@@ -65,10 +65,12 @@ Boston, MA  02111-1307, USA.
 	interface Receive as RemoveFeatureReceiver;
 	interface Receive as BatteryInfoReqReceiver;
 
-  	interface STAccelerometer;
+  	interface AccSensor;
+  	//interface STAccelerometer;
 
-	interface Read<uint16_t> as ReadGyroX;
-	interface Read<uint16_t> as ReadGyroY;
+        // commented because we are just simulating the data gathering
+	//interface Read<uint16_t> as ReadGyroX;
+	//interface Read<uint16_t> as ReadGyroY;
 
         interface BuffersManager as BM;
 
@@ -84,7 +86,7 @@ Boston, MA  02111-1307, USA.
         interface AmpRemoveFeature;
         interface AmpServiceAdvertisement;
 
-        interface Read<uint16_t> as ReadVolt;
+        //interface Read<uint16_t> as ReadVolt;
   }
 
 }
@@ -140,7 +142,7 @@ implementation {
 
       // used for 'checkAndSendBatteryInfo()'
       bool sendBatteryReady = FALSE;
-      uint16_t lastBatteryLevel;
+      uint16_t lastBatteryLevel = 4096;
 
       uint8_t tmp; // used in 'insertJob'
       uint8_t tmp2;
@@ -237,10 +239,13 @@ implementation {
       *
       * @return void
       */
+      // commented because we are just simulating the data gathering
+      /*
       event void ReadGyroX.readDone(error_t result, uint16_t data) {
 	    gyroX = data;
 	    call BM.putElem(GYROSCOPE_CODE, AXIS_X, &gyroX);
       }
+      */
 
       /*
       * The event is thrown when a new gyroscope y-axis reading is ready.
@@ -251,10 +256,13 @@ implementation {
       *
       * @return void
       */
+      // commented because we are just simulating the data gathering
+      /*
       event void ReadGyroY.readDone(error_t result, uint16_t data) {
 	    gyroY = data;
 	    call BM.putElem(GYROSCOPE_CODE, AXIS_Y, &gyroY);
       }
+      */
       
       /*
       * The function check whether there's some active battery info to send. 
@@ -290,11 +298,14 @@ implementation {
       *
       * @return void
       */
+      // commented because we are just simulating the data gathering
+      /*
       event void ReadVolt.readDone(error_t result, uint16_t data) {
           lastBatteryLevel = data;
           sendBatteryReady = TRUE;
           checkAndSendBatteryInfo();
       }
+      */
 
       /*
       * The function is called when a new Data Packet has to be sent.
@@ -433,7 +444,8 @@ implementation {
       * @return void
       */
       void sendBatteryInfoPkt() {
-          call ReadVolt.read();
+          // commented because we are just simulating the data gathering
+          //call ReadVolt.read();
       }
 
       /*
@@ -620,10 +632,14 @@ implementation {
       event void SamplingTimer.fired() {
            //call Leds.led1Toggle();
            if (accelRequested) {
-               call STAccelerometer.readAccel();
-               accX = call STAccelerometer.getAccelX();
-               accY = call STAccelerometer.getAccelY();
-               accZ = call STAccelerometer.getAccelZ();
+               //call STAccelerometer.readAccel();
+               //accX = call STAccelerometer.getAccelX();
+               //accY = call STAccelerometer.getAccelY();
+               //accZ = call STAccelerometer.getAccelZ();
+               call AccSensor.readAccel();
+               accX = call AccSensor.getAccelX();
+               accY = call AccSensor.getAccelY();
+               accZ = call AccSensor.getAccelZ();
 
                if (accX > 0x8000)
                    accX -= 65536;
@@ -659,8 +675,10 @@ implementation {
            }
 
            if (gyroRequested) {
-              call ReadGyroX.read();
-              call ReadGyroY.read();
+              //call ReadGyroX.read();
+              //call ReadGyroY.read();
+              gyroX = 0;
+              gyroY = 0;
            }
            
            if (temperatureRequested) {
