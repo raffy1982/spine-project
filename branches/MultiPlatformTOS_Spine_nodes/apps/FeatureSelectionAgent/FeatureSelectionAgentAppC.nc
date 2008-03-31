@@ -59,11 +59,16 @@ implementation {
   components new AMSenderC(AM_SERVICEMESSAGEPKT) as ServiceMessageSender;
   components new AMSenderC(AM_BATTERYINFOPKT) as BatteryInfoSender;
 
+
   components AccSensorC as Acc;
   //components STAccelerometerC as Acc;
 
   //components new GyroXSensorC() as GyroX;
   //components new GyroYSensorC() as GyroY;
+
+  components VoltageSensorC as Volt;
+  //components new VoltageC() as Volt;
+
 
   components BuffersManagerAppC as BMAppC;
 
@@ -78,8 +83,6 @@ implementation {
   components AmpServiceMessageC;
   components AmpRemoveFeatureC;
   components AmpServiceAdvertisementC;
-  
-  //components new VoltageC() as Volt;
 
   App.Leds -> LedsC;
 
@@ -102,11 +105,16 @@ implementation {
   App.RemoveFeatureReceiver -> RemoveFeatureReceiver;
   App.BatteryInfoReqReceiver -> BatteryInfoReqReceiver;
 
+
   App.AccSensor -> Acc;
   //App.STAccelerometer -> Acc;
+
   //App.ReadGyroX -> GyroX;
   //App.ReadGyroY -> GyroY;
-  
+
+  App.VoltSensor -> Volt;
+
+
   App.BM -> BMAppC;
 
   App.JobEngine -> JobEngineAppC;
@@ -120,7 +128,5 @@ implementation {
   App.AmpServiceMessage -> AmpServiceMessageC;
   App.AmpRemoveFeature -> AmpRemoveFeatureC;
   App.AmpServiceAdvertisement -> AmpServiceAdvertisementC;
-  
-  //App.ReadVolt -> Volt;
 
 }
