@@ -1,6 +1,6 @@
 COMPONENT=FeatureSelectionAgentAppC
 
-LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [[ ! -d $$SUPPORT_MAKE_PATH/support/make ]]; do SUPPORT_MAKE_PATH=../$$SUPPORT_MAKE_PATH; done; echo $$SUPPORT_MAKE_PATH)
+LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [ ! -d $$SUPPORT_MAKE_PATH/support/make ]; do SUPPORT_MAKE_PATH=../$$SUPPORT_MAKE_PATH; done; echo $$SUPPORT_MAKE_PATH)
 TOSMAKE_PATH=$(LOCAL_TOSROOT)/support/make
 
 GOALS += spine
