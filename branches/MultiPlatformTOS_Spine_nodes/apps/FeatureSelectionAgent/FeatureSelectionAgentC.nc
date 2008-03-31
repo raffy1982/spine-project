@@ -65,12 +65,16 @@ Boston, MA  02111-1307, USA.
 	interface Receive as RemoveFeatureReceiver;
 	interface Receive as BatteryInfoReqReceiver;
 
+
   	interface AccSensor;
   	//interface STAccelerometer;
 
-        // commented because we are just simulating the data gathering
-	//interface Read<uint16_t> as ReadGyroX;
+        //interface Read<uint16_t> as ReadGyroX;
 	//interface Read<uint16_t> as ReadGyroY;
+	
+	interface VoltageSensor as VoltSensor;
+	//interface Read<uint16_t> as VoltSensor;
+
 
         interface BuffersManager as BM;
 
@@ -86,7 +90,6 @@ Boston, MA  02111-1307, USA.
         interface AmpRemoveFeature;
         interface AmpServiceAdvertisement;
 
-        //interface Read<uint16_t> as ReadVolt;
   }
 
 }
@@ -157,8 +160,6 @@ implementation {
       uint8_t shiftTemp;
       bool error;
 
-      uint8_t tempI; // used in 'removeJob'
-
       // the following are used in 'removeFeature()'
       uint8_t deleting[3];
       uint8_t toDel;
@@ -173,7 +174,6 @@ implementation {
       
       uint8_t numMotes = 1;
 
-
       /*
       * The function starts the sampling process and activate the features computation
       * and the results communication.
@@ -182,6 +182,7 @@ implementation {
       * @return void
       */
       void startTimers() {
+
            call SamplingTimer.startPeriodic(samplingPeriod);
            call SendTimer.startPeriodic(sendPeriod);
 
@@ -298,14 +299,14 @@ implementation {
       *
       * @return void
       */
-      // commented because we are just simulating the data gathering
       /*
-      event void ReadVolt.readDone(error_t result, uint16_t data) {
+      event void VoltSensor.readDone(error_t result, uint16_t data) {
           lastBatteryLevel = data;
           sendBatteryReady = TRUE;
           checkAndSendBatteryInfo();
       }
       */
+      
 
       /*
       * The function is called when a new Data Packet has to be sent.
@@ -444,8 +445,11 @@ implementation {
       * @return void
       */
       void sendBatteryInfoPkt() {
-          // commented because we are just simulating the data gathering
-          //call ReadVolt.read();
+          //call VoltSensor.read();
+          call VoltSensor.readVolt();
+          lastBatteryLevel = call VoltSensor.getVolt();
+          sendBatteryReady = TRUE;
+          checkAndSendBatteryInfo();
       }
 
       /*
