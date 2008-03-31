@@ -23,6 +23,16 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/system/signalProcessing/featExtractors/linear
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/signalProcessing/featExtractors/nonLinear
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/utils
 
-
+ifdef BUFFER_SIZE
+      PFLAGS += -DBUFFER_SIZE=$(BUFFER_SIZE)
+else 
+     ifeq ($(firstword $(MAKECMDGOALS)),micaz)
+          PFLAGS += -DBUFFER_SIZE=200
+     else
+         ifeq ($(firstword $(MAKECMDGOALS)),telosb)
+              PFLAGS += -DBUFFER_SIZE=500
+         endif
+     endif
+endif
 
 
