@@ -35,6 +35,10 @@ Boston, MA  02111-1307, USA.
 #ifndef FeatureSelectionAgent_H
 #define FeatureSelectionAgent_H
 
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 200
+#endif
+
 #include "AmpPacketsConstants.h"
 
 enum {
@@ -48,7 +52,7 @@ enum {
   AM_SERVICEADVERTISEMENTPKT = SERVICE_ADVERTISEMENT_PKT_CODE,
 
   SAMPLE_SIZE = 2,
-  BUFFER_SIZE = 200 * SAMPLE_SIZE,  // 500 if telosb
+  BUF_SIZE = BUFFER_SIZE * SAMPLE_SIZE,  // 500 if telosb
   MAX_FEATURES_PER_AXIS = 10,
 
   AMP_VERSION = 1,
@@ -59,7 +63,6 @@ enum {
   
   DETECTION_PAUSE_LENGHT = 10
 };    
-
 
 // AMP PACKETS
 
@@ -113,3 +116,5 @@ typedef nx_struct BatteryInfoPkt {
 } BatteryInfoPkt;
 
 #endif
+
+

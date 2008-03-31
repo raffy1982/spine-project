@@ -3,7 +3,7 @@ SPINE - Signal Processing In-Note Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
-Copyright (C) 2007 Telecom Italia S.p.A. 
+Copyright (C) 2007 Telecom Italia S.p.A.
  
 GNU Lesser General Public License
  
@@ -110,13 +110,13 @@ implementation {
      bool busyGyroX[MAX_FEATURES_PER_AXIS]; // buffers IDs: 31 to 40
      bool busyGyroY[MAX_FEATURES_PER_AXIS]; // buffers IDs: 41 to 50
      
-     int8_t accX[BUFFER_SIZE];
-     int8_t accY[BUFFER_SIZE];
-     int8_t accZ[BUFFER_SIZE];
-     int8_t gyroX[BUFFER_SIZE];
-     int8_t gyroY[BUFFER_SIZE];
-     
-     int16_t window4Return[BUFFER_SIZE/2];
+     int8_t accX[BUF_SIZE];
+     int8_t accY[BUF_SIZE];
+     int8_t accZ[BUF_SIZE];
+     int8_t gyroX[BUF_SIZE];
+     int8_t gyroY[BUF_SIZE];
+
+     int16_t window4Return[BUF_SIZE/2];
      
      uint16_t i_currAccX = 0;
      uint16_t* i_currAccXPunt = &i_currAccX;
@@ -142,11 +142,11 @@ implementation {
       * @return void
       */
      event void Boot.booted() {
-         call BAccX01.init(accX, i_currAccXPunt, BUFFER_SIZE/2, 0, 0);
-         call BAccY01.init(accY, i_currAccYPunt, BUFFER_SIZE/2, 0, 0);
-         call BAccZ01.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, 0, 0);
-         call BGyroX01.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, 0, 0);
-         call BGyroY01.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, 0, 0);
+         call BAccX01.init(accX, i_currAccXPunt, BUF_SIZE/2, 0, 0);
+         call BAccY01.init(accY, i_currAccYPunt, BUF_SIZE/2, 0, 0);
+         call BAccZ01.init(accZ, i_currAccZPunt, BUF_SIZE/2, 0, 0);
+         call BGyroX01.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, 0, 0);
+         call BGyroY01.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, 0, 0);
      }
 
      /*
@@ -425,7 +425,7 @@ implementation {
      */
      command int8_t BuffersManager.bufferAllocReq(uint8_t sensorCode, uint8_t axisCode, uint16_t window,  uint16_t shift) {
 
-        if (window > BUFFER_SIZE/2)
+        if (window > BUF_SIZE/2)
            return -WINDOW_SIZE_TOO_BIG_CODE;
         switch (sensorCode) {
             case ACCELEROMETER_CODE: {
@@ -443,43 +443,43 @@ implementation {
                          // we are going to allocate the resources
                          switch (i) {
                             case 0: {
-                                call BAccX01.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX01.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 1: {
-                                call BAccX02.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX02.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 2: {
-                                call BAccX03.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX03.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 3: {
-                                call BAccX04.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX04.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 4: {
-                                call BAccX05.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX05.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 5: {
-                                call BAccX06.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX06.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 6: {
-                                call BAccX07.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX07.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 7: {
-                                call BAccX08.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX08.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 8: {
-                                call BAccX09.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX09.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             case 9: {
-                                call BAccX10.init(accX, i_currAccXPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccX10.init(accX, i_currAccXPunt, BUF_SIZE/2, window, shift);
                                 return i; // returns buffer ID
                             }
                             default: break;
@@ -500,43 +500,43 @@ implementation {
                          // we are going to allocate the resources
                          switch (i) {
                             case 0: {
-                                call BAccY01.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY01.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 1: {
-                                call BAccY02.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY02.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 2: {
-                                call BAccY03.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY03.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 3: {
-                                call BAccY04.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY04.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 4: {
-                                call BAccY05.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY05.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 5: {
-                                call BAccY06.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY06.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 6: {
-                                call BAccY07.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY07.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 7: {
-                                call BAccY08.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY08.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 8: {
-                                call BAccY09.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY09.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             case 9: {
-                                call BAccY10.init(accY, i_currAccYPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccY10.init(accY, i_currAccYPunt, BUF_SIZE/2, window, shift);
                                 return i+10; // returns buffer ID
                             }
                             default: break;
@@ -557,43 +557,43 @@ implementation {
                          // we are going to allocate the resources
                          switch (i) {
                             case 0: {
-                                call BAccZ01.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ01.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 1: {
-                                call BAccZ02.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ02.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 2: {
-                                call BAccZ03.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ03.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 3: {
-                                call BAccZ04.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ04.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 4: {
-                                call BAccZ05.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ05.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 5: {
-                                call BAccZ06.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ06.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 6: {
-                                call BAccZ07.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ07.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 7: {
-                                call BAccZ08.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ08.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 8: {
-                                call BAccZ09.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ09.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             case 9: {
-                                call BAccZ10.init(accZ, i_currAccZPunt, BUFFER_SIZE/2, window, shift);
+                                call BAccZ10.init(accZ, i_currAccZPunt, BUF_SIZE/2, window, shift);
                                 return i+20; // returns buffer ID
                             }
                             default: break;
@@ -620,43 +620,43 @@ implementation {
                          // we are going to allocate the resources
                          switch (i) {
                             case 0: {
-                                call BGyroX01.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX01.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 1: {
-                                call BGyroX02.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX02.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 2: {
-                                call BGyroX03.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX03.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 3: {
-                                call BGyroX04.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX04.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 4: {
-                                call BGyroX05.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX05.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 5: {
-                                call BGyroX06.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX06.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 6: {
-                                call BGyroX07.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX07.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 7: {
-                                call BGyroX08.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX08.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 8: {
-                                call BGyroX09.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX09.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             case 9: {
-                                call BGyroX10.init(gyroX, i_currGyroXPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroX10.init(gyroX, i_currGyroXPunt, BUF_SIZE/2, window, shift);
                                 return i+30; // returns buffer ID
                             }
                             default: break;
@@ -677,43 +677,43 @@ implementation {
                          // we are going to allocate the resources
                          switch (i) {
                             case 0: {
-                                call BGyroY01.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY01.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 1: {
-                                call BGyroY02.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY02.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 2: {
-                                call BGyroY03.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY03.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 3: {
-                                call BGyroY04.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY04.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 4: {
-                                call BGyroY05.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY05.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 5: {
-                                call BGyroY06.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY06.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 6: {
-                                call BGyroY07.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY07.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 7: {
-                                call BGyroY08.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY08.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 8: {
-                                call BGyroY09.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY09.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             case 9: {
-                                call BGyroY10.init(gyroY, i_currGyroYPunt, BUFFER_SIZE/2, window, shift);
+                                call BGyroY10.init(gyroY, i_currGyroYPunt, BUF_SIZE/2, window, shift);
                                 return i+40; // returns buffer ID
                             }
                             default: break;
