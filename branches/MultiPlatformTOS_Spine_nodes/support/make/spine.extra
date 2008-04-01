@@ -23,11 +23,17 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/system/signalProcessing/featExtractors/linear
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/signalProcessing/featExtractors/nonLinear
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/utils
 
+// PFLAGS += -DNO_GYRO     // <-- remove this comment if your platform do NOT have the gyro
+
+ifeq ($(SENSORBOARD),mts300)
+     PFLAGS += -DNO_GYRO
+endif
+
 ifdef BUFFER_SIZE
       PFLAGS += -DBUFFER_SIZE=$(BUFFER_SIZE)
-else 
+else
      ifeq ($(firstword $(MAKECMDGOALS)),micaz)
-          PFLAGS += -DBUFFER_SIZE=200
+          PFLAGS += -DBUFFER_SIZE=180
      else
          ifeq ($(firstword $(MAKECMDGOALS)),telosb)
               PFLAGS += -DBUFFER_SIZE=500
