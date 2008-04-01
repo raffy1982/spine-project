@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 #define FeatureSelectionAgent_H
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 200
+#define BUFFER_SIZE 180
 #endif
 
 #include "AmpPacketsConstants.h"
