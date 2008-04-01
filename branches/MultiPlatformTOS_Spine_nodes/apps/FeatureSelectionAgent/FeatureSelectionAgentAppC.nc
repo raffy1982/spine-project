@@ -109,10 +109,15 @@ implementation {
   App.AccSensor -> Acc;
   //App.STAccelerometer -> Acc;
 
+  #ifdef NO_GYRO
+  #else
+  components GyroSensorC as Gyro;
+  App.GyroSensor -> Gyro;
+  #endif
   //App.ReadGyroX -> GyroX;
   //App.ReadGyroY -> GyroY;
 
-  App.VoltSensor -> Volt;
+  App.VoltSensor -> Volt;  
 
 
   App.BM -> BMAppC;

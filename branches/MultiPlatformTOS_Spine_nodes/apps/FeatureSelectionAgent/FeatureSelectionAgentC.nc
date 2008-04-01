@@ -69,6 +69,7 @@ Boston, MA  02111-1307, USA.
   	interface AccSensor;
   	//interface STAccelerometer;
 
+        interface GyroSensor;
         //interface Read<uint16_t> as ReadGyroX;
 	//interface Read<uint16_t> as ReadGyroY;
 	
@@ -681,8 +682,17 @@ implementation {
            if (gyroRequested) {
               //call ReadGyroX.read();
               //call ReadGyroY.read();
-              gyroX = 0;
-              gyroY = 0;
+              #ifdef NO_GYRO
+              gyroX=0;
+              gyroY=0;
+              #else
+              call GyroSensor.readGyro();
+              gyroX = call GyroSensor.getGyroX();
+              gyroY = call GyroSensor.getGyroY();
+              #endif
+
+              call BM.putElem(GYROSCOPE_CODE, AXIS_X, &gyroX);
+              call BM.putElem(GYROSCOPE_CODE, AXIS_Y, &gyroY);
            }
            
            if (temperatureRequested) {
