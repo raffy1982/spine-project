@@ -220,6 +220,7 @@ implementation {
           accelRequested = FALSE;
           gyroRequested = FALSE;
           temperatureRequested = FALSE;
+          fallDetectionActive = FALSE;
           
           for (i=0; i<iJob; i++)
               call BM.bufferRelease(id[i]);
