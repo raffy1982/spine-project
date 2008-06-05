@@ -25,6 +25,12 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/system/utils
 
 // PFLAGS += -DNO_GYRO     // <-- remove this comment if your platform do NOT have the gyro
 
+PFLAGS += -DSENSORS_REGISTRY_SIZE=4
+
+//PFLAGS += -DBOOT_RADIO_ON=FALSE
+// PFLAGS += -DRADIO_DUTY_CYCLING=TRUE // <-- remove this comment if you want the radio duty cycling
+// PFLAGS += -DGROUP_ID=3 // <-- remove this comment if you want to customize the node group id
+
 ifeq ($(SENSORBOARD),mts300)
      PFLAGS += -DNO_GYRO
 endif
