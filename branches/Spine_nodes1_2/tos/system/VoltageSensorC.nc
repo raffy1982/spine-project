@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Node Environment is a framework that
+SPINE - Signal Processing In-Note Environment is a framework that 
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,18 +24,20 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * 
- * 
+ *  Configuration component for the PIL (Platform Independent Layer) voltage sensor
+ *
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
  * @version 1.0
- */      
+ */
  configuration VoltageSensorC {
-    provides interface VoltageSensor;
+    provides interface Sensor;
 }
+
 implementation {
-    components VoltageSensorP;
     
-    VoltageSensor = VoltageSensorP.VoltSensor;
+    components HilVoltageSensorC;
+
+    Sensor = HilVoltageSensorC;
 }

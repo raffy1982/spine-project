@@ -24,18 +24,19 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * 
+ *  Configuration component for the PIL (Platform Independent Layer) accelerometer sensor
  * 
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
  * @version 1.0
- */      
+ */
  configuration AccSensorC {
-    provides interface AccSensor;
+    provides interface Sensor;
 }
 implementation {
-    components AccSensorP;
     
-    AccSensor = AccSensorP.Acc;
+    components HilAccSensorC;
+
+    Sensor = HilAccSensorC;
 }
