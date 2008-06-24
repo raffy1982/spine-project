@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Note Environment is a framework that 
+SPINE - Signal Processing In-Node Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,30 +24,37 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * Configuration component of the 'MTS300 sensorboard' dual-axis Accelerometer sensor driver 
+ * for the micaz platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
  * @version 1.0
- */      
+ */
  
- configuration HilAccSensorC {
-  provides interface AccSensor;
+configuration HilAccSensorC {
+  provides interface Sensor;
 }
+
 implementation {
-    components MainC;
-    components ActiveMessageC;
     components HilAccSensorP;
+    
     components new AccelXC() as AccX;
     components new AccelYC() as AccY;
 
-    HilAccSensorP.Boot -> MainC;
-    HilAccSensorP.SplitControl -> ActiveMessageC;
-    AccSensor = HilAccSensorP;
+    components MainC;
+    
+    components SensorsRegistryC;
+
+    
+    Sensor = HilAccSensorP;
+    
     HilAccSensorP.AccelX -> AccX;
     HilAccSensorP.AccelY -> AccY;
+    
+    HilAccSensorP.Boot -> MainC;
 
-
+    HilAccSensorP.SensorsRegistry -> SensorsRegistryC;
 }
 
 

@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Note Environment is a framework that 
+SPINE - Signal Processing In-Node Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,101 +24,140 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * 
- * 
+ * Module component of the 'MTS300 sensorboard' dual-axis Accelerometer sensor driver
+ * for the micaz platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ *
  * @version 1.0
- */      
+ */
 
- module HilAccSensorP {
+module HilAccSensorP {
   uses {
-     interface Boot;
-     interface SplitControl;
      interface Read<uint16_t> as AccelX;
      interface Read<uint16_t> as AccelY;
+     
+     interface Boot;
+     interface SensorsRegistry;
   }
-  provides interface AccSensor as Acc;
+
+  provides interface Sensor;
 }
+
 implementation {
   
-    norace uint16_t accX=0;
-    norace uint16_t accY=0;
-    norace uint16_t accZ=0;
+    uint16_t accX = 0;
+    uint16_t accY = 0;
 
-    /**
-    * Init the accelerometer sensor and enable its registers
-    *
-    * @return void
-    */
-    void initAccel() {
+    uint8_t acqType;
+    bool xReady;
+    bool yReady;
+    
+    uint8_t valueTypesList[2];
 
-    }
+    uint8_t acquireTypesList[3];
+    
+    bool registered = FALSE;
+
 
     event void Boot.booted() {
-        call SplitControl.start();
+       if (!registered) {
+          valueTypesList[0] = CH_1;
+          valueTypesList[1] = CH_2;
+          acquireTypesList[0] = CH_1_ONLY;
+          acquireTypesList[1] = CH_2_ONLY;
+          acquireTypesList[2] = ALL;
+
+          call SensorsRegistry.registerSensor(ACC_SENSOR);
+
+          registered = TRUE;
+       }
     }
 
-    event void SplitControl.startDone(error_t err) {
-        if (err == SUCCESS) {
-            initAccel();
+    command uint8_t Sensor.getSignificantBits() {
+        return 12;
+    }
+
+    command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
+        xReady = FALSE;
+        yReady = FALSE;
+
+        acqType = acquireType;
+
+        if(acquireType == ALL || acquireType == CH_1_ONLY)
+            call AccelX.read();
+        if(acquireType == ALL || acquireType == CH_2_ONLY)
+            call AccelY.read();
+
+        return SUCCESS;
+    }
+
+    command uint16_t Sensor.getValue(enum ValueTypes valueType) {
+        switch (valueType) {
+            case CH_1 : return accX;
+            case CH_2 : return accY;
+            default : return 0xffff;
         }
-        else
-            call SplitControl.start();
     }
 
-    event void SplitControl.stopDone(error_t err) {}
+    command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+        *valuesNr = sizeof valueTypesList;
+        memcpy(buffer, &accX, 2);
+        memcpy(buffer+1, &accY, 2);
+    }
 
-    /**
-    * Reads the current accelerometer values over all three axis
-    * and make them ready to get using the related commands.
+    command enum SensorCode Sensor.getSensorCode() {
+        return ACC_SENSOR;
+    }
+
+    command uint16_t Sensor.getSensorID() {
+        return 0xaa3f; // the ID has been randomly choosen
+    }
+
+    /*
+    * The event is thrown when a new gyroscope x-axis reading is ready.
+    * It sets a global variable and put the reading in the system buffer.
+    *
+    * @param result : indicates whether the reading process has succeed or not.
+    * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
     *
     * @return void
     */
-    command void Acc.readAccel() {
-        call AccelX.read();
-        call AccelY.read();
-    }
-    
-    /**
-    * Gets the last x-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last x-axis value stored
-    */
-    async command uint16_t Acc.getAccelX() {
-        return accX;
-    }
-
-    /**
-    * Gets the last y-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last y-axis value stored
-    */
-    async command uint16_t Acc.getAccelY() {
-        return accY;
-    }
-
-    /**
-    * Gets the last z-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last z-axis value stored
-    */
-    async command uint16_t Acc.getAccelZ() {
-        return accZ;
-    }
-
     event void AccelX.readDone(error_t result, uint16_t data) {
-       if (result != SUCCESS)
-	   accX = 0;
-       else
-           accX = data;
+        xReady = TRUE;
+
+        accX = data;
+
+        if ((acqType == ALL && yReady) || acqType == CH_1_ONLY)
+           signal Sensor.acquisitionDone(result, acqType);
     }
-    
+
+    /*
+    * The event is thrown when a new gyroscope y-axis reading is ready.
+    * It sets a global variable and put the reading in the system buffer.
+    *
+    * @param result : indicates whether the reading process has succeed or not.
+    * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
+    *
+    * @return void
+    */
     event void AccelY.readDone(error_t result, uint16_t data) {
-       if (result != SUCCESS)
-	   accY = 0;
-       else
-           accY = data;
+        yReady = TRUE;
+
+        accY = data;
+
+        if ((acqType == ALL && xReady) || acqType == CH_2_ONLY)
+           signal Sensor.acquisitionDone(result, acqType);
+    }
+
+    command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {
+        *valuesTypeNr = sizeof valueTypesList;
+        return valueTypesList;
+    }
+
+    command uint8_t* Sensor.getAcquireTypesList(uint8_t* acquireTypesNr) {
+        *acquireTypesNr = sizeof acquireTypesList;
+        return acquireTypesList;
     }
 }
 
