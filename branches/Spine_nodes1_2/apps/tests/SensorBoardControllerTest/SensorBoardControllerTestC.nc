@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Test component of the SensorBoard Manager.
+ * Test component of the SensorBoard Controller.
  *
  * @author Raffaele Gravina
  *
@@ -34,26 +34,26 @@ Boston, MA  02111-1307, USA.
 #include "Timer.h"
 #include "SensorsConstants.h"
 
-module SensorBoardManagerTestC
+module SensorBoardControllerTestC
 {
   uses {
     interface Boot;
     interface Timer<TMilli>;
 
-    interface SensorBoardManager;
+    interface SensorBoardController;
     interface RadioController;
   }
 }
 implementation
 {
-  uint8_t reading = 0;
-  uint16_t readings[5];
+  uint16_t readings[3];
+  uint16_t bufTmp[6];
 
 
   event void Boot.booted() {}
 
   void startTimer() {
-    call Timer.startPeriodic(200);
+    call Timer.startPeriodic(20);
   }
           
   event void RadioController.radioOn() {
@@ -63,25 +63,34 @@ implementation
   event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {}
 
   event void Timer.fired() {
-    if (reading == 5) {
-	call RadioController.send(AM_BROADCAST_ADDR, DATA, &readings, sizeof readings);
-	reading = 0;
-    }
-
-    call SensorBoardManager.acquireData(VOLTAGE_SENSOR, CH_1_ONLY);
-    // call SensorManager.acquireData(ACC_SENSOR, ALL);
-    // call SensorManager.acquireData(INTERNAL_TEMPERATURE_SENSOR, CH_1_ONLY);
-    // call SensorManager.acquireData(GYRO_SENSOR, ALL);
-
+    call SensorBoardController.acquireData(ACC_SENSOR, ALL);
+    //call SensorBoardController.acquireData(VOLTAGE_SENSOR, CH_1_ONLY);
+    //call SensorBoardController.acquireData(INTERNAL_TEMPERATURE_SENSOR, CH_1_ONLY);
+    //call SensorBoardController.acquireData(GYRO_SENSOR, ALL);
   }
 
-  event void SensorBoardManager.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
-      if (result != SUCCESS)
-          readings[reading++] = 0xffff;
-      else
-          readings[reading++] = call SensorBoardManager.getValue(sensorCode, CH_1);
+  event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+      uint8_t resNr;
+      uint8_t i;
+      if (result != SUCCESS) {
+          readings[0] = 0xffff;
+          readings[1] = 0xffff;
+          readings[2] = 0xffff;
+          //memset(readings, 0xffff, 3);
+      }
+      else {
+          call SensorBoardController.getAllValues(sensorCode, bufTmp, &resNr);
+          for (i=0; i<resNr; i++)
+             readings[i] = bufTmp[i];
+
+          //readings[0] = call SensorBoardController.getValue(sensorCode, CH_1);
+          //readings[1] = call SensorBoardController.getValue(sensorCode, CH_2);
+          //readings[2] = call SensorBoardController.getValue(sensorCode, CH_3);
           // 'CH_1' indicate the specific sensor driver to return the last acquired value of the first channel.
           // Tipically those parameters will be provided by the coordinator, then are transparent to the core node system
+      }
+      call RadioController.send(AM_BROADCAST_ADDR, AM_SPINE, &readings, sizeof readings);
+
    }
 
 }

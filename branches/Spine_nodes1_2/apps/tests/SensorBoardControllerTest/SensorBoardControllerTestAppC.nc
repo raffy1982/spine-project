@@ -24,25 +24,25 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Test component of the SensorBoard Manager.
+ * Test component of the SensorBoard Controller.
  *
  * @author Raffaele Gravina
  *
  * @version 1.0
  */
-configuration SensorBoardManagerTestAppC {
+configuration SensorBoardControllerTestAppC {
 }
 
 implementation
 {
-  components SensorBoardManagerTestC, MainC, new TimerMilliC(),
+  components SensorBoardControllerTestC, MainC, new TimerMilliC(),
              RadioControllerC,
-             SensorBoardManagerC;
+             SensorBoardControllerC;
 
-  SensorBoardManagerTestC.Boot -> MainC.Boot;
-  SensorBoardManagerTestC.Timer -> TimerMilliC;
+  SensorBoardControllerTestC.Boot -> MainC.Boot;
+  SensorBoardControllerTestC.Timer -> TimerMilliC;
 
-  SensorBoardManagerTestC.SensorBoardManager -> SensorBoardManagerC;
-  
-  SensorBoardManagerTestC.RadioController -> RadioControllerC;
+  SensorBoardControllerTestC.SensorBoardController -> SensorBoardControllerC;
+
+  SensorBoardControllerTestC.RadioController -> RadioControllerC;
 }
