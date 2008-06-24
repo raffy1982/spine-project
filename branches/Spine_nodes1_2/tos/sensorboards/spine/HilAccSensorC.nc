@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Note Environment is a framework that 
+SPINE - Signal Processing In-Node Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,37 +24,38 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Implementation of the 'STMicroelectronics LIS3LV02DQ Accelerometer' tri-axial sensor
- * for the telosb platform
+ * Configuration component of the 'STMicroelectronics LIS3LV02DQ Accelerometer' 
+ * tri-axial sensor driver for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
- * @author Antonio Guerrieri <aguerrieri@wsnlabberkeley.com>
- * @author Filippo Tempia <filippo.tempia@telecomitalia.it>
+ *
  * @version 1.0
- */      
+ */
  
- configuration HilAccSensorC {
-  provides interface AccSensor;
+configuration HilAccSensorC {
+  provides interface Sensor;
 }
+
 implementation {
     components MainC;
 
-    components ActiveMessageC;
-    
     components HplMsp430GeneralIOC;
 
     components HilAccSensorP;
 
-    AccSensor = HilAccSensorP;
-    
+    components SensorsRegistryC;
+
+
     HilAccSensorP.Boot -> MainC;
 
-    HilAccSensorP.SplitControl -> ActiveMessageC;
-    
     HilAccSensorP.CS_accel_port -> HplMsp430GeneralIOC.Port26;
     HilAccSensorP.CLK_port      -> HplMsp430GeneralIOC.Port66;
     HilAccSensorP.DIN_port      -> HplMsp430GeneralIOC.Port67;
     HilAccSensorP.DOUT_port     -> HplMsp430GeneralIOC.Port23;
+
+    Sensor = HilAccSensorP;
+
+    HilAccSensorP.SensorsRegistry -> SensorsRegistryC;
 }
 
 

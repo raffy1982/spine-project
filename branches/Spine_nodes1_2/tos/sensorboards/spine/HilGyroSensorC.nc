@@ -24,33 +24,37 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
+ * Configuration component of the 'Sparkfun Integrated Dual-Axis Gyro IDG-300'
+ * sensor driver for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ *
  * @version 1.0
  */
 
- configuration HilGyroSensorC {
-  provides interface GyroSensor;
+configuration HilGyroSensorC {
+  provides interface Sensor;
 }
-implementation {
-    components MainC;
 
-    components ActiveMessageC;
-    
+implementation {
     components HilGyroSensorP;
 
     components new GyroXSensorC() as GyroX;
     components new GyroYSensorC() as GyroY;
 
+    components MainC;
 
-    GyroSensor = HilGyroSensorP;
+    components SensorsRegistryC;
 
-    HilGyroSensorP.Boot -> MainC;
 
-    HilGyroSensorP.SplitControl -> ActiveMessageC;
+    Sensor = HilGyroSensorP;
 
     HilGyroSensorP.GyroX -> GyroX;
     HilGyroSensorP.GyroY -> GyroY;
+    
+    HilGyroSensorP.Boot -> MainC;
+
+    HilGyroSensorP.SensorsRegistry -> SensorsRegistryC;
 }
 
 

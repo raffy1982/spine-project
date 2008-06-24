@@ -24,116 +24,140 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Implementation of the 'STMicroelectronics LIS3LV02DQ Accelerometer' tri-axial sensor
- * for the telosb platform
+ * Module component of the 'Sparkfun Integrated Dual-Axis Gyro IDG-300'
+ * sensor driver for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ *
  * @version 1.0
  */
 
- module HilGyroSensorP {
+module HilGyroSensorP {
   uses {
-     interface Boot;
-
-     interface SplitControl;
-     
      interface Read<uint16_t> as GyroX;
      interface Read<uint16_t> as GyroY;
+
+     interface Boot;
+     interface SensorsRegistry;
   }
-  provides interface GyroSensor as Gyro;
+
+  provides interface Sensor;
 }
 implementation {
   
-    norace uint16_t gyroX=0;
-    norace uint16_t gyroY=0;
-    norace uint16_t gyroZ=0;
+    uint16_t gyroX = 0;
+    uint16_t gyroY = 0;
 
-    /**
-    * Init the gyroscope sensor
-    *
-    * @return void
-    */
-    void initGyro() {
-        call GyroX.read();
-        call GyroY.read();
-    }
+    uint8_t acqType;
+    bool xReady;
+    bool yReady;
+
+    uint8_t valueTypesList[2];
+
+    uint8_t acquireTypesList[3];
+    
+    bool registered = FALSE;
+
 
     event void Boot.booted() {
-        call SplitControl.start();
+       if (!registered) {
+          valueTypesList[0] = CH_1;
+          valueTypesList[1] = CH_2;
+          acquireTypesList[0] = CH_1_ONLY;
+          acquireTypesList[1] = CH_2_ONLY;
+          acquireTypesList[2] = ALL;
+
+          call SensorsRegistry.registerSensor(GYRO_SENSOR);
+
+          registered = TRUE;
+       }
     }
 
-    event void SplitControl.startDone(error_t err) {
-        if (err == SUCCESS) {
-            initGyro();
+    command uint8_t Sensor.getSignificantBits() {
+        return 12;
+    }
+
+    command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
+        xReady = FALSE;
+        yReady = FALSE;
+
+        acqType = acquireType;
+
+        if(acquireType == ALL || acquireType == CH_1_ONLY)
+            call GyroX.read();
+        if(acquireType == ALL || acquireType == CH_2_ONLY)
+            call GyroY.read();
+
+        return SUCCESS;
+    }
+    
+    command uint16_t Sensor.getValue(enum ValueTypes valueType) {
+        switch (valueType) {
+            case CH_1 : return gyroX;
+            case CH_2 : return gyroY;
+            default : return 0xffff;
         }
-        else
-            call SplitControl.start();
     }
 
-    event void SplitControl.stopDone(error_t err) {}
+    command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+        *valuesNr = sizeof valueTypesList;
+        memcpy(buffer, &gyroX, 2);
+        memcpy(buffer+1, &gyroY, 2);
+    }
 
-    /**
-    * Reads the current gyroscope values over all axis
-    * and make them ready to get using the related commands.
+    command enum SensorCode Sensor.getSensorCode() {
+        return GYRO_SENSOR;
+    }
+
+    command uint16_t Sensor.getSensorID() {
+        return 0x45ac; // the ID has been randomly choosen
+    }
+
+    /*
+    * The event is thrown when a new gyroscope x-axis reading is ready.
+    * It sets a global variable and put the reading in the system buffer.
+    *
+    * @param result : indicates whether the reading process has succeed or not.
+    * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
     *
     * @return void
     */
-    command void Gyro.readGyro() {
+    event void GyroX.readDone(error_t result, uint16_t data) {
+        xReady = TRUE;
 
+        gyroX = data;
+
+        if ((acqType == ALL && yReady) || acqType == CH_1_ONLY)
+           signal Sensor.acquisitionDone(result, acqType);
     }
-    
-    /**
-    * Gets the last x-axis value stored using the command readGyro.
+
+    /*
+    * The event is thrown when a new gyroscope y-axis reading is ready.
+    * It sets a global variable and put the reading in the system buffer.
     *
-    * @return 'uint16_t' the last x-axis value stored
-    */
-    async command uint16_t Gyro.getGyroX() {
-        return gyroX;
-    }
-
-    /**
-    * Gets the last y-axis value stored using the command readGyro.
+    * @param result : indicates whether the reading process has succeed or not.
+    * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
     *
-    * @return 'uint16_t' the last y-axis value stored
+    * @return void
     */
-    async command uint16_t Gyro.getGyroY() {
-        return gyroY;
+    event void GyroY.readDone(error_t result, uint16_t data) {
+        yReady = TRUE;
+
+        gyroY = data;
+
+        if ((acqType == ALL && xReady) || acqType == CH_2_ONLY)
+           signal Sensor.acquisitionDone(result, acqType);
     }
 
-    /**
-    * Gets the last z-axis value stored using the command readGyro.
-    *
-    * @return 'uint16_t' the last z-axis value stored
-    */
-    async command uint16_t Gyro.getGyroZ() {
-        return gyroZ;
+    command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {
+        *valuesTypeNr = sizeof valueTypesList;
+        return valueTypesList;
     }
 
-      /*
-      * The event is thrown when a new gyroscope x-axis reading is ready.
-      * It sets a global variable and put the reading in the system buffer.
-      *
-      * @param result : indicates whether the reading process has succeed or not.
-      * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
-      *
-      * @return void
-      */
-      event void GyroX.readDone(error_t result, uint16_t data) {
-	    gyroX = data;
-      }
-
-      /*
-      * The event is thrown when a new gyroscope y-axis reading is ready.
-      * It sets a global variable and put the reading in the system buffer.
-      *
-      * @param result : indicates whether the reading process has succeed or not.
-      * @param data : if the result is <code>SUCCESS</code>, it contains a consistent reading.
-      *
-      * @return void
-      */
-      event void GyroY.readDone(error_t result, uint16_t data) {
-	    gyroY = data;
-      }
+    command uint8_t* Sensor.getAcquireTypesList(uint8_t* acquireTypesNr) {
+        *acquireTypesNr = sizeof acquireTypesList;
+        return acquireTypesList;
+    }
 }
 
 

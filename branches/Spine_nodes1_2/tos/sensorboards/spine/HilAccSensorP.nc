@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Note Environment is a framework that 
+SPINE - Signal Processing In-Node Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,39 +24,50 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Implementation of the 'STMicroelectronics LIS3LV02DQ Accelerometer' tri-axial sensor
- * for the telosb platform
+ * Module component of the 'STMicroelectronics LIS3LV02DQ Accelerometer'
+ * tri-axial sensor driver for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  * @author Antonio Guerrieri <aguerrieri@wsnlabberkeley.com>
  * @author Filippo Tempia <filippo.tempia@telecomitalia.it>
+ *
  * @version 1.0
  */      
 
- #include "Msp430Adc12.h"
+#include "Msp430Adc12.h"
 
- module HilAccSensorP {
-  uses {
-     interface Boot;
+module HilAccSensorP {
 
-     interface SplitControl;
-     interface HplMsp430GeneralIO as CS_accel_port;
-     interface HplMsp430GeneralIO as CLK_port;
-     interface HplMsp430GeneralIO as DIN_port;
-     interface HplMsp430GeneralIO as DOUT_port;
-  }
-  provides interface AccSensor as Acc;
+    uses {
+       interface HplMsp430GeneralIO as CS_accel_port;
+       interface HplMsp430GeneralIO as CLK_port;
+       interface HplMsp430GeneralIO as DIN_port;
+       interface HplMsp430GeneralIO as DOUT_port;
+
+       interface Boot;
+       interface SensorsRegistry;
+    }
+
+    provides interface Sensor;
 }
+
 implementation {
   
     uint8_t writeBuff;
     uint8_t i;
     bool temp = FALSE;
 
-    norace uint16_t accX;
-    norace uint16_t accY;
-    norace uint16_t accZ;
+    uint16_t accX;
+    uint16_t accY;
+    uint16_t accZ;
+    
+    uint8_t valueTypesList[3];
 
+    uint8_t acquireTypesList[1];
+    
+    bool registered = FALSE;
+
+    
     /**
     * Init the accelerometer sensor and enable its registers
     *
@@ -70,7 +81,6 @@ implementation {
 	writeBuff = 0x20;  // 00100000 = 0x20 ENABLE ACCELEROMETER REGISTER ADDRESS
 	for (i=8; i>=1; i--) {
 	    call CLK_port.clr();
-
 	    //WRITE
 	    if ((writeBuff>>(i-1) & 0x01) != 0)
 	        call DIN_port.set();
@@ -80,11 +90,8 @@ implementation {
 	}
 
 	writeBuff = 0xc7;  // 11000111 = 0xc7 ENABLE ACCELEROMETER REGISTER VALUE
-	//writeBuff = 0xcf;  // 11001111 = 0xcf ENABLE ACCELEROMETER REGISTER VALUE
-  
         for (i=8; i>=1; i--) {
   	    call CLK_port.clr();
-
   	    //WRITE
   	    if ((writeBuff>>(i-1) & 0x01) != 0)
   	        call DIN_port.set();
@@ -95,146 +102,147 @@ implementation {
     }
 
     event void Boot.booted() {
-        call SplitControl.start();
-    }
+        if (!registered) {
+           call DOUT_port.makeInput();
+	   call CS_accel_port.makeOutput();
+	   call CS_accel_port.set();
+	   call CLK_port.makeOutput();
+	   call DIN_port.makeOutput();
 
-    event void SplitControl.startDone(error_t err) {
-        if (err == SUCCESS) {
-            call DOUT_port.makeInput();
-	    call CS_accel_port.makeOutput();
-	    call CS_accel_port.set();
-	    call CLK_port.makeOutput();
-	    call DIN_port.makeOutput();
+           initAccel();
 
-            initAccel();
+           valueTypesList[0] = CH_1;
+           valueTypesList[1] = CH_2;
+           valueTypesList[2] = CH_3;
+           acquireTypesList[0] = ALL;
+
+           call SensorsRegistry.registerSensor(ACC_SENSOR);
+           
+           registered = TRUE;
         }
-        else
-            call SplitControl.start();
     }
 
-    event void SplitControl.stopDone(error_t err) {}
-
-    /**
-    * Reads the current accelerometer values over all three axis
-    * and make them ready to get using the related commands.
-    *
-    * @return void
-    */
-    command void Acc.readAccel() {
-        call CS_accel_port.set();
-        call CLK_port.set();
-        call CS_accel_port.clr();
-
-        accX = 0;
-        accY = 0;
-        accZ = 0;
-        writeBuff = 0xe8;  // 11101000 = 0xe8 READ ACCELERATION DATA
-
-        for (i=8; i>=1; i--) {
-           call CLK_port.clr();
-
-           //WRITE
-	   if ((writeBuff>>(i-1) & 0x01) != 0)
-	       call DIN_port.set();
-	   else
-	       call DIN_port.clr();
-	   call CLK_port.set();
-	}
-
-        //LOW X-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-	        if (temp)
-		    accX = accX + (0x0001<<(i-1));
-		call CLK_port.set();
-	}
-
-        //HIGH X-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-     	    if (temp)
-	        accX = accX + (0x0100<<(i-1));
-            call CLK_port.set();
-	}
-
-	//LOW Y-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-	        if (temp)
-		    accY = accY + (0x0001<<(i-1));
-		call CLK_port.set();
-	}
-
-        //HIGH Y-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-     	    if (temp)
-	        accY = accY + (0x0100<<(i-1));
-            call CLK_port.set();
-	}
-	
-	//LOW Z-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-	        if (temp)
-		    accZ = accZ + (0x0001<<(i-1));
-		call CLK_port.set();
-	}
-
-        //HIGH Z-AXIS BYTE
-	for (i=8; i>=1; i--) {
-	    call CLK_port.clr();
-
-            //READ
-	    temp = call DOUT_port.get();
-     	    if (temp)
-	        accZ = accZ + (0x0100<<(i-1));
-            call CLK_port.set();
-	}
-
-	call CS_accel_port.set();
-    }
-    
-    /**
-    * Gets the last x-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last x-axis value stored
-    */
-    async command uint16_t Acc.getAccelX() {
-        return accX;
+    command uint8_t Sensor.getSignificantBits() {
+        return 12;
     }
 
-    /**
-    * Gets the last y-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last y-axis value stored
-    */
-    async command uint16_t Acc.getAccelY() {
-        return accY;
+    command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
+       call CS_accel_port.set();
+       call CLK_port.set();
+       call CS_accel_port.clr();
+
+       accX=0;
+       accY=0;
+       accZ=0;
+
+       writeBuff = 0xe8;  // 11101000 = 0xe8 READ ACCELERATION DATA
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //WRITE
+          if ((writeBuff>>(i-1) & 0x01) != 0)
+              call DIN_port.set();
+          else
+              call DIN_port.clr();
+          call CLK_port.set();
+       }
+
+       //LOW X-AXIS BYTE
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //READ
+          temp = call DOUT_port.get();
+          if (temp)
+              accX = accX + (0x0001<<(i-1));
+          call CLK_port.set();
+       }
+       //HIGH X-AXIS BYTE
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //READ
+          temp = call DOUT_port.get();
+          if (temp)
+              accX = accX + (0x0100<<(i-1));
+          call CLK_port.set();
+       }
+
+       //LOW Y-AXIS BYTE
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //READ
+	  temp = call DOUT_port.get();
+	  if (temp)
+	      accY = accY + (0x0001<<(i-1));
+	  call CLK_port.set();
+       }
+       //HIGH Y-AXIS BYTE
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //READ
+	  temp = call DOUT_port.get();
+     	  if (temp)
+	      accY = accY + (0x0100<<(i-1));
+          call CLK_port.set();
+       }
+
+       //LOW Z-AXIS BYTE
+       for (i=8; i>=1; i--) {
+          call CLK_port.clr();
+          //READ
+	  temp = call DOUT_port.get();
+	  if (temp)
+	      accZ = accZ + (0x0001<<(i-1));
+	  call CLK_port.set();
+       }
+       //HIGH Z-AXIS BYTE
+       for (i=8; i>=1; i--) {
+	  call CLK_port.clr();
+          //READ
+	  temp = call DOUT_port.get();
+     	  if (temp)
+	      accZ = accZ + (0x0100<<(i-1));
+	  call CLK_port.set();
+       }
+
+
+       call CS_accel_port.set();
+
+       signal Sensor.acquisitionDone(SUCCESS, acquireType);
+
+       return SUCCESS;
     }
 
-    /**
-    * Gets the last z-axis value stored using the command readAccel.
-    *
-    * @return 'uint16_t' the last z-axis value stored
-    */
-    async command uint16_t Acc.getAccelZ() {
-        return accZ;
+    command uint16_t Sensor.getValue(enum ValueTypes valueType) {
+        switch (valueType) {
+            case CH_1 : return accX;
+            case CH_2 : return accY;
+            case CH_3 : return accZ;
+            default : return 0xffff;
+        }
+    }
+
+    command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+        *valuesNr = sizeof valueTypesList;
+        memcpy(buffer, &accX, 2);
+        memcpy(buffer+1, &accY, 2);
+        memcpy(buffer+2, &accZ, 2);
+    }
+
+    command enum SensorCode Sensor.getSensorCode() {
+        return ACC_SENSOR;
+    }
+
+    command uint16_t Sensor.getSensorID() {
+        return 0x2143; // the ID has been randomly choosen
+    }
+
+    command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {
+        *valuesTypeNr = sizeof valueTypesList;
+        return valueTypesList;
+    }
+
+    command uint8_t* Sensor.getAcquireTypesList(uint8_t* acquireTypesNr) {
+        *acquireTypesNr = sizeof acquireTypesList;
+        return acquireTypesList;
     }
 }
 
