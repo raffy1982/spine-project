@@ -34,19 +34,39 @@ Boston, MA  02111-1307, USA.
 #ifndef SpinePackets_H
 #define SpinePackets_H
 
+#include "message.h"
+
 enum PacketTypes {
 
   AM_SPINE = 0x99,
 
-  SERVICE_ADVERTISEMENT = 0x2,
-  DATA = 0x4,
-  VOLTAGE_NOTIFY = 0x7,
-  SERVICE_MESSAGE = 0x8,
+  SERVICE_ADV = 0x02,
+  DATA = 0x04,
+  SVC_MSG = 0x06,               // to notify the coordinator of events, errors, warnings and other internal information.
 
-  SERVICE_DISCOVERY = 0x1,
-  FUNCTION_ENABLE_REQ = 0x3,
-  FUNCTION_DISABLE_REQ = 0x5,
-  VOLTAGE_REQ = 0x6
+  SERVICE_DISCOVERY = 0x01,
+  SETUP_SENSOR = 0x03,
+  SETUP_FUNCTION = 0x05,
+  START = 0x09,
+  RESET = 0x0B,                 // it is used as a BEACON (re-sync) message
+  STOP = 0x0D,
+  FUNCTION_REQ = 0x07           // contains a flag to specify if enable or disable the function
+};
+
+enum {
+  SPINE_HEADER_PKT_SIZE = 9,
+  SPINE_PKT_PAYLOAD_MAX_SIZE = TOSH_DATA_LENGTH - SPINE_HEADER_PKT_SIZE,   // default will be 28 - 9 = 19 bytes
+  SPINE_PKT_MAX_SIZE = SPINE_HEADER_PKT_SIZE + SPINE_PKT_PAYLOAD_MAX_SIZE,  // default will be 19 + 9 = 28 bytes
+  
+  SPINE_SVC_MSG_SIZE = 2,                   // the SPINE header szie is not included
+  SPINE_SVC_ADV_PKT_MAX_SIZE = 50,          // the SPINE header size is not included
+  SPINE_SETUP_SENSOR_PKT_SIZE = 3,          // the SPINE header size is not included
+  SPINE_START_PKT_SIZE = 2                  // the SPINE header size is not included
+};
+
+enum {
+  SPINE_BASE_STATION = 0x0000,
+  SPINE_BROADCAST = 0xFFFF
 };
 
 #endif

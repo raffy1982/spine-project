@@ -36,25 +36,30 @@ Boston, MA  02111-1307, USA.
 
 enum SensorCode {
 
-  ACC_SENSOR = 0x0,
-  VOLTAGE_SENSOR = 0x1,
-  GYRO_SENSOR = 0x2,
-  INTERNAL_TEMPERATURE_SENSOR = 0x3
+  ACC_SENSOR = 0x01,
+  VOLTAGE_SENSOR = 0x02,
+  GYRO_SENSOR = 0x03,
+  INTERNAL_TEMPERATURE_SENSOR = 0x04
 
 };
 
 enum ValueTypes {
-   CH_1 = 0x1,
-   CH_2 = 0x2,
-   CH_3 = 0x3
+   CH_1 = 0x00,
+   CH_2 = 0x01,
+   CH_3 = 0x02,
+   CH_4 = 0x03
 };
 
 enum AcquireTypes {
-   CH_1_ONLY = 0x1,
-   CH_2_ONLY = 0x2,
-   CH_3_ONLY = 0x3,
+   CH_1_ONLY = 0x01,
+   CH_2_ONLY = 0x02,
+   CH_3_ONLY = 0x03,
 
-   ALL = 0xa
+   ALL = 0x0A
+};
+
+enum {
+   MAX_VALUE_TYPES = 0x04
 };
 
 #endif
