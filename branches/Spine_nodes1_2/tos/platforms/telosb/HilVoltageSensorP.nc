@@ -24,72 +24,87 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * 
- * 
+ * Module component of the on-chip voltage sensor driver 
+ * for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ *
  * @version 1.0
- */      
+ */
 
- module HilVoltageSensorP {
+module HilVoltageSensorP {
+  
   uses {
-     interface Boot;
-     interface SplitControl;
-     interface Read<uint16_t> as Volt;
+    interface Read<uint16_t> as Volt;
+
+    interface Boot;
+    interface SensorsRegistry;
   }
-  provides interface VoltageSensor as VoltSensor;
+
+  provides interface Sensor;
 }
+
 implementation {
   
-    norace uint16_t volt=0;
+    uint16_t volt = 0;
+    
+    uint8_t valueTypesList[1];
 
-    /**
-    * Init the voltage sensor
-    *
-    * @return void
-    */
-    void initVoltSensor() {
-
-    }
+    uint8_t acquireTypesList[1];
+    
+    bool registered = FALSE;
+    
 
     event void Boot.booted() {
-        call SplitControl.start();
+       if (!registered) {
+          call SensorsRegistry.registerSensor(VOLTAGE_SENSOR);
+          
+          valueTypesList[0] = CH_1;
+          acquireTypesList[0] = CH_1_ONLY;
+
+          registered = TRUE;
+       }
     }
 
-    event void SplitControl.startDone(error_t err) {
-        if (err == SUCCESS) {
-            initVoltSensor();
-        }
-        else
-            call SplitControl.start();
+    command uint8_t Sensor.getSignificantBits() {
+        return 12;
     }
 
-    event void SplitControl.stopDone(error_t err) {}
+    command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
+        call Volt.read(); // here the acquireType is not usefull
+        return SUCCESS;
+    }
 
-    /**
-    * Reads the current voltage level and make it
-    * ready to get using the related commands.
-    *
-    * @return void
-    */
-    command void VoltSensor.readVolt() {
-        call Volt.read();
+    command uint16_t Sensor.getValue(enum ValueTypes valueType) {
+        return volt; // here the valueType is not usefull
     }
-    
-    /**
-    * Gets the last voltage level stored using the command readVolt.
-    *
-    * @return 'uint16_t' the last voltage level stored
-    */
-    async command uint16_t VoltSensor.getVolt() {
-        return volt;
+
+    command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+        *valuesNr = sizeof valueTypesList;
+        memcpy(buffer, &volt, 2);
     }
-    
+
     event void Volt.readDone(error_t result, uint16_t data) {
-       if (result != SUCCESS)
-	   volt = 0;
-       else
-           volt = data;
+       volt = (result != SUCCESS)? 0 : data;
+       signal Sensor.acquisitionDone(result, CH_1_ONLY);
+    }
+
+    command enum SensorCode Sensor.getSensorCode() {
+        return VOLTAGE_SENSOR;
+    }
+
+    command uint16_t Sensor.getSensorID() {
+        return 0xab34; // the ID has been randomly choosen
+    }
+
+    command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {
+        *valuesTypeNr = sizeof valueTypesList;
+        return valueTypesList;
+    }
+
+    command uint8_t* Sensor.getAcquireTypesList(uint8_t* acquireTypesNr) {
+        *acquireTypesNr = sizeof acquireTypesList;
+        return acquireTypesList;
     }
 }
 

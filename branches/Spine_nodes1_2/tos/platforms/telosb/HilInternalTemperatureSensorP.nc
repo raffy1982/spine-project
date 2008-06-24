@@ -52,127 +52,58 @@ implementation {
 
     uint8_t acquireTypesList[1];
     
-    event void Boot.booted() {
-        valueTypesList[0] = CH_1;
-        acquireTypesList[0] = CH_1_ONLY;
+    bool registered = FALSE;
+    
 
-        call SensorsRegistry.registerSensor(INTERNAL_TEMPERATURE_SENSOR);
+    event void Boot.booted() {
+       if (!registered) {
+          call SensorsRegistry.registerSensor(INTERNAL_TEMPERATURE_SENSOR);
+          
+          valueTypesList[0] = CH_1;
+          acquireTypesList[0] = CH_1_ONLY;
+
+          registered = TRUE;
+       }
     }
 
-
-    /**
-    * Returns the number of significant bits in the reading.
-    *
-    *
-    * @return 'uint8_t'
-    */
     command uint8_t Sensor.getSignificantBits() {
         return 12;
     }
-    
-    /**
-    * Returns the number of channels of the sensor (i.e. if the sensor is a 3D accelerometer, it will have 3 channels;
-    *                                                    instead, if is a temperature sensor it will have just 1 channel).
-    *
-    * @return 'uint8_t'
-    */
-    command uint8_t Sensor.getChannelsNumber() {
-        return 1;
-    }
 
-    /**
-    * Commands the reading of the current voltage level.
-    *
-    * @return SUCCESS if it's all ok, FAIL otherwise
-    */
     command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
-        call InternalTemp.read();
+        call InternalTemp.read();  // here the acquireType is not usefull
         return SUCCESS;
     }
-    
-    /**
-    * Gets the data value of the given 'valueType'
-    *
-    * @return 'uint16_t' the data value of the given 'valueType'
-    */
+
     command uint16_t Sensor.getValue(enum ValueTypes valueType) {
         return internTemp; // here the valueType is not usefull
     }
 
-    /**
-    * Returns all the last acquired 'channels' values of the sensor
-    * Note that this command must be called within the 'acquisitionDone' event handler
-    * to be sure to get the latest valid data
-    *
-    * @param 'buffer' the buffer array in which to store the values. Note the caller must pre-allocate
-    *                 a buffer big enough to contain all the values
-    *
-    * @return 'void' (the result of the command is stored in the given buffer)
-    */
-    command void Sensor.getAllValues(uint16_t* buffer) {
+    command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+        *valuesNr = sizeof valueTypesList;
         memcpy(buffer, &internTemp, 2);
     }
-    
+
     event void InternalTemp.readDone(error_t result, uint16_t data) {
-       if (result != SUCCESS)
-	   internTemp = 0;
-       else
-           internTemp = data;
-       
-       signal Sensor.acquisitionDone(result, 0); // here the acquireType is not usefull
+       internTemp = (result != SUCCESS)? 0 : data;
+       signal Sensor.acquisitionDone(result, CH_1_ONLY);
     }
-    
-    /**
-    * Returns the sensor code
-    *
-    * @return 'enum SensorCode' the sensor code
-    */
+
     command enum SensorCode Sensor.getSensorCode() {
         return INTERNAL_TEMPERATURE_SENSOR;
     }
-    
-    /**
-    * Returns the sensor serial number or other unique ID
-    *
-    * @return 'uint16_t' the sensor ID
-    */
+
     command uint16_t Sensor.getSensorID() {
         return 0xacfd; // the ID has been randomly choosen
     }
-    
-    /**
-    * Returns the number of value type available (usually are related to sensor channels, if more than one)
-    *
-    * @return 'uint8_t' the number of value type available
-    */
-    command uint8_t Sensor.getValueTypesNumber() {
-        return 1;
-    }
 
-    /**
-    * Returns the value types code list
-    *
-    * @return 'uint8_t*' the value types code list. Note the caller must use 'getValueTypesNumber' to know how many value types are available
-    */
-    command uint8_t* Sensor.getValueTypesList() {
+    command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {
+        *valuesTypeNr = sizeof valueTypesList;
         return valueTypesList;
     }
-    
-    /**
-    * Returns the number of acquire type
-    *
-    * @return 'uint8_t' the number of acquire type available
-    */
-    command uint8_t Sensor.getAcquireTypesNumber() {
-        return 1;
-    }
 
-    /**
-    * Returns the acquire types code list
-    *
-    * @return 'uint8_t*' the acquire types code list. Note the caller must use 'getAcquireTypesNumber' to know how many acquire types are available
-    */
-    command uint8_t* Sensor.getAcquireTypesList() {
+    command uint8_t* Sensor.getAcquireTypesList(uint8_t* acquireTypesNr) {
+        *acquireTypesNr = sizeof acquireTypesList;
         return acquireTypesList;
     }
 }

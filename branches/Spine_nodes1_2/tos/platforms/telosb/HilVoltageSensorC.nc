@@ -24,27 +24,35 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * Configuration component of the on-chip voltage sensor driver
+ * for the telosb platform
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
  * @version 1.0
- */      
+ */
  
- configuration HilVoltageSensorC {
-  provides interface VoltageSensor;
+configuration HilVoltageSensorC {
+  provides interface Sensor;
 }
+
 implementation {
-    components MainC;
-    components ActiveMessageC;
     components HilVoltageSensorP;
+
     components new VoltageC() as Volt;
+    
+    components MainC;
 
-    HilVoltageSensorP.Boot -> MainC;
-    HilVoltageSensorP.SplitControl -> ActiveMessageC;
-    VoltageSensor = HilVoltageSensorP;
+    components SensorsRegistryC;
+
+    
+    Sensor = HilVoltageSensorP;
+
     HilVoltageSensorP.Volt -> Volt;
-
+    
+    HilVoltageSensorP.Boot -> MainC;
+    
+    HilVoltageSensorP.SensorsRegistry -> SensorsRegistryC;
 
 }
 
