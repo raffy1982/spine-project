@@ -41,11 +41,13 @@ Boston, MA  02111-1307, USA.
  }
 
  implementation {
-     components FunctionManagerP;
+     components PacketManagerC, FunctionManagerP;
 
      components FeatureEngineC;    
 
      FunctionManager = FunctionManagerP;
+
+     FunctionManagerP.PacketManager -> PacketManagerC;
 
      FunctionManagerP.Functions = Functions;
      FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;

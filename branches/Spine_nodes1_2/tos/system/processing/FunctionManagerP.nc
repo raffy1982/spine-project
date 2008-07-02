@@ -33,17 +33,20 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef FUNCTION_LIST_SIZE
-#define FUNCTION_LIST_SIZE 8
+#define FUNCTION_LIST_SIZE 4             // max nr of functions supported by SPINE is 8
 #endif
 
 #ifndef FUNCTION_LIBRARIES_LIST_SIZE
-#define FUNCTION_LIBRARIES_LIST_SIZE 256
+#define FUNCTION_LIBRARIES_LIST_SIZE 128 // max nr of library per function is 32, so FUNCTION_LIBRARIES_LIST_SIZE = 32 * FUNCTION_LIST_SIZE
 #endif
 
 module FunctionManagerP {
        provides interface FunctionManager;
        
-       uses interface Function as Functions[uint8_t functionID]; 
+       uses {
+         interface PacketManager;
+         interface Function as Functions[uint8_t functionID];
+       }
 }
 
 implementation {
@@ -53,7 +56,8 @@ implementation {
        
        uint8_t functionLibrariesList[FUNCTION_LIBRARIES_LIST_SIZE];
        uint8_t functLibCount = 0;
-       uint8_t testindes = 0;
+       
+       uint8_t data[2+64];
 
        command error_t FunctionManager.registerFunction(enum FunctionCodes functionCode) {
           if (functCount < FUNCTION_LIST_SIZE) { // to avoid memory leaks
@@ -79,31 +83,57 @@ implementation {
        }
 
        command bool FunctionManager.setUpFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize) {
-
-          return TRUE;
+          return call Functions.setUpFunction[functionCode](functionParams, functionParamsSize);
        }
 
 
        command bool FunctionManager.activateFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize) {
-          return TRUE;
+          return call Functions.activateFunction[functionCode](functionParams, functionParamsSize);
        }
 
-       command bool FunctionManager.disableFunction(enum FunctionCodes functionCode) {
-          return TRUE;
+       command bool FunctionManager.disableFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize) {
+          return call Functions.disableFunction[functionCode](functionParams, functionParamsSize);
+       }
+       
+       /**
+       *
+       *
+       * @return 'void'
+       */
+       command void FunctionManager.startComputing() {
+          uint8_t i;
+          for (i = 0; i<functCount; i++)
+             call Functions.startComputing[ functionList[i] ]();
        }
 
+       command void FunctionManager.stopComputing() {
+          uint8_t i;
+          for (i = 0; i<functCount; i++)
+             call Functions.stopComputing[ functionList[i] ]();
+       }
 
-       default command bool Functions.setUpFunction[uint8_t functionID](enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize) {
+       command void FunctionManager.send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len) {
+          data[0] = functionCode;
+          data[1] = len;
+          memcpy((data+2), functionData, len);
+          call PacketManager.build(DATA, data, (len+2));
+       }
+
+       
+       event void PacketManager.messageReceived(enum PacketTypes pktType){}
+
+
+       default command bool Functions.setUpFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.setUpFunction: Executed default operation. Chances are there's an operation miswiring.\n");
           return FALSE;
        }
 
-       default command bool Functions.activateFunction[uint8_t functionID](enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize) {
+       default command bool Functions.activateFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.activateFunction: Executed default operation. Chances are there's an operation miswiring.\n");
           return FALSE;
        }
 
-       default command bool Functions.disableFunction[uint8_t functionID](enum FunctionCodes functionCode) {
+       default command bool Functions.disableFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.disableFunction: Executed default operation. Chances are there's an operation miswiring.\n");
           return FALSE;
        }
@@ -111,6 +141,14 @@ implementation {
        default command uint8_t* Functions.getFunctionList[uint8_t functionID](uint8_t* functionCount) {
            dbg(DBG_USR1, "FunctionManagerP.getFunctionList: Executed default operation. Chances are there's an operation miswiring.\n");
            return NULL;
+       }
+       
+       default command void Functions.startComputing[uint8_t functionID]() {
+           dbg(DBG_USR1, "FunctionManagerP.startComputing: Executed default operation. Chances are there's an operation miswiring.\n");
+       }
+       
+       default command void Functions.stopComputing[uint8_t functionID]() {
+           dbg(DBG_USR1, "FunctionManagerP.stopComputing: Executed default operation. Chances are there's an operation miswiring.\n");
        }
 
 }
