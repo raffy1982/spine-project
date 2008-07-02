@@ -33,11 +33,11 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef BUFFER_POOL_SIZE
-#define BUFFER_POOL_SIZE 3
+#define BUFFER_POOL_SIZE 6
 #endif
 
 #ifndef BUFFER_LENGTH
-#define BUFFER_LENGTH 10
+#define BUFFER_LENGTH 80
 #endif
 
 module BufferPoolP {
@@ -109,6 +109,14 @@ implementation {
           }
 
           memcpy(buffer, tmpBuffer, windowSize*2);
+       }
+       
+       command void BufferPool.getBufferPoolCopy(uint16_t* buffer) {
+          atomic {
+            uint8_t currBufID;
+            for (currBufID = 0; currBufID<BUFFER_POOL_SIZE; currBufID++)
+               call BufferPool.getData(currBufID, BUFFER_LENGTH, buffer+(currBufID * BUFFER_LENGTH));
+          }     
        }
 }
 
