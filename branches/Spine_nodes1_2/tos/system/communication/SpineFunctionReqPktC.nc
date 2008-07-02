@@ -32,13 +32,47 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */ 
  module SpineFunctionReqPktC {
-       provides interface InPacket;
+       
+       provides {
+         interface InPacket;
+         interface SpineFunctionReqPkt;
+       }
  }
 
  implementation {
 
+    uint8_t fnCode;
+    bool isEnableReq;
+    uint8_t* fnParams;
+    uint8_t fnParamsSize;
+    
+    uint8_t fnReqBuf[SPINE_FUNCTION_REQ_PKT_MAX_SIZE];
+
+
     command bool InPacket.parse(void* payload, uint8_t len) {
+       memcpy(fnReqBuf, payload, len);
+       
+       fnCode = (fnReqBuf[0]>>3);
+       isEnableReq = ( (fnReqBuf[0]>>2) & 0x01 ); // 0x01 = 00000001
+       
+       fnParamsSize = fnReqBuf[1];
+
+       fnParams = (fnReqBuf+2);
+
        return TRUE;
+    }
+    
+    command enum FunctionCodes SpineFunctionReqPkt.getFunctionCode() {
+      return fnCode;
+    }
+
+    command bool SpineFunctionReqPkt.isEnableRequest() {
+      return isEnableReq;
+    }
+
+    command uint8_t* SpineFunctionReqPkt.getFunctionParams(uint8_t* functionParamsSize) {
+      *functionParamsSize = fnParamsSize;
+      return  fnParams;
     }
 
 }
