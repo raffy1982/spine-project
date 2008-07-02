@@ -62,7 +62,7 @@ implementation {
      components new TimerMilliC() as InternalTemperatureSensorTimer;
 
      SensorBoardController = SensorBoardControllerP;
-     
+
      SensorBoardControllerP.SensorsRegistry -> SensorsRegistryC;
      SensorBoardControllerP.BufferPool -> BufferPoolP;
      SensorBoardControllerP.PacketManager -> PacketManagerC;
@@ -72,7 +72,7 @@ implementation {
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
      SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
-     
+
      SensorBoardControllerP.SamplingTimers = SamplingTimers;
      SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;

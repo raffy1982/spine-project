@@ -67,9 +67,6 @@ implementation {
        uint8_t sensorOneShotList[SENSORS_ONE_SHOT_LIST_SIZE];
        uint8_t sensOneShotCount = 0;
 
-       uint8_t sensorList[SENSORS_REGISTRY_SIZE];
-       uint8_t sensCount = 0;
-
        uint8_t sensorCode4BufList[SENS_4BUF_ARRAY_SIZE];
        uint8_t sensorChanCode4BufList[SENS_4BUF_ARRAY_SIZE];
        uint8_t sensCodeChanbuffID4BufList[SENS_4BUF_ARRAY_SIZE];
@@ -117,7 +114,6 @@ implementation {
              call SensorImpls.acquireData[sensorCode](ALL);
           else {
              call SensorsRegistry.setSamplingTime(sensorCode, samplingTime);
-             
              if (!buffers4SensorAllocated(sensorCode)) {
                 valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
                 for(j = 0; j<valueTypesCount; j++) {
@@ -127,6 +123,8 @@ implementation {
                 }
                 count4BufList += valueTypesCount;
              }
+             else 
+                call SamplingTimers.startPeriodic[sensorCode](samplingTime); // check
           }
        }
        
@@ -143,6 +141,15 @@ implementation {
              if (currSamplingTime > 0)
                 call SamplingTimers.startPeriodic[currSensCode](currSamplingTime);
           }
+       }
+       
+       command void SensorBoardController.stopSensing() {
+          uint8_t i;
+          uint8_t sensorsCount;
+          uint8_t* sensorsList = call SensorsRegistry.getSensorList(&sensorsCount);
+
+          for (i = 0; i<sensorsCount; i++)
+             call SamplingTimers.stop[*(sensorsList+i)]();
        }
 
        command uint8_t SensorBoardController.getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType) {
@@ -169,10 +176,11 @@ implementation {
            uint8_t valueTypesCount;
            uint8_t currSensorValueType;
            
-           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {
-              call SensorImpls.getAllValues[sensorCode](readings, &readingsCount);
-              valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
-              
+           call SensorImpls.getAllValues[sensorCode](readings, &readingsCount);
+           valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
+
+           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {   
+
               msg[msgSize++] = ONE_SHOT;
               msg[msgSize++] = 1 + MAX_VALUE_TYPES + 2*readingsCount;
               msg[msgSize++] = sensorCode;
@@ -197,6 +205,11 @@ implementation {
               }
               
               call PacketManager.build(DATA, &msg, msgSize);
+           }
+           else {
+              for (j = 0; j<readingsCount; j++)
+                 call BufferPool.putElem(call SensorBoardController.getBufferID(sensorCode, *(valueTypesList+j)),
+                                         readings[j]);   // assuming the valueTypesList and the readings buffer is populated in the same order
            }
            
            signal SensorBoardController.acquisitionDone(sensorCode, result, resultCode);
@@ -244,6 +257,10 @@ implementation {
        
        default command void SamplingTimers.startPeriodic[uint8_t sensorCode](uint32_t dt) {
            dbg(DBG_USR1, "SensorBoardControllerP.startPeriodic: Executed default operation. Chances are there's an operation miswiring.\n");
+       }
+       
+       default command void SamplingTimers.stop[uint8_t sensorCode]() {
+           dbg(DBG_USR1, "SensorBoardControllerP.stop: Executed default operation. Chances are there's an operation miswiring.\n");
        }
 }
 
