@@ -47,6 +47,8 @@ interface BufferPool {
     command uint8_t getBufferPoolSize();
 
     command void getBufferedData(uint8_t bufferID, uint8_t firstToNow, uint8_t lastToNow, uint16_t* buffer);
+    
+    command void getBufferPoolCopy(uint16_t* buffer);
 
     event void newElem(uint8_t bufferID, uint16_t elem);
 
