@@ -41,11 +41,9 @@ implementation {
 
   uint8_t msg1[1];
   uint8_t msg2[3];
-  uint8_t msg3[4];
   uint8_t msg4[5];
   uint16_t destination1 = 0xA1B2;
   uint16_t destination2 = 0xDCFD;
-  uint16_t destination3 = 0x4567;
   uint16_t destination4 = AM_BROADCAST_ADDR;
 
   event void Boot.booted() {
@@ -54,12 +52,7 @@ implementation {
      msg2[0] = 0xaa;
      msg2[1] = 0xbb;
      msg2[2] = 0xcc;
-     
-     msg3[0] = 0x66;
-     msg3[1] = 0x77;
-     msg3[2] = 0x88;
-     msg3[3] = 0x99;
-     
+
      msg4[0] = 0x22;
      msg4[1] = 0x33;
      msg4[2] = 0x44;
@@ -68,10 +61,9 @@ implementation {
   }
 
   event void RadioController.radioOn() {
-     call RadioController.send(destination1, SERVICE_ADVERTISEMENT, &msg1, sizeof msg1);
+     call RadioController.send(destination1, SERVICE_ADV, &msg1, sizeof msg1);
      call RadioController.send(destination2, DATA, &msg2, sizeof msg2);
-     call RadioController.send(destination3, VOLTAGE_NOTIFY, &msg3, sizeof msg3);
-     call RadioController.send(destination4, SERVICE_MESSAGE, &msg4, sizeof msg4);
+     call RadioController.send(destination4, SVC_MSG, &msg4, sizeof msg4);
   }
   
   event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {
