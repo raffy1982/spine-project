@@ -63,7 +63,7 @@ Boston, MA  02111-1307, USA.
        * @return
        */
        command bool setUpFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize);
-       
+
        /**
        *
        *
@@ -80,8 +80,30 @@ Boston, MA  02111-1307, USA.
        *
        * @return
        */
-       command bool disableFunction(enum FunctionCodes functionCode);
-
+       command bool disableFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize);
+       
+       /**
+       *
+       *
+       * @return 'void'
+       */
+       command void startComputing();
+       
+       /**
+       *
+       *
+       * @return 'void'
+       */
+       command void stopComputing();
+       
+       /**
+       *
+       *
+       * @param
+       *
+       * @return
+       */
+       command void send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len);
  }
 
 
