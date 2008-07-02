@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 
 #include "SpinePackets.h"
 #include "SensorsConstants.h"
+#include "Functions.h"
 
 #ifndef SPINE_APP_UTILITY_BUFFER_SIZE
 #define SPINE_APP_UTILITY_BUFFER_SIZE 300
@@ -44,29 +45,24 @@ module SPINEApp_C
     interface Boot;
     
     interface PacketManager;
+
     interface SpineSetupSensorPkt;
+    interface SpineFunctionReqPkt;
+    interface SpineSetupFunctionPkt;
 
     interface SensorsRegistry;
     interface SensorBoardController;
 
     interface FunctionManager;
-
-    interface Timer<TMilli> as DebugTimer;    // DEBUG CODE TO BE REMOVED
-    interface RadioController;                // DEBUG CODE TO BE REMOVED
   }
-  
-  provides interface SPINEApp;
-
 }
 implementation
 {
   uint8_t buffer[SPINE_APP_UTILITY_BUFFER_SIZE];
 
-  
-  
-  void init() {
-     call DebugTimer.startOneShot(1000);    // DEBUG CODE TO BE REMOVED
-  }
+
+  void init() {}
+
 
   void handle_Svc_Discovery() {
      uint16_t currBufferSize = 0;
@@ -117,40 +113,40 @@ implementation
 
   void handle_Setup_Function() {
 
+     uint8_t functionCode = call SpineSetupFunctionPkt.getFunctionCode();
+     uint8_t functionParamsSize;
+     uint8_t* functionParams = call SpineSetupFunctionPkt.getFunctionParams(&functionParamsSize);
+    
+     call FunctionManager.setUpFunction(functionCode, functionParams, functionParamsSize);
   }
 
   void handle_Start() {
-
+     call SensorBoardController.startSensing();
+     call FunctionManager.startComputing();
   }
 
   void handle_Reset() {
-
+     // TODO
   }
 
-  void handle_Stop() {
-
+  void handle_Syncr() {
+     // TODO
   }
 
   void handle_Function_Req() {
 
-  }
+     uint8_t functionCode = call SpineFunctionReqPkt.getFunctionCode();
+     bool enable = call SpineFunctionReqPkt.isEnableRequest();
+     uint8_t functionParamsSize;
+     uint8_t* functionParams = call SpineFunctionReqPkt.getFunctionParams(&functionParamsSize);
 
-  event void Boot.booted() {
-      init();
-  }
-  
-  command void SPINEApp.send(enum PacketTypes pktType, void* payload, uint8_t len) {
-      call PacketManager.build(pktType, payload, len);
-  }
-
-  
-  event void DebugTimer.fired() { // DEBUG CODE TO BE REMOVED
-      handle_Svc_Discovery();
-      //handle_Setup_Sensor();
+     if (enable)
+        call FunctionManager.activateFunction(functionCode, functionParams, functionParamsSize);
+     else
+        call FunctionManager.disableFunction(functionCode, functionParams, functionParamsSize);
   }
 
 
-  
   event void PacketManager.messageReceived(enum PacketTypes pktType) {
       switch(pktType) {
         case SERVICE_DISCOVERY: handle_Svc_Discovery(); break;
@@ -158,14 +154,17 @@ implementation
         case SETUP_FUNCTION: handle_Setup_Function(); break;
         case START: handle_Start(); break;
         case RESET: handle_Reset(); break;
-        case STOP: handle_Stop(); break;
+        case SYNCR: handle_Syncr(); break;
         case FUNCTION_REQ: handle_Function_Req(); break;
         default: break;
       }
   }
+
+
+  event void Boot.booted() {
+      init();
+  }
+
   
   event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
-
-  event void RadioController.radioOn(){} // DEBUG CODE TO BE REMOVED
-  event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len){} // DEBUG CODE TO BE REMOVED
 }

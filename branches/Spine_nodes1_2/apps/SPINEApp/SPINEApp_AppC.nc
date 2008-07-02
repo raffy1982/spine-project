@@ -36,27 +36,26 @@ configuration SPINEApp_AppC {
 implementation {
   components MainC, SPINEApp_C;
   
-  components new TimerMilliC() as DebugTimer;  // DEGUB CODE TO BE REMOVED
-  components RadioControllerC;
-
   components PacketManagerC;
   components SpineSetupSensorPktC;
+  components SpineFunctionReqPktC;
+  components SpineSetupFunctionPktC;
 
   components SensorsRegistryC;
   components SensorBoardControllerC;
 
   components FunctionManagerC;
+  
 
   SPINEApp_C.Boot -> MainC.Boot;
   
   SPINEApp_C.PacketManager -> PacketManagerC;
   SPINEApp_C.SpineSetupSensorPkt -> SpineSetupSensorPktC;
+  SPINEApp_C.SpineFunctionReqPkt -> SpineFunctionReqPktC;
+  SPINEApp_C.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;
 
   SPINEApp_C.SensorsRegistry -> SensorsRegistryC;
   SPINEApp_C.SensorBoardController -> SensorBoardControllerC;
 
   SPINEApp_C.FunctionManager -> FunctionManagerC;
-  
-  SPINEApp_C.DebugTimer -> DebugTimer;  // DEGUB CODE TO BE REMOVED
-  SPINEApp_C.RadioController -> RadioControllerC;  // DEGUB CODE TO BE REMOVED
 }
