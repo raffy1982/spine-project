@@ -32,12 +32,39 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */ 
  module SpineSetupFunctionPktC {
-       provides interface InPacket;
+       provides {
+         interface InPacket;
+         interface SpineSetupFunctionPkt;
+       }
  }
 
  implementation {
 
+    uint8_t fnCode;
+    uint8_t* fnParams;
+    uint8_t fnParamsSize;
+    
+    uint8_t setFnBuf[SPINE_SETUP_FUNCTION_PKT_MAX_SIZE];
+
+
     command bool InPacket.parse(void* payload, uint8_t len) {
+       memcpy(setFnBuf, payload, len);
+       
+       fnCode = (setFnBuf[0]>>3);
+
+       fnParamsSize = setFnBuf[1];
+
+       fnParams = (setFnBuf+2);
+
        return TRUE;
+    }
+    
+    command enum FunctionCodes SpineSetupFunctionPkt.getFunctionCode() {
+      return fnCode;
+    }
+
+    command uint8_t* SpineSetupFunctionPkt.getFunctionParams(uint8_t* functionParamsSize) {
+      *functionParamsSize = fnParamsSize;
+      return  fnParams;
     }
 }
