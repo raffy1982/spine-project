@@ -23,14 +23,17 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
-/**
- * Interface of the Sensor Registry. Each sensor driver must register itself to the registry at boot time. 
+ /**
+ * Interface of the Sensor Registry. Each sensor driver must register itself to the registry at boot time.
  * This component allows the retrieval of the sensor list.
  *
  * @author Raffaele Gravina
  *
  * @version 1.0
  */
+ 
+ #include "SensorsConstants.h"
+
  interface SensorsRegistry {
 
        /**
@@ -41,7 +44,7 @@ Boston, MA  02111-1307, USA.
        * @return 'error_t' SUCCESS if the registration has success; FAIL otherwise
        */
        command error_t registerSensor(enum SensorCode sensorCode);
-       
+
        /**
        * Returns the sensor list. The caller has to invoke the 'getSensorsCount' command in order to know the size of this list.
        *
