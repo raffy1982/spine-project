@@ -37,7 +37,7 @@ implementation {
   components MainC, PacketManagerTestC;
   components LedsC;
   
-  components PacketManagerC, SpineHeaderC, SpineSetupSensorPktC, SpineStartPktC;
+  components PacketManagerC, SpineHeaderC, SpineSetupSensorPktC, SpineStartPktC, SpineFunctionReqPktC;
 
 
   PacketManagerTestC.Boot -> MainC.Boot;
@@ -47,8 +47,10 @@ implementation {
   PacketManagerTestC.SpineHeader -> SpineHeaderC;
   PacketManagerTestC.SpineSetupSensorPkt -> SpineSetupSensorPktC;
   PacketManagerTestC.SpineStartPkt -> SpineStartPktC;
+  PacketManagerTestC.SpineFunctionReqPkt -> SpineFunctionReqPktC;
   
-  PacketManagerTestC.InPacket -> SpineStartPktC;
+  //PacketManagerTestC.InPacket -> SpineStartPktC;
+  PacketManagerTestC.InPacket -> SpineFunctionReqPktC;
 
 }
 

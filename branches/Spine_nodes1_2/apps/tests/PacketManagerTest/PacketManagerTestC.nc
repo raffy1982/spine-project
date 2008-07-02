@@ -30,16 +30,21 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.0
  */
+ 
+ #include "Functions.h"
+
  module PacketManagerTestC {
   uses interface Boot;
   uses interface Leds;
 
   uses {
      interface PacketManager;
+
      interface SpineHeader;
      interface InPacket;
      interface SpineSetupSensorPkt;
      interface SpineStartPkt;
+     interface SpineFunctionReqPkt;
   }
 }
 
@@ -51,8 +56,14 @@ implementation {
   uint8_t msg3[3];
   
   uint8_t msg4[2];
+  
+  uint8_t msg5[6];
 
   event void Boot.booted() {
+    
+     uint8_t* tmpBuf;
+     uint8_t tmpByte;
+
      msg1[0] = 0x81;  // vers 2, ext 0, type 1
      msg1[1] = 0xAB;  // group AB
      msg1[2] = 0x00;  // src 0000
@@ -72,11 +83,19 @@ implementation {
      
      msg4[0] = 0x00;  // motes in net 10
      msg4[1] = 0x0A;
+     
+     msg5[0] = 0x0C;  // fnCode 2, enable T
+     msg5[1] = 0x04;  // params Length 4
+     msg5[2] = 0x01;  // featCode 1
+     msg5[3] = 0x01;  // sensorNr 2
+     msg5[4] = 0x1E;  // acc ch1,ch2,ch3
+     msg5[5] = 0x28;  // volt ch1
 
      //call PacketManager.build(SVC_MSG, &msg2, sizeof msg2);
      //call SpineHeader.parse(&msg1);
      //call InPacket.parse(&msg3, sizeof msg3);
-     call InPacket.parse(&msg4, sizeof msg4);
+     //call InPacket.parse(&msg4, sizeof msg4);
+     call InPacket.parse(&msg5, sizeof msg5);
 
      //if (call SpineHeader.getVersion() == 0x02) call Leds.led0Toggle();
      //if (!call SpineHeader.isExtended() && call SpineHeader.getPktType() == SERVICE_DISCOVERY)  call Leds.led1Toggle();
@@ -89,7 +108,11 @@ implementation {
 
      //if (call SpineSetupSensorPkt.getSensorCode() == 0x03 && call SpineSetupSensorPkt.getTimeScale() == 0x03E8
      //    && call SpineSetupSensorPkt.getSamplingTime() == 0x03E9) call Leds.led0Toggle();
-    if (call SpineStartPkt.getNetworkSize() == 0x000A) call Leds.led0Toggle();
+     //if (call SpineStartPkt.getNetworkSize() == 0x000A) call Leds.led0Toggle();
+     
+     if (call SpineFunctionReqPkt.getFunctionCode()==0x01 && call SpineFunctionReqPkt.isEnableRequest()) call Leds.led0Toggle();
+     tmpBuf = call SpineFunctionReqPkt.getFunctionParams(&tmpByte);
+     if (tmpByte == 0x04 && tmpBuf[0]==0x01 && tmpBuf[1]==0x01 && tmpBuf[2]==0x1E && tmpBuf[3]==0x28)  call Leds.led1Toggle();
   }
 
   event void PacketManager.messageReceived(enum PacketTypes pktType) {
