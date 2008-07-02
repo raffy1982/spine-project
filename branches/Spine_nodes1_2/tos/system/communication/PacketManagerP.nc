@@ -104,7 +104,7 @@ Boston, MA  02111-1307, USA.
 
 
      default command bool InPackets.parse[uint8_t inPktID](void* payload, uint8_t len) {
-           bool isSpinePktWithNoPayload = (inPktID == SERVICE_DISCOVERY || inPktID == RESET || inPktID == STOP);
+           bool isSpinePktWithNoPayload = (inPktID == SERVICE_DISCOVERY || inPktID == RESET || inPktID == SYNCR);
            if (!isSpinePktWithNoPayload)
               dbg(DBG_USR1, "PacketManagerP.parse: Executed default operation. Chances are there's an operation miswiring.\n");
            return isSpinePktWithNoPayload;
