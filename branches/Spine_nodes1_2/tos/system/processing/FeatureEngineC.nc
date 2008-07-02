@@ -38,11 +38,14 @@ Boston, MA  02111-1307, USA.
       provides interface Function;
       provides interface FeatureEngine;
 
-      uses interface Feature as Features[uint8_t featureID];
+      uses {
+        interface Feature as Features[uint8_t featureID];
+        interface Timer<TMilli> as ComputingTimers[uint8_t id];
+      }
  }
 
  implementation {
-      components MainC, FunctionManagerC, FeatureEngineP;
+      components MainC, FunctionManagerC, SensorsRegistryC, BufferPoolP, FeatureEngineP;
       
       components MaxC;
       components MinC;
@@ -51,16 +54,23 @@ Boston, MA  02111-1307, USA.
       components AmplitudeC;
       components RmsC;
       components StandardDeviationC;
-      components TotalEnergyC;
+      components TotalEnergyC;    components LedsC;
       
+      components new TimerMilliC() as Timer1;
+      components new TimerMilliC() as Timer2;
+      components new TimerMilliC() as Timer3;
+      components new TimerMilliC() as Timer4;
 
       FeatureEngineP.Function = Function;
       FeatureEngineP.FeatureEngine = FeatureEngine;
 
       FeatureEngineP.FunctionManager -> FunctionManagerC;
+      FeatureEngineP.SensorsRegistry -> SensorsRegistryC;
+
+      FeatureEngineP.BufferPool -> BufferPoolP;
 
       FeatureEngineP.Boot -> MainC.Boot;
-      FeatureEngineP.Boot -> MainC.Boot;
+      FeatureEngineP.Leds -> LedsC;
 
       FeatureEngineP.Features = Features;
       FeatureEngineP.Features[MAX] -> MaxC;
@@ -71,4 +81,10 @@ Boston, MA  02111-1307, USA.
       FeatureEngineP.Features[RMS] -> RmsC;
       FeatureEngineP.Features[ST_DEV] -> StandardDeviationC;
       FeatureEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;
+
+      FeatureEngineP.ComputingTimers = ComputingTimers;
+      FeatureEngineP.ComputingTimers[VOLTAGE_SENSOR] -> Timer1;
+      FeatureEngineP.ComputingTimers[ACC_SENSOR] -> Timer2;
+      FeatureEngineP.ComputingTimers[GYRO_SENSOR] -> Timer3;
+      FeatureEngineP.ComputingTimers[INTERNAL_TEMPERATURE_SENSOR] -> Timer4;
  }
