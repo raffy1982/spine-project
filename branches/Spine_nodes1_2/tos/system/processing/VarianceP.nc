@@ -69,6 +69,10 @@ implementation {
 
           return  (var/elemCount);
        }
+       
+       command uint8_t Feature.getResultSize() {
+         return 4;
+       }
 }
 
 

@@ -66,6 +66,10 @@ Boston, MA  02111-1307, USA.
 
             return call MathUtils.isqrt(rms);
        }
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
  }
 
 

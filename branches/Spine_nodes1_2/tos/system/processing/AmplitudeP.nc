@@ -60,6 +60,9 @@ implementation {
             return ( (call Max.calculate(data, elemCount)) - (call Mean.calculate(data, elemCount)) );
        }
 
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 }
 
 

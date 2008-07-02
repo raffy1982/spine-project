@@ -67,7 +67,10 @@ implementation {
 
             return (max - min);
        }
-
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 }
 
 

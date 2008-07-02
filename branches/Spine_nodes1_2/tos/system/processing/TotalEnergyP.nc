@@ -61,6 +61,10 @@ implementation {
 
           return  energy;
        }
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 }
 
 

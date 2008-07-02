@@ -59,7 +59,10 @@ implementation {
        command int32_t Feature.calculate(int16_t* data, uint16_t elemCount) {
             return call MathUtils.isqrt(call Variance.calculate(data, elemCount));
        }
-
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 }
 
 

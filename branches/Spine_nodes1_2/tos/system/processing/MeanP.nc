@@ -62,7 +62,10 @@ implementation {
 
             return  (mu / dataLen);
        }
-
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 }
 
 
