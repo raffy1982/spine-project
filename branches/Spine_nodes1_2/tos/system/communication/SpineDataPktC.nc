@@ -37,8 +37,25 @@ Boston, MA  02111-1307, USA.
 
  implementation {
 
+    uint8_t dataBuf[SPINE_DATA_PKT_MAX_SIZE];
+
+
     command void* OutPacket.build(void* payload, uint8_t len, uint8_t* builtLen) {
-        return NULL;
+
+        uint8_t functionCode;
+        uint8_t dataSize;
+
+        memcpy(&functionCode, payload, 1);
+        functionCode = functionCode<<3;
+        dataBuf[0] = functionCode;
+
+        memcpy(&dataSize, (payload+1), 1);
+        dataBuf[1] = dataSize;
+        
+        memcpy((dataBuf+2), (payload+2), dataSize);
+
+        *builtLen = (2+dataSize);
+        return dataBuf;
     }
 
  }
