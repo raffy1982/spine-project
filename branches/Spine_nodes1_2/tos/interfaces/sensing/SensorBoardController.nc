@@ -34,6 +34,9 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.0
  */
+ 
+ #include "SensorsConstants.h" 
+
  interface SensorBoardController {
 
        /**
@@ -110,7 +113,19 @@ Boston, MA  02111-1307, USA.
        */
        command void setSamplingTime(enum SensorCode sensorCode, uint32_t samplingTime);
 
+       /**
+       *
+       *
+       * @return 'void'
+       */
        command void startSensing();
+       
+       /**
+       *
+       *
+       * @return 'void'
+       */
+       command void stopSensing();
 
        command uint8_t getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType);
 
