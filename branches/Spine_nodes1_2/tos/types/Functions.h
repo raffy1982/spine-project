@@ -46,17 +46,34 @@ enum FunctionCodes {
 
 enum FeatureCodes {
 
-  ROW_DATA = 0x00,
-  MAX = 0x01,
-  MIN = 0x02,
-  RANGE = 0x03,
-  MEAN = 0x04,
-  AMPLITUDE = 0x05,
-  RMS = 0x06,
-  ST_DEV = 0x07,
-  TOTAL_ENERGY = 0x08
+  ROW_DATA = 0x01,
+  MAX = 0x02,
+  MIN = 0x03,
+  RANGE = 0x04,
+  MEAN = 0x05,
+  AMPLITUDE = 0x06,
+  RMS = 0x07,
+  ST_DEV = 0x08,
+  TOTAL_ENERGY = 0x09
 
 };
+
+typedef struct active_feature_t {
+  uint8_t featureCode;
+  uint8_t sensorCode;
+  uint8_t sensorChBitmask;
+} active_feature_t;
+
+typedef struct feat_params_t {
+  uint8_t sensorCode;
+  uint8_t windowSize;
+  uint32_t processingTime;
+} feat_params_t;
+
+typedef struct running_timers_t {
+  uint8_t sensorCode;
+  uint32_t time;
+} running_timers_t;
 
 #endif
 
