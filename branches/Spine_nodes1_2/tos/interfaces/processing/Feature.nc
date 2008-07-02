@@ -42,6 +42,13 @@ Boston, MA  02111-1307, USA.
        * @return
        */
        command int32_t calculate(int16_t* data, uint16_t dataLen);
+       
+       /**
+       *
+       *
+       * @return
+       */
+       command uint8_t getResultSize();
  }
 
 
