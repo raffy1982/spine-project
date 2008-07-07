@@ -36,6 +36,7 @@ configuration SPINEApp_AppC {
 implementation {
   components MainC, SPINEApp_C;
   
+  components RadioControllerC;
   components PacketManagerC;
   components SpineSetupSensorPktC;
   components SpineFunctionReqPktC;
@@ -49,6 +50,7 @@ implementation {
 
   SPINEApp_C.Boot -> MainC.Boot;
   
+  SPINEApp_C.RadioController -> RadioControllerC;
   SPINEApp_C.PacketManager -> PacketManagerC;
   SPINEApp_C.SpineSetupSensorPkt -> SpineSetupSensorPktC;
   SPINEApp_C.SpineFunctionReqPkt -> SpineFunctionReqPktC;

@@ -39,11 +39,16 @@ Boston, MA  02111-1307, USA.
 #define SPINE_APP_UTILITY_BUFFER_SIZE 300
 #endif
 
+#ifndef RADIO_LOW_POWER
+#define RADIO_LOW_POWER TRUE
+#endif
+
 module SPINEApp_C
 {
   uses {
     interface Boot;
     
+    interface RadioController;
     interface PacketManager;
 
     interface SpineSetupSensorPkt;
@@ -61,7 +66,9 @@ implementation
   uint8_t buffer[SPINE_APP_UTILITY_BUFFER_SIZE];
 
 
-  void init() {}
+  void init() {
+     call RadioController.setRadioAlwaysOn(TRUE);
+  }
 
 
   void handle_Svc_Discovery() {
@@ -123,6 +130,8 @@ implementation
   void handle_Start() {
      call SensorBoardController.startSensing();
      call FunctionManager.startComputing();
+     
+     call RadioController.setRadioAlwaysOn(!RADIO_LOW_POWER);
   }
 
   void handle_Reset() {
@@ -165,6 +174,7 @@ implementation
       init();
   }
 
-  
+  event void RadioController.radioOn() {}
+  event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {}
   event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
 }

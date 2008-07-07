@@ -207,7 +207,7 @@ Boston, MA  02111-1307, USA.
        }
        
        command void RadioController.setRadioAlwaysOn(bool enable) {
-           lowPowerEnabled = enable;
+           lowPowerEnabled = !enable;
            if (lowPowerEnabled)
               radioTurnOffPolicy();
        }
