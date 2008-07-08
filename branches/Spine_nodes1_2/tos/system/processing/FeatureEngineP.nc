@@ -220,7 +220,7 @@ Boston, MA  02111-1307, USA.
      }
      
      command void Function.startComputing() {
-        /*uint8_t i, j, k;
+        uint8_t i, j, k;
         uint8_t currCode;
         uint32_t currTime;
         bool start = FALSE;
@@ -249,19 +249,7 @@ Boston, MA  02111-1307, USA.
         }
 
         for (i = 0; i<runningTimersIndex; i++)
-           call ComputingTimers.startPeriodic[ runningTimersList[i].sensorCode ](runningTimersList[i].time); */
-           
-        uint8_t i, j;
-        uint8_t currCode;
-        for (i = 0; i<featParamsIndex; i++) {
-           currCode = featParamsList[i].sensorCode;
-           for (j = 0; j<actFeatsIndex; j++) {
-              if (actFeatsList[j].sensorCode == currCode) {
-                 call ComputingTimers.startPeriodic[ currCode ](featParamsList[i].processingTime);
-                 break;
-              }
-           }
-        }
+           call ComputingTimers.startPeriodic[ runningTimersList[i].sensorCode ](runningTimersList[i].time);
      }
 
      command void Function.stopComputing() {
