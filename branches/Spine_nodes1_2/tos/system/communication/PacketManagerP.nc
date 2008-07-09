@@ -72,7 +72,7 @@ Boston, MA  02111-1307, USA.
           for (i = 0; i<totFragments; i++) {
              fragmentNr = i+1;
              header = call Header.build(MY_SPINE_VERSION, extension, pktType, MY_GROUP_ID, TOS_NODE_ID, DEFAULT_DEST,
-                                        sequenceNr++, fragmentNr, totFragments);
+                                        sequenceNr, fragmentNr, totFragments);
 
              memcpy(msgTmp, header, SPINE_HEADER_PKT_SIZE);
 
@@ -83,6 +83,8 @@ Boston, MA  02111-1307, USA.
 
              call RadioController.send(DEFAULT_DEST, pktType, &msgTmp, SPINE_HEADER_PKT_SIZE + lenTmp);
           }
+          
+          sequenceNr++;
 
      }
 
