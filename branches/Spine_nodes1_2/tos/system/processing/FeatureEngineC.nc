@@ -54,8 +54,11 @@ Boston, MA  02111-1307, USA.
       components AmplitudeC;
       components RmsC;
       components StandardDeviationC;
-      components TotalEnergyC;    components LedsC;
+      components TotalEnergyC;
+      components VarianceC;
       
+      components LedsC; // DEBUG CODE
+
       components new TimerMilliC() as Timer1;
       components new TimerMilliC() as Timer2;
       components new TimerMilliC() as Timer3;
@@ -70,7 +73,8 @@ Boston, MA  02111-1307, USA.
       FeatureEngineP.BufferPool -> BufferPoolP;
 
       FeatureEngineP.Boot -> MainC.Boot;
-      FeatureEngineP.Leds -> LedsC;
+
+      FeatureEngineP.Leds -> LedsC; // DEBUG CODE
 
       FeatureEngineP.Features = Features;
       FeatureEngineP.Features[MAX] -> MaxC;
@@ -81,6 +85,7 @@ Boston, MA  02111-1307, USA.
       FeatureEngineP.Features[RMS] -> RmsC;
       FeatureEngineP.Features[ST_DEV] -> StandardDeviationC;
       FeatureEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;
+      FeatureEngineP.Features[VARIANCE] -> VarianceC;
 
       FeatureEngineP.ComputingTimers = ComputingTimers;
       FeatureEngineP.ComputingTimers[VOLTAGE_SENSOR] -> Timer1;

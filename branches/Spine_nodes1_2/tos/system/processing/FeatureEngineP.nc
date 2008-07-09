@@ -68,25 +68,27 @@ Boston, MA  02111-1307, USA.
             interface Timer<TMilli> as ComputingTimers[uint8_t id];
             interface FunctionManager;
             interface SensorsRegistry;
-            interface BufferPool;   interface Leds;
+            interface BufferPool;   
+            
+            interface Leds; // DEBUG CODE
        }
  }
 
  implementation {
-     
+
      uint8_t featureList[FEATURE_LIST_SIZE];
      uint8_t featCount = 0;
      bool registered = FALSE;
-     
+
      active_feature_t actFeatsList[ACT_FEATS_LIST_SIZE];   // <featureCode, sensorCode, sensorChBitmask>
      uint8_t actFeatsIndex = 0;
 
      feat_params_t featParamsList[SENSORS_REGISTRY_SIZE];  // <sensorCode, windowSize, processingTime>
      uint8_t featParamsIndex = 0;
-     
-     running_timers_t runningTimersList[SENSORS_REGISTRY_SIZE];
+
+     running_timers_t runningTimersList[SENSORS_REGISTRY_SIZE]; // <sensorCode, processingTime>
      uint8_t runningTimersIndex = 0;
-     
+
      uint8_t evalFeatsList[64];
      uint8_t evalFeatsIndex;
      uint8_t evalFeatsCount;
@@ -104,8 +106,8 @@ Boston, MA  02111-1307, USA.
         uint8_t i;
         uint8_t sensCode;
         uint8_t windowS;
-        uint8_t shiftS; 
-        uint32_t shiftBig; 
+        uint8_t shiftS;
+        uint32_t shiftBig;
         uint32_t currSTime;
 
         if (functionParamsSize != 3)
@@ -197,10 +199,10 @@ Boston, MA  02111-1307, USA.
 
                  if (actFeatsList[j].sensorChBitmask == 0x0) {
                     for ( k = j; k<actFeatsIndex; k++) {
-                       //actFeatsList[k] = actFeatsList[k+1];
-                       actFeatsList[k].featureCode = actFeatsList[k+1].featureCode;
+                       actFeatsList[k] = actFeatsList[k+1];
+                       /*actFeatsList[k].featureCode = actFeatsList[k+1].featureCode;
                        actFeatsList[k].sensorCode = actFeatsList[k+1].sensorCode;
-                       actFeatsList[k].sensorChBitmask = actFeatsList[k+1].sensorChBitmask;
+                       actFeatsList[k].sensorChBitmask = actFeatsList[k+1].sensorChBitmask;*/
                     }
                     actFeatsList[actFeatsIndex].featureCode = 0;
                     actFeatsList[actFeatsIndex].sensorCode = 0;
@@ -290,11 +292,13 @@ Boston, MA  02111-1307, USA.
                   evalFeatsList[evalFeatsIndex++] = (tmp>>8*( (sizeof currResult) - 1));
                }
 
-               evalFeatsCount++;
+               //evalFeatsCount++;
             }
          }
+
+         evalFeatsCount++;
      }
-     uint8_t idOld=4;
+
      event void ComputingTimers.fired[uint8_t id]() {
          /*uint8_t i, j;
          uint32_t thisTime = call ComputingTimers.getdt[id]();
@@ -317,11 +321,11 @@ Boston, MA  02111-1307, USA.
                      calculateFeature(actFeatsList[j].featureCode, currSensorCode, actFeatsList[j].sensorChBitmask, featParamsList[i].windowSize, bufferPoolCopy);
 
                evalFeatsList[1] = evalFeatsCount;
-               
+
                call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
             }
          }*/
-         
+
          uint8_t i, j;
          uint8_t currWindowSize = 1;
          uint16_t bufferPoolCopy[call BufferPool.getBufferSize(0) * call BufferPool.getBufferPoolSize()];
@@ -331,7 +335,7 @@ Boston, MA  02111-1307, USA.
          evalFeatsCount = 0;
          evalFeatsList[evalFeatsIndex++] = id;
          evalFeatsList[evalFeatsIndex++] = 0;
-         
+
          for (j = 0; j<featParamsIndex; j++)
             if (featParamsList[j].sensorCode == id) {
                currWindowSize = featParamsList[j].windowSize;
@@ -354,12 +358,12 @@ Boston, MA  02111-1307, USA.
         dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
         return 0xFF;
      }
-     
+
      default command int32_t Features.calculate[uint8_t featureID](int16_t* data, uint16_t dataLen) {
         dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
         return 0xFFFFFFFF;
      }
-     
+
      default command void ComputingTimers.startPeriodic[uint8_t id](uint32_t dt) {
         dbg(DBG_USR1, "FeatureEngineP.startPeriodic: Executed default operation. Chances are there's an operation miswiring.\n");
      }

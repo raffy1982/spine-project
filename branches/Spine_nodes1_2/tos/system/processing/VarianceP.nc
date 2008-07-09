@@ -35,10 +35,10 @@ Boston, MA  02111-1307, USA.
 module VarianceP {
        
        uses {
-          /*
+
           interface Boot;
           interface FeatureEngine;
-          */
+
           
           interface Feature as Mean;
        }
@@ -48,16 +48,15 @@ module VarianceP {
 
 implementation {
 
-       /*   WE CHOOSE TO DON'T REGISTER THE VARIANCE FOR SIGNAL IT TO THE COORDINATOR; WE CAN STILL USE IT INTERNALLY
        bool registered = FALSE;
 
        event void Boot.booted() {
           if (!registered) {
-             call FeatureEngine.registerFeature(ST_DEV);
+             call FeatureEngine.registerFeature(VARIANCE);
              registered = TRUE;
           }
        }
-       */
+
 
        command int32_t Feature.calculate(int16_t* data, uint16_t elemCount) {
           int32_t var = 0;

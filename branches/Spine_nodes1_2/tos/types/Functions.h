@@ -54,7 +54,8 @@ enum FeatureCodes {
   AMPLITUDE = 0x06,
   RMS = 0x07,
   ST_DEV = 0x08,
-  TOTAL_ENERGY = 0x09
+  TOTAL_ENERGY = 0x09,
+  VARIANCE = 0x0A
 
 };
 
