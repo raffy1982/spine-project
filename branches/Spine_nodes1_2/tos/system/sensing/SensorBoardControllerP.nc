@@ -166,7 +166,7 @@ implementation {
        event void SensorImpls.acquisitionDone[uint8_t sensorCode](error_t result, int8_t resultCode) {
            uint8_t j;
 
-           uint8_t msg[15]; // 15: feature code 1 byte + params lenght 1byte + sensorCode 1 byte + channels flags 4bytes + values (max 4*2 bytes = 8)
+           uint8_t msg[12];  // 15: feature code 1 byte + params lenght 1byte + sensorCode 1 byte + channel bitmask + values (max 4*2 bytes = 8)
            uint8_t msgSize = 0;
 
            uint16_t readings[MAX_VALUE_TYPES];
@@ -175,35 +175,35 @@ implementation {
            uint8_t* valueTypesList;
            uint8_t valueTypesCount;
            uint8_t currSensorValueType;
-           
+
            call SensorImpls.getAllValues[sensorCode](readings, &readingsCount);
            valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
 
-           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {   
+           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {
 
               msg[msgSize++] = ONE_SHOT;
-              msg[msgSize++] = 1 + MAX_VALUE_TYPES + 2*readingsCount;
+              msg[msgSize++] = 1 + 1 + 2*readingsCount;
               msg[msgSize++] = sensorCode;
-              
-              memset(msg+msgSize, 0x00, MAX_VALUE_TYPES);
+
+              msg[msgSize] = 0x0;
               for(j = 0; j<valueTypesCount; j++) {
                  currSensorValueType = *(valueTypesList+j);
-                 
+
                  switch(currSensorValueType) {
-                    case CH_1 : msg[msgSize] = TRUE; break;
-                    case CH_2 : msg[msgSize+1] = TRUE; break;
-                    case CH_3 : msg[msgSize+2] = TRUE; break;
-                    case CH_4 : msg[msgSize+3] = TRUE; break;
+                    case CH_1 : msg[msgSize] |= 0x08; break;
+                    case CH_2 : msg[msgSize] |= 0x04; break;
+                    case CH_3 : msg[msgSize] |= 0x02; break;
+                    case CH_4 : msg[msgSize] |= 0x01; break;
                     default: break;
                  }
               }
-              msgSize += MAX_VALUE_TYPES;
-              
+              msgSize++;
+
               for (j = 0; j<readingsCount; j++) {
                  msg[msgSize++] = readings[j]>>8;
                  msg[msgSize++] = (uint8_t)readings[j];
               }
-              
+
               call PacketManager.build(DATA, &msg, msgSize);
            }
            else {
