@@ -58,7 +58,7 @@ enum {
   SPINE_SVC_MSG_SIZE = 2,                   // the SPINE header szie is not included
   SPINE_SVC_ADV_PKT_MAX_SIZE = 50,          // the SPINE header size is not included
   SPINE_SETUP_SENSOR_PKT_SIZE = 3,          // the SPINE header size is not included
-  SPINE_START_PKT_SIZE = 2,                 // the SPINE header size is not included
+  SPINE_START_PKT_SIZE = 3,                 // the SPINE header size is not included
   SPINE_FUNCTION_REQ_PKT_MAX_SIZE = 20,     // the SPINE header size is not included
   SPINE_SETUP_FUNCTION_PKT_MAX_SIZE = 20,   // the SPINE header size is not included
   SPINE_DATA_PKT_MAX_SIZE = 246             // the SPINE header size is not included  - note: max tinyos message payload is 255

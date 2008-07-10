@@ -34,6 +34,8 @@ Boston, MA  02111-1307, USA.
 interface SpineStartPkt {
 
     command uint16_t getNetworkSize();
+    
+    command bool radioAlwaysOnFlag();
 
 
 }

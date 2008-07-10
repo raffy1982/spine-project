@@ -38,6 +38,7 @@ implementation {
   
   components RadioControllerC;
   components PacketManagerC;
+  components SpineStartPktC;
   components SpineSetupSensorPktC;
   components SpineFunctionReqPktC;
   components SpineSetupFunctionPktC;
@@ -52,6 +53,7 @@ implementation {
   
   SPINEApp_C.RadioController -> RadioControllerC;
   SPINEApp_C.PacketManager -> PacketManagerC;
+  SPINEApp_C.SpineStartPkt -> SpineStartPktC;
   SPINEApp_C.SpineSetupSensorPkt -> SpineSetupSensorPktC;
   SPINEApp_C.SpineFunctionReqPkt -> SpineFunctionReqPktC;
   SPINEApp_C.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;

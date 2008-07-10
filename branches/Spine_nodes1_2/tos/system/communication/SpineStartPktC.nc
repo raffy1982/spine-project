@@ -42,17 +42,24 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     uint16_t netSize;
+    bool radioAlwaysOnFlag;
+    
     uint8_t startBuf[SPINE_START_PKT_SIZE];
 
     command bool InPacket.parse(void* payload, uint8_t len) {
        memcpy(startBuf, payload, SPINE_START_PKT_SIZE);
-       netSize = *(startBuf);                  // check
+       netSize = *(startBuf);
        netSize = (netSize<<8) | *(startBuf+1);
+       radioAlwaysOnFlag = ( *(startBuf+2) == 0)? FALSE: TRUE;
 
        return TRUE;
     }
     
     command uint16_t SpineStartPkt.getNetworkSize() {
        return netSize;
+    }
+
+    command bool SpineStartPkt.radioAlwaysOnFlag() {
+       return radioAlwaysOnFlag;
     }
 }

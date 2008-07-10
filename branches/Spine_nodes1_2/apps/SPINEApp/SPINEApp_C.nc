@@ -9,7 +9,7 @@ GNU Lesser General Public License
  
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation, 
+License as published by the Free Software Foundation,
 version 2.1 of the License. 
  
 This library is distributed in the hope that it will be useful,
@@ -39,10 +39,6 @@ Boston, MA  02111-1307, USA.
 #define SPINE_APP_UTILITY_BUFFER_SIZE 300
 #endif
 
-#ifndef RADIO_LOW_POWER
-#define RADIO_LOW_POWER TRUE
-#endif
-
 module SPINEApp_C
 {
   uses {
@@ -51,6 +47,7 @@ module SPINEApp_C
     interface RadioController;
     interface PacketManager;
 
+    interface SpineStartPkt;
     interface SpineSetupSensorPkt;
     interface SpineFunctionReqPkt;
     interface SpineSetupFunctionPkt;
@@ -128,10 +125,10 @@ implementation
   }
 
   void handle_Start() {
+     call RadioController.setRadioAlwaysOn(call SpineStartPkt.radioAlwaysOnFlag());
+     
      call SensorBoardController.startSensing();
      call FunctionManager.startComputing();
-     
-     call RadioController.setRadioAlwaysOn(!RADIO_LOW_POWER);
   }
 
   void handle_Reset() {
