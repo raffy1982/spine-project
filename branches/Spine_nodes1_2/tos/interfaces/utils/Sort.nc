@@ -62,6 +62,30 @@ Boston, MA  02111-1307, USA.
     * @return void
     */
     command void selectionSort(uint16_t* array, uint16_t length);
+    
+    /**
+    * Sorts the given array using the Recursive Quick Sort algorithm
+    *
+    * @param array : the pointer to the array to be sorted
+    * @param length : the lenght of the array
+    * @param low : beginning index ( put 0)
+    * @param high : end index ( put array length - 1)
+    *
+    * @return void
+    */
+    command void quickSort(uint16_t* array, uint16_t length, uint16_t low, uint16_t high);
+
+    /**
+    * Sorts the given array using the Recursive Merge Sort algorithm
+    *
+    * @param array : the pointer to the array to be sorted
+    * @param length : the lenght of the array
+    * @param low : beginning index ( put 0)
+    * @param high : end index ( put array length - 1)
+    *
+    * @return void
+    */
+    command void mergeSort(uint16_t* array, uint16_t length, uint16_t low, uint16_t high);
 
  }
 
