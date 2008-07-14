@@ -51,6 +51,8 @@ public class SPINEFunctionConstants {
 	public static final byte ST_DEV = 0x08;
 	public static final byte TOTAL_ENERGY = 0x09;
 	public static final byte VARIANCE = 0x0A;
+	public static final byte MODE = 0x0B;
+	public static final byte MEDIAN = 0x0C;
 	
 	public static final String FEATURE_LABEL = "Feature";
 	
@@ -77,6 +79,8 @@ public class SPINEFunctionConstants {
 			case ST_DEV: return "Standard Deviation";
 			case TOTAL_ENERGY: return "Total Energy";
 			case VARIANCE: return "Variance";
+			case MODE: return "Mode";
+			case MEDIAN: return "Median";
 			default: return "?";
 		}
 	}
