@@ -17,7 +17,7 @@
   <target name="compile" description="compile the java source files">
     <!-- Compile the java code from src into classes -->
     <mkdir dir="classes"/>
-    <javac srcdir="src" optimize="${javac.optimize}" debug="${javac.debug}" debuglevel="lines,vars,source" classpath="${tinyos.jar}" destdir="classes" deprecation="on"/>
+    <javac srcdir="src" optimize="${javac.optimize}" debug="${javac.debug}" debuglevel="lines,vars,source" classpath="${tinyos.jar};lib/localNodeAdapter.jar" destdir="classes" deprecation="on"/>
   </target>
 
 
@@ -29,13 +29,13 @@
     <mkdir dir="lib"/>
     <jar jarfile="lib/SPINE.jar">
      <fileset dir="classes"> 
-       <exclude name="demo/*.class" />
+       <exclude name="test/*.class" />
      </fileset>
     </jar>
-    <mkdir dir="demo"/>
-    <jar jarfile="demo/demo.jar">
+    <mkdir dir="test"/>
+    <jar jarfile="test/SPINETest.jar">
      <fileset dir="classes"> 
-       <include name="demo/*.class" />
+       <include name="test/*.class" />
      </fileset>
     </jar>
   </target>
@@ -47,7 +47,7 @@
          _______________________________________________ -->
   <target name="doc" description="generate the javadoc files">
     <mkdir dir="doc"/>
-    <javadoc sourcepath="src" destdir="doc" doctitle="SPINE Signal Processing In Node Environment" author="true" windowtitle="SPINE Java API" packagenames="com.tilab.spine, com.tilab.spine.*, demo"/> 
+    <javadoc sourcepath="src" destdir="doc" doctitle="SPINE Signal Processing In Node Environment" author="true" windowtitle="SPINE Java API" packagenames="spine, spine.*, test"/> 
   </target>
 
 
@@ -56,7 +56,7 @@
                                run
          _______________________________________________ -->
   <target name="run" description="launch the java SpineTest" depends="compile">
-    <java classname="demo.SPINETest" classpath="${tinyos.jar};classes"/> 
+    <java classname="test.SPINETest" classpath="${tinyos.jar};classes;lib/localNodeAdapter.jar"/> 
   </target>
  
 
@@ -71,7 +71,7 @@
       <fileset dir="../.." includes="spine/Spine_serverApp/src/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/doc/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/lib/**"/>
-      <fileset dir="../.." includes="spine/Spine_serverApp/demo/**"/>
+      <fileset dir="../.." includes="spine/Spine_serverApp/test/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/*"/>
     </jar>
   </target>
