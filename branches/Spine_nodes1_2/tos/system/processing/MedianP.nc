@@ -24,59 +24,55 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * The present 'enum' contains the codes associated to the features expected and supported by AMP
- * (Activity Monitoring Features Selection Protocol)  
+ * This component calculate the Median of a set of elements.
  *
  * @author Raffaele Gravina
  * @author Antonio Guerrieri
  *
  * @version 1.0
+ *
  */
 
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+module MedianP {
 
-enum FunctionCodes {
+       uses {
+          interface Boot;
+          interface FeatureEngine;
+          interface Sort;
+       }
 
-  FEATURE = 0x01,
-  ALARM = 0x02,
-  SIGNAL_PROCESSING = 0x03,
-  ONE_SHOT = 0x04
-};
+       provides interface Feature;
+}
 
-enum FeatureCodes {
+implementation {
+       
+       bool registered = FALSE;
 
-  ROW_DATA = 0x01,
-  MAX = 0x02,
-  MIN = 0x03,
-  RANGE = 0x04,
-  MEAN = 0x05,
-  AMPLITUDE = 0x06,
-  RMS = 0x07,
-  ST_DEV = 0x08,
-  TOTAL_ENERGY = 0x09,
-  VARIANCE = 0x0A,
-  MODE = 0x0B,
-  MEDIAN = 0x0C
+       event void Boot.booted() {
+          if (!registered) {
+             call FeatureEngine.registerFeature(MEDIAN);
+             registered = TRUE;
+          }
+       }
 
-};
+       command int32_t Feature.calculate(int16_t* data, uint16_t elemCount) {
+          int16_t orderedData[elemCount];
 
-typedef struct active_feature_t {
-  uint8_t featureCode;
-  uint8_t sensorCode;
-  uint8_t sensorChBitmask;
-} active_feature_t;
+          memcpy(orderedData, data, sizeof orderedData);
+          call Sort.mergeSort(orderedData, elemCount, 0, elemCount-1);
+          
+          if (elemCount%2 == 0)
+                return ((int32_t)orderedData[elemCount/2] + (int32_t)orderedData[(elemCount/2)-1])/2 ;
+            else 
+                return data[(elemCount-1)/2];
+       }
 
-typedef struct feat_params_t {
-  uint8_t sensorCode;
-  uint8_t windowSize;
-  uint32_t processingTime;
-} feat_params_t;
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
 
-typedef struct running_timers_t {
-  uint8_t sensorCode;
-  uint32_t time;
-} running_timers_t;
+}
 
-#endif
+
+
 

@@ -23,60 +23,26 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
-/**
- * The present 'enum' contains the codes associated to the features expected and supported by AMP
- * (Activity Monitoring Features Selection Protocol)  
+ /**
+ *  Configuration component for Feature 'Mode'
+ * 
  *
- * @author Raffaele Gravina
- * @author Antonio Guerrieri
+ * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
  * @version 1.0
  */
+ configuration ModeC {
+    provides interface Feature;
+ }
+ implementation {
 
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+    components ModeP;
+    components MainC, FeatureEngineC;
+    components SortC; 
 
-enum FunctionCodes {
+    Feature = ModeP;
 
-  FEATURE = 0x01,
-  ALARM = 0x02,
-  SIGNAL_PROCESSING = 0x03,
-  ONE_SHOT = 0x04
-};
-
-enum FeatureCodes {
-
-  ROW_DATA = 0x01,
-  MAX = 0x02,
-  MIN = 0x03,
-  RANGE = 0x04,
-  MEAN = 0x05,
-  AMPLITUDE = 0x06,
-  RMS = 0x07,
-  ST_DEV = 0x08,
-  TOTAL_ENERGY = 0x09,
-  VARIANCE = 0x0A,
-  MODE = 0x0B,
-  MEDIAN = 0x0C
-
-};
-
-typedef struct active_feature_t {
-  uint8_t featureCode;
-  uint8_t sensorCode;
-  uint8_t sensorChBitmask;
-} active_feature_t;
-
-typedef struct feat_params_t {
-  uint8_t sensorCode;
-  uint8_t windowSize;
-  uint32_t processingTime;
-} feat_params_t;
-
-typedef struct running_timers_t {
-  uint8_t sensorCode;
-  uint32_t time;
-} running_timers_t;
-
-#endif
-
+    ModeP.Boot -> MainC.Boot;
+    ModeP.FeatureEngine -> FeatureEngineC;
+    ModeP.Sort -> SortC;
+ }

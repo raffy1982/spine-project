@@ -56,7 +56,9 @@ Boston, MA  02111-1307, USA.
       components StandardDeviationC;
       components TotalEnergyC;
       components VarianceC;
-      
+      components ModeC;
+      components MedianC;
+
       components LedsC; // DEBUG CODE
 
       components new TimerMilliC() as Timer1;
@@ -86,6 +88,8 @@ Boston, MA  02111-1307, USA.
       FeatureEngineP.Features[ST_DEV] -> StandardDeviationC;
       FeatureEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;
       FeatureEngineP.Features[VARIANCE] -> VarianceC;
+      FeatureEngineP.Features[MODE] -> ModeC;
+      FeatureEngineP.Features[MEDIAN] -> MedianC;
 
       FeatureEngineP.ComputingTimers = ComputingTimers;
       FeatureEngineP.ComputingTimers[VOLTAGE_SENSOR] -> Timer1;
