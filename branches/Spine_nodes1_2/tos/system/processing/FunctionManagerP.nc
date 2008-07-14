@@ -71,7 +71,8 @@ implementation {
           uint8_t i;
           uint8_t* currFunctLibList;
           uint8_t currFunctLibCount;
-
+          
+          functLibCount = 0;
           for (i = 0; i<functCount; i++) {
              currFunctLibList = call Functions.getFunctionList[ functionList[i] ](&currFunctLibCount);
              memcpy(functionLibrariesList+functLibCount, currFunctLibList, currFunctLibCount);
