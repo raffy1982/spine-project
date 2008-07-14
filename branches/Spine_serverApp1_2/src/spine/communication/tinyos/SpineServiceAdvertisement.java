@@ -44,14 +44,14 @@ public class SpineServiceAdvertisement {
 		data[0] = sensorsNr;
 		
 		for (int i = 0; i<sensorsNr; i++) {
-			data[1+i*2] = (byte)(payload[1+i]>>4); 
+			data[1+i*2] = (byte)((payload[1+i] & 0xFF)>>4); 
 			data[(1+i*2) + 1] = (byte)(payload[1+i] & 0x0F);			
 		}
 		
 		data[1+sensorsNr*2] = librariesNr;	
 		
 		for (int i = 0; i<librariesNr; i++) {
-			data[(1+sensorsNr*2)+1+i*2] = (byte)(payload[1+sensorsNr+1+i]>>5); 
+			data[(1+sensorsNr*2)+1+i*2] = (byte)((payload[1+sensorsNr+1+i] & 0xFF)>>5); 
 			data[(1+sensorsNr*2)+1+i*2+1] = (byte)(payload[1+sensorsNr+1+i] & 0x1F); // 0x1F = 0001 1111 binary
 		}
 		

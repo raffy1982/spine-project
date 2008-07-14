@@ -48,8 +48,12 @@ import spine.datamodel.Node;
 
 public class SPINEManager implements WSNConnection.Listener {
 
+	private final static long DISCOVERY_TIMEOUT = 500;
+	
 	public static final String URL_PREFIX_KEY = "url_prefix";
 	private static final String URL_PREFIX = System.getProperty(URL_PREFIX_KEY);
+	
+	private static final byte DISC_COMPL = 100;
 	
 	private static final short MY_GROUP_ID = 0xAB;
 
@@ -59,6 +63,8 @@ public class SPINEManager implements WSNConnection.Listener {
 	private Vector listeners = new Vector(); // <values:SPINEListener>
 	
 	private Vector activeNodes = new Vector(); // <values:SpineNode>
+	private boolean discoveryCompleted = false;
+	private long discoveryTimeout = DISCOVERY_TIMEOUT;
 	
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;
@@ -104,6 +110,9 @@ public class SPINEManager implements WSNConnection.Listener {
 
 	public void discoveryWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SERVICE_DISCOVERY, null);
+		
+		if(this.discoveryTimeout > 0)
+			new DiscoveryTimer(this.discoveryTimeout).start();
 	}
 	
 	public void bootUpWsn() {		
@@ -202,7 +211,10 @@ public class SPINEManager implements WSNConnection.Listener {
 		
 		short pktType = msg.getClusterId(); 
 		switch(pktType) {
-			case SPINEPacketsConstants.SERVICE_ADV: activeNodes.addElement(new Node(nodeID, msg.getPayload())); break;
+			case SPINEPacketsConstants.SERVICE_ADV: 
+				if (!this.discoveryCompleted) 
+					this.activeNodes.addElement(new Node(nodeID, msg.getPayload())); 				
+				break;
 			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); break;
 			case SPINEPacketsConstants.SVC_MSG: break;
 			default: break;
@@ -215,15 +227,18 @@ public class SPINEManager implements WSNConnection.Listener {
 	private void notifyListeners(int nodeID, short pktType, Object o) {
 		for (int i = 0; i<this.listeners.size(); i++) 
 			switch(pktType) {
-				case SPINEPacketsConstants.SERVICE_ADV: 
-					((SPINEListener)this.listeners.elementAt(i)).newNodeDiscovered((Node)activeNodes.lastElement()); 
+				case SPINEPacketsConstants.SERVICE_ADV:
+					if (!this.discoveryCompleted)
+						((SPINEListener)this.listeners.elementAt(i)).newNodeDiscovered((Node)activeNodes.lastElement()); 
 					break;
 				case SPINEPacketsConstants.DATA: 
 					((SPINEListener)this.listeners.elementAt(i)).dataReceived(nodeID, (Data)o); 
 					break;	
 				case SPINEPacketsConstants.SVC_MSG: 
 					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(); 
-					break;	
+					break;
+				case DISC_COMPL:
+					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted(activeNodes);
 				default: break;
 			}
 		
@@ -242,5 +257,47 @@ public class SPINEManager implements WSNConnection.Listener {
 			System.out.print(Integer.toHexString(b) + " ");
 		}
 		System.out.println("\n");		
+	}
+
+	public void readNow(int nodeID, byte sensorCode) {
+		this.setupSensor(nodeID, sensorCode, SPINESensorConstants.NOW, 0);		
+	}
+	
+	/**
+	 * This method sets the timeout for the discovery procedure.
+	 * 
+	 * This method has effect only if used before the 'discoveryWsn()'; if not used, a default timeout of 0.5s, is used.
+	 * 
+	 * A timeout <= 0 will disable the Discovery Timer; 
+	 * this way a 'discovery complete' event will never be signaled and at any time an 
+	 * announcing node is added to the active-nodes list and signaled to the SPINE listeners. 
+	 * 
+	 * @param discoveryTimeout the timeout for the discovery procedure
+	 */
+	public void setDiscoveryProcedureTimeout(long discoveryTimeout) {
+		this.discoveryTimeout = discoveryTimeout;
+	}
+	
+	
+	private class DiscoveryTimer extends Thread {
+		
+		private long delay = 0;
+		
+		DiscoveryTimer(long delay) {
+			this.delay = delay;
+		}
+		
+		public void run () {
+			try {
+				sleep(delay);
+			} catch (InterruptedException e) {e.printStackTrace();}
+			
+			if (activeNodes.size()==0) 
+				//listener.messageReceived(Constants.BASE_STATION_ADDRESS, ServiceMessageCodes.FATAL_ERROR, ServiceMessageCodes.CONNECTION_FAIL);
+				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, SPINEPacketsConstants.SVC_MSG, null);
+						
+			discoveryCompleted = true;			
+			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL, activeNodes);
+		}
 	}
 }

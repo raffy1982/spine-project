@@ -34,6 +34,8 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
+import java.util.Vector;
+
 import spine.datamodel.Data;
 import spine.datamodel.Node;
 
@@ -44,5 +46,7 @@ public interface SPINEListener {
 	public void serviceMessageReceived(); // TODO add parameters
 
 	public void dataReceived(int nodeID, Data data);
+
+	public void discoveryCompleted(Vector activeNodes);
 	
 }

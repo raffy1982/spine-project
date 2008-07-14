@@ -41,10 +41,10 @@ public class SpineData {
 
 	public static byte[] parse(byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
-		byte dtIndex = 0;
-		byte pldIndex = 0;
+		short dtIndex = 0;
+		short pldIndex = 0;
 		
-		byte functionCode = (byte)(payload[pldIndex++]>>3);
+		byte functionCode = (byte)((payload[pldIndex++] & 0xFF)>>3);
 		dataTmp[dtIndex++] = functionCode;
 		
 		//byte paramLen = (byte)payload[pldIndex++];
