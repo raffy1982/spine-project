@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 #endif
 
 #ifndef BUFFER_LENGTH
-#define BUFFER_LENGTH 80
+#define BUFFER_LENGTH 256
 #endif
 
 module BufferPoolP {
@@ -67,7 +67,7 @@ implementation {
            // TODO
        }
 
-       command void BufferPool.getData(uint8_t bufferID, uint8_t windowSize, uint16_t* buffer) {
+       command void BufferPool.getData(uint8_t bufferID, uint16_t windowSize, uint16_t* buffer) {
           call BufferPool.getBufferedData(bufferID, windowSize, 0, buffer);
        }
 
@@ -87,11 +87,11 @@ implementation {
           return BUFFER_POOL_SIZE;
        }
 
-       command void BufferPool.getBufferedData(uint8_t bufferID, uint8_t firstToNow, uint8_t lastToNow, uint16_t* buffer) {
+       command void BufferPool.getBufferedData(uint8_t bufferID, uint16_t firstToNow, uint16_t lastToNow, uint16_t* buffer) {
           uint8_t i=0;
           uint8_t j=0;
           uint8_t k;
-          uint8_t windowSize = firstToNow - lastToNow;
+          uint16_t windowSize = firstToNow - lastToNow;
 
           if (windowSize > BUFFER_LENGTH)
             windowSize = BUFFER_LENGTH;
