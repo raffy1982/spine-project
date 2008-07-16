@@ -104,6 +104,8 @@ Boston, MA  02111-1307, USA.
        * @return
        */
        command void send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len);
+       
+       command void reset();
  }
 
 

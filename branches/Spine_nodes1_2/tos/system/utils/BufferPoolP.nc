@@ -37,11 +37,11 @@ Boston, MA  02111-1307, USA.
 #endif
 
 #ifndef BUFFER_LENGTH
-#define BUFFER_LENGTH 256
+#define BUFFER_LENGTH 80
 #endif
 
 module BufferPoolP {
-       
+
        provides interface BufferPool;
 }
 
@@ -51,7 +51,7 @@ implementation {
        uint8_t buffersIndexes[BUFFER_POOL_SIZE];
 
        uint16_t tmpBuffer[BUFFER_LENGTH];
-       
+
        uint8_t nextAvailableBufferID = 0;
 
 
@@ -62,7 +62,7 @@ implementation {
              return nextAvailableBufferID;
           return nextAvailableBufferID++;
        }
-       
+
        command void BufferPool.releaseBuffer(uint8_t bufferID) {
            // TODO
        }
@@ -75,7 +75,7 @@ implementation {
           bufferPool[ (BUFFER_LENGTH * bufferID) + buffersIndexes[bufferID] ] = elem;
 
           buffersIndexes[bufferID] = (buffersIndexes[bufferID]+1)%BUFFER_LENGTH;
-          
+
           signal BufferPool.newElem(bufferID, elem);
        }
 
@@ -88,9 +88,9 @@ implementation {
        }
 
        command void BufferPool.getBufferedData(uint8_t bufferID, uint16_t firstToNow, uint16_t lastToNow, uint16_t* buffer) {
-          uint8_t i=0;
-          uint8_t j=0;
-          uint8_t k;
+          uint16_t i = 0;
+          uint16_t j = 0;
+          uint16_t k;
           uint16_t windowSize = firstToNow - lastToNow;
 
           if (windowSize > BUFFER_LENGTH)
@@ -103,20 +103,29 @@ implementation {
              for (i = 0; i<(buffersIndexes[bufferID]); i++)
                 tmpBuffer[i] = bufferPool[(BUFFER_LENGTH * bufferID) + (buffersIndexes[bufferID]-1 - i)];
 
-             k = (BUFFER_LENGTH-1);
+             k = (BUFFER_LENGTH - 1);
              for (j = (BUFFER_LENGTH-(windowSize-buffersIndexes[bufferID])); j<BUFFER_LENGTH; j++)
                 tmpBuffer[i++] = bufferPool[(BUFFER_LENGTH * bufferID) + k--];
           }
 
           memcpy(buffer, tmpBuffer, windowSize*2);
        }
-       
+
        command void BufferPool.getBufferPoolCopy(uint16_t* buffer) {
           atomic {
             uint8_t currBufID;
             for (currBufID = 0; currBufID<BUFFER_POOL_SIZE; currBufID++)
                call BufferPool.getData(currBufID, BUFFER_LENGTH, buffer+(currBufID * BUFFER_LENGTH));
-          }     
+          }
+       }
+
+       command void BufferPool.clear() {
+          memset(bufferPool, 0x00, sizeof bufferPool);
+          memset(buffersIndexes, 0x00, sizeof buffersIndexes);
+
+          memset(tmpBuffer, 0x00, sizeof tmpBuffer);
+
+          nextAvailableBufferID = 0;
        }
 }
 

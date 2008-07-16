@@ -41,9 +41,9 @@ Boston, MA  02111-1307, USA.
 
  implementation {
 
-    uint16_t netSize;
+    uint16_t netSize = 1;
     bool radioAlwaysOnFlag;
-    
+
     uint8_t startBuf[SPINE_START_PKT_SIZE];
 
     command bool InPacket.parse(void* payload, uint8_t len) {

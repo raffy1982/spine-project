@@ -143,7 +143,7 @@ implementation {
           }
        }
        
-       command void SensorBoardController.stopSensing() {
+       void stopSensing() {
           uint8_t i;
           uint8_t sensorsCount;
           uint8_t* sensorsList = call SensorsRegistry.getSensorList(&sensorsCount);
@@ -152,9 +152,13 @@ implementation {
              call SamplingTimers.stop[*(sensorsList+i)]();
        }
 
+       command void SensorBoardController.stopSensing() {
+          stopSensing();
+       }
+
        command uint8_t SensorBoardController.getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType) {
           uint8_t i;
-          
+
           for (i = 0; i<count4BufList; i++)
             if (sensorCode4BufList[i] == sensorCode && sensorChanCode4BufList[i] == valueType)
                return sensCodeChanbuffID4BufList[i];
@@ -213,6 +217,22 @@ implementation {
            }
            
            signal SensorBoardController.acquisitionDone(sensorCode, result, resultCode);
+       }
+       
+       command void SensorBoardController.reset() {
+          stopSensing();
+          
+          memset(sensorOneShotList, 0x00, sizeof sensorOneShotList);
+          sensOneShotCount = 0;
+
+          memset(sensorCode4BufList, 0x00, sizeof sensorCode4BufList);
+          memset(sensorChanCode4BufList, 0x00, sizeof sensorChanCode4BufList);
+          memset(sensCodeChanbuffID4BufList, 0x00, sizeof sensCodeChanbuffID4BufList);
+          count4BufList = 0;
+          
+          call BufferPool.clear();
+          
+          call SensorsRegistry.reset();
        }
 
        event void SamplingTimers.fired[uint8_t sensorCode]() {

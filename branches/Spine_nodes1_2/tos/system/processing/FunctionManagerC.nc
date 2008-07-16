@@ -43,7 +43,7 @@ Boston, MA  02111-1307, USA.
  implementation {
      components PacketManagerC, FunctionManagerP;
 
-     components FeatureEngineC;    
+components FeatureEngineC;
 
      FunctionManager = FunctionManagerP;
 

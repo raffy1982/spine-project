@@ -85,6 +85,8 @@ Boston, MA  02111-1307, USA.
        * @return 'void'
        */
        command void stopComputing();
+       
+       command void reset();
 
  }
 

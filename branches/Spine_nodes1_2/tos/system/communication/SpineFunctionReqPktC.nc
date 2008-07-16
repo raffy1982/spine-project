@@ -41,10 +41,10 @@ Boston, MA  02111-1307, USA.
 
  implementation {
 
-    uint8_t fnCode;
+    uint8_t fnCode = 0;
     bool isEnableReq;
     uint8_t* fnParams;
-    uint8_t fnParamsSize;
+    uint8_t fnParamsSize = 0;
     
     uint8_t fnReqBuf[SPINE_FUNCTION_REQ_PKT_MAX_SIZE];
 

@@ -106,11 +106,15 @@ implementation {
           for (i = 0; i<functCount; i++)
              call Functions.startComputing[ functionList[i] ]();
        }
-
-       command void FunctionManager.stopComputing() {
+       
+       void stopComputing() {
           uint8_t i;
           for (i = 0; i<functCount; i++)
              call Functions.stopComputing[ functionList[i] ]();
+       }
+
+       command void FunctionManager.stopComputing() {
+          stopComputing();
        }
 
        command void FunctionManager.send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len) {
@@ -120,7 +124,17 @@ implementation {
           call PacketManager.build(DATA, data, (len+2));
        }
 
-       
+       command void FunctionManager.reset() {
+          uint8_t i;
+          
+          stopComputing();
+
+          for (i = 0; i<functCount; i++)
+             call Functions.reset[ functionList[i] ]();
+
+          memset(data, 0x00, sizeof data);
+       }
+
        event void PacketManager.messageReceived(enum PacketTypes pktType){}
 
 
@@ -150,6 +164,10 @@ implementation {
        
        default command void Functions.stopComputing[uint8_t functionID]() {
            dbg(DBG_USR1, "FunctionManagerP.stopComputing: Executed default operation. Chances are there's an operation miswiring.\n");
+       }
+       
+       default command void Functions.reset[uint8_t functionID]() {
+           dbg(DBG_USR1, "FunctionManagerP.reset: Executed default operation. Chances are there's an operation miswiring.\n");
        }
 
 }

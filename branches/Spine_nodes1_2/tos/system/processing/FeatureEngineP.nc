@@ -90,8 +90,8 @@ Boston, MA  02111-1307, USA.
      uint8_t runningTimersIndex = 0;
 
      uint8_t evalFeatsList[64];
-     uint8_t evalFeatsIndex;
-     uint8_t evalFeatsCount;
+     uint8_t evalFeatsIndex = 0;
+     uint8_t evalFeatsCount = 0;
 
 
      event void Boot.booted() {
@@ -254,12 +254,16 @@ Boston, MA  02111-1307, USA.
            call ComputingTimers.startPeriodic[ runningTimersList[i].sensorCode ](runningTimersList[i].time);
      }
 
-     command void Function.stopComputing() {
+     void stopComputing() {
         uint8_t i;
         for (i = 0; i<featParamsIndex; i++)
            call ComputingTimers.stop[ featParamsList[i].sensorCode ]();
      }
-     
+
+     command void Function.stopComputing() {
+        stopComputing();
+     }
+
      command error_t FeatureEngine.registerFeature(enum FeatureCodes featureID) {
          if (featCount < FEATURE_LIST_SIZE) { // to avoid memory leaks
             featureList[featCount++] = ((FEATURE<<5) | (featureID & 0x1F));  // The & 0x1F (00011111) is to avoid corruption in the first 'FunctionCode' 3 bits
@@ -349,6 +353,21 @@ Boston, MA  02111-1307, USA.
          evalFeatsList[1] = evalFeatsCount;
 
          call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
+     }
+     
+     command void Function.reset() {
+          memset(actFeatsList, 0x00, sizeof actFeatsList);
+          actFeatsIndex = 0;
+
+          memset(featParamsList, 0x00, sizeof featParamsList);
+          featParamsIndex = 0;
+
+          memset(runningTimersList, 0x00, sizeof runningTimersList);       
+          runningTimersIndex = 0;
+
+          memset(evalFeatsList, 0x00, sizeof evalFeatsList);
+          evalFeatsIndex = 0;
+          evalFeatsCount = 0;
      }
 
      event void BufferPool.newElem(uint8_t bufferID, uint16_t elem) {/*if (bufferID==0) call Leds.led0Toggle(); else call Leds.led1Toggle();*/}

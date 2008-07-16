@@ -82,6 +82,8 @@ Boston, MA  02111-1307, USA.
        * @return              SUCCESS if the request to send succeeded.
        */
        command error_t send(uint16_t destination, enum PacketTypes pktType, void* payload, uint8_t len);
+       
+       command void reset();
 
        /**
        * Signals the reception of a message.

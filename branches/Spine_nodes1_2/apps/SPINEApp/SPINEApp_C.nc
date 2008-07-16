@@ -132,7 +132,13 @@ implementation
   }
 
   void handle_Reset() {
-     // TODO
+     call FunctionManager.reset();
+     call SensorBoardController.reset();
+     call RadioController.reset();
+
+     memset(buffer, 0x00, sizeof buffer);
+     
+     init();
   }
 
   void handle_Syncr() {

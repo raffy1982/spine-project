@@ -49,6 +49,8 @@ interface BufferPool {
     command void getBufferedData(uint8_t bufferID, uint16_t firstToNow, uint16_t lastToNow, uint16_t* buffer);
     
     command void getBufferPoolCopy(uint16_t* buffer);
+    
+    command void clear();
 
     event void newElem(uint8_t bufferID, uint16_t elem);
 

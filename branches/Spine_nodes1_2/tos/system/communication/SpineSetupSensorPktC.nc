@@ -42,8 +42,8 @@ Boston, MA  02111-1307, USA.
     uint8_t setSensBuf[SPINE_SETUP_SENSOR_PKT_SIZE];
     
     uint8_t sensCode;          // 4 bits
-    uint8_t timeScale;         // 2 bits
-    uint16_t samplingTime;     // 16 bits
+    uint8_t timeScale = 0;     // 2 bits
+    uint16_t samplingTime = 0; // 16 bits
 
 
     command bool InPacket.parse(void* payload, uint8_t len) {
