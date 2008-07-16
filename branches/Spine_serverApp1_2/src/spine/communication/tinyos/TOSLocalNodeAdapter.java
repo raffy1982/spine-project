@@ -37,6 +37,7 @@ package spine.communication.tinyos;
 import java.io.IOException;
 import java.util.Vector;
 
+import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SpineTOSMessage.SPINEHeader;
 
@@ -66,12 +67,20 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 	private boolean sendImmediately = true;
 	
 	public void messageReceived(int srcID, net.tinyos.message.Message tosmsg) {
-		
+System.out.print("messageReceived -> ");		
 		if (tosmsg instanceof SpineTOSMessage) {			
 			try {
 				SPINEHeader h = ((SpineTOSMessage)tosmsg).getHeader();
-System.out.print("in.lowLevel: "); printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				int sourceNodeID = h.getSourceID();
+				
+				if(sourceNodeID == SPINEPacketsConstants.SPINE_BASE_STATION || 
+					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
+					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
+					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION || 
+					h.getGroupID() != SPINEManager.MY_GROUP_ID) 
+					return;
+
+System.out.print("in.lowLevel: "); printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				
 				sendMessages(sourceNodeID);
 				
@@ -165,9 +174,10 @@ System.out.print("in.lowLevel: "); printPayload(((SpineTOSMessage)tosmsg).getRaw
 		Msg curr = null;
 		for (int i = 0; i<this.messagesQueue.size(); i++) {
 			curr = (Msg)this.messagesQueue.elementAt(i);
-			if (curr.destNodeID == nodeID) {
+			if (curr.destNodeID == nodeID || curr.destNodeID == SPINEPacketsConstants.SPINE_BROADCAST) {
 				try {
 					this.moteIF.send(curr.destNodeID, curr.tosmsg);
+System.out.println("Ota deferred send.");					
 					this.messagesQueue.removeElementAt(i);
 					Thread.sleep(2);
 				} catch (IOException e) {
@@ -184,7 +194,7 @@ System.out.print("in.lowLevel: "); printPayload(((SpineTOSMessage)tosmsg).getRaw
 		if(this.sendImmediately) {
 			try {
 				this.moteIF.send(destNodeID, tosmsg);
-																					 // check if the flag radioAlwaysOn flag is false
+System.out.println("Ota immediate send.");																										 // check if the flag radioAlwaysOn flag is false
 				if(tosmsg.getHeader().getPktType() == SPINEPacketsConstants.START && tosmsg.getRawPayload()[2] == 0)
 					this.sendImmediately = false;
 				

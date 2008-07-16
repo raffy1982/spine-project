@@ -38,10 +38,11 @@ import spine.SPINEFunctionConstants;
 
 public class SpineSetupFunction {
 	
-	public static byte[] build(byte[] payload) {
+	public static byte[] build(byte[] payload) throws UnknownFunctionException {
 		byte[] data = new byte[payload.length];
 		
-		switch(payload[0]) {
+		byte functionCode = payload[0];
+		switch(functionCode) {
 			case SPINEFunctionConstants.FEATURE: {
 				if (payload.length != 5)
 					return null;
@@ -55,7 +56,7 @@ public class SpineSetupFunction {
 				data[4] = payload[4];
 				break;
 			}
-			default: break;
+			default: throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a setup function");
 		}
 		
 		return data;

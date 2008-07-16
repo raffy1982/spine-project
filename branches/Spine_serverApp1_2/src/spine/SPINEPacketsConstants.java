@@ -54,4 +54,7 @@ public interface SPINEPacketsConstants {
 	public static final byte SYNCR = 0x0D;                // it is used as a BEACON (re-sync) message
 	public static final byte FUNCTION_REQ = 0x07;         // contains a flag to specify if enable or disable the function
 	
+
+	public static final byte CURRENT_SPINE_VERSION = 2;
+	
 }

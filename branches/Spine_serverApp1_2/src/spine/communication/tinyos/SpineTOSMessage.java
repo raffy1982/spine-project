@@ -40,8 +40,6 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 	
 	private static final String TINYOS_URL_PREFIX = "http://tinyos:";
 	
-	private static final byte CURRENT_SPINE_VERSION = 2;
-	
 	public static final int BASE_STATION = 0;
 	
 	private static final int DEFAULT_MESSAGE_SIZE = 0; 	// it represents a variable-size array and 
@@ -62,7 +60,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	
     	this.amTypeSet(AM_TYPE); 
     	
-    	SPINEHeader header = new SPINEHeader(CURRENT_SPINE_VERSION, false, pktType, 
+    	SPINEHeader header = new SPINEHeader(SPINEPacketsConstants.CURRENT_SPINE_VERSION, false, pktType, 
     										 groupID, sourceID, destID, sequenceNumber, fragmentNr, totalFragments);    	
     	
     	byte[] msgBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE + payload.length];

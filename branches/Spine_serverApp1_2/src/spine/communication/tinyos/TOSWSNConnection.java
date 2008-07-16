@@ -99,6 +99,8 @@ public class TOSWSNConnection implements WSNConnection {
 			System.out.println(e);
 		}catch (IndexOutOfBoundsException e) {
 			System.out.println(e);
+		} catch (UnknownFunctionException e) {
+			System.out.println(e);
 		}
 		
 	}

@@ -55,7 +55,7 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 	private static final byte DISC_COMPL = 100;
 	
-	private static final short MY_GROUP_ID = 0xAB;
+	public static final byte MY_GROUP_ID = (byte)0xAB;
 
 	public static final String MESSAGE_CLASSNAME_KEY = "Message_ClassName";
 	
@@ -167,11 +167,11 @@ public class SPINEManager implements WSNConnection.Listener {
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, payload);
 	}
 	
-	public void reset() {		
+	public void resetWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
 	}
 	
-	public void syncr() {		
+	public void syncrWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SYNCR, null);
 	}
 
@@ -238,7 +238,7 @@ public class SPINEManager implements WSNConnection.Listener {
 					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(); 
 					break;
 				case DISC_COMPL:
-					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted(activeNodes);
+					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
 				default: break;
 			}
 		

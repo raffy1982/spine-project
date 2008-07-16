@@ -38,7 +38,7 @@ import spine.SPINEPacketsConstants;
 
 public class PacketManager {
 
-	public static byte[] build(com.tilab.zigbee.Message msg) {
+	public static byte[] build(com.tilab.zigbee.Message msg) throws UnknownFunctionException {
 		byte[] payload = msg.getPayload();
 		
 		switch (msg.getClusterId()) {

@@ -52,14 +52,14 @@ public class SPINETest implements SPINEListener {
 	private static final String PORT = "42";
 	private static final String SPEED = "telosb";
 	
-	private static final int SAMPLING_TIME = 25;
+	private static final int SAMPLING_TIME = 50;
 	
-	private static final byte WINDOW_SIZE = 40;
-	private static final byte SHIFT_SIZE = 20;
+	private static final short WINDOW_SIZE = 40;
+	private static final short SHIFT_SIZE = 20;
 	
 	private static SPINEManager manager;
 	
-	//private static int counter = 0;
+	private static int counter = 0;
 	
 	
 	public void newNodeDiscovered(Node newNode) {}
@@ -68,52 +68,55 @@ public class SPINETest implements SPINEListener {
 		for (int i = 0; i<activeNodes.size(); i++)
 			System.out.println((Node)activeNodes.elementAt(i));
 		
-		Node node = (Node)activeNodes.firstElement();
-		
-		for (int i=0; i<node.getSensorsList().size(); i++) {
-			byte sensor = ((Sensor)node.getSensorsList().elementAt(i)).getCode();
-			if (sensor == SPINESensorConstants.ACC_SENSOR) {
-				manager.setupSensor(node.getNodeID(), 
-									sensor, SPINESensorConstants.MILLISEC, SAMPLING_TIME);
-				
-				byte[] params = new byte[3];
-				params[0] = sensor;
-				params[1] = WINDOW_SIZE;
-				params[2] = SHIFT_SIZE;
-				manager.setupFunction(node.getNodeID(), SPINEFunctionConstants.FEATURE, params);
-				
-				params = new byte[16];
-				params[0] = sensor;
-				params[1] = 7; // how many libraries activation request
-				params[2] = SPINEFunctionConstants.MODE;
-				params[3] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[4] = SPINEFunctionConstants.MEDIAN;
-				params[5] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[6] = SPINEFunctionConstants.MAX;
-				params[7] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[8] = SPINEFunctionConstants.MIN;
-				params[9] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[10] = SPINEFunctionConstants.MEAN;
-				params[11] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[12] = SPINEFunctionConstants.AMPLITUDE;
-				params[13] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[14] = SPINEFunctionConstants.RANGE;
-				params[15] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				/*params[2] = SPINEFunctionConstants.VARIANCE;
-				params[3] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[4] = SPINEFunctionConstants.ST_DEV;
-				params[5] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[6] = SPINEFunctionConstants.MAX;
-				params[7] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();
-				params[8] = SPINEFunctionConstants.MIN;
-				params[9] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();*/
-				manager.activateFunction(node.getNodeID(), SPINEFunctionConstants.FEATURE, params);
-				break;
+		if (activeNodes != null && activeNodes.size() > 0) {
+			Node node = (Node) activeNodes.firstElement();
+			for (int i = 0; i < node.getSensorsList().size(); i++) {
+				byte sensor = ((Sensor) node.getSensorsList().elementAt(i))
+						.getCode();
+				if (sensor == SPINESensorConstants.ACC_SENSOR) {
+					manager.setupSensor(node.getNodeID(), sensor,
+							SPINESensorConstants.MILLISEC, SAMPLING_TIME);
+
+					byte[] params = new byte[3];
+					params[0] = sensor;
+					params[1] = (byte) WINDOW_SIZE;
+					params[2] = (byte) SHIFT_SIZE;
+					manager.setupFunction(node.getNodeID(),
+							SPINEFunctionConstants.FEATURE, params);
+
+					params = new byte[16];
+					params[0] = sensor;
+					params[1] = 7; // how many libraries activation request
+					params[2] = SPINEFunctionConstants.MODE;
+					params[3] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[4] = SPINEFunctionConstants.MEDIAN;
+					params[5] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[6] = SPINEFunctionConstants.MAX;
+					params[7] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[8] = SPINEFunctionConstants.MIN;
+					params[9] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[10] = SPINEFunctionConstants.MEAN;
+					params[11] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[12] = SPINEFunctionConstants.AMPLITUDE;
+					params[13] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					params[14] = SPINEFunctionConstants.RANGE;
+					params[15] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					//manager.activateFunction(node.getNodeID(), SPINEFunctionConstants.FEATURE, params);
+
+					params = new byte[4];
+					params[0] = sensor;
+					params[1] = 1; // how many libraries activation request
+					params[2] = SPINEFunctionConstants.RMS;
+					params[3] = ((Sensor) node.getSensorsList().elementAt(i)).getChannelBitmask();
+					/*params[4] = SPINEFunctionConstants.MAX;
+					params[5] = ((Sensor)node.getSensorsList().elementAt(i)).getChannelBitmask();*/
+					manager.activateFunction(node.getNodeID(), SPINEFunctionConstants.FEATURE, params);
+					break;
+				}
 			}
+			//manager.start(true);
+			manager.start(false);
 		}
-		
-		//manager.start(true);
-		manager.start(false);
 	}
 
 	public void dataReceived(int nodeID, Data data) {
@@ -123,18 +126,21 @@ public class SPINETest implements SPINEListener {
 				for (int i = 0; i<features.size(); i++)
 					System.out.println((Feature)features.elementAt(i));
 				
-				/*counter++;
+				counter++;
 				
-				if(counter == 5) {
+				if(counter == 5)
+					manager.resetWsn();
+				
+				/*if(counter == 3) {
 					byte[] params = new byte[4];
 					params[0] = ((Feature)features.elementAt(0)).getSensorCode();
 					params[1] = 1; // how many libraries deactivation request
 					params[2] = ((Feature)features.elementAt(0)).getFeatureCode();
 					params[3] = 0; // want to disable that feature on every channels
 					manager.deactivateFunction(nodeID, SPINEFunctionConstants.FEATURE, params);
-				}	
+				}*/	
 				
-				if(counter == 10) {
+				/*if(counter == 10) {
 					byte[] params = new byte[4];
 					params[0] = ((Feature)features.elementAt(0)).getSensorCode();
 					params[1] = 1; // how many libraries activation request
@@ -192,8 +198,8 @@ public class SPINETest implements SPINEListener {
 		public void run () {
 			try { sleep(this.delay); } catch (InterruptedException e) {}
 			
-			manager.readNow(this.nodeID, SPINESensorConstants.ACC_SENSOR);
-			//manager.readNow(this.nodeID, SPINESensorConstants.INTERNAL_TEMPERATURE_SENSOR);
+			//manager.readNow(this.nodeID, SPINESensorConstants.ACC_SENSOR);
+			manager.readNow(this.nodeID, SPINESensorConstants.INTERNAL_TEMPERATURE_SENSOR);
 		}
 	}
 }
