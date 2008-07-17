@@ -15,12 +15,11 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/system/sensing
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/processing
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/utils
 
-PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/$(firstword $(MAKECMDGOALS))
+PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/%p
 
 PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/$(SENSORBOARD)
 
 PFLAGS += -I$(TOS_OVERLAY_DIR)/types
-
 
 ifeq ($(SENSORBOARD),mts300)
      PFLAGS += -DNO_GYRO
@@ -33,6 +32,8 @@ else
           PFLAGS += -DBUFFER_SIZE=80
      else
          ifeq ($(firstword $(MAKECMDGOALS)),telosb)
+              PFLAGS += -DBUFFER_SIZE=255
+         else ifeq ($(firstword $(MAKECMDGOALS)),tmote)
               PFLAGS += -DBUFFER_SIZE=255
          endif
      endif
