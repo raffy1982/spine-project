@@ -38,9 +38,9 @@ Boston, MA  02111-1307, USA.
  #ifndef FEATURE_LIST_SIZE
  #define FEATURE_LIST_SIZE 32
  #endif
- 
+
  #ifndef ACT_FEATS_LIST_SIZE
- #define ACT_FEATS_LIST_SIZE 512
+ #define ACT_FEATS_LIST_SIZE 256
  #endif
  
  #ifndef SENSORS_REGISTRY_SIZE
@@ -65,7 +65,6 @@ Boston, MA  02111-1307, USA.
        uses {
             interface Boot;
             interface Feature as Features[uint8_t featureID];
-            interface Timer<TMilli> as ComputingTimers[uint8_t id];
             interface FunctionManager;
             interface SensorsRegistry;
             interface BufferPool;   
@@ -86,12 +85,12 @@ Boston, MA  02111-1307, USA.
      feat_params_t featParamsList[SENSORS_REGISTRY_SIZE];  // <sensorCode, windowSize, processingTime>
      uint8_t featParamsIndex = 0;
 
-     running_timers_t runningTimersList[SENSORS_REGISTRY_SIZE]; // <sensorCode, processingTime>
-     uint8_t runningTimersIndex = 0;
-
      uint8_t evalFeatsList[64];
      uint8_t evalFeatsIndex = 0;
      uint8_t evalFeatsCount = 0;
+
+     bool computingStarted = FALSE;
+     uint16_t newSamplesSinceLastFeature[SENSORS_REGISTRY_SIZE];
 
 
      event void Boot.booted() {
@@ -104,38 +103,36 @@ Boston, MA  02111-1307, USA.
 
      command bool Function.setUpFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
         uint8_t i;
-        uint8_t sensCode;
-        uint8_t windowS;
-        uint8_t shiftS;
-        uint32_t shiftBig;
-        uint32_t currSTime;
+	uint8_t sensCode;
+	uint8_t windowS;
+	uint8_t shiftS;
 
-        if (functionParamsSize != 3)
+	// get the job parameters
+	if (functionParamsSize != 3)
            return FALSE;
 
-        memcpy(&sensCode, functionParams, 1);
-        memcpy(&windowS, (functionParams+1), 1);
-        memcpy(&shiftS, (functionParams+2), 1);
-        shiftBig = shiftS;
 
-        if (shiftS == 0)
-           return FALSE;
+	sensCode = functionParams[0];
+	windowS = functionParams[1];
+	shiftS = functionParams[2];
 
-        sensCode = sensCode>>4;
+	if (shiftS == 0)
+	   return FALSE;
+
+
+	sensCode = sensCode>>4;	// because the sensor code is stored in the MSB of the byte
 
         for (i = 0; i<featParamsIndex; i++)
            if (featParamsList[i].sensorCode == sensCode) {
               featParamsList[i].windowSize = windowS;
-              currSTime = call SensorsRegistry.getSamplingTime(sensCode);
-              featParamsList[i].processingTime = ( currSTime * shiftBig );
+              featParamsList[i].processingTime = shiftS;
               break;
            }
 
         if (i == featParamsIndex) {
            featParamsList[featParamsIndex].sensorCode = sensCode;
            featParamsList[featParamsIndex].windowSize = windowS;
-           currSTime = call SensorsRegistry.getSamplingTime(sensCode);
-           featParamsList[featParamsIndex++].processingTime = ( currSTime * shiftBig );
+           featParamsList[featParamsIndex++].processingTime = shiftS;
         }
 
         return TRUE;
@@ -148,15 +145,18 @@ Boston, MA  02111-1307, USA.
         uint8_t currFeatureCode;
         uint8_t currSensorChBitmask;
 
-        if (functionParamsSize < 4)
-           return FALSE;
+        //if (functionParamsSize < 4)
+        //   return FALSE;
+        if (((functionParamsSize-2)%2) != 0)
+           return FALSE;	// fail on invalid number of parameters
 
-        memcpy(&sensorCode, functionParams, 1);
-        memcpy(&featureNumber, (functionParams+1), 1);
+
+        sensorCode = functionParams[0];
+	featureNumber = functionParams[1];
 
         for(i = 0; i<featureNumber; i++) {
-           memcpy(&currFeatureCode, (functionParams+2+2*i), 1);
-           memcpy(&currSensorChBitmask, (functionParams+3+2*i), 1);
+           currFeatureCode = functionParams[2+2*i];
+	   currSensorChBitmask = functionParams[3+2*i];
            currSensorChBitmask = (currSensorChBitmask & 0x0F);
 
            for(j = 0; j<actFeatsIndex; j++)
@@ -182,15 +182,17 @@ Boston, MA  02111-1307, USA.
         uint8_t currFeatureCode;
         uint8_t currSensorChBitmask;
 
-        if (functionParamsSize < 4)
-           return FALSE;
+        //if (functionParamsSize < 4)
+        //   return FALSE;
+        if (((functionParamsSize-2)%2) != 0)
+           return FALSE;	// fail on invalid number of parameters
 
-        memcpy(&sensorCode, functionParams, 1);
-        memcpy(&featureNumber, (functionParams+1), 1);
+        sensorCode = functionParams[0];
+	featureNumber = functionParams[1];
 
         for(i = 0; i<featureNumber; i++) {
-           memcpy(&currFeatureCode, (functionParams+2+2*i), 1);
-           memcpy(&currSensorChBitmask, (functionParams+3+2*i), 1);
+           currFeatureCode = functionParams[2+2*i];
+	   currSensorChBitmask = functionParams[3+2*i];
            currSensorChBitmask = (currSensorChBitmask & 0x0F);
 
            for(j = 0; j<actFeatsIndex; j++) {
@@ -221,47 +223,15 @@ Boston, MA  02111-1307, USA.
          return featureList;
      }
      
-     command void Function.startComputing() {
-        uint8_t i, j, k;
-        uint8_t currCode;
-        uint32_t currTime;
-        bool start = FALSE;
+     command void Function.startComputing() {                 // CHECK... probably can be an empty command
+        // initialize the newElementsSinceLastFeatureArray
+	memset(newSamplesSinceLastFeature, 0, sizeof(newSamplesSinceLastFeature));
 
-        for (i = 0; i<featParamsIndex; i++) {
-           currCode = featParamsList[i].sensorCode;
-           start = FALSE;
-           for (k = 0; k<actFeatsIndex; k++) {
-              if (actFeatsList[k].sensorCode == currCode) {
-                 start = TRUE;
-                 break;
-              }
-           }
-
-           if (start) {
-              currTime = featParamsList[i].processingTime;
-              for (j = 0; j<runningTimersIndex; j++)
-                 if (runningTimersList[j].time == currTime)
-                    break;
-
-              if (j == runningTimersIndex) {
-                 runningTimersList[runningTimersIndex].sensorCode = currCode;
-                 runningTimersList[runningTimersIndex++].time = currTime;
-              }
-           }
-        }
-
-        for (i = 0; i<runningTimersIndex; i++)
-           call ComputingTimers.startPeriodic[ runningTimersList[i].sensorCode ](runningTimersList[i].time);
+	computingStarted = TRUE;
      }
 
-     void stopComputing() {
-        uint8_t i;
-        for (i = 0; i<featParamsIndex; i++)
-           call ComputingTimers.stop[ featParamsList[i].sensorCode ]();
-     }
-
-     command void Function.stopComputing() {
-        stopComputing();
+     command void Function.stopComputing() {                    // CHECK... probably can be an empty command
+        computingStarted = FALSE;
      }
 
      command error_t FeatureEngine.registerFeature(enum FeatureCodes featureID) {
@@ -295,66 +265,12 @@ Boston, MA  02111-1307, USA.
                   tmp = ( currResult<<8*( (sizeof currResult) - currResultByteSize + j) );
                   evalFeatsList[evalFeatsIndex++] = (tmp>>8*( (sizeof currResult) - 1));
                }
-
-               //evalFeatsCount++;
             }
          }
 
          evalFeatsCount++;
      }
 
-     event void ComputingTimers.fired[uint8_t id]() {
-         /*uint8_t i, j;
-         uint32_t thisTime = call ComputingTimers.getdt[id]();
-         uint8_t currSensorCode;
-
-         uint16_t bufferPoolCopy[call BufferPool.getBufferSize(0) * call BufferPool.getBufferPoolSize()];
-         call BufferPool.getBufferPoolCopy(bufferPoolCopy);
-
-         for (i = 0; i<featParamsIndex; i++) {
-            if (featParamsList[i].processingTime == thisTime) {
-               currSensorCode = featParamsList[i].sensorCode;
-
-               evalFeatsIndex = 0;
-               evalFeatsCount = 0;
-               evalFeatsList[evalFeatsIndex++] = currSensorCode;
-               evalFeatsList[evalFeatsIndex++] = 0;
-
-               for (j = 0; j<actFeatsIndex; j++)
-                  if (actFeatsList[j].sensorCode == currSensorCode)
-                     calculateFeature(actFeatsList[j].featureCode, currSensorCode, actFeatsList[j].sensorChBitmask, featParamsList[i].windowSize, bufferPoolCopy);
-
-               evalFeatsList[1] = evalFeatsCount;
-
-               call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
-            }
-         }*/
-
-         uint8_t i, j;
-         uint8_t currWindowSize = 1;
-         uint16_t bufferPoolCopy[call BufferPool.getBufferSize(0) * call BufferPool.getBufferPoolSize()];
-         call BufferPool.getBufferPoolCopy(bufferPoolCopy);
-
-         evalFeatsIndex = 0;
-         evalFeatsCount = 0;
-         evalFeatsList[evalFeatsIndex++] = id;
-         evalFeatsList[evalFeatsIndex++] = 0;
-
-         for (j = 0; j<featParamsIndex; j++)
-            if (featParamsList[j].sensorCode == id) {
-               currWindowSize = featParamsList[j].windowSize;
-               break;
-            }
-
-         for (i = 0; i<actFeatsIndex; i++)
-            if (actFeatsList[i].sensorCode == id)
-               calculateFeature(actFeatsList[i].featureCode, id, actFeatsList[i].sensorChBitmask, currWindowSize, bufferPoolCopy);
-
-         evalFeatsList[1] = evalFeatsCount;
-
-         call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
-     }
-     
      command void Function.reset() {
           memset(actFeatsList, 0x00, sizeof actFeatsList);
           actFeatsIndex = 0;
@@ -362,15 +278,57 @@ Boston, MA  02111-1307, USA.
           memset(featParamsList, 0x00, sizeof featParamsList);
           featParamsIndex = 0;
 
-          memset(runningTimersList, 0x00, sizeof runningTimersList);       
-          runningTimersIndex = 0;
-
           memset(evalFeatsList, 0x00, sizeof evalFeatsList);
           evalFeatsIndex = 0;
           evalFeatsCount = 0;
+          
+          computingStarted = FALSE;
+          memset(newSamplesSinceLastFeature, 0, sizeof newSamplesSinceLastFeature);
      }
 
-     event void BufferPool.newElem(uint8_t bufferID, uint16_t elem) {/*if (bufferID==0) call Leds.led0Toggle(); else call Leds.led1Toggle();*/}
+     
+     event void BufferPool.newElem(uint8_t bufferID, uint16_t elem) {}
+     
+     event void FunctionManager.sensorWasSampled(enum SensorCode sensorCode) {
+        uint8_t i;
+	uint8_t shift = 0;
+	uint8_t window = 0;
+	uint16_t bufferPoolCopy[call BufferPool.getBufferSize(0) * call BufferPool.getBufferPoolSize()];
+
+	if (! computingStarted)
+	   return;
+
+	newSamplesSinceLastFeature[sensorCode]++;
+
+	call BufferPool.getBufferPoolCopy(bufferPoolCopy);
+
+	// determine the shift for the given sensor
+	for (i = 0; i < featParamsIndex; i++) {
+	   if (featParamsList[i].sensorCode == sensorCode) {
+	      shift = featParamsList[i].processingTime;
+	      window = featParamsList[i].windowSize;
+	   }
+	}
+
+	// check if it is time to calculate a feature
+	if (newSamplesSinceLastFeature[sensorCode] == shift) {
+	   // if so calculate all active features for that sensor
+	   evalFeatsIndex = 0;
+	   evalFeatsCount = 0;
+	   evalFeatsList[evalFeatsIndex++] = sensorCode;
+	   evalFeatsList[evalFeatsIndex++] = 0;
+
+	   for (i = 0; i < actFeatsIndex; i++)
+	      if (actFeatsList[i].sensorCode == sensorCode)
+                 calculateFeature(actFeatsList[i].featureCode, actFeatsList[i].sensorCode, actFeatsList[i].sensorChBitmask, window, bufferPoolCopy);
+
+	   evalFeatsList[1] = evalFeatsCount;
+
+	   call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
+
+	   newSamplesSinceLastFeature[sensorCode] = 0;
+	}
+     }
 
 
      default command uint8_t Features.getResultSize[uint8_t featureID]() {
@@ -381,19 +339,6 @@ Boston, MA  02111-1307, USA.
      default command int32_t Features.calculate[uint8_t featureID](int16_t* data, uint16_t dataLen) {
         dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
         return 0xFFFFFFFF;
-     }
-
-     default command void ComputingTimers.startPeriodic[uint8_t id](uint32_t dt) {
-        dbg(DBG_USR1, "FeatureEngineP.startPeriodic: Executed default operation. Chances are there's an operation miswiring.\n");
-     }
-
-      default command void ComputingTimers.stop[uint8_t id]() {
-        dbg(DBG_USR1, "FeatureEngineP.stop: Executed default operation. Chances are there's an operation miswiring.\n");
-     }
-
-     default command uint32_t ComputingTimers.getdt[uint8_t id]() {
-        dbg(DBG_USR1, "FeatureEngineP.getdt: Executed default operation. Chances are there's an operation miswiring.\n");
-        return 0;
      }
  }
 

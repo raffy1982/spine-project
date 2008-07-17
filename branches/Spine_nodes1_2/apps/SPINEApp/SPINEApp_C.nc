@@ -180,4 +180,5 @@ implementation
   event void RadioController.radioOn() {}
   event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {}
   event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
+  event void FunctionManager.sensorWasSampled(enum SensorCode sensorCode) {}
 }

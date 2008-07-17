@@ -130,6 +130,8 @@ Boston, MA  02111-1307, USA.
        command void reset();
 
        command uint8_t getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType);
+       
+       command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
 
        /**
        * This events is thrown as soon as the given sensor completes its data acquisition process

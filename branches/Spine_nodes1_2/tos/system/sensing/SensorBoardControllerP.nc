@@ -166,6 +166,20 @@ implementation {
           return 0xFF;
        }
 
+       command error_t SensorBoardController.getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel) {
+   		uint8_t i;
+		
+   		for (i = 0; i<count4BufList; i++) {
+   			if (sensCodeChanbuffID4BufList[i] == bufferID) {
+   				*sensorCode = sensorCode4BufList[i];
+   				*channel = sensorChanCode4BufList[i];
+   				return SUCCESS;
+   			}
+   		}
+		
+   		return FAIL;
+       }
+
 
        event void SensorImpls.acquisitionDone[uint8_t sensorCode](error_t result, int8_t resultCode) {
            uint8_t j;

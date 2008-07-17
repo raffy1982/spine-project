@@ -89,6 +89,10 @@ implementation {
           return call SensorBoardController.getBufferID(sensorCode, valueType);
        }
        
+       command error_t SensorsRegistry.getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel) {
+          return call SensorBoardController.getSensorAndChannelForBufferID(bufferID, sensorCode, channel);
+       }
+
        event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode){}
 
 }

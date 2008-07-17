@@ -28,12 +28,13 @@ Boston, MA  02111-1307, USA.
  * This component allows the retrieval of the Function list.
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski
  *
  * @version 1.0
  */
 
 #ifndef FUNCTION_LIST_SIZE
-#define FUNCTION_LIST_SIZE 4             // max nr of functions supported by SPINE is 8
+#define FUNCTION_LIST_SIZE 5             // max nr of functions supported by SPINE is 8
 #endif
 
 #ifndef FUNCTION_LIBRARIES_LIST_SIZE
@@ -46,6 +47,7 @@ module FunctionManagerP {
        uses {
          interface PacketManager;
          interface Function as Functions[uint8_t functionID];
+		 interface SensorBoardController;
        }
 }
 
@@ -137,6 +139,18 @@ implementation {
 
        event void PacketManager.messageReceived(enum PacketTypes pktType){}
 
+	   /**
+	    * lets the function manager (and therefore registered functions) know
+		* when another sample has been taken to allow the triggering of feature
+		* calculation
+		*
+		*/
+	   event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+		   if (result == SUCCESS) {
+			   signal FunctionManager.sensorWasSampled(sensorCode);
+		   }
+	   }
+	
 
        default command bool Functions.setUpFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.setUpFunction: Executed default operation. Chances are there's an operation miswiring.\n");

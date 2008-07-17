@@ -75,6 +75,8 @@ Boston, MA  02111-1307, USA.
 
        command uint8_t getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType);
        
+       command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
+
        command void reset();
 
  }

@@ -41,14 +41,18 @@ Boston, MA  02111-1307, USA.
  }
 
  implementation {
-     components PacketManagerC, FunctionManagerP;
-
-components FeatureEngineC;
+     
+     components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
+	
+     components FeatureEngineC;
+     components MultiChannelFeatureEngineC;
 
      FunctionManager = FunctionManagerP;
 
      FunctionManagerP.PacketManager -> PacketManagerC;
+     FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
 
      FunctionManagerP.Functions = Functions;
      FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
+     FunctionManagerP.Functions[MULTI_CHANNEL_FEATURE] -> MultiChannelFeatureEngineC;
  }

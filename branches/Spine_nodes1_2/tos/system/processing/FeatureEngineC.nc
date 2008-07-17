@@ -38,10 +38,7 @@ Boston, MA  02111-1307, USA.
       provides interface Function;
       provides interface FeatureEngine;
 
-      uses {
-        interface Feature as Features[uint8_t featureID];
-        interface Timer<TMilli> as ComputingTimers[uint8_t id];
-      }
+      uses interface Feature as Features[uint8_t featureID];
  }
 
  implementation {
@@ -58,13 +55,9 @@ Boston, MA  02111-1307, USA.
       components VarianceC;
       components ModeC;
       components MedianC;
+      components RawDataC;
 
       components LedsC; // DEBUG CODE
-
-      components new TimerMilliC() as Timer1;
-      components new TimerMilliC() as Timer2;
-      components new TimerMilliC() as Timer3;
-      components new TimerMilliC() as Timer4;
 
       FeatureEngineP.Function = Function;
       FeatureEngineP.FeatureEngine = FeatureEngine;
@@ -90,10 +83,5 @@ Boston, MA  02111-1307, USA.
       FeatureEngineP.Features[VARIANCE] -> VarianceC;
       FeatureEngineP.Features[MODE] -> ModeC;
       FeatureEngineP.Features[MEDIAN] -> MedianC;
-
-      FeatureEngineP.ComputingTimers = ComputingTimers;
-      FeatureEngineP.ComputingTimers[VOLTAGE_SENSOR] -> Timer1;
-      FeatureEngineP.ComputingTimers[ACC_SENSOR] -> Timer2;
-      FeatureEngineP.ComputingTimers[GYRO_SENSOR] -> Timer3;
-      FeatureEngineP.ComputingTimers[INTERNAL_TEMPERATURE_SENSOR] -> Timer4;
+      FeatureEngineP.Features[RAW_DATA] -> RawDataC;
  }

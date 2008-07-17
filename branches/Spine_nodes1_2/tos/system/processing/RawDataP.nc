@@ -24,65 +24,44 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * The present 'enum' contains the codes associated to the features expected and supported by AMP
- * (Activity Monitoring Features Selection Protocol)  
+ * This component calculate the Raw Data of a set of elements.
  *
  * @author Raffaele Gravina
  * @author Antonio Guerrieri
  *
  * @version 1.0
  */
+ 
+ module RawDataP {
 
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+       provides interface Feature;
+       
+       uses {
+          interface Boot;
+          interface FeatureEngine;
+       }
+}
 
-enum FunctionCodes {
+implementation {
+       
+       bool registered = FALSE;
 
-  FEATURE = 0x01,
-  ALARM = 0x02,
-  SIGNAL_PROCESSING = 0x03,
-  ONE_SHOT = 0x04,
-  MULTI_CHANNEL_FEATURE = 0x05
-};
+       event void Boot.booted() {
+          if (!registered) {
+             call FeatureEngine.registerFeature(RAW_DATA);
+             registered = TRUE;
+          }
+       }
 
-enum FeatureCodes {
+       command int32_t Feature.calculate(int16_t* data, uint16_t elemCount) {
+          return data[0];
+       }
+       
+       command uint8_t Feature.getResultSize() {
+         return 2;
+       }
+}
 
-  RAW_DATA = 0x01,
-  MAX = 0x02,
-  MIN = 0x03,
-  RANGE = 0x04,
-  MEAN = 0x05,
-  AMPLITUDE = 0x06,
-  RMS = 0x07,
-  ST_DEV = 0x08,
-  TOTAL_ENERGY = 0x09,
-  VARIANCE = 0x0A,
-  MODE = 0x0B,
-  MEDIAN = 0x0C
 
-};
 
-enum MultiChannelFeatureCodes {
-  PITCH_ROLL = 0x01,
-  VECTOR_MAGNITUDE = 0x02
-};
-
-typedef struct active_feature_t {
-  uint8_t featureCode;
-  uint8_t sensorCode;
-  uint8_t sensorChBitmask;
-} active_feature_t;
-
-typedef struct feat_params_t {
-  uint8_t sensorCode;
-  uint8_t windowSize;
-  uint8_t processingTime; // actually contains just the shift_size
-} feat_params_t;
-
-/*typedef struct running_timers_t {
-  uint8_t sensorCode;
-  uint32_t time;
-} running_timers_t;*/
-
-#endif
 
