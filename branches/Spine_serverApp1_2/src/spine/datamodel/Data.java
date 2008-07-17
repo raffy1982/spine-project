@@ -48,7 +48,7 @@ public class Data {
 		this.functionCode = payload[0];
 		
 		switch (this.functionCode) {
-			case SPINEFunctionConstants.FEATURE: {
+			case SPINEFunctionConstants.FEATURE: case SPINEFunctionConstants.MULTI_CHANNEL_FEATURE: {
 				data = new Vector();
 				
 				byte sensorCode = payload[1];
@@ -67,7 +67,7 @@ public class Data {
 					int currCh3Value = convertToInt(payload, (3+i*18) + 10);
 					int currCh4Value = convertToInt(payload, (3+i*18) + 14);
 					
-					((Vector)data).addElement(new Feature(nodeID, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
+					((Vector)data).addElement(new Feature(nodeID, this.functionCode, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
 				}		
 				break;
 			}
@@ -79,7 +79,7 @@ public class Data {
 				int currCh2Value = convertTwoBytesToInt(payload, 5);
 				int currCh3Value = convertTwoBytesToInt(payload, 7);
 				int currCh4Value = convertTwoBytesToInt(payload, 9);
-				data = new Feature(nodeID, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
+				data = new Feature(nodeID, this.functionCode, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
 				break;
 			}
 			default: break;

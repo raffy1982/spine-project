@@ -43,7 +43,7 @@ public class SpineSetupFunction {
 		
 		byte functionCode = payload[0];
 		switch(functionCode) {
-			case SPINEFunctionConstants.FEATURE: {
+			case SPINEFunctionConstants.FEATURE: case SPINEFunctionConstants.MULTI_CHANNEL_FEATURE: {
 				if (payload.length != 5)
 					return null;
 				

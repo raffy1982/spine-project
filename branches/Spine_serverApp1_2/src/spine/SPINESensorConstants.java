@@ -71,6 +71,11 @@ public class SPINESensorConstants {
 	
 	public static final int MAX_VALUE_TYPES = 4;
 	
+	public static final byte CH1 = 0x00;
+	public static final byte CH2 = 0x01;
+	public static final byte CH3 = 0x02;
+	public static final byte CH4 = 0x03;
+	
 	public static final String CH1_LABEL = "ch1";
 	public static final String CH2_LABEL = "ch2";
 	public static final String CH3_LABEL = "ch3";

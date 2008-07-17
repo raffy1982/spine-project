@@ -41,6 +41,7 @@ public class Feature {
 	
 	private int nodeID;
 	
+	private byte functionCode;
 	private byte featureCode;
 	
 	private byte sensorCode;
@@ -52,9 +53,10 @@ public class Feature {
 	private int ch4Value;
 	
 	
-	Feature(int nodeID, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
+	Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
 		this.nodeID = nodeID;
 
+		this.functionCode = functionCode;
 		this.featureCode = featureCode;
 		
 		this.sensorCode = sensorCode;
@@ -100,12 +102,17 @@ public class Feature {
 	}
 	
 	public String toString() {
-		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.featureCode) + 
+		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
 				" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
 				" (now on " + SPINESensorConstants.valueTypesBitmaskToString(this.channelBitmask) + ") " + 
 				" - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
 				"; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
 				"; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
 				"; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
+	}
+
+
+	public byte getFunctionCode() {
+		return functionCode;
 	}
 }

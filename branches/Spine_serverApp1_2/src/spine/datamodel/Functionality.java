@@ -39,23 +39,23 @@ import spine.SPINEFunctionConstants;
 public class Functionality {
 	
 	private byte functionType;
-	private byte code;
+	private byte functionCode;
 	
-	public Functionality(byte functionType, byte code) {
+	public Functionality(byte functionType, byte functionCode) {
 		this.functionType = functionType;
-		this.code = code; 
+		this.functionCode = functionCode; 
 	}
 	
 	public String toString() {
 		return SPINEFunctionConstants.functionCodeToString(functionType) + " - " + 
-			   SPINEFunctionConstants.functionalityCodeToString(code);
+			   SPINEFunctionConstants.functionalityCodeToString(functionType, functionCode);
 	}
 
 	public byte getFunctionType() {
 		return functionType;
 	}
 
-	public byte getCode() {
-		return code;
+	public byte getFunctionCode() {
+		return functionCode;
 	}
 }

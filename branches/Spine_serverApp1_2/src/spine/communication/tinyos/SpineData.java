@@ -51,7 +51,7 @@ public class SpineData {
 		pldIndex++;
 		
 		switch(functionCode) {
-			case SPINEFunctionConstants.FEATURE: {
+			case SPINEFunctionConstants.FEATURE: case SPINEFunctionConstants.MULTI_CHANNEL_FEATURE: {
 				byte sensorCode = payload[pldIndex++];
 				dataTmp[dtIndex++] = sensorCode;
 				

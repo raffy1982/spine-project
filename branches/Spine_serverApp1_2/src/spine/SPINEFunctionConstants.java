@@ -28,6 +28,7 @@ Boston, MA  02111-1307, USA.
  *  
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski
  *
  * @version 1.2
  */
@@ -40,6 +41,7 @@ public class SPINEFunctionConstants {
 	public static final byte ALARM = 0x02;
 	public static final byte SIGNAL_PROCESSING = 0x03;
 	public static final byte ONE_SHOT = 0x04;
+	public static final byte MULTI_CHANNEL_FEATURE = 0x05;
 	
 	public static final byte RAW_DATA = 0x01;
 	public static final byte MAX = 0x02;
@@ -54,7 +56,11 @@ public class SPINEFunctionConstants {
 	public static final byte MODE = 0x0B;
 	public static final byte MEDIAN = 0x0C;
 	
+	public static final byte PITCH_ROLL = 0x01;
+	public static final byte VECTOR_MAGNITUDE = 0x02;
+	
 	public static final String FEATURE_LABEL = "Feature";
+	public static final String MULTI_CHANNEL_FEATURE_LABEL = "Multi-Channel Feature";
 	
 	
 	public static String functionCodeToString(byte code) {
@@ -63,25 +69,39 @@ public class SPINEFunctionConstants {
 			case ALARM: return "Alarm";
 			case SIGNAL_PROCESSING: return "DSP";
 			case ONE_SHOT: return "One Shot";
+			case MULTI_CHANNEL_FEATURE: return MULTI_CHANNEL_FEATURE_LABEL;
 			default: return "?";
 		}
 	}
 	
-	public static String functionalityCodeToString(byte code) {
-		switch (code) {
-			case RAW_DATA: return "Raw Data";
-			case MAX: return "Max";
-			case MIN: return "Min";
-			case RANGE: return "Range";
-			case MEAN: return "Mean";
-			case AMPLITUDE: return "Amplitude";
-			case RMS: return "RMS";
-			case ST_DEV: return "Standard Deviation";
-			case TOTAL_ENERGY: return "Total Energy";
-			case VARIANCE: return "Variance";
-			case MODE: return "Mode";
-			case MEDIAN: return "Median";
-			default: return "?";
+	public static String functionalityCodeToString(byte functionCode, byte functionalityCode) {
+		switch (functionCode) {
+			case FEATURE:
+				switch (functionalityCode) {
+					case RAW_DATA: return "Raw Data";
+					case MAX: return "Max";
+					case MIN: return "Min";
+					case RANGE: return "Range";
+					case MEAN: return "Mean";
+					case AMPLITUDE: return "Amplitude";
+					case RMS: return "RMS";
+					case ST_DEV: return "Standard Deviation";
+					case TOTAL_ENERGY: return "Total Energy";
+					case VARIANCE: return "Variance";
+					case MODE: return "Mode";
+					case MEDIAN: return "Median";
+					default: return "?";
+				}
+				
+			case MULTI_CHANNEL_FEATURE:
+				switch (functionalityCode) {
+					case PITCH_ROLL: return "Pitch & Roll";
+					case VECTOR_MAGNITUDE: return "Vector Magnitude";
+					default: return "?";
+				}
+				
+			default:
+				return "?";
 		}
 	}
 }
