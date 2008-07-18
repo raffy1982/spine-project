@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
-interface MultiChannelFeature {
+interface Feature {
 
 	/**
 	 * calculate

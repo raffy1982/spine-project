@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *  Configuration component for MultiChannelFeature 'PitchRoll'
+ *  Configuration component for Feature 'PitchRoll'
  * 
  *
  * @author Philip Kuryloski
@@ -32,15 +32,15 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 configuration PitchRollC {
-	provides interface MultiChannelFeature;
+	provides interface Feature;
 }
 implementation {
 
     components PitchRollP;
-    components MainC, MultiChannelFeatureEngineC;
+    components MainC, FeatureEngineC;
 
-    MultiChannelFeature = PitchRollP;
+    Feature = PitchRollP;
 
     PitchRollP.Boot -> MainC.Boot;
-    PitchRollP.MultiChannelFeatureEngine -> MultiChannelFeatureEngineC;
+    PitchRollP.FeatureEngine -> FeatureEngineC;
 }

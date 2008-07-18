@@ -33,11 +33,11 @@ Boston, MA  02111-1307, USA.
  
 module PitchRollP {
       
-	provides interface MultiChannelFeature;
+	provides interface Feature;
       
 	uses {
 		interface Boot;
-		interface MultiChannelFeatureEngine;
+		interface FeatureEngine;
 	}
 }
 
@@ -47,12 +47,12 @@ implementation {
 
 	event void Boot.booted() {
 		if (!registered) {
-			call MultiChannelFeatureEngine.registerMultiChannelFeature(PITCH_ROLL);
+			call FeatureEngine.registerFeature(PITCH_ROLL);
 			registered = TRUE;
 		}
 	}
 
-	command error_t MultiChannelFeature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+	command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
 		uint16_t i;
 		int32_t sum_x = 0;
 		int32_t sum_y = 0;
@@ -98,18 +98,14 @@ implementation {
 			((int16_t *)result)[0] = pitch;
 			((int16_t *)result)[1] = roll;
 	
-			return SUCCESS;
+			return BM_CH1_CH2_ONLY;
 		} else {
-			return FAIL;
+			return BM_NONE;
 		}
 		
 	}
 	
-	command uint8_t MultiChannelFeature.getReturnedChannelCount() {
-		return 2;
-	}
-	
-	command uint8_t MultiChannelFeature.getResultSize() {
+	command uint8_t Feature.getResultSize() {
 		return 2;
 	}
 }

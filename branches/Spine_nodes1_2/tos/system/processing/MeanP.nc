@@ -43,7 +43,7 @@ Boston, MA  02111-1307, USA.
 }
 
 implementation {
-     
+
        bool registered = FALSE;
 
        event void Boot.booted() {
@@ -53,7 +53,8 @@ implementation {
           }
        }
 
-       command int32_t Feature.calculate(int16_t* data, uint16_t dataLen) {
+       
+       int32_t calculate(int16_t* data, uint16_t dataLen) {
             uint16_t i;
             int32_t mu = 0;
             
@@ -61,6 +62,18 @@ implementation {
                 mu += *(data + i);
 
             return  (mu / dataLen);
+       }
+
+       command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+            uint8_t i;
+            uint8_t mask = 0x08;
+            uint8_t rChCount = 0;
+
+            for (i = 0; i<MAX_VALUE_TYPES; i++)
+               if ( (channelMask & (mask>>i)) == (mask>>i))
+                  ((uint16_t *) result)[rChCount++] = calculate(data[i], dataLen);
+
+            return channelMask;
        }
        
        command uint8_t Feature.getResultSize() {

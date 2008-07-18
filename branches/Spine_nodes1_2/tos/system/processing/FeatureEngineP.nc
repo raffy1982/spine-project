@@ -241,9 +241,9 @@ implementation {
 		computingStarted = FALSE;
 	}
 	
-	command error_t MultiChannelFeatureEngine.registerFeature(enum FeatureCodes featureCode) {
-		if (featCount < MC_FEATURE_LIST_SIZE) { // to avoid memory leaks
-			featureList[featCount++] = ((MULTI_CHANNEL_FEATURE<<5) | (featureCode & 0x1F));  // The & 0x1F (00011111) is to avoid corruption in the first 'FunctionCode' 3 bits
+	command error_t FeatureEngine.registerFeature(enum FeatureCodes featureCode) {
+		if (featCount < FEATURE_LIST_SIZE) { // to avoid memory leaks
+			featureList[featCount++] = ((FEATURE<<5) | (featureCode & 0x1F));  // The & 0x1F (00011111) is to avoid corruption in the first 'FunctionCode' 3 bits
 			return SUCCESS;
 		}
 		return FAIL;
@@ -346,7 +346,7 @@ implementation {
 			
 			evalFeatsList[1] = evalFeatsCount;
 						
-			call FunctionManager.send(MULTI_CHANNEL_FEATURE, evalFeatsList, evalFeatsIndex);
+			call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
 			
 			newSamplesSinceLastFeature[sensorCode] = 0;
 		}

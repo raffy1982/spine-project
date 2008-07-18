@@ -67,7 +67,7 @@ implementation {
 	components LedsC;
 
 	FeatureEngineP.Function = Function;
-	MultiChannelFeatureEngineP.FeatureEngine = FeatureEngine;
+	FeatureEngineP.FeatureEngine = FeatureEngine;
 
 	FeatureEngineP.FunctionManager -> FunctionManagerC;
 	FeatureEngineP.SensorsRegistry -> SensorsRegistryC;

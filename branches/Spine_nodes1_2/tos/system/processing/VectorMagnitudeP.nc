@@ -34,11 +34,11 @@ Boston, MA  02111-1307, USA.
  
 module VectorMagnitudeP {
       
-	provides interface MultiChannelFeature;
+	provides interface Feature;
       
 	uses {
 		interface Boot;
-		interface MultiChannelFeatureEngine;
+		interface FeatureEngine;
 		interface MathUtils;
 	}
 }
@@ -49,12 +49,12 @@ implementation {
 
 	event void Boot.booted() {
 		if (!registered) {
-			call MultiChannelFeatureEngine.registerMultiChannelFeature(VECTOR_MAGNITUDE);
+			call FeatureEngine.registerFeature(VECTOR_MAGNITUDE);
 			registered = TRUE;
 		}
 	}
 
-	command error_t MultiChannelFeature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+	command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
 		uint8_t i;
 		uint16_t j;
 		uint8_t mask = 0x08;
@@ -82,14 +82,10 @@ implementation {
 		
 		((uint16_t *)result)[0] = (uint16_t)mag;
 
-		return SUCCESS;
+		return BM_CH1_ONLY;
 	}
 	
-	command uint8_t MultiChannelFeature.getReturnedChannelCount() {
-		return 1;
-	}
-	
-	command uint8_t MultiChannelFeature.getResultSize() {
+	command uint8_t Feature.getResultSize() {
 		return 2;
 	}
 }

@@ -53,14 +53,14 @@ implementation {
           }
        }
 
-       command int32_t Feature.calculate(int16_t* data, uint16_t elemCount) {
+       int32_t calculate(int16_t* data, uint16_t elemCount) {
             uint16_t i = 0, j;
             uint16_t iMax = 0;
             int16_t orderedData[elemCount];
             uint16_t tmp[elemCount];
 
             memset(tmp, 0x00, sizeof tmp);
-            
+
             memcpy(orderedData, data, sizeof orderedData);
             call Sort.mergeSort(orderedData, elemCount, 0, elemCount-1);
 
@@ -80,6 +80,18 @@ implementation {
                   iMax = i;
 
             return orderedData[iMax];
+       }
+       
+       command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+            uint8_t i;
+            uint8_t mask = 0x08;
+            uint8_t rChCount = 0;
+
+            for (i = 0; i<MAX_VALUE_TYPES; i++)
+               if ( (channelMask & (mask>>i)) == (mask>>i))
+                  ((uint16_t *) result)[rChCount++] = calculate(data[i], dataLen);
+
+            return channelMask;
        }
        
        command uint8_t Feature.getResultSize() {

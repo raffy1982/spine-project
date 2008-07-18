@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *  Configuration component for MultiChannelFeature 'VectorMagnitude'
+ *  Configuration component for Feature 'VectorMagnitude'
  * 
  *
  * @author Philip Kuryloski
@@ -32,17 +32,17 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 configuration VectorMagnitudeC {
-	provides interface MultiChannelFeature;
+	provides interface Feature;
 }
 implementation {
 
     components VectorMagnitudeP;
-    components MainC, MultiChannelFeatureEngineC;
+    components MainC, FeatureEngineC;
     components MathUtilsC;
 
-    MultiChannelFeature = VectorMagnitudeP;
+    Feature = VectorMagnitudeP;
 
     VectorMagnitudeP.Boot -> MainC.Boot;
-    VectorMagnitudeP.MultiChannelFeatureEngine -> MultiChannelFeatureEngineC;
+    VectorMagnitudeP.FeatureEngine -> FeatureEngineC;
     VectorMagnitudeP.MathUtils -> MathUtilsC;
 }
