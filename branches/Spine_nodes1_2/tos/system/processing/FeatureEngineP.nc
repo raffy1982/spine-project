@@ -24,7 +24,7 @@
  *****************************************************************/
 
 /**
- * Module component of the SPINE Multi Channel Feature Engine.
+ * Module component of the SPINE Feature Engine.
  *
  *
  * @author Raffaele Gravina
@@ -36,12 +36,12 @@
 #include "Functions.h"
 #include "SensorsConstants.h"
 
-#ifndef MC_FEATURE_LIST_SIZE
-#define MC_FEATURE_LIST_SIZE 32
+#ifndef FEATURE_LIST_SIZE
+#define FEATURE_LIST_SIZE 32
 #endif
 
-#ifndef ACT_MC_FEATS_LIST_SIZE
-#define ACT_MC_FEATS_LIST_SIZE 256
+#ifndef ACT_FEATS_LIST_SIZE
+#define ACT_FEATS_LIST_SIZE 256
 #endif
 
 #ifndef SENSORS_REGISTRY_SIZE
@@ -56,16 +56,16 @@
 #define BUFFER_LENGTH 80
 #endif
 
-module MultiChannelFeatureEngineP {
+module FeatureEngineP {
 	
 	provides {
 		interface Function;
-		interface MultiChannelFeatureEngine;
+		interface FeatureEngine;
 	}
 	
 	uses {
 		interface Boot;
-		interface MultiChannelFeature as MultiChannelFeatures[uint8_t featureID];
+		interface Feature as Features[uint8_t featureID];
 		interface FunctionManager;
 		interface SensorsRegistry;
 		interface BufferPool;
@@ -75,11 +75,11 @@ module MultiChannelFeatureEngineP {
 
 implementation {
 	
-	uint8_t featureList[MC_FEATURE_LIST_SIZE];
+	uint8_t featureList[FEATURE_LIST_SIZE];
 	uint8_t featCount = 0;
 	bool registered = FALSE;
 	
-	active_feature_t actFeatsList[ACT_MC_FEATS_LIST_SIZE];   // <featureCode, sensorCode, sensorChBitmask>
+	active_feature_t actFeatsList[ACT_FEATS_LIST_SIZE];   // <featureCode, sensorCode, sensorChBitmask>
 	uint8_t actFeatsIndex = 0;
 	
 	feat_params_t featParamsList[SENSORS_REGISTRY_SIZE];  // <sensorCode, windowSize, processingTime>
@@ -104,7 +104,7 @@ implementation {
 
 	event void Boot.booted() {
 		if (!registered) {
-			call FunctionManager.registerFunction(MULTI_CHANNEL_FEATURE);
+			call FunctionManager.registerFunction(FEATURE);
 			registered = TRUE;
 		}
 	}
@@ -241,7 +241,7 @@ implementation {
 		computingStarted = FALSE;
 	}
 	
-	command error_t MultiChannelFeatureEngine.registerMultiChannelFeature(enum MultiChannelFeatureCodes featureCode) {
+	command error_t MultiChannelFeatureEngine.registerFeature(enum FeatureCodes featureCode) {
 		if (featCount < MC_FEATURE_LIST_SIZE) { // to avoid memory leaks
 			featureList[featCount++] = ((MULTI_CHANNEL_FEATURE<<5) | (featureCode & 0x1F));  // The & 0x1F (00011111) is to avoid corruption in the first 'FunctionCode' 3 bits
 			return SUCCESS;
@@ -278,11 +278,11 @@ implementation {
 			}
 		}
 		
-		// here we allow the multichannel feature to write its result array directely into the evalFeatsList
+		// here we allow the  feature to write its result array directely into the evalFeatsList
 		buffer = &(buf[0]);
-		returnSensorChBitmask = call MultiChannelFeatures.calculate[featureCode]((int16_t **)buffer, sensorChBitmask, windowSize, evalFeatsList+evalFeatsIndex);
+		returnSensorChBitmask = call Features.calculate[featureCode]((int16_t **)buffer, sensorChBitmask, windowSize, evalFeatsList+evalFeatsIndex);
 
-		resultWordLength = call MultiChannelFeatures.getResultSize[featureCode]();
+		resultWordLength = call Features.getResultSize[featureCode]();
                 returnedChannelCount = countOfChannelsInMask(returnSensorChBitmask);
 
 		// reverse result byte order
@@ -367,13 +367,13 @@ implementation {
            memset(newSamplesSinceLastFeature, 0, sizeof newSamplesSinceLastFeature);
         }
 	
-	default command uint8_t MultiChannelFeatures.getResultSize[uint8_t featureID]() {
-		dbg(DBG_USR1, "MultiChannelFeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
+	default command uint8_t Features.getResultSize[uint8_t featureID]() {
+		dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
 		return 0xFF;
 	}
 	
-	default command error_t MultiChannelFeatures.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
-		dbg(DBG_USR1, "MultiChannelFeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
+	default command error_t Features.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+		dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
 		return FAIL;
 	}
 

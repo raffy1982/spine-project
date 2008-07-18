@@ -27,6 +27,7 @@ Boston, MA  02111-1307, USA.
  * Interface of the Function Manager. Each specific function implementation must register itself to the FunctionManager at boot time.
  * This component allows the retrieval of the Function list.
  *
+ * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
  * @version 1.0
@@ -34,16 +35,16 @@ Boston, MA  02111-1307, USA.
  
 #include "Functions.h"
 
-interface MultiChannelFeatureEngine {
+interface FeatureEngine {
 
 	/**
 	 * 
 	 *
-	 * @param 'multiChannelFeatureCode' the code of the feature to register
+	 * @param 'FeatureCode' the code of the feature to register
 	 *
 	 * @return
 	 */
-	command error_t registerMultiChannelFeature(enum MultiChannelFeatureCodes featureCode);
+	command error_t registerFeature(enum FeatureCodes featureCode);
 	 
 }
 

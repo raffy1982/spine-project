@@ -24,9 +24,9 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Interface of the SPINE Multi Channel Feature.
+ * Interface of the SPINE Feature.
  *
- *
+ * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
  * @version 1.0
