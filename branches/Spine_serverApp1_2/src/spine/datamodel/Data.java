@@ -48,7 +48,7 @@ public class Data {
 		this.functionCode = payload[0];
 		
 		switch (this.functionCode) {
-			case SPINEFunctionConstants.FEATURE: case SPINEFunctionConstants.MULTI_CHANNEL_FEATURE: {
+			case SPINEFunctionConstants.FEATURE: {
 				data = new Vector();
 				
 				byte sensorCode = payload[1];
@@ -104,6 +104,10 @@ public class Data {
 	private static int convertTwoBytesToInt(byte[] bytes, int index) {
 		return   (bytes[index + 1] & 0xFF) |
 		        ((bytes[index] & 0xFF) << 8);
+	}
+	
+	public String toString() {
+		return "" + this.data;
 	}
 
 }
