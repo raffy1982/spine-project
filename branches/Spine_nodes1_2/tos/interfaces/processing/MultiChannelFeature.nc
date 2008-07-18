@@ -42,17 +42,10 @@ interface MultiChannelFeature {
 	 * @param	dataLen	the number of samples per channel
 	 * @param	result	buffer to store the calculated result (must have size returnedChannelCount x resultSize bytes)
 	 *
-	 * @return	succes
+	 * @return	the channels written into the 'result', expressed as a channel Bitmask
 	 */
-	command error_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result);
-	
-	/**
-	 * getReturnedChannelCount
-	 *
-	 * @return the number of channels returned by the calculate operation
-	 */
-	command uint8_t getReturnedChannelCount();
-	
+	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result);
+
 	/**
 	 * getResultSize
 	 *

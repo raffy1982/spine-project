@@ -10,7 +10,7 @@ GNU Lesser General Public License
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
-version 2.1 of the License. 
+version 2.1 of the License.
  
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -50,14 +50,22 @@ configuration MultiChannelFeatureEngineC {
 implementation {
 	components MainC, FunctionManagerC, SensorsRegistryC, BufferPoolP, MultiChannelFeatureEngineP;
       
-	components PitchRollC, VectorMagnitudeC;
+	components PitchRollC;
+        components VectorMagnitudeC;
+        components MaxC;
+        components MinC;
+        components RangeC;
+        components MeanC;
+        components AmplitudeC;
+        components RmsC;
+        components StandardDeviationC;
+        components TotalEnergyC;
+        components VarianceC;
+        components ModeC;
+        components MedianC;
+        components RawDataC;
 	
 	components LedsC;
-	
-//	components new TimerMilliC() as Timer1;
-//	components new TimerMilliC() as Timer2;
-//	components new TimerMilliC() as Timer3;
-//	components new TimerMilliC() as Timer4;
 
 	MultiChannelFeatureEngineP.Function = Function;
 	MultiChannelFeatureEngineP.MultiChannelFeatureEngine = MultiChannelFeatureEngine;
@@ -73,10 +81,16 @@ implementation {
 	MultiChannelFeatureEngineP.MultiChannelFeatures = MultiChannelFeatures;
 	MultiChannelFeatureEngineP.MultiChannelFeatures[PITCH_ROLL] -> PitchRollC;
 	MultiChannelFeatureEngineP.MultiChannelFeatures[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
-
-//	MultiChannelFeatureEngineP.ComputingTimers = ComputingTimers;
-//	MultiChannelFeatureEngineP.ComputingTimers[VOLTAGE_SENSOR] -> Timer1;
-//	MultiChannelFeatureEngineP.ComputingTimers[ACC_SENSOR] -> Timer2;
-//	MultiChannelFeatureEngineP.ComputingTimers[GYRO_SENSOR] -> Timer3;
-//	MultiChannelFeatureEngineP.ComputingTimers[INTERNAL_TEMPERATURE_SENSOR] -> Timer4;
+	MultiChannelFeatureEngineP.MultiChannelFeatures[MAX] -> MaxC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[MIN] -> MinC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[RANGE] -> RangeC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[MEAN] -> MeanC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[AMPLITUDE] -> AmplitudeC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[RMS] -> RmsC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[ST_DEV] -> StandardDeviationC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[TOTAL_ENERGY] -> TotalEnergyC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[VARIANCE] -> VarianceC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[MODE] -> ModeC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[MEDIAN] -> MedianC;
+        MultiChannelFeatureEngineP.MultiChannelFeatures[RAW_DATA] -> RawDataC;
 }

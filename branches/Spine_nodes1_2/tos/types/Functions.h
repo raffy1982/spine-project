@@ -41,8 +41,8 @@ enum FunctionCodes {
   FEATURE = 0x01,
   ALARM = 0x02,
   SIGNAL_PROCESSING = 0x03,
-  ONE_SHOT = 0x04,
-  MULTI_CHANNEL_FEATURE = 0x05
+  ONE_SHOT = 0x04
+
 };
 
 enum FeatureCodes {
@@ -58,13 +58,10 @@ enum FeatureCodes {
   TOTAL_ENERGY = 0x09,
   VARIANCE = 0x0A,
   MODE = 0x0B,
-  MEDIAN = 0x0C
-
-};
-
-enum MultiChannelFeatureCodes {
-  PITCH_ROLL = 0x01,
-  VECTOR_MAGNITUDE = 0x02
+  MEDIAN = 0x0C,
+  PITCH_ROLL = 0x0D,
+  VECTOR_MAGNITUDE = 0x0E
+  
 };
 
 typedef struct active_feature_t {
@@ -78,11 +75,6 @@ typedef struct feat_params_t {
   uint8_t windowSize;
   uint8_t processingTime; // actually contains just the shift_size
 } feat_params_t;
-
-/*typedef struct running_timers_t {
-  uint8_t sensorCode;
-  uint32_t time;
-} running_timers_t;*/
 
 #endif
 

@@ -93,6 +93,15 @@ implementation {
 	
 	uint16_t newSamplesSinceLastFeature[SENSORS_REGISTRY_SIZE];
 	
+	uint8_t countOfChannelsInMask(uint8_t mask) {
+                uint8_t i, sum = 0;
+                
+                for (i=0; i<MAX_VALUE_TYPES; i++)
+                   sum += (mask>>i & 0x01);
+                
+                return sum;
+        }
+
 	event void Boot.booted() {
 		if (!registered) {
 			call FunctionManager.registerFunction(MULTI_CHANNEL_FEATURE);
@@ -248,25 +257,19 @@ implementation {
 		
 		uint8_t i,j;
 		uint8_t mask = 0x08;
-		error_t success;
+		uint8_t returnedChannelCount = 0;
 		uint8_t returnSensorChBitmask = 0x00;
-		uint8_t tmp[4];
-		
-		uint8_t resultCount = 0;
+		uint8_t *maskAndSizePtr = NULL;
+		uint32_t tmp = 0, currResult = 0;
+
 		uint8_t resultWordLength = 0;
-		
+
 		evalFeatsList[evalFeatsIndex++] = featureCode;
-		
-		// because this is a multichannel feature, we must generate a new
-		// bitmask that indicates the count of values generated (which could be
-		// different than which channels are set to be sampled)
-		returnSensorChBitmask = (0x0F << (4 - call MultiChannelFeatures.getReturnedChannelCount[featureCode]())) & 0x0F;
-		
-		evalFeatsList[evalFeatsIndex] = ((returnSensorChBitmask & 0x0F) << 4);
-		evalFeatsList[evalFeatsIndex++] |= ((call MultiChannelFeatures.getResultSize[featureCode]()) & 0x0F);
-		
+
+		maskAndSizePtr = evalFeatsList+evalFeatsIndex++;
+
 		for (i = 0; i<MAX_VALUE_TYPES; i++) {
-			
+
 			// prepare the buffer (buffer is an array of pointers to the real buffers for each sensor channel)
 			if ( (sensorChBitmask & (mask>>i)) == (mask>>i)) {
 				buf[i] = ( bufferPoolCopy + call BufferPool.getBufferSize(0) * call SensorsRegistry.getBufferID(sensorCode, i) );
@@ -277,23 +280,28 @@ implementation {
 		
 		// here we allow the multichannel feature to write its result array directely into the evalFeatsList
 		buffer = &(buf[0]);
-		success = call MultiChannelFeatures.calculate[featureCode]((int16_t **)buffer, sensorChBitmask, windowSize, evalFeatsList+evalFeatsIndex);
-		
-		resultCount = call MultiChannelFeatures.getReturnedChannelCount[featureCode]();
+		returnSensorChBitmask = call MultiChannelFeatures.calculate[featureCode]((int16_t **)buffer, sensorChBitmask, windowSize, evalFeatsList+evalFeatsIndex);
+
 		resultWordLength = call MultiChannelFeatures.getResultSize[featureCode]();
-		
+                returnedChannelCount = countOfChannelsInMask(returnSensorChBitmask);
+
 		// reverse result byte order
 		if (resultWordLength > 1) {
-			for (i = 0; i < resultCount; i++) {
-				memcpy(tmp, evalFeatsList+evalFeatsIndex+(i*resultWordLength), resultWordLength);
-				for (j=0; j<resultWordLength; j++) {
-					*(evalFeatsList+evalFeatsIndex+(i*resultWordLength)+j) = tmp[resultWordLength-1-j];
-				}
+			for (i = 0; i < returnedChannelCount; i++) {
+
+				currResult = (resultWordLength==4)? *((uint32_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i))) :
+                                                                    *((uint16_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i)));
+				for (j = 0; j<resultWordLength; j++) {
+                                   tmp = ( currResult<<8*( (sizeof currResult) - resultWordLength + j) );
+                                   *(evalFeatsList + evalFeatsIndex + (resultWordLength*i) + j) = (tmp>>8*( (sizeof currResult) - 1));
+                               }
 			}
 		}
-		
+
+		*maskAndSizePtr = ((returnSensorChBitmask & 0x0F) << 4);
+		*maskAndSizePtr |= (resultWordLength & 0x0F);
 		// increment our index
-		evalFeatsIndex += resultCount * resultWordLength;
+		evalFeatsIndex += returnedChannelCount * resultWordLength;
 		
 		evalFeatsCount++;
 	}
@@ -358,11 +366,6 @@ implementation {
            computingStarted = FALSE;
            memset(newSamplesSinceLastFeature, 0, sizeof newSamplesSinceLastFeature);
         }
-	
-	default command uint8_t MultiChannelFeatures.getReturnedChannelCount[uint8_t featureID]() {
-		dbg(DBG_USR1, "MultiChannelFeatureEngineP.getReturnedChannelCount: Executed default operation. Chances are there's an operation miswiring.\n");
-		return 0xFF;
-	}
 	
 	default command uint8_t MultiChannelFeatures.getResultSize[uint8_t featureID]() {
 		dbg(DBG_USR1, "MultiChannelFeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
