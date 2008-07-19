@@ -72,6 +72,10 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     
     public SPINEHeader getHeader() throws IllegalSpineHeaderSizeException {
     	byte[] msgBuf = this.dataGet();
+    	
+    	if (msgBuf.length < SPINEHeader.SPINE_HEADER_SIZE) 
+    		throw new IllegalSpineHeaderSizeException(SPINEHeader.SPINE_HEADER_SIZE, msgBuf.length);
+    	
 		byte[] headerBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE];
 		System.arraycopy(msgBuf, 0, headerBuf, 0, SPINEHeader.SPINE_HEADER_SIZE);		
 		
