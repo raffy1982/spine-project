@@ -80,7 +80,7 @@ System.out.print("messageReceived -> ");
 					h.getGroupID() != SPINEManager.MY_GROUP_ID) 
 					return;
 
-System.out.print("in.lowLevel: "); printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
+printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				
 				sendMessages(sourceNodeID);
 				
@@ -250,7 +250,7 @@ System.out.println("Ota immediate send.");																										 // check if
 	}
 	
 	private void printPayload(byte[] payload) {  // DEBUG CODE
-		System.out.print("out: ");
+		System.out.print("in.lowLevel: "); 
 		if(payload == null || payload.length == 0)
 			System.out.print("empty payload");
 		else{
