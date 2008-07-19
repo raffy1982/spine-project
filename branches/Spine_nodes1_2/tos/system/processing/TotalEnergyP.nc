@@ -57,7 +57,7 @@ implementation {
           uint8_t i;
 
           for(i=0; i<elemCount; i++)
-             energy += ( ((uint32_t)(*(data + i))) * ((uint32_t)(*(data + i))) );
+             energy += ( (int32_t)data[i] * (int32_t)data[i] );
 
           return  energy;
        }

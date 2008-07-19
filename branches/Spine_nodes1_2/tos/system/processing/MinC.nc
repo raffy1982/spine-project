@@ -37,10 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components MinP;
-    components MainC, FeatureEngineC;
+    components MainC, FeatureEngineC, MathUtilsC;
 
     Feature = MinP;
 
     MinP.Boot -> MainC.Boot;
     MinP.FeatureEngine -> FeatureEngineC;
+    MinP.MathUtils -> MathUtilsC;
  }

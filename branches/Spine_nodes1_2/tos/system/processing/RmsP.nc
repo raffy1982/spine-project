@@ -60,7 +60,7 @@ Boston, MA  02111-1307, USA.
             uint16_t i;
 
             for(i = 0; i<elemCount; i++)
-                  rms += ( ((int32_t)(*(data + i))) * ((int32_t)(*(data + i))) );
+                  rms += ( (int32_t)data[i] * (int32_t)data[i] );
 
             rms /= elemCount;
 

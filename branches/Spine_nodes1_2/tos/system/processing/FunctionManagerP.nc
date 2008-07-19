@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef FUNCTION_LIST_SIZE
-#define FUNCTION_LIST_SIZE 5             // max nr of functions supported by SPINE is 8
+#define FUNCTION_LIST_SIZE 4             // max nr of functions supported by SPINE is 8
 #endif
 
 #ifndef FUNCTION_LIBRARIES_LIST_SIZE

@@ -37,17 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components VarianceP;
-    components MainC, FeatureEngineC;
-    
-    components MeanC;
-
+    components MainC, FeatureEngineC, MathUtilsC;
 
     Feature = VarianceP;
 
-
     VarianceP.Boot -> MainC.Boot;
     VarianceP.FeatureEngine -> FeatureEngineC;
-
-
-    VarianceP.Mean -> MeanC;
+    VarianceP.MathUtils -> MathUtilsC;
  }

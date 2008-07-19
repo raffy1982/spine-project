@@ -37,15 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components AmplitudeP;
-    components MainC, FeatureEngineC;
+    components MainC, FeatureEngineC, MathUtilsC;
     
-    components MaxC, MeanC;
-
     Feature = AmplitudeP;
 
     AmplitudeP.Boot -> MainC.Boot;
     AmplitudeP.FeatureEngine -> FeatureEngineC;
-
-    AmplitudeP.Max -> MaxC;
-    AmplitudeP.Mean -> MeanC;
+    AmplitudeP.MathUtils -> MathUtilsC;
  }

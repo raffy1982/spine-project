@@ -40,13 +40,11 @@ Boston, MA  02111-1307, USA.
     components MainC, FeatureEngineC;
     
     components MathUtilsC;
-    components VarianceC;
 
     Feature = StandardDeviationP;
 
     StandardDeviationP.Boot -> MainC.Boot;
     StandardDeviationP.FeatureEngine -> FeatureEngineC;
     
-    StandardDeviationP.Variance -> VarianceC;
     StandardDeviationP.MathUtils -> MathUtilsC;
  }

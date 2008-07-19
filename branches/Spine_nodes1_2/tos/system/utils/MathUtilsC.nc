@@ -35,12 +35,54 @@ Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #define NEXT(n, i)  (((n) + (i)/(n)) >> 1)
 
-module MathUtilsC
-{
+module MathUtilsC {
    provides interface MathUtils;
 }
 implementation
 {
+      command uint16_t MathUtils.max(int16_t* data, uint16_t elemCount) {
+            uint16_t i;
+            int16_t max = data[0];
+
+            for(i = 1; i < elemCount; i++)
+                  if( data[i] > max)
+                       max = data[i];
+
+            return max;
+      }
+      
+      command uint16_t MathUtils.min(int16_t* data, uint16_t elemCount) {
+            uint16_t i;
+            int16_t min = data[0];
+
+            for(i = 1; i < elemCount; i++)
+                  if( data[i] < min)
+                       min = data[i];
+
+            return min;
+      }
+      
+      command uint16_t MathUtils.mean(int16_t* data, uint16_t dataLen) {
+            uint16_t i;
+            int32_t mu = 0;
+
+            for(i = 0; i < dataLen; i++)
+                mu += data[i];
+
+            return  (mu / dataLen);
+      }
+      
+      command uint32_t MathUtils.variance(int16_t* data, uint16_t elemCount) {
+          uint32_t var = 0;
+          uint16_t i;
+          int16_t mu = call MathUtils.mean(data, elemCount);
+
+          for(i = 0; i<elemCount; i++)
+                var += (  ((int32_t)data[i] - mu) * ((int32_t)data[i] - mu)  );
+
+          return  (var/elemCount);
+       }
+
       /*
       * Returns the truncated integer square root of the given parameter.
       *

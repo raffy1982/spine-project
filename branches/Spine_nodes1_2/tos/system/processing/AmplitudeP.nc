@@ -39,9 +39,7 @@ Boston, MA  02111-1307, USA.
        uses {
           interface Boot;
           interface FeatureEngine;
-          
-          interface Feature as Max;
-          interface Feature as Mean;
+          interface MathUtils;
        }
 }
 
@@ -60,16 +58,10 @@ implementation {
             uint8_t i;
             uint8_t mask = 0x08;
             uint8_t rChCount = 0;
-            int8_t max[MAX_VALUE_TYPES * call Max.getResultSize()];
-            int8_t mean[MAX_VALUE_TYPES * call Mean.getResultSize()];
-            
-            call Max.calculate(data, channelMask, dataLen, max);
-            call Mean.calculate(data, channelMask, dataLen, mean);
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
-               if ( (channelMask & (mask>>i)) == (mask>>i)) {
-                  ((uint16_t *) result)[rChCount++] = ((uint16_t *) max)[i] - ((uint16_t *) mean)[i];
-               }
+               if ( (channelMask & (mask>>i)) == (mask>>i))
+                  ((uint16_t *) result)[rChCount++] = call MathUtils.max(data[i], dataLen) - call MathUtils.mean(data[i], dataLen);
 
             return channelMask;
        }
@@ -77,6 +69,7 @@ implementation {
        command uint8_t Feature.getResultSize() {
          return 2;
        }
+
 }
 
 

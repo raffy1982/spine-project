@@ -37,10 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components MeanP;
-    components MainC, FeatureEngineC;
+    components MainC, FeatureEngineC, MathUtilsC;
 
     Feature = MeanP;
 
     MeanP.Boot -> MainC.Boot;
     MeanP.FeatureEngine -> FeatureEngineC;
+    MeanP.MathUtils -> MathUtilsC;
  }

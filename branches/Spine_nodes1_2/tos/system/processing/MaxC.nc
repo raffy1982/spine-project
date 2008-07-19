@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
  /**
  *  Configuration component for Feature 'Max'
- * 
+ *
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
@@ -37,10 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components MaxP;
-    components MainC, FeatureEngineC;
+    components MainC, FeatureEngineC, MathUtilsC;
 
     Feature = MaxP;
 
     MaxP.Boot -> MainC.Boot;
     MaxP.FeatureEngine -> FeatureEngineC;
+    MaxP.MathUtils -> MathUtilsC;
  }

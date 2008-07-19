@@ -55,14 +55,14 @@ implementation {
 
        int32_t calculate(int16_t* data, uint16_t elemCount) {
             uint16_t i;
-            int16_t min = *data;
+            int16_t min = data[0];
             int16_t max = min;
-            
+
             for(i = 1; i < elemCount; i++) {
-                 if( *(data + i) < min)
-                      min = *(data + i);
-                 if( *(data + i) > max)
-                      max = *(data + i);
+                 if( data[i] < min)
+                      min = data[i];
+                 if( data[i] > max)
+                      max = data[i];
             }
 
             return (max - min);

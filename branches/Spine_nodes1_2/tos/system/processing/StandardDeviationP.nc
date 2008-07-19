@@ -39,7 +39,6 @@ Boston, MA  02111-1307, USA.
           interface FeatureEngine;
           
           interface MathUtils;
-          interface Feature as Variance;
        }
 
        provides interface Feature;
@@ -60,14 +59,10 @@ implementation {
             uint8_t i;
             uint8_t mask = 0x08;
             uint8_t rChCount = 0;
-            int8_t var[MAX_VALUE_TYPES * call Variance.getResultSize()];
-
-            call Variance.calculate(data, channelMask, dataLen, var);
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
-               if ( (channelMask & (mask>>i)) == (mask>>i)) {
-                  ((uint16_t *) result)[rChCount++] = call MathUtils.isqrt(((uint32_t *) var)[i]);
-               }
+               if ( (channelMask & (mask>>i)) == (mask>>i))
+                  ((uint16_t *) result)[rChCount++] = call MathUtils.isqrt(call MathUtils.variance(data[i], dataLen));
 
             return channelMask;
        }

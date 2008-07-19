@@ -3,7 +3,7 @@ SPINE - Signal Processing In-Note Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
-Copyright (C) 2007 Telecom Italia S.p.A. 
+Copyright (C) 2007 Telecom Italia S.p.A.
  
 GNU Lesser General Public License
  
@@ -32,6 +32,14 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */ 
  interface MathUtils {
+
+        command uint16_t max(int16_t* data, uint16_t elemCount);
+        
+        command uint16_t min(int16_t* data, uint16_t elemCount);
+
+        command uint16_t mean(int16_t* data, uint16_t elemCount);
+        
+        command uint32_t variance(int16_t* data, uint16_t elemCount);
 
         /*
         * Returns the truncated integer square root of the given parameter.
