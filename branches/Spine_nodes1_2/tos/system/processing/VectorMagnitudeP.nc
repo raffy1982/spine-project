@@ -62,7 +62,7 @@ implementation {
 		int32_t sum[4] = {0, 0, 0, 0};
 		uint32_t avg2[4] = {0, 0, 0, 0};
 		
-		uint32_t tmp1, tmp2, mag;
+		uint32_t mag;
 		
 		for (i = 0; i<4; i++) {
 			if ( (channelMask & (mask>>i)) == (mask>>i)) {
@@ -75,10 +75,8 @@ implementation {
 				avg2[i] = sum[i]*sum[i];
 			}
 		}
-		
-		tmp1 = call MathUtils.isqrt(avg2[0] + avg2[1]);
-		tmp2 = call MathUtils.isqrt(avg2[2] + avg2[3]);
-		mag = call MathUtils.isqrt((tmp1*tmp1) + (tmp2*tmp2));
+
+		mag = call MathUtils.isqrt(avg2[0] + avg2[1] + avg2[2] + avg2[3]);
 		
 		((uint16_t *)result)[0] = (uint16_t)mag;
 
