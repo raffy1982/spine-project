@@ -55,26 +55,20 @@ implementation {
           }
        }
 
-       int32_t calculate(int16_t* data, uint16_t elemCount) {
-          int16_t orderedData[elemCount];
-
-          memcpy(orderedData, data, sizeof orderedData);
-          call Sort.mergeSort(orderedData, elemCount, 0, elemCount-1);
-          
-          if (elemCount%2 == 0)
-                return ((int32_t)orderedData[elemCount/2] + (int32_t)orderedData[(elemCount/2)-1])/2 ;
-            else 
-                return data[(elemCount-1)/2];
-       }
-       
        command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
             uint8_t i;
             uint8_t mask = 0x08;
             uint8_t rChCount = 0;
+            int16_t sortedData[255];       // TODO: understand why this array ( only here ) must by statically sized
+            int32_t tmpResult;
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
-               if ( (channelMask & (mask>>i)) == (mask>>i))
-                  ((uint16_t *) result)[rChCount++] = calculate(data[i], dataLen);
+               if ( (channelMask & (mask>>i)) == (mask>>i)) {
+                  memcpy(sortedData, data[i], (dataLen * sizeof(int16_t)) );
+                  call Sort.mergeSort(sortedData, dataLen, 0, dataLen-1);
+                  tmpResult = (dataLen%2 == 0)? (sortedData[dataLen/2] + sortedData[(dataLen/2)-1])/2 : sortedData[(dataLen-1)/2];
+                  ((uint16_t *) result)[rChCount++] = (uint16_t)tmpResult;
+               }
 
             return channelMask;
        }

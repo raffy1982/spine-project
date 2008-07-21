@@ -35,8 +35,6 @@ Boston, MA  02111-1307, USA.
 
 #include "Functions.h"
 
-//#include "printf.h"
-
 configuration FeatureEngineC {
 	provides interface Function;
 	provides interface FeatureEngine;
@@ -56,10 +54,10 @@ implementation {
         components AmplitudeC;
         components RmsC;
         components StandardDeviationC;
-        //components TotalEnergyC;          // YET TO BE FIXED
+        components TotalEnergyC;
         components VarianceC;
         components ModeC;
-        //components MedianC;               // ***
+        components MedianC;
         components RawDataC;
         components PitchRollC;
         components VectorMagnitudeC;
@@ -85,10 +83,10 @@ implementation {
         FeatureEngineP.Features[AMPLITUDE] -> AmplitudeC;
         FeatureEngineP.Features[RMS] -> RmsC;
         FeatureEngineP.Features[ST_DEV] -> StandardDeviationC;
-        //FeatureEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;      // YET TO BE FIXED
+        FeatureEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;
         FeatureEngineP.Features[VARIANCE] -> VarianceC;
         FeatureEngineP.Features[MODE] -> ModeC;
-        //FeatureEngineP.Features[MEDIAN] -> MedianC;                 // ***
+        FeatureEngineP.Features[MEDIAN] -> MedianC;
         FeatureEngineP.Features[RAW_DATA] -> RawDataC;
         FeatureEngineP.Features[PITCH_ROLL] -> PitchRollC;
 	FeatureEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;

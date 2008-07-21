@@ -41,7 +41,7 @@
 #endif
 
 #ifndef ACT_FEATS_LIST_SIZE
-#define ACT_FEATS_LIST_SIZE 256
+#define ACT_FEATS_LIST_SIZE 64
 #endif
 
 #ifndef SENSORS_REGISTRY_SIZE
@@ -85,7 +85,7 @@ implementation {
 	feat_params_t featParamsList[SENSORS_REGISTRY_SIZE];  // <sensorCode, windowSize, processingTime>
 	uint8_t featParamsIndex = 0;
 	
-	uint8_t evalFeatsList[64];
+	uint8_t evalFeatsList[128];
 	uint8_t evalFeatsIndex = 0;
 	uint8_t evalFeatsCount = 0;
 	

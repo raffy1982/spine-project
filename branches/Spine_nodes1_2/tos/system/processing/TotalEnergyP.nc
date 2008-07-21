@@ -52,30 +52,29 @@ implementation {
           }
        }
 
-       uint32_t calculate(int16_t* data, uint16_t elemCount) {
-          uint32_t energy = 0;
-          uint8_t i;
-
-          for(i=0; i<elemCount; i++)
-             energy += ( (int32_t)data[i] * (int32_t)data[i] );
-
-          return  energy;
-       }
-       
        command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
-            uint8_t i;
-            uint8_t mask = 0x08;
-            uint8_t rChCount = 0;
+          uint8_t i;
+	  uint16_t j;
+	  uint8_t mask = 0x08;
 
-            for (i = 0; i<MAX_VALUE_TYPES; i++)
-               if ( (channelMask & (mask>>i)) == (mask>>i))
-                  ((uint32_t *) result)[rChCount++] = calculate(data[i], dataLen);
+	  uint32_t enCh[4] = {0, 0, 0, 0};
 
-            return channelMask;
+	  uint32_t totEn;
+
+	  for (i = 0; i<4; i++) 
+	     if ( (channelMask & (mask>>i)) == (mask>>i))
+	        for (j=0; j<dataLen; j++)
+		   enCh[i] += (int32_t)data[i][j]*(int32_t)data[i][j]/dataLen;
+
+          totEn = enCh[0] + enCh[1] + enCh[2] + enCh[3];
+
+	  ((uint32_t *)result)[0] = totEn;
+
+	  return BM_CH1_ONLY;
        }
        
        command uint8_t Feature.getResultSize() {
-         return 4;
+          return 4;
        }
 }
 

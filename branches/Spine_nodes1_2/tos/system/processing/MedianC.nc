@@ -38,7 +38,7 @@ Boston, MA  02111-1307, USA.
 
     components MedianP;
     components MainC, FeatureEngineC;
-    components SortC; 
+    components SortC;
 
     Feature = MedianP;
 
