@@ -158,11 +158,16 @@ public class SPINEManager implements WSNConnection.Listener {
 	}
 	
 	public void start(boolean radioAlwaysOn) {
-		byte[] payload = new byte[3];
+		start(radioAlwaysOn, false);
+	}
+	
+	public void start(boolean radioAlwaysOn, boolean enableTDMA) {
+		byte[] payload = new byte[4];
 		int nodesCount = activeNodes.size();
 		payload[0] = (byte)(nodesCount>>8);
 		payload[1] = (byte)nodesCount;
 		payload[2] = (radioAlwaysOn)? (byte)1: 0;
+		payload[3] = (enableTDMA)? (byte)1: 0;
 		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, payload);
 	}
