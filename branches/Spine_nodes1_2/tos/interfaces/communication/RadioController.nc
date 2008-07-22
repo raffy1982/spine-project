@@ -68,6 +68,10 @@ Boston, MA  02111-1307, USA.
        * @return    void.
        */
        command void setRadioAlwaysOn(bool enable);
+       
+       command void enableTDMA(uint16_t networkSize, uint16_t myTimeSlotID);
+
+       command void disableTDMA();
 
        /**
        * Send a packet with a data payload of <tt>data</tt> and type <tt>pktType</tt> to address <tt>destination</tt>.

@@ -35,10 +35,15 @@ Boston, MA  02111-1307, USA.
   uses interface Leds;
 
   uses interface RadioController;
+  
+  uses interface Timer<TMilli> as DeferredSend;
 }
 
 implementation {
 
+  uint16_t netSize = 5;
+  uint16_t myTimeSlotID = 4;
+  
   uint8_t msg1[1];
   uint8_t msg2[3];
   uint8_t msg4[5];
@@ -47,6 +52,9 @@ implementation {
   uint16_t destination4 = AM_BROADCAST_ADDR;
 
   event void Boot.booted() {
+     //call RadioController.setRadioAlwaysOn(TRUE);
+     call RadioController.setRadioAlwaysOn(FALSE);
+
      msg1[0] = 0x11;
      
      msg2[0] = 0xaa;
@@ -60,12 +68,21 @@ implementation {
      msg4[4] = 0x66;
   }
 
-  event void RadioController.radioOn() {
+  event void DeferredSend.fired() {
+     call Leds.led1Toggle();
+
      call RadioController.send(destination1, SERVICE_ADV, &msg1, sizeof msg1);
      call RadioController.send(destination2, DATA, &msg2, sizeof msg2);
      call RadioController.send(destination4, SVC_MSG, &msg4, sizeof msg4);
   }
-  
+
+  event void RadioController.radioOn() {
+     call RadioController.enableTDMA(netSize, myTimeSlotID); 
+     //call RadioController.disableTDMA();
+
+     call DeferredSend.startPeriodic(3443);
+  }
+
   event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {
   }
 

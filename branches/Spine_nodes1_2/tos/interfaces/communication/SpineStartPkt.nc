@@ -37,5 +37,5 @@ interface SpineStartPkt {
     
     command bool radioAlwaysOnFlag();
 
-
+    command bool enableTDMAFlag();
 }

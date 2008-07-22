@@ -48,6 +48,14 @@ Boston, MA  02111-1307, USA.
  #define BOOT_RADIO_ON TRUE
  #endif
 
+ #ifndef ENABLE_TDMA
+ #define ENABLE_TDMA FALSE
+ #endif
+ 
+ #ifndef TDMA_FRAME_PERIOD
+ #define TDMA_FRAME_PERIOD 600
+ #endif
+
  #ifndef RADIO_LOW_POWER
  #define RADIO_LOW_POWER TRUE
  #endif
@@ -69,6 +77,7 @@ Boston, MA  02111-1307, USA.
             interface Leds;
             interface Timer<TMilli> as GuardTimer;
             interface Timer<TMilli> as ListenTimer;
+            interface Timer<TMilli> as TDMATimer;
        }
 
        provides interface RadioController;
@@ -89,6 +98,12 @@ Boston, MA  02111-1307, USA.
        bool canSendNow = TRUE;
        bool sendMsgTmp = FALSE;                            
 
+       bool tdmaEnabled = ENABLE_TDMA;
+       bool myTurn = !ENABLE_TDMA;
+       uint8_t myTimeSlot = -1;
+       uint8_t netSize = -1;
+       uint8_t currentTimeSlot = -1;
+       
 
        event void Boot.booted() {
            if (BOOT_RADIO_ON)
@@ -116,9 +131,18 @@ Boston, MA  02111-1307, USA.
            memcpy(call Sender.getPayload(&msgTmp), call Sender.getPayload(&mtmp), length);
            return sendOneMessage(call AMPacket.destination(&msgTmp), call AMPacket.type(&msgTmp), &msgTmp, length);
        }
-       
+
+
        event void ListenTimer.fired() {
            call Radio.stop();
+       }
+
+
+       void radioTurnOnPolicy() {
+           if(!radioOn && !radioTurningOn) {
+              radioTurningOn = TRUE;
+              call Radio.start();
+           }
        }
 
        void radioTurnOffPolicy() {
@@ -131,6 +155,7 @@ Boston, MA  02111-1307, USA.
            sendMessages();
        }
 
+
        void checkQueueToSend() {
            if (call Queue.empty()) {
                radioTurnOffPolicy();
@@ -140,6 +165,23 @@ Boston, MA  02111-1307, USA.
                call GuardTimer.startOneShot(GUARD_TIMER);
        }
 
+       event void TDMATimer.fired() {
+           currentTimeSlot++;
+           currentTimeSlot %= netSize;
+
+           myTurn = (myTimeSlot == currentTimeSlot);
+           if (myTurn)    {
+              call Leds.led0On();
+              if (!call Queue.empty()) {
+                 if (!radioOn)
+                    radioTurnOnPolicy();
+                 else
+                    checkQueueToSend();
+              }      
+           }
+           else
+              call Leds.led0Off();
+       }
 
        event void Radio.startDone(error_t res) {
            radioOn = (res == SUCCESS);
@@ -149,6 +191,7 @@ Boston, MA  02111-1307, USA.
 
            if (firstStart) {
               firstStart = FALSE;
+
               signal RadioController.radioOn();
            }
 
@@ -158,19 +201,14 @@ Boston, MA  02111-1307, USA.
               sendMsgTmp = FALSE;
               sendOneMessage(call AMPacket.destination(&msgTmp), call AMPacket.type(&msgTmp), &msgTmp, call Packet.payloadLength(&msgTmp));
            }
+           else if (myTurn && tdmaEnabled)
+              checkQueueToSend();
        }
 
        event void Radio.stopDone(error_t res) {
            radioOn = !(res == SUCCESS);
            
            call Leds.led2Toggle();
-       }
-
-       void radioTurnOnPolicy() {
-           if(!radioOn && !radioTurningOn) {
-              radioTurningOn = TRUE;
-              call Radio.start();
-           }
        }
 
        error_t bufferData(uint16_t destination, uint8_t type, void* payload, uint8_t len) {
@@ -209,25 +247,50 @@ Boston, MA  02111-1307, USA.
            if (lowPowerEnabled)
               radioTurnOffPolicy();
        }
+       
+       command void RadioController.enableTDMA(uint16_t networkSize, uint16_t myTimeSlotID) {
+           tdmaEnabled = TRUE;
+           myTurn = FALSE;
+           netSize = networkSize;
+           myTimeSlot = myTimeSlotID;
+
+           call TDMATimer.startPeriodic(TDMA_FRAME_PERIOD / networkSize);
+       }
+       
+       command void RadioController.disableTDMA() {
+           tdmaEnabled = FALSE;
+           myTurn = TRUE;
+
+           call TDMATimer.stop();
+       }
 
        command error_t RadioController.send(uint16_t destination, enum PacketTypes pktType, void* payload, uint8_t len) {
            error_t status = SUCCESS;
            if (!radioOn) {
-              if (canSendNow) {
-                 canSendNow = FALSE;
-                 status = prepareToSend(destination, pktType, payload, len);
+              if (myTurn) {
+                 if (canSendNow) {
+                    canSendNow = FALSE;
+                    status = prepareToSend(destination, pktType, payload, len);
+                 }
+                 else
+                    status = bufferData(destination, pktType, payload, len);
+                 
+                 radioTurnOnPolicy();   
               }
               else
                  status = bufferData(destination, pktType, payload, len);
-              radioTurnOnPolicy();
            }
            else {
-              if (lowPowerEnabled)
-                 call ListenTimer.stop(); // if it's not running, nothing happens
+              if (myTurn) {
+                 if (lowPowerEnabled)
+                    call ListenTimer.stop(); // if it's not running, nothing happens
 
-              if (canSendNow) { // send the message immediately
-                 canSendNow = FALSE;
-                 status = ecombine(prepareToSend(destination, pktType, payload, len), sendOneMessage(destination, pktType, &msgTmp, len));
+                 if (canSendNow) { // send the message immediately
+                    canSendNow = FALSE;
+                    status = ecombine(prepareToSend(destination, pktType, payload, len), sendOneMessage(destination, pktType, &msgTmp, len));
+                 }
+                 else
+                    status = bufferData(destination, pktType, payload, len);
               }
               else
                  status = bufferData(destination, pktType, payload, len);
@@ -239,6 +302,7 @@ Boston, MA  02111-1307, USA.
        command void RadioController.reset() {
          call GuardTimer.stop();
          call ListenTimer.stop();
+         call TDMATimer.stop();
 
          //memset(msgTmp, 0x00, sizeof msgTmp);
 
@@ -249,6 +313,12 @@ Boston, MA  02111-1307, USA.
          firstStart = TRUE;
          canSendNow = TRUE;
          sendMsgTmp = FALSE;
+         
+         tdmaEnabled = ENABLE_TDMA;
+         myTurn = FALSE;
+         myTimeSlot = -1;
+         netSize = -1;
+         currentTimeSlot = -1;
 
          while(!call Queue.empty())
             call Queue.dequeue();

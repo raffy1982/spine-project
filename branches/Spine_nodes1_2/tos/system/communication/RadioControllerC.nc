@@ -59,7 +59,7 @@ Boston, MA  02111-1307, USA.
                  new AMReceiverC(AM_SPINE) as ReceiverC,
                  
                  new QueueC(message_t, QUEUE_MAX_SIZE) as Queue,
-                 new TimerMilliC() as GuardTimer, new TimerMilliC() as ListenTimer;
+                 new TimerMilliC() as GuardTimer, new TimerMilliC() as ListenTimer, new TimerMilliC() as TDMATimer;
 
       
       RadioController = RadioControllerP;
@@ -79,4 +79,5 @@ Boston, MA  02111-1307, USA.
 
       RadioControllerP.GuardTimer -> GuardTimer;
       RadioControllerP.ListenTimer -> ListenTimer;
+      RadioControllerP.TDMATimer -> TDMATimer;
  }

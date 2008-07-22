@@ -126,6 +126,8 @@ implementation
 
   void handle_Start() {
      call RadioController.setRadioAlwaysOn(call SpineStartPkt.radioAlwaysOnFlag());
+     if (call SpineStartPkt.enableTDMAFlag())
+        call RadioController.enableTDMA(call SpineStartPkt.getNetworkSize(), (TOS_NODE_ID-1)); // that currently forces to flash the nodes with sequential IDs starting from 1
      
      call SensorBoardController.startSensing();
      call FunctionManager.startComputing();

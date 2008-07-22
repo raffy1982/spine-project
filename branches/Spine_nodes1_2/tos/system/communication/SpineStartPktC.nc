@@ -43,14 +43,16 @@ Boston, MA  02111-1307, USA.
 
     uint16_t netSize = 1;
     bool radioAlwaysOnFlag;
+    bool enableTDMAFlag;
 
     uint8_t startBuf[SPINE_START_PKT_SIZE];
 
     command bool InPacket.parse(void* payload, uint8_t len) {
        memcpy(startBuf, payload, SPINE_START_PKT_SIZE);
-       netSize = *(startBuf);
-       netSize = (netSize<<8) | *(startBuf+1);
-       radioAlwaysOnFlag = ( *(startBuf+2) == 0)? FALSE: TRUE;
+       netSize = startBuf[0];
+       netSize = (netSize<<8) | startBuf[1];
+       radioAlwaysOnFlag = ( startBuf[2] == 0)? FALSE: TRUE;
+       enableTDMAFlag = ( startBuf[3] == 0)? FALSE: TRUE;
 
        return TRUE;
     }
@@ -61,5 +63,9 @@ Boston, MA  02111-1307, USA.
 
     command bool SpineStartPkt.radioAlwaysOnFlag() {
        return radioAlwaysOnFlag;
+    }
+    
+    command bool SpineStartPkt.enableTDMAFlag() {
+       return enableTDMAFlag;
     }
 }

@@ -39,10 +39,14 @@ implementation {
   
   components RadioControllerC;
 
+  components new TimerMilliC() as DeferredSend;
+
 
   RadioControllerTestC.Boot -> MainC.Boot;
   RadioControllerTestC.Leds -> LedsC;
 
   RadioControllerTestC.RadioController -> RadioControllerC;
+  
+  RadioControllerTestC.DeferredSend -> DeferredSend;
 }
 
