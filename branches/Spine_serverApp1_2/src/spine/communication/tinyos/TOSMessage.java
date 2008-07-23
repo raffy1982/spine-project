@@ -114,7 +114,7 @@ public class TOSMessage implements com.tilab.zigbee.Message {
 		//this.txSettingsBitMask = txSettings;
 	}
 	
-	void setSourceURL(String sourceID) {
+	protected void setSourceURL(String sourceID) {
 		this.sourceID = sourceID;
 	}
 }

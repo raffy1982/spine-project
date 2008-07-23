@@ -31,14 +31,37 @@ Boston, MA  02111-1307, USA.
 * @version 1.0
 */
 
-package spine.communication.tinyos;
+package spine.datamodel;
 
-public class UnknownFunctionException extends Exception {
+import java.util.Vector;
 
-	private static final long serialVersionUID = 1;
-	
-	public UnknownFunctionException(String message) {
-		super(message);
+
+public class FeatureData extends Data {
+
+	protected Object decode(int nodeID, byte[] payload) {
+		this.functionCode = payload[0];
+		
+		this.data = new Vector();
+		
+		byte sensorCode = payload[1];
+		byte featuresCount = payload[2];
+		
+		byte currFeatCode, currBitmask;		
+		int currCh1Value, currCh2Value, currCh3Value, currCh4Value;
+		
+		for (int i = 0; i<featuresCount; i++) {
+			currFeatCode = payload[3+i*18];
+			currBitmask = payload[(3+i*18) + 1];
+			
+			currCh1Value = Data.convertToInt(payload, (3+i*18) + 2);
+			currCh2Value = Data.convertToInt(payload, (3+i*18) + 6);
+			currCh3Value = Data.convertToInt(payload, (3+i*18) + 10);
+			currCh4Value = Data.convertToInt(payload, (3+i*18) + 14);
+			
+			((Vector)this.data).addElement(new Feature(nodeID, this.functionCode, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+		}
+		
+		return this.data;
 	}
-
+	
 }

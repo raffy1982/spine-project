@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic on node configuration for feature extraction and a 
-OtA protocol for the management for WSN
+allows dynamic configuration of feature extraction capabilities 
+of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -24,38 +24,32 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- *  
- *
- * @author Raffaele Gravina
- *
- * @version 1.2
- */
+*
+*
+* @author Raffaele Gravina
+*
+* @version 1.0
+*/
 
-package spine.datamodel;
+package spine.communication.tinyos;
 
-import spine.SPINESensorConstants;
+public class FeatureSpineSetupFunction extends SpineSetupFunction {
 
-public class Sensor {
-
-	private byte code;
-	private byte channelBitmask;
+	protected byte[] build(byte[] payload) {
+		byte[] data = new byte[payload.length];
 	
-	protected Sensor(byte code, byte channelBitmask) {
-		this.code = code;
-		this.channelBitmask = channelBitmask; 
+		if (payload.length != 5)
+			return null;
+			
+		data = new byte[payload.length];
+		
+		data[0] = (byte)(payload[0]<<3);
+		data[1] = payload[1];
+		data[2] = (byte)(payload[2]<<4);
+		data[3] = payload[3];
+		data[4] = payload[4];
+		
+		return data;	
 	}
 	
-	public String toString() {
-		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
-			   SPINESensorConstants.valueTypesBitmaskToString(channelBitmask);
-	}
-
-	public byte getCode() {
-		return code;
-	}
-
-	public byte getChannelBitmask() {
-		return channelBitmask;
-	}
 }

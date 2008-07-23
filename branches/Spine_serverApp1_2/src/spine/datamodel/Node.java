@@ -36,9 +36,11 @@ package spine.datamodel;
 
 import java.util.Vector;
 
+import spine.Properties;
+
 public class Node {
 	
-	private static final String NEW_LINE = "\n";
+	private static final String NEW_LINE = Properties.getProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
 	
 	private int nodeID;
 	

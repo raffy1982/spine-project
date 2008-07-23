@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic on node configuration for feature extraction and a 
-OtA protocol for the management for WSN
+allows dynamic configuration of feature extraction capabilities 
+of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -24,38 +24,32 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- *  
- *
- * @author Raffaele Gravina
- *
- * @version 1.2
- */
+*
+*
+* @author Raffaele Gravina
+*
+* @version 1.0
+*/
 
 package spine.datamodel;
 
-import spine.SPINESensorConstants;
+import spine.SPINEFunctionConstants;
 
-public class Sensor {
+public class OneShotData extends Data {
 
-	private byte code;
-	private byte channelBitmask;
-	
-	protected Sensor(byte code, byte channelBitmask) {
-		this.code = code;
-		this.channelBitmask = channelBitmask; 
-	}
-	
-	public String toString() {
-		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
-			   SPINESensorConstants.valueTypesBitmaskToString(channelBitmask);
-	}
-
-	public byte getCode() {
-		return code;
+	protected Object decode(int nodeID, byte[] payload) {
+		this.functionCode = payload[0];
+		
+		byte sensorCode = payload[1];
+		byte bitmask = payload[2];
+		
+		int currCh1Value = convertTwoBytesToInt(payload, 3);
+		int currCh2Value = convertTwoBytesToInt(payload, 5);
+		int currCh3Value = convertTwoBytesToInt(payload, 7);
+		int currCh4Value = convertTwoBytesToInt(payload, 9);
+		this.data = new Feature(nodeID, this.functionCode, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
+		
+		return this.data;
 	}
 
-	public byte getChannelBitmask() {
-		return channelBitmask;
-	}
 }

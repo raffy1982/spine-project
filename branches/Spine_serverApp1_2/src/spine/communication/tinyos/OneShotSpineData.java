@@ -33,12 +33,42 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-public class UnknownFunctionException extends Exception {
+import spine.SPINESensorConstants;
 
-	private static final long serialVersionUID = 1;
-	
-	public UnknownFunctionException(String message) {
-		super(message);
+public class OneShotSpineData extends SpineData {
+
+	protected byte[] parse(byte[] payload) {
+		byte[] dataTmp = new byte[579]; 
+		short dtIndex = 0;
+		short pldIndex = 0;
+		
+		byte functionCode = (byte)((payload[pldIndex++] & 0xFF)>>3);
+		dataTmp[dtIndex++] = functionCode;
+		
+		//byte paramLen = (byte)payload[pldIndex++];
+		pldIndex++;
+		
+		byte sensorCode = payload[pldIndex++];
+		dataTmp[dtIndex++] = sensorCode;
+		
+		byte bitmask = payload[pldIndex++];
+		dataTmp[dtIndex++] = bitmask;				
+		
+		for (int j = 1; j<=SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
+			if (SPINESensorConstants.chPresent(j, bitmask)) {						
+					dataTmp[dtIndex++] = payload[pldIndex++]; 
+					dataTmp[dtIndex++] = payload[pldIndex++]; 
+			}
+			else {
+				dataTmp[dtIndex++] = 0; 
+				dataTmp[dtIndex++] = 0;
+			}
+		}
+				
+		byte[] data = new byte[dtIndex];
+		System.arraycopy(dataTmp, 0, data, 0, data.length);
+		
+		return data;
 	}
-
+	
 }

@@ -34,30 +34,30 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-import spine.SPINEFunctionConstants;
+import spine.Properties;
 
 public class SpineFunctionReq {
 	
-	public static byte[] build(byte[] payload) throws UnknownFunctionException {
-		byte[] data = new byte[payload.length];
-		
+	private final static String SPINEFUNCTIONREQ_CLASSNAME_KEY_PREFIX = "spineFunctionReq_function_className_";
+	
+	protected SpineFunctionReq() {}
+	
+	protected byte[] build(byte[] payload) throws UnknownFunctionException {
 		byte functionCode = payload[0];
-		switch(functionCode) {
-			case SPINEFunctionConstants.FEATURE: {
-				
-				data = new byte[payload.length - 1];
-				
-				data[0] = (byte)(payload[0]<<3 | ( (payload[1]<<2) & 0x04 )); // 00000100
-				
-				for (int i = 1; i<data.length; i++) 
-					data[i] = payload[i+1];
-				
-				break;
-			}
-			default: throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a function (de)activation.");
-		}
 		
-		return data;
+		try {
+			Class c = Class.forName(Properties.getProperties().getProperty(SPINEFUNCTIONREQ_CLASSNAME_KEY_PREFIX + functionCode));
+			return ((SpineFunctionReq)c.newInstance()).build(payload);
+		}  	catch (ClassNotFoundException e) { 
+				throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a function (de)activation."); 
+		  	}
+			catch (NullPointerException e) { 
+				throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a function (de)activation."); 
+			} 
+			catch (InstantiationException e) { System.out.println(e); } 
+			catch (IllegalAccessException e) { System.out.println(e); }
+		
+		return null;
 	}
 	
 }

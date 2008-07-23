@@ -34,13 +34,12 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import spine.Properties;
 import spine.SPINEPacketsConstants;
 
 public class SpineTOSMessage extends net.tinyos.message.Message {
 	
-	private static final String TINYOS_URL_PREFIX = "http://tinyos:";
-	
-	public static final int BASE_STATION = 0;
+	private static final String TINYOS_URL_PREFIX = Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY);
 	
 	private static final int DEFAULT_MESSAGE_SIZE = 0; 	// it represents a variable-size array and 
 														// does not check the corresponding array index
@@ -50,12 +49,12 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 	private byte[] payloadBuf = null;
 	
 
-    public SpineTOSMessage() {
+	protected SpineTOSMessage() {
         super(DEFAULT_MESSAGE_SIZE);
         this.amTypeSet(AM_TYPE);
     }
     
-    public SpineTOSMessage(byte pktType, byte groupID, int sourceID, int destID, byte sequenceNumber, byte fragmentNr, byte totalFragments, byte[] payload) {
+	protected SpineTOSMessage(byte pktType, byte groupID, int sourceID, int destID, byte sequenceNumber, byte fragmentNr, byte totalFragments, byte[] payload) {
     	super(SPINEHeader.SPINE_HEADER_SIZE + payload.length);
     	
     	this.amTypeSet(AM_TYPE); 
@@ -70,7 +69,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	this.dataSet(msgBuf);        
 	}
     
-    public SPINEHeader getHeader() throws IllegalSpineHeaderSizeException {
+	protected SPINEHeader getHeader() throws IllegalSpineHeaderSizeException {
     	byte[] msgBuf = this.dataGet();
     	
     	if (msgBuf.length < SPINEHeader.SPINE_HEADER_SIZE) 
@@ -82,7 +81,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		return new SPINEHeader(headerBuf); 
     }
     
-    public byte[] getRawPayload() {
+	protected byte[] getRawPayload() {
     	if (this.payloadBuf == null) {
 	    	this.payloadBuf = new byte[this.dataGet().length - SPINEHeader.SPINE_HEADER_SIZE];
 			System.arraycopy(this.dataGet(), SPINEHeader.SPINE_HEADER_SIZE, this.payloadBuf, 0, this.payloadBuf.length);
@@ -90,11 +89,11 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		return this.payloadBuf;
     }
     
-    public void setRawPayload(byte[] payload) {
+	protected void setRawPayload(byte[] payload) {
     	this.payloadBuf = payload;
     }
 
-	public TOSMessage parse() throws IllegalSpineHeaderSizeException {
+	protected TOSMessage parse() throws IllegalSpineHeaderSizeException {
 		TOSMessage msg = new TOSMessage();
 		
 		byte[] msgBuf = this.dataGet();
@@ -147,7 +146,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	private byte fragNr;    // 8 bits
     	private byte totFrags;  // 8 bits
         
-    	public SPINEHeader (byte version, boolean extension, byte pktType, byte groupID, int sourceID, int destID, 
+    	private SPINEHeader (byte version, boolean extension, byte pktType, byte groupID, int sourceID, int destID, 
     			   			byte sequenceNumber, byte fragmentNr, byte totalFragments) {
     		
     		this.vers = version;
@@ -163,7 +162,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     		this.canBuild = true;
     	}
     	
-    	public SPINEHeader(byte[] header) throws IllegalSpineHeaderSizeException {
+    	private SPINEHeader(byte[] header) throws IllegalSpineHeaderSizeException {
     		if (header.length != SPINE_HEADER_SIZE) 
     			throw new IllegalSpineHeaderSizeException(SPINE_HEADER_SIZE, header.length);
     		else {
@@ -173,7 +172,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     		}
     	}
     	
-        public byte[] build() {
+        private byte[] build() {
         	
         	if (!canBuild)
         		return null;
@@ -198,7 +197,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     		return headerBuf;
         }
 
-        public boolean parse() {       
+        private boolean parse() {       
         	if (!canParse)
         		return false;
         	
@@ -222,43 +221,43 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
         	return true;
         }
 
-        public byte getVersion() {
+        protected byte getVersion() {
            return vers;
         }
 
-        public boolean isExtended() {
+        protected boolean isExtended() {
            return ext;
         }
 
-        public byte getPktType() {
+        protected byte getPktType() {
            return pktT;
         }
 
-        public byte getGroupID() {
+        protected byte getGroupID() {
            return grpID;
         }
 
-        public int getSourceID() {
+        protected int getSourceID() {
            return srcID;
         }
 
-        public int getDestID() {
+        protected int getDestID() {
            return dstID;
         }
         
-        public byte getSequenceNumber() {
+        protected byte getSequenceNumber() {
           return seqNr;
         }
 
-        public byte getFragmentNumber() {
+        protected byte getFragmentNumber() {
            return fragNr;
         }
 
-        public byte getTotalFragments() {
+        protected byte getTotalFragments() {
            return totFrags;
         }
         
-        public byte[] getHeaderBuf() {
+        protected byte[] getHeaderBuf() {
         	return headerBuf;
         }
         

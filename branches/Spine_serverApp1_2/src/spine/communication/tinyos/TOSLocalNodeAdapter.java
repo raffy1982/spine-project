@@ -37,7 +37,7 @@ package spine.communication.tinyos;
 import java.io.IOException;
 import java.util.Vector;
 
-import spine.SPINEManager;
+import spine.Properties;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SpineTOSMessage.SPINEHeader;
 
@@ -53,6 +53,7 @@ import com.tilab.zigbee.WSNConnection;
 
 public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
 
+	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getProperties().getProperty(Properties.GROUP_ID_KEY), 16);
 	
 	private Vector connections = new Vector(); // <values: WSNConnection>
 	
@@ -66,6 +67,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 	
 	private boolean sendImmediately = true;
 	
+	
 	public void messageReceived(int srcID, net.tinyos.message.Message tosmsg) {
 System.out.print("messageReceived -> ");		
 		if (tosmsg instanceof SpineTOSMessage) {			
@@ -77,7 +79,7 @@ System.out.print("messageReceived -> ");
 					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
 					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION || 
-					h.getGroupID() != SPINEManager.MY_GROUP_ID) 
+					h.getGroupID() != MY_GROUP_ID) 
 					return;
 
 printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
@@ -170,8 +172,8 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 		// TODO		
 	}
 	
-	public void sendMessages(int nodeID) {		
-		Msg curr = null;
+	protected void sendMessages(int nodeID) {		
+		Msg curr = null;	
 		for (int i = 0; i<this.messagesQueue.size(); i++) {
 			curr = (Msg)this.messagesQueue.elementAt(i);
 			if (curr.destNodeID == nodeID || curr.destNodeID == SPINEPacketsConstants.SPINE_BROADCAST) {
@@ -190,7 +192,7 @@ System.out.println("Ota deferred send.");
 		}		
 	}
 
-	public synchronized void send(int destNodeID, SpineTOSMessage tosmsg) {
+	protected synchronized void send(int destNodeID, SpineTOSMessage tosmsg) {
 		if(this.sendImmediately) {
 			try {
 				this.moteIF.send(destNodeID, tosmsg);
@@ -215,7 +217,7 @@ System.out.println("Ota immediate send.");																										 // check if
 		byte totFragments;
 		byte[] partialPayload;
 		
-		Partial(int nodeID, byte seqNr, byte totFragments, byte[] partialPayload) {
+		private Partial(int nodeID, byte seqNr, byte totFragments, byte[] partialPayload) {
 			this.nodeID = nodeID;
 			this.seqNr = seqNr;
 			this.lastFragmentNr = 1;
@@ -223,7 +225,7 @@ System.out.println("Ota immediate send.");																										 // check if
 			this.partialPayload = partialPayload;
 		}
 		
-		void addToPayload(byte[] newPartial) {
+		private void addToPayload(byte[] newPartial) {
 			byte[] newPartialPayload = new byte[partialPayload.length + newPartial.length];
 			System.arraycopy(partialPayload, 0, newPartialPayload, 0, partialPayload.length);
 			System.arraycopy(newPartial, 0, newPartialPayload, partialPayload.length, newPartial.length);
@@ -233,7 +235,7 @@ System.out.println("Ota immediate send.");																										 // check if
 			lastFragmentNr++;
 		}
 		
-		boolean equal(int nodeID, byte seqNr) {
+		private boolean equal(int nodeID, byte seqNr) {
 			return (this.nodeID == nodeID && this.seqNr == seqNr);
 		}
 		
@@ -243,7 +245,7 @@ System.out.println("Ota immediate send.");																										 // check if
 		int destNodeID;
 		SpineTOSMessage tosmsg;
 		
-		Msg(int destNodeID, SpineTOSMessage tosmsg) {
+		private Msg(int destNodeID, SpineTOSMessage tosmsg) {
 			this.destNodeID = destNodeID;
 			this.tosmsg = tosmsg;
 		}

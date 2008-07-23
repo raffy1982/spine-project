@@ -36,7 +36,7 @@ package spine.communication.tinyos;
 
 public class SpineServiceAdvertisement {
 
-	public static byte[] parse(byte[] payload) {
+	protected static byte[] parse(byte[] payload) {
 		byte sensorsNr = payload[0];
 		byte librariesNr = payload[1+sensorsNr];		
 		byte[] data = new byte[1 + sensorsNr*2 + 1 + librariesNr*2];

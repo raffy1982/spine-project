@@ -38,14 +38,11 @@ import java.io.InterruptedIOException;
 
 import com.tilab.zigbee.WSNConnection;
 
+import spine.Properties;
 import spine.SPINEPacketsConstants;
 
 public class TOSWSNConnection implements WSNConnection {
 
-	private static final String TINYOS_URL_PREFIX = "http://tinyos:";
-	
-	private static final int URL_PREFIX_LENGTH = TINYOS_URL_PREFIX.length();	
-	
 	private byte sequenceNumber = 0; 
 	
 	private WSNConnection.Listener listener = null;	
@@ -53,7 +50,7 @@ public class TOSWSNConnection implements WSNConnection {
 	private TOSLocalNodeAdapter adapter = null;
 	
 	
-	TOSWSNConnection (TOSLocalNodeAdapter adapter) {
+	protected TOSWSNConnection (TOSLocalNodeAdapter adapter) {
 		this.adapter = adapter;
 	}
 	
@@ -85,7 +82,7 @@ public class TOSWSNConnection implements WSNConnection {
 		
 		try {
 			
-			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(URL_PREFIX_LENGTH));
+			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
 			byte[] compressedPayload = PacketManager.build(msg);
 			SpineTOSMessage tosmsg = new SpineTOSMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
 														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 

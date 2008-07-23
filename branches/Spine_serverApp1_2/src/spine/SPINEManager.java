@@ -38,7 +38,6 @@ import java.io.InterruptedIOException;
 import java.util.Vector;
 
 import com.tilab.zigbee.LocalNodeAdapter;
-import com.tilab.zigbee.Message;
 import com.tilab.zigbee.WSNConnection;
 
 import spine.SPINEPacketsConstants;
@@ -48,17 +47,18 @@ import spine.datamodel.Node;
 
 public class SPINEManager implements WSNConnection.Listener {
 
-	private final static long DISCOVERY_TIMEOUT = 500;
+	private static Properties prop = Properties.getProperties();
 	
-	public static final String URL_PREFIX_KEY = "url_prefix";
-	private static final String URL_PREFIX = System.getProperty(URL_PREFIX_KEY);
 	
-	private static final byte DISC_COMPL = 100;
+	private final static long DISCOVERY_TIMEOUT = 500;	
 	
-	public static final byte MY_GROUP_ID = (byte)0xAB;
+	private static final String URL_PREFIX = prop.getProperty(Properties.URL_PREFIX_KEY);
+	
+	private static final byte DISC_COMPL_EVT_COD = 100;
+	
+	
+	private static final byte MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
 
-	public static final String MESSAGE_CLASSNAME_KEY = "Message_ClassName";
-	
 	
 	private Vector listeners = new Vector(); // <values:SPINEListener>
 	
@@ -67,14 +67,15 @@ public class SPINEManager implements WSNConnection.Listener {
 	private long discoveryTimeout = DISCOVERY_TIMEOUT;
 	
 	private WSNConnection connection;
-	private LocalNodeAdapter nodeAdapter;
+	private LocalNodeAdapter nodeAdapter;	
 	
 	
-	public static SPINEManager instance;	
+	public static SPINEManager instance;
+	
 	
 	private SPINEManager(String port, String speed) {
 		try {
-			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();			
+			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();	
 			
 			Vector params = new Vector();
 			params.add(port);
@@ -105,6 +106,10 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 	public void registerListener(SPINEListener listener) {
 		this.listeners.addElement(listener);
+	}
+	
+	public void deregisterListener(SPINEListener listener) {
+		this.listeners.removeElement(listener);
 	}
 
 
@@ -182,11 +187,11 @@ public class SPINEManager implements WSNConnection.Listener {
 
 	private void send(int nodeID, byte pktType, byte[] payload) {
 		try {
-			Class c = Class.forName(System.getProperty(MESSAGE_CLASSNAME_KEY));
+			Class c = Class.forName(prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY));
 			com.tilab.zigbee.Message msg = (com.tilab.zigbee.Message)c.newInstance();
 			
 			msg.setDestinationURL(URL_PREFIX + nodeID);
-			msg.setClusterId(pktType);
+			msg.setClusterId(pktType); 
 			msg.setProfileId(MY_GROUP_ID);
 			if (payload != null)
 				msg.setPayload(payload);
@@ -205,12 +210,9 @@ public class SPINEManager implements WSNConnection.Listener {
 		}			
 	}
 
-
 	public void messageReceived(com.tilab.zigbee.Message msg) {
 
-		int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length())); 
-		
-		printPayload(msg); // DEBUG CODE
+		int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
 		
 		Object o = null;
 		
@@ -227,6 +229,8 @@ public class SPINEManager implements WSNConnection.Listener {
 		
 		notifyListeners(nodeID, pktType, o);
 		
+		//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
+		System.gc();		
 	}
 
 	private void notifyListeners(int nodeID, short pktType, Object o) {
@@ -242,7 +246,7 @@ public class SPINEManager implements WSNConnection.Listener {
 				case SPINEPacketsConstants.SVC_MSG: 
 					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(); 
 					break;
-				case DISC_COMPL:
+				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
 				default: break;
 			}
@@ -254,7 +258,7 @@ public class SPINEManager implements WSNConnection.Listener {
 	}
 	
 	
-	private void printPayload(Message msg) {  // DEBUG CODE
+	/*private void printPayload(Message msg) {  // DEBUG CODE
 		System.out.print("in: ");
 		for (int i = 0; i<msg.getPayload().length; i++) {
 			short b =  msg.getPayload()[i];
@@ -262,7 +266,7 @@ public class SPINEManager implements WSNConnection.Listener {
 			System.out.print(Integer.toHexString(b) + " ");
 		}
 		System.out.println("\n");		
-	}
+	}*/
 
 	public void readNow(int nodeID, byte sensorCode) {
 		this.setupSensor(nodeID, sensorCode, SPINESensorConstants.NOW, 0);		
@@ -283,12 +287,16 @@ public class SPINEManager implements WSNConnection.Listener {
 		this.discoveryTimeout = discoveryTimeout;
 	}
 	
+	public static Properties getProperties() {
+		return prop;
+	}
+	
 	
 	private class DiscoveryTimer extends Thread {
 		
 		private long delay = 0;
 		
-		DiscoveryTimer(long delay) {
+		private DiscoveryTimer(long delay) {
 			this.delay = delay;
 		}
 		
@@ -302,7 +310,7 @@ public class SPINEManager implements WSNConnection.Listener {
 				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, SPINEPacketsConstants.SVC_MSG, null);
 						
 			discoveryCompleted = true;			
-			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL, activeNodes);
+			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);
 		}
 	}
 }

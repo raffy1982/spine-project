@@ -53,7 +53,7 @@ public class Feature {
 	private int ch4Value;
 	
 	
-	Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
+	protected Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
 		this.nodeID = nodeID;
 
 		this.functionCode = functionCode;

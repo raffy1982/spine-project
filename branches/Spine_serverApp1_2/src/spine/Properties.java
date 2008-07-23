@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic on node configuration for feature extraction and a 
-OtA protocol for the management for WSN
+allows dynamic configuration of feature extraction capabilities 
+of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -24,38 +24,38 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- *  
- *
- * @author Raffaele Gravina
- *
- * @version 1.2
- */
+*
+*
+* @author Raffaele Gravina
+*
+* @version 1.0
+*/
 
-package spine.datamodel;
+package spine;
 
-import spine.SPINESensorConstants;
-
-public class Sensor {
-
-	private byte code;
-	private byte channelBitmask;
+public abstract class Properties {
 	
-	protected Sensor(byte code, byte channelBitmask) {
-		this.code = code;
-		this.channelBitmask = channelBitmask; 
+	public static final String BASE_STATION_PORT_KEY = "BS_PORT";
+	public static final String BASE_STATION_SPEED_KEY = "BS_SPEED";
+	public static final String URL_PREFIX_KEY = "url_prefix";
+	public static final String GROUP_ID_KEY = "group_id";
+	public static final String LINE_SEPARATOR_KEY = "line_separator";
+	
+	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
+
+
+	public static Properties getProperties() {
+		return PropertiesImpl.getInstance();
 	}
 	
-	public String toString() {
-		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
-			   SPINESensorConstants.valueTypesBitmaskToString(channelBitmask);
-	}
-
-	public byte getCode() {
-		return code;
-	}
-
-	public byte getChannelBitmask() {
-		return channelBitmask;
-	}
+	
+	public abstract void load();
+	
+	public abstract void store();
+	
+	public abstract String getProperty(String key);
+	
+	public abstract void setProperty(String key, String value);
+	
+	public abstract Object remove(String key);
 }

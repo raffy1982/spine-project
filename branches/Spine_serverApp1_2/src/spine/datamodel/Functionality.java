@@ -41,7 +41,7 @@ public class Functionality {
 	private byte functionType;
 	private byte functionCode;
 	
-	public Functionality(byte functionType, byte functionCode) {
+	protected Functionality(byte functionType, byte functionCode) {
 		this.functionType = functionType;
 		this.functionCode = functionCode; 
 	}
@@ -51,11 +51,11 @@ public class Functionality {
 			   SPINEFunctionConstants.functionalityCodeToString(functionType, functionCode);
 	}
 
-	public byte getFunctionType() {
+	protected byte getFunctionType() {
 		return functionType;
 	}
 
-	public byte getFunctionCode() {
+	protected byte getFunctionCode() {
 		return functionCode;
 	}
 }

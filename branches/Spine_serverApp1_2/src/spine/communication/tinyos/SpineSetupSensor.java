@@ -36,13 +36,11 @@ package spine.communication.tinyos;
 
 public class SpineSetupSensor {
 	
-	public static final byte SIZE = 3;
-	
-	public static byte[] build(byte[] payload) {
+	protected static byte[] build(byte[] payload) {
 		if (payload.length != 4)
 			return null;
 		
-		byte[] data = new byte[SIZE];
+		byte[] data = new byte[3];
 		
 		data[0] = (byte)((payload[0]<<4) | (payload[1]<<2 & 0x0C)); // 0x0C = 0000 1100
 		data[1] = payload[2];

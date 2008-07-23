@@ -34,102 +34,25 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-import spine.SPINEFunctionConstants;
-import spine.SPINESensorConstants;
+import spine.Properties;
 
 public class SpineData {
 
-	public static byte[] parse(byte[] payload) {
-		byte[] dataTmp = new byte[579]; 
-		short dtIndex = 0;
-		short pldIndex = 0;
+	private final static String SPINEDATA_FUNCT_CLASSNAME_KEY_PREFIX = "spineData_function_className_";
+	
+	protected SpineData() {}
+	
+	protected byte[] parse(byte[] payload) {
+		byte functionCode = (byte)((payload[0] & 0xFF)>>3);
 		
-		byte functionCode = (byte)((payload[pldIndex++] & 0xFF)>>3);
-		dataTmp[dtIndex++] = functionCode;
+		try {
+			Class c = Class.forName(Properties.getProperties().getProperty(SPINEDATA_FUNCT_CLASSNAME_KEY_PREFIX + functionCode));
+			return ((SpineData)c.newInstance()).parse(payload);
+		} catch (ClassNotFoundException e) { System.out.println(e); } 
+		  catch (InstantiationException e) { System.out.println(e); } 
+		  catch (IllegalAccessException e) { System.out.println(e);	}
 		
-		//byte paramLen = (byte)payload[pldIndex++];
-		pldIndex++;
-		
-		switch(functionCode) {
-			case SPINEFunctionConstants.FEATURE: {
-				byte sensorCode = payload[pldIndex++];
-				dataTmp[dtIndex++] = sensorCode;
-				
-				byte featuresCount = payload[pldIndex++];
-				dataTmp[dtIndex++] = featuresCount;
-				
-				for (int i = 0; i<featuresCount; i++) {
-					byte currFeatCode = payload[pldIndex++];
-					dataTmp[dtIndex++] = currFeatCode;
-					
-					byte currSensBitmask = (byte)( (payload[pldIndex]>>4) & 0x0F );
-					dataTmp[dtIndex++] = currSensBitmask;
-					
-					byte resultLen = (byte)(payload[pldIndex++] & 0x0F);					
-					for (int j = 1; j<=SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
-						if (SPINESensorConstants.chPresent(j, currSensBitmask)) {						
-							if (resultLen == 1) {
-								dataTmp[dtIndex++] = 0;
-								dataTmp[dtIndex++] = 0; 
-								dataTmp[dtIndex++] = 0; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-							}
-							else if (resultLen == 2) {
-								dataTmp[dtIndex++] = 0;
-								dataTmp[dtIndex++] = 0; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-							}
-							else if (resultLen == 3) {
-								dataTmp[dtIndex++] = 0;
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-							}
-							else if (resultLen == 4) {
-								dataTmp[dtIndex++] = payload[pldIndex++];
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-								dataTmp[dtIndex++] = payload[pldIndex++]; 
-							}	
-						}
-						else {
-							dataTmp[dtIndex++] = 0;
-							dataTmp[dtIndex++] = 0; 
-							dataTmp[dtIndex++] = 0; 
-							dataTmp[dtIndex++] = 0;
-						}
-					}
-				}				
-				break;
-			}
-			case SPINEFunctionConstants.ONE_SHOT: {
-				byte sensorCode = payload[pldIndex++];
-				dataTmp[dtIndex++] = sensorCode;
-				
-				byte bitmask = payload[pldIndex++];
-				dataTmp[dtIndex++] = bitmask;				
-				
-				for (int j = 1; j<=SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
-					if (SPINESensorConstants.chPresent(j, bitmask)) {						
-							dataTmp[dtIndex++] = payload[pldIndex++]; 
-							dataTmp[dtIndex++] = payload[pldIndex++]; 
-					}
-					else {
-						dataTmp[dtIndex++] = 0; 
-						dataTmp[dtIndex++] = 0;
-					}
-				}	
-				
-				break;
-			}
-			default: break;
-		}
-		
-		byte[] data = new byte[dtIndex];
-		System.arraycopy(dataTmp, 0, data, 0, data.length);
-		
-		return data;
+		return null;  
 	}
 
 }
