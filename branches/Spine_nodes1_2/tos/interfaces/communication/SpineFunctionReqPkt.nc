@@ -31,6 +31,9 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.0
  */ 
+ 
+#include "Functions.h"
+
 interface SpineFunctionReqPkt {
 
     command enum FunctionCodes getFunctionCode();
@@ -38,6 +41,5 @@ interface SpineFunctionReqPkt {
     command bool isEnableRequest();
 
     command uint8_t* getFunctionParams(uint8_t* functionParamsSize);
-
 
 }

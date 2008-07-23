@@ -47,16 +47,13 @@ Boston, MA  02111-1307, USA.
 
 
     command bool InPacket.parse(void* payload, uint8_t len) {
-       uint8_t byteTmp;
-
        memcpy(setSensBuf, payload, SPINE_SETUP_SENSOR_PKT_SIZE);
 
-       memcpy(&byteTmp, setSensBuf, 1);
-       sensCode = (byteTmp & 0xF0)>>4;    // 0xF0 = 11110000 binary
-       timeScale = (byteTmp & 0x0C)>>2;   // 0x0C = 00001100 binary
+       sensCode = (setSensBuf[0] & 0xF0)>>4;    // 0xF0 = 11110000 binary
+       timeScale = (setSensBuf[0] & 0x0C)>>2;   // 0x0C = 00001100 binary
 
-       memcpy(&samplingTime, setSensBuf+1, 1);
-       samplingTime = (samplingTime)<<8 | *(setSensBuf+2);
+       samplingTime = setSensBuf[1];
+       samplingTime = (samplingTime)<<8 | setSensBuf[2];
 
        return TRUE;
     }

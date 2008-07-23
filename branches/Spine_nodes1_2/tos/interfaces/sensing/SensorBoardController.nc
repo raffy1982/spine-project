@@ -36,7 +36,8 @@ Boston, MA  02111-1307, USA.
  */
  
  #include "SensorsConstants.h"
-
+ #include "Functions.h"
+ 
  interface SensorBoardController {
 
        /**

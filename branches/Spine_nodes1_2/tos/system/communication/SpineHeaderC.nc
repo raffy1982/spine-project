@@ -56,55 +56,46 @@ Boston, MA  02111-1307, USA.
     
     command void* SpineHeader.build(uint8_t version, bool extension, enum PacketTypes pktType, uint8_t groupID, uint16_t sourceID, uint16_t destID,
                                     uint8_t sequenceNumber, uint8_t fragmentNr, uint8_t totalFragments) {
-       uint8_t byteTmp;
+       
+       headerBuf[0] = ((version<<6) | (extension<<5) | pktType);
 
-       byteTmp = ((version<<6) | (extension<<5) | pktType);
-       memcpy(&headerBuf, &byteTmp, 1);
+       headerBuf[1] = groupID;
 
-       memcpy(headerBuf+1, &groupID, 1);
+       headerBuf[2] = sourceID>>8;
+       headerBuf[3] = (uint8_t)sourceID;
 
-       byteTmp = sourceID>>8;
-       memcpy(headerBuf+2, &byteTmp, 1);
-       byteTmp = (uint8_t)sourceID;
-       memcpy(headerBuf+3, &byteTmp, 1);
+       headerBuf[4] = destID>>8;
+       headerBuf[5] = (uint8_t)destID;
 
-       byteTmp = destID>>8;
-       memcpy(headerBuf+4, &byteTmp, 1);
-       byteTmp = (uint8_t)destID;
-       memcpy(headerBuf+5, &byteTmp, 1);
+       headerBuf[6] = sequenceNumber;
 
-       memcpy(headerBuf+6, &sequenceNumber, 1);
+       headerBuf[7] = fragmentNr;
 
-       memcpy(headerBuf+7, &fragmentNr, 1);
-
-       memcpy(headerBuf+8, &totalFragments, 1);
+       headerBuf[8] = totalFragments;
 
        return headerBuf;
     }
 
     command bool SpineHeader.parse(void* header) {
-       uint8_t byteTmp;
-
        memcpy(headerBuf, header, SPINE_HEADER_PKT_SIZE);
        
-       memcpy(&byteTmp, headerBuf, 1);
-       vers = (byteTmp & 0xC0)>>6;    // 0xC0 = 11000000 binary
-       ext = (byteTmp & 0x20)>>5;     // 0x20 = 00100000 binary
-       pktT = (byteTmp & 0x1F);       // 0x1F = 00011111 binary
+       vers = (headerBuf[0] & 0xC0)>>6;    // 0xC0 = 11000000 binary
+       ext = (headerBuf[0] & 0x20)>>5;     // 0x20 = 00100000 binary
+       pktT = (headerBuf[0] & 0x1F);       // 0x1F = 00011111 binary
 
-       memcpy(&grpID, (headerBuf+1), 1);
-       
-       srcID = *(headerBuf+2);                  // check
-       srcID = (srcID<<8) | *(headerBuf+3);
+       grpID = headerBuf[1];
 
-       dstID = *(headerBuf+4);                  // check
-       dstID = (dstID<<8) | *(headerBuf+5);
+       srcID = headerBuf[2];                  // check
+       srcID = (srcID<<8) | headerBuf[3];
 
-       memcpy(&seqNr, (headerBuf+6), 1);
-       
-       memcpy(&fragNr, (headerBuf+7), 1);
+       dstID = headerBuf[4];                  // check
+       dstID = (dstID<<8) | headerBuf[5];
 
-       memcpy(&totFrags, (headerBuf+8), 1);
+       seqNr = headerBuf[6];
+
+       fragNr = headerBuf[7];
+
+       totFrags = headerBuf[8];
 
        return TRUE;
     }

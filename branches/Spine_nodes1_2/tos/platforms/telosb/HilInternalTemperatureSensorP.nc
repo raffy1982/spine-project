@@ -81,7 +81,7 @@ implementation {
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        memcpy(buffer, &internTemp, 2);
+        buffer[0] = internTemp;
     }
 
     event void InternalTemp.readDone(error_t result, uint16_t data) {

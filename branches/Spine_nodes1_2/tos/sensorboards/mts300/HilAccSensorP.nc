@@ -102,8 +102,8 @@ implementation {
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        memcpy(buffer, &accX, 2);
-        memcpy(buffer+1, &accY, 2);
+        buffer[0] = accX;
+        buffer[1] = accY;
     }
 
     command enum SensorCode Sensor.getSensorCode() {

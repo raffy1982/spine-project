@@ -35,12 +35,9 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
-#include "SensorsConstants.h"
-#include "Functions.h"
-
 configuration SensorBoardControllerC {
      provides interface SensorBoardController;
-     
+
      uses {
         interface Sensor as SensorImpls[uint8_t sensorID];
         interface Timer<TMilli> as SamplingTimers[uint8_t sensorCode];

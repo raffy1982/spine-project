@@ -33,15 +33,13 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
-#include "Functions.h"
-
 configuration FeatureEngineC {
-	provides interface Function;
+	
+        provides interface Function;
 	provides interface FeatureEngine;
 
-	uses {
-		interface Feature as Features[uint8_t featureID];
-	}
+	uses interface Feature as Features[uint8_t featureID];
+
 }
 
 implementation {

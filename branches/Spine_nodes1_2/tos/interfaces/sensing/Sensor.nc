@@ -32,6 +32,9 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.0
  */
+
+#include "SensorsConstants.h"
+
 interface Sensor {
 
     /**

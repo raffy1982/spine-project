@@ -118,7 +118,7 @@ implementation {
                 valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
                 for(j = 0; j<valueTypesCount; j++) {
                     sensorCode4BufList[count4BufList+j] = sensorCode;
-                    sensorChanCode4BufList[count4BufList+j] = *(valueTypesList+j);
+                    sensorChanCode4BufList[count4BufList+j] = valueTypesList[j];
                     sensCodeChanbuffID4BufList[count4BufList+j] = call BufferPool.getAvailableBuffer();
                 }
                 count4BufList += valueTypesCount;
@@ -136,7 +136,7 @@ implementation {
           uint32_t currSamplingTime;
 
           for (i = 0; i<sensorsCount; i++) {
-             currSensCode = *(sensorsList+i);
+             currSensCode = sensorsList[i];
              currSamplingTime = call SensorsRegistry.getSamplingTime(currSensCode);
              if (currSamplingTime > 0)
                 call SamplingTimers.startPeriodic[currSensCode](currSamplingTime);
@@ -149,7 +149,7 @@ implementation {
           uint8_t* sensorsList = call SensorsRegistry.getSensorList(&sensorsCount);
 
           for (i = 0; i<sensorsCount; i++)
-             call SamplingTimers.stop[*(sensorsList+i)]();
+             call SamplingTimers.stop[ sensorsList[i] ]();
        }
 
        command void SensorBoardController.stopSensing() {
@@ -205,7 +205,7 @@ implementation {
 
               msg[msgSize] = 0x0;
               for(j = 0; j<valueTypesCount; j++) {
-                 currSensorValueType = *(valueTypesList+j);
+                 currSensorValueType = valueTypesList[j];
 
                  switch(currSensorValueType) {
                     case CH_1 : msg[msgSize] |= 0x08; break;
@@ -226,7 +226,7 @@ implementation {
            }
            else {
               for (j = 0; j<readingsCount; j++)
-                 call BufferPool.putElem(call SensorBoardController.getBufferID(sensorCode, *(valueTypesList+j)),
+                 call BufferPool.putElem(call SensorBoardController.getBufferID(sensorCode, valueTypesList[j] ),
                                          readings[j]);   // assuming the valueTypesList and the readings buffer is populated in the same order
            }
            

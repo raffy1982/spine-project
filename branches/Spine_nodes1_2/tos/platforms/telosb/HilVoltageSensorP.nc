@@ -81,7 +81,7 @@ implementation {
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        memcpy(buffer, &volt, 2);
+        buffer[0] = volt;
     }
 
     event void Volt.readDone(error_t result, uint16_t data) {

@@ -195,9 +195,7 @@ Boston, MA  02111-1307, USA.
               signal RadioController.radioOn();
            }
 
-           //if(!canSendNow)
-           //   checkQueueToSend();
-           /*else*/ if (sendMsgTmp) {
+           if (sendMsgTmp) {
               sendMsgTmp = FALSE;
               sendOneMessage(call AMPacket.destination(&msgTmp), call AMPacket.type(&msgTmp), &msgTmp, call Packet.payloadLength(&msgTmp));
            }

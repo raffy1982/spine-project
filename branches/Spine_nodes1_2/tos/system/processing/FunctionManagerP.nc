@@ -34,11 +34,11 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef FUNCTION_LIST_SIZE
-#define FUNCTION_LIST_SIZE 4             // max nr of functions supported by SPINE is 8
+#define FUNCTION_LIST_SIZE 8             // max nr of functions supported by SPINE is 8
 #endif
 
 #ifndef FUNCTION_LIBRARIES_LIST_SIZE
-#define FUNCTION_LIBRARIES_LIST_SIZE 128 // max nr of library per function is 32, so FUNCTION_LIBRARIES_LIST_SIZE = 32 * FUNCTION_LIST_SIZE
+#define FUNCTION_LIBRARIES_LIST_SIZE 512 // max nr of library per function is 32, so FUNCTION_LIBRARIES_LIST_SIZE = 32 * FUNCTION_LIST_SIZE
 #endif
 
 module FunctionManagerP {
@@ -59,7 +59,7 @@ implementation {
        uint8_t functionLibrariesList[FUNCTION_LIBRARIES_LIST_SIZE];
        uint8_t functLibCount = 0;
        
-       uint8_t data[2+64];
+       uint8_t data[128];
 
        command error_t FunctionManager.registerFunction(enum FunctionCodes functionCode) {
           if (functCount < FUNCTION_LIST_SIZE) { // to avoid memory leaks
@@ -139,18 +139,17 @@ implementation {
 
        event void PacketManager.messageReceived(enum PacketTypes pktType){}
 
-	   /**
-	    * lets the function manager (and therefore registered functions) know
-		* when another sample has been taken to allow the triggering of feature
-		* calculation
-		*
-		*/
-	   event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
-		   if (result == SUCCESS) {
-			   signal FunctionManager.sensorWasSampled(sensorCode);
-		   }
-	   }
-	
+       /**
+       * lets the function manager (and therefore registered functions) know
+       * when another sample has been taken to allow the triggering of feature
+       * calculation
+       *
+       */
+       event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+          if (result == SUCCESS)
+             signal FunctionManager.sensorWasSampled(sensorCode);
+       }
+
 
        default command bool Functions.setUpFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.setUpFunction: Executed default operation. Chances are there's an operation miswiring.\n");

@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef BUFFER_POOL_SIZE
-#define BUFFER_POOL_SIZE 6
+#define BUFFER_POOL_SIZE 16
 #endif
 
 #ifndef BUFFER_LENGTH
@@ -108,7 +108,7 @@ implementation {
                 tmpBuffer[i++] = bufferPool[(BUFFER_LENGTH * bufferID) + k--];
           }
 
-          memcpy(buffer, tmpBuffer, windowSize*2);
+          memcpy(buffer, tmpBuffer, (windowSize * sizeof(uint16_t)) );
        }
 
        command void BufferPool.getBufferPoolCopy(uint16_t* buffer) {

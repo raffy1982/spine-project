@@ -33,9 +33,6 @@
  * @version 1.0
  */
 
-#include "Functions.h"
-#include "SensorsConstants.h"
-
 #ifndef FEATURE_LIST_SIZE
 #define FEATURE_LIST_SIZE 32
 #endif
@@ -48,21 +45,13 @@
 #define SENSORS_REGISTRY_SIZE 16
 #endif
 
-#ifndef BUFFER_POOL_SIZE
-#define BUFFER_POOL_SIZE 6
-#endif
-
-#ifndef BUFFER_LENGTH
-#define BUFFER_LENGTH 80
-#endif
-
 module FeatureEngineP {
 	
 	provides {
 		interface Function;
 		interface FeatureEngine;
 	}
-	
+
 	uses {
 		interface Boot;
 		interface Feature as Features[uint8_t featureID];
@@ -194,14 +183,13 @@ implementation {
 		if (functionParamsSize < 4)
 		return FALSE;
 		
-		memcpy(&sensorCode, functionParams, 1);
-		memcpy(&featureNumber, (functionParams+1), 1);
-		
+		sensorCode = functionParams[0];
+		featureNumber = functionParams[1];
+
 		for(i = 0; i<featureNumber; i++) {
-			memcpy(&currFeatureCode, (functionParams+2+2*i), 1);
-			memcpy(&currSensorChBitmask, (functionParams+3+2*i), 1);
-			currSensorChBitmask = (currSensorChBitmask & 0x0F);
-			
+			currFeatureCode = functionParams[2+2*i];
+			currSensorChBitmask = (functionParams[3+2*i] & 0x0F);
+
 			for(j = 0; j<actFeatsIndex; j++) {
 				if (actFeatsList[j].featureCode == currFeatureCode && actFeatsList[j].sensorCode == sensorCode) {
 					actFeatsList[j].sensorChBitmask &= currSensorChBitmask;
@@ -289,10 +277,11 @@ implementation {
 		if (resultWordLength > 1) {
 			for (i = 0; i < returnedChannelCount; i++) {
 
-				currResult = (resultWordLength==4)? *((uint32_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i))) :
-                                                                    *((uint16_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i)));
+				currResult = (resultWordLength == sizeof(uint32_t) )? 
+                                                               *((uint32_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i))) :
+                                                               *((uint16_t *)(evalFeatsList + evalFeatsIndex + (resultWordLength*i)));
 				for (j = 0; j<resultWordLength; j++) {
-                                   tmp = ( currResult<<8*( (sizeof currResult) - resultWordLength + j) );
+                                   tmp = ( currResult<<8*( sizeof(currResult) - resultWordLength + j) );
                                    *(evalFeatsList + evalFeatsIndex + (resultWordLength*i) + j) = (tmp>>8*( (sizeof currResult) - 1));
                                }
 			}
@@ -302,7 +291,7 @@ implementation {
 		*maskAndSizePtr |= (resultWordLength & 0x0F);
 		// increment our index
 		evalFeatsIndex += returnedChannelCount * resultWordLength;
-		
+
 		evalFeatsCount++;
 	}
 		

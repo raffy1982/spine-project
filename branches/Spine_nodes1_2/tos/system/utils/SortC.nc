@@ -52,10 +52,10 @@ implementation
 
             for (i = 0; i < length - 1; i++)
                 for (j = 0; j < length - 1; j++) {
-                    if ((int16_t)(*(array + j) ) > (int16_t)(*(array + j + 1) )) {
-                       temp = (int16_t)(*(array + j) );
-                       (int16_t)(*(array + j) ) = (int16_t)(*(array + j + 1) );
-                       (int16_t)(*(array + j + 1) ) = temp;
+                    if ( (int16_t)array[j] > (int16_t)array[j+1] ) {
+                       temp = (int16_t)array[j];
+                       (int16_t)array[j] = (int16_t)array[j+1];
+                       (int16_t)array[j+1] = temp;
                     }
                 }
        }
@@ -73,13 +73,13 @@ implementation
             int16_t temp;
 
             for (i = 1; i < length; i++) {
-                temp = (int16_t)(*(array + i) );
+                temp = (int16_t)array[i];
                 j = i;
-                while ((j > 0) && ((int16_t)(*(array + j - 1) ) > temp)) {
-                      (int16_t)(*(array + j) ) = (int16_t)(*(array + j - 1) );
+                while ( j>0 && (int16_t)array[j-1]>temp ) {
+                      (int16_t)array[j] = (int16_t)array[j-1];
                       j = j - 1;
                 }
-                (int16_t)(*(array + j) ) = temp;
+                (int16_t)array[j] = temp;
             }
        }
 
@@ -93,18 +93,19 @@ implementation
        */
        command void Sort.selectionSort(uint16_t* array, uint16_t length) {
             uint16_t i, j;
-            int16_t min, temp;
+            uint16_t min;
+            int16_t temp;
 
-            for (i = 0; i < length - 1; i++)
+            for (i = 0; i < length-1; i++)
             {
                 min = i;
                 for (j = i + 1; j < length; j++)
-                    if ((int16_t)(*(array + j) ) < (int16_t)(*(array + min) ))
+                    if ( (int16_t)array[j] < (int16_t)array[min] )
                         min = j;
 
-                temp = (int16_t)(*(array + i) );
-                (int16_t)(*(array + i) ) = (int16_t)(*(array + min) );
-                (int16_t)(*(array + min) ) = temp;
+                temp = (int16_t)array[i];
+                (int16_t)array[i] = (int16_t)array[min];
+                (int16_t)array[min] = temp;
             }
        }
 

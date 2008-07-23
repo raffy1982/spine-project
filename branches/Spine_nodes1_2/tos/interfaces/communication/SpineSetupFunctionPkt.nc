@@ -31,6 +31,9 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.0
  */ 
+
+#include "Functions.h"
+
 interface SpineSetupFunctionPkt {
 
     command enum FunctionCodes getFunctionCode();

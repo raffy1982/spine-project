@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
  
-  module PacketManagerP {
+ module PacketManagerP {
 
        uses {
             interface RadioController;
@@ -42,14 +42,11 @@ Boston, MA  02111-1307, USA.
             interface InPacket as InPackets[uint8_t inPktID];
             interface OutPacket as OutPackets[uint8_t outPktID];
        }
-       
+
        provides interface PacketManager;
  }
 
  implementation {
-
-     uint8_t MY_SPINE_VERSION = 0x02;
-     uint8_t MY_GROUP_ID = 0xAB;
 
      uint16_t DEFAULT_DEST = SPINE_BASE_STATION;
 
@@ -71,7 +68,7 @@ Boston, MA  02111-1307, USA.
                                                                          ((builtLen/SPINE_PKT_PAYLOAD_MAX_SIZE) + 1);
           for (i = 0; i<totFragments; i++) {
              fragmentNr = i+1;
-             header = call Header.build(MY_SPINE_VERSION, extension, pktType, MY_GROUP_ID, TOS_NODE_ID, DEFAULT_DEST,
+             header = call Header.build(SPINE_VERSION, extension, pktType, GROUP_ID, TOS_NODE_ID, DEFAULT_DEST,
                                         sequenceNr, fragmentNr, totFragments);
 
              memcpy(msgTmp, header, SPINE_HEADER_PKT_SIZE);
@@ -97,7 +94,7 @@ Boston, MA  02111-1307, USA.
             call Header.parse(pkt);
             // if the type of the incoming message is not a recognized spine packet, it won't be signaled
             if (call  InPackets.parse[call Header.getPktType()](pkt + SPINE_HEADER_PKT_SIZE, len - SPINE_HEADER_PKT_SIZE)) {
-                if (call Header.getVersion() == MY_SPINE_VERSION && call Header.getGroupID() == MY_GROUP_ID &&
+                if (call Header.getVersion() == SPINE_VERSION && call Header.getGroupID() == GROUP_ID &&
                        (call Header.getDestID() == TOS_NODE_ID || call Header.getDestID() == SPINE_BROADCAST) )
                     signal PacketManager.messageReceived(call Header.getPktType()); // it's supposed to be the same of the 'pktType' param
             }

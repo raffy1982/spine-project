@@ -131,9 +131,9 @@ implementation {
        call CLK_port.set();
        call CS_accel_port.clr();
 
-       accX=0;
-       accY=0;
-       accZ=0;
+       accX = 0;
+       accY = 0;
+       accZ = 0;
 
        writeBuff = 0xe8;  // 11101000 = 0xe8 READ ACCELERATION DATA
        for (i=8; i>=1; i--) {
@@ -222,9 +222,9 @@ implementation {
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        memcpy(buffer, &accX, 2);
-        memcpy(buffer+1, &accY, 2);
-        memcpy(buffer+2, &accZ, 2);
+        buffer[0] = accX;
+        buffer[1] = accY;
+        buffer[2] = accZ;
     }
 
     command enum SensorCode Sensor.getSensorCode() {

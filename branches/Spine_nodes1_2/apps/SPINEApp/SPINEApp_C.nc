@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 #include "Functions.h"
 
 #ifndef SPINE_APP_UTILITY_BUFFER_SIZE
-#define SPINE_APP_UTILITY_BUFFER_SIZE 300
+#define SPINE_APP_UTILITY_BUFFER_SIZE 100
 #endif
 
 module SPINEApp_C
@@ -83,12 +83,12 @@ implementation
      buffer[currBufferSize++] = sensorsCount;
 
      for (i = 0; i<sensorsCount; i++) {
-        buffer[currBufferSize++] = *(sensorsList+i);
-        currSensorValueTypeList = call SensorBoardController.getValueTypesList(*(sensorsList+i), &currSensorValueTypeCount);
+        buffer[currBufferSize++] = sensorsList[i];
+        currSensorValueTypeList = call SensorBoardController.getValueTypesList(sensorsList[i], &currSensorValueTypeCount);
 
         memset(buffer+currBufferSize, 0x00, MAX_VALUE_TYPES);
         for(j = 0; j<currSensorValueTypeCount; j++) {
-           currSensorValueType = *(currSensorValueTypeList+j);
+           currSensorValueType = currSensorValueTypeList[j];
            
            switch(currSensorValueType) {
               case CH_1 : buffer[currBufferSize] = TRUE; break;
@@ -105,7 +105,7 @@ implementation
      buffer[currBufferSize++] = functionsCount;
 
      for (i = 0; i<functionsCount; i++)
-        buffer[currBufferSize++] = *(functionList+i);
+        buffer[currBufferSize++] = functionList[i];
      
      call PacketManager.build(SERVICE_ADV, &buffer, currBufferSize);
   }
@@ -128,7 +128,7 @@ implementation
      call RadioController.setRadioAlwaysOn(call SpineStartPkt.radioAlwaysOnFlag());
      if (call SpineStartPkt.enableTDMAFlag())
         call RadioController.enableTDMA(call SpineStartPkt.getNetworkSize(), (TOS_NODE_ID-1)); // that currently forces to flash the nodes with sequential IDs starting from 1
-     
+
      call SensorBoardController.startSensing();
      call FunctionManager.startComputing();
   }

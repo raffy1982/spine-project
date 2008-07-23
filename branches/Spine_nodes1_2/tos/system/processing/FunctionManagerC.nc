@@ -32,11 +32,9 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
  
- #include "Functions.h"
-
  configuration FunctionManagerC {
      provides interface FunctionManager;
-     
+
      uses interface Function as Functions[uint8_t functionID];
  }
 
