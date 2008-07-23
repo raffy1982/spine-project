@@ -21,22 +21,3 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/$(SENSORBOARD)
 
 PFLAGS += -I$(TOS_OVERLAY_DIR)/types
 
-ifeq ($(SENSORBOARD),mts300)
-     PFLAGS += -DNO_GYRO
-endif
-
-ifdef BUFFER_SIZE
-      PFLAGS += -DBUFFER_SIZE=$(BUFFER_SIZE)
-else
-     ifeq ($(firstword $(MAKECMDGOALS)),micaz)
-          PFLAGS += -DBUFFER_SIZE=80
-     else
-         ifeq ($(firstword $(MAKECMDGOALS)),telosb)
-              PFLAGS += -DBUFFER_SIZE=255
-         else ifeq ($(firstword $(MAKECMDGOALS)),tmote)
-              PFLAGS += -DBUFFER_SIZE=255
-         endif
-     endif
-endif
-
-
