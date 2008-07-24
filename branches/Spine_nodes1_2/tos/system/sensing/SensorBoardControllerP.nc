@@ -35,16 +35,8 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */ 
 
-#ifndef SENSORS_ONE_SHOT_LIST_SIZE
-#define SENSORS_ONE_SHOT_LIST_SIZE 8
-#endif
-
 #ifndef SENSORS_REGISTRY_SIZE
 #define SENSORS_REGISTRY_SIZE 16
-#endif
-
-#ifndef SENS_4BUF_ARRAY_SIZE
-#define SENS_4BUF_ARRAY_SIZE 64
 #endif
 
 module SensorBoardControllerP {
@@ -64,12 +56,10 @@ module SensorBoardControllerP {
 
 implementation {
 
-       uint8_t sensorOneShotList[SENSORS_ONE_SHOT_LIST_SIZE];
+       uint8_t sensorOneShotList[SENSORS_REGISTRY_SIZE];
        uint8_t sensOneShotCount = 0;
 
-       uint8_t sensorCode4BufList[SENS_4BUF_ARRAY_SIZE];
-       uint8_t sensorChanCode4BufList[SENS_4BUF_ARRAY_SIZE];
-       uint8_t sensCodeChanbuffID4BufList[SENS_4BUF_ARRAY_SIZE];
+       sensor_buffer_map_t sensorBufferMap[SENSORS_REGISTRY_SIZE * MAX_VALUE_TYPES];    // <sensorCode, channelCode, bufferID>
        uint8_t count4BufList = 0;
 
 
@@ -99,8 +89,8 @@ implementation {
 
        bool buffers4SensorAllocated(uint8_t sensCode) {
           uint8_t i;
-          for (i = 0; i<sizeof sensorCode4BufList; i++)
-            if (sensorCode4BufList[i] == sensCode) return TRUE;
+          for (i = 0; i<(SENSORS_REGISTRY_SIZE * MAX_VALUE_TYPES); i++)
+            if (sensorBufferMap[i].sensorCode == sensCode) return TRUE;
 
           return FALSE;
        }
@@ -117,9 +107,9 @@ implementation {
              if (!buffers4SensorAllocated(sensorCode)) {
                 valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
                 for(j = 0; j<valueTypesCount; j++) {
-                    sensorCode4BufList[count4BufList+j] = sensorCode;
-                    sensorChanCode4BufList[count4BufList+j] = valueTypesList[j];
-                    sensCodeChanbuffID4BufList[count4BufList+j] = call BufferPool.getAvailableBuffer();
+                    sensorBufferMap[count4BufList+j].sensorCode = sensorCode;
+                    sensorBufferMap[count4BufList+j].channelCode = valueTypesList[j];
+                    sensorBufferMap[count4BufList+j].bufferID = call BufferPool.getAvailableBuffer();
                 }
                 count4BufList += valueTypesCount;
              }
@@ -160,19 +150,19 @@ implementation {
           uint8_t i;
 
           for (i = 0; i<count4BufList; i++)
-            if (sensorCode4BufList[i] == sensorCode && sensorChanCode4BufList[i] == valueType)
-               return sensCodeChanbuffID4BufList[i];
+            if (sensorBufferMap[i].sensorCode == sensorCode && sensorBufferMap[i].channelCode == valueType)
+               return sensorBufferMap[i].bufferID;
 
           return 0xFF;
        }
 
        command error_t SensorBoardController.getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel) {
    		uint8_t i;
-		
+
    		for (i = 0; i<count4BufList; i++) {
-   			if (sensCodeChanbuffID4BufList[i] == bufferID) {
-   				*sensorCode = sensorCode4BufList[i];
-   				*channel = sensorChanCode4BufList[i];
+   			if (sensorBufferMap[i].bufferID == bufferID) {
+   				*sensorCode = sensorBufferMap[i].sensorCode;
+   				*channel = sensorBufferMap[i].channelCode;
    				return SUCCESS;
    			}
    		}
@@ -235,13 +225,11 @@ implementation {
        
        command void SensorBoardController.reset() {
           stopSensing();
-          
+
           memset(sensorOneShotList, 0x00, sizeof sensorOneShotList);
           sensOneShotCount = 0;
 
-          memset(sensorCode4BufList, 0x00, sizeof sensorCode4BufList);
-          memset(sensorChanCode4BufList, 0x00, sizeof sensorChanCode4BufList);
-          memset(sensCodeChanbuffID4BufList, 0x00, sizeof sensCodeChanbuffID4BufList);
+          memset(sensorBufferMap, 0x00, sizeof sensorBufferMap);
           count4BufList = 0;
           
           call BufferPool.clear();

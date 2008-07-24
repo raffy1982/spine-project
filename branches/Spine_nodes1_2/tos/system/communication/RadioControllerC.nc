@@ -44,8 +44,8 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
- #ifndef QUEUE_MAX_SIZE
- #define QUEUE_MAX_SIZE 20
+ #ifndef RADIO_QUEUE_MAX_SIZE
+ #define RADIO_QUEUE_MAX_SIZE 20
  #endif
 
  configuration RadioControllerC {
@@ -58,7 +58,7 @@ Boston, MA  02111-1307, USA.
 
                  new AMReceiverC(AM_SPINE) as ReceiverC,
                  
-                 new QueueC(message_t, QUEUE_MAX_SIZE) as Queue,
+                 new QueueC(message_t, RADIO_QUEUE_MAX_SIZE) as Queue,
                  new TimerMilliC() as GuardTimer, new TimerMilliC() as ListenTimer, new TimerMilliC() as TDMATimer;
 
       

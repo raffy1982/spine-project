@@ -86,6 +86,12 @@ enum {
    MAX_VALUE_TYPES = 0x04
 };
 
+typedef struct sensor_buffer_map_t {
+  uint8_t sensorCode;
+  uint8_t channelCode;
+  uint8_t bufferID;
+} sensor_buffer_map_t;
+
 #endif
 
 
