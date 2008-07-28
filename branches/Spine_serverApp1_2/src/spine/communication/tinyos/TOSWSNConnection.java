@@ -83,7 +83,7 @@ public class TOSWSNConnection implements WSNConnection {
 		try {
 			
 			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
-			byte[] compressedPayload = PacketManager.build(msg);
+			byte[] compressedPayload = msg.getPayload();
 			SpineTOSMessage tosmsg = new SpineTOSMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
 														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
 														 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
@@ -96,9 +96,7 @@ public class TOSWSNConnection implements WSNConnection {
 			System.out.println(e);
 		}catch (IndexOutOfBoundsException e) {
 			System.out.println(e);
-		} catch (UnknownFunctionException e) {
-			System.out.println(e);
-		}
+		} 
 		
 	}
 
@@ -107,7 +105,7 @@ public class TOSWSNConnection implements WSNConnection {
 	}
 	
 	private void printPayload(byte[] payload) {  // DEBUG CODE
-		System.out.print("out: ");
+		System.out.print("messageSent     -> out.lowLevel: ");
 		if(payload == null || payload.length == 0)
 			System.out.print("empty payload");
 		else{
@@ -117,7 +115,7 @@ public class TOSWSNConnection implements WSNConnection {
 				System.out.print(Integer.toHexString(b) + " ");
 			}
 		}
-		System.out.println("\n");		
+		System.out.println();
 	}
 
 }

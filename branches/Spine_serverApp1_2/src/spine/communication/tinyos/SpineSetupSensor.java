@@ -34,19 +34,35 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-public class SpineSetupSensor {
+public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage {
 	
-	protected static byte[] build(byte[] payload) {
-		if (payload.length != 4)
-			return null;
+	private final static int LENGTH = 3;
+	
+	private byte sensor = -1;
+	private byte timeScale = -1;
+	private int samplingTime = -1;
+	
+	
+	public byte[] encode() {
+		byte[] data = new byte[LENGTH];
 		
-		byte[] data = new byte[3];
-		
-		data[0] = (byte)((payload[0]<<4) | (payload[1]<<2 & 0x0C)); // 0x0C = 0000 1100
-		data[1] = payload[2];
-		data[2] = payload[3];
+		data[0] = (byte)((this.sensor<<4) | (this.timeScale<<2 & 0x0C)); // 0x0C = 0000 1100
+		data[1] = (byte)((this.samplingTime & 0x0000FFFF)>>8);
+		data[2] = (byte)(this.samplingTime & 0x000000FF);
 		
 		return data;
+	}
+	
+	public void setSensor(byte sensor) {
+		this.sensor = sensor;
+	}
+	
+	public void setTimeScale(byte timeScale) {
+		this.timeScale = timeScale;	
+	}
+	
+	public void setSamplingTime(int samplingTime) {
+		this.samplingTime = samplingTime;
 	}
 	
 }

@@ -38,12 +38,13 @@ import java.util.Vector;
 
 import spine.datamodel.Data;
 import spine.datamodel.Node;
+import spine.datamodel.ServiceMessage;
 
 public interface SPINEListener {
 	
 	public void newNodeDiscovered(Node newNode);
 
-	public void serviceMessageReceived(); // TODO add parameters
+	public void serviceMessageReceived(int nodeID, ServiceMessage msg); // TODO add parameters
 
 	public void dataReceived(int nodeID, Data data);
 

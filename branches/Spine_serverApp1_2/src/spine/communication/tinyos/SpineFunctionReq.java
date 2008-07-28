@@ -34,30 +34,14 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-import spine.Properties;
+public abstract class SpineFunctionReq {
+	
+	protected boolean isActivationRequest;
 
-public class SpineFunctionReq {
-	
-	private final static String SPINEFUNCTIONREQ_CLASSNAME_KEY_PREFIX = "spineFunctionReq_function_className_";
-	
-	protected SpineFunctionReq() {}
-	
-	protected byte[] build(byte[] payload) throws UnknownFunctionException {
-		byte functionCode = payload[0];
-		
-		try {
-			Class c = Class.forName(Properties.getProperties().getProperty(SPINEFUNCTIONREQ_CLASSNAME_KEY_PREFIX + functionCode));
-			return ((SpineFunctionReq)c.newInstance()).build(payload);
-		}  	catch (ClassNotFoundException e) { 
-				throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a function (de)activation."); 
-		  	}
-			catch (NullPointerException e) { 
-				throw new UnknownFunctionException("unknown function '" + functionCode + "' while trying a function (de)activation."); 
-			} 
-			catch (InstantiationException e) { System.out.println(e); } 
-			catch (IllegalAccessException e) { System.out.println(e); }
-		
-		return null;
+	public abstract byte[] encode();
+
+	public void setActivationFlag(boolean isActivationRequest) {
+		this.isActivationRequest = isActivationRequest;		
 	}
 	
 }

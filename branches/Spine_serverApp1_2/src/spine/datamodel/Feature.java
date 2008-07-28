@@ -52,6 +52,11 @@ public class Feature {
 	private int ch3Value;
 	private int ch4Value;
 	
+	public Feature(byte featureCode, byte channelBitmask) { 
+		// this is used only for convenience into the FeatureSpineFunctionReq class
+		this.featureCode = featureCode;
+		this.channelBitmask = channelBitmask;
+	}
 	
 	protected Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
 		this.nodeID = nodeID;

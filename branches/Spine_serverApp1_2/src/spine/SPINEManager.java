@@ -42,8 +42,13 @@ import com.tilab.zigbee.WSNConnection;
 
 import spine.SPINEPacketsConstants;
 
+import spine.communication.tinyos.SpineFunctionReq;
+import spine.communication.tinyos.SpineSetupFunction;
+import spine.communication.tinyos.SpineSetupSensor;
+import spine.communication.tinyos.SpineStart;
 import spine.datamodel.Data;
 import spine.datamodel.Node;
+import spine.datamodel.ServiceMessage;
 
 public class SPINEManager implements WSNConnection.Listener {
 
@@ -124,42 +129,24 @@ public class SPINEManager implements WSNConnection.Listener {
 		
 	}
 
-	public void setupSensor(int nodeID, byte sensorCode, byte timeScale, int samplingTime) {
-		byte[] payload = new byte[4];
-		payload[0] = sensorCode;
-		payload[1] = timeScale;				
-		payload[2] = (byte)((samplingTime & 0x0000FFFF)>>8);
-		payload[3] = (byte)(samplingTime & 0x000000FF);
-		
-		send(nodeID, SPINEPacketsConstants.SETUP_SENSOR, payload);
+	public void setupSensor(int nodeID, SpineSetupSensor sss) {
+		send(nodeID, SPINEPacketsConstants.SETUP_SENSOR, sss);
 	}
 
-	public void setupFunction(int nodeID, byte function, byte[] params) {
-		byte[] payload = new byte[2 + params.length];
-		payload[0] = function;
-		payload[1] = (byte)params.length;	
-		System.arraycopy(params, 0, payload, 2, params.length);
-		send(nodeID, SPINEPacketsConstants.SETUP_FUNCTION, payload);
+	public void setupFunction(int nodeID, SpineSetupFunction ssf) {
+		send(nodeID, SPINEPacketsConstants.SETUP_FUNCTION, ssf);
 	}
 
-	public void activateFunction(int nodeID, byte function, byte[] params) {
-		byte[] payload = new byte[3 + params.length];
-		payload[0] = function;
-		payload[1] = 1; // stands as the activate/deactivate flag (1 = TRUE, activate)
-		payload[2] = (byte)params.length;	
-		System.arraycopy(params, 0, payload, 3, params.length);
+	public void activateFunction(int nodeID, SpineFunctionReq sfr) {
+		sfr.setActivationFlag(true);
 
-		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, payload);
+		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, sfr);
 	}
 	
-	public void deactivateFunction(int nodeID, byte function, byte[] params) {
-		byte[] payload = new byte[3 + params.length];
-		payload[0] = function;
-		payload[1] = 0; // stands as the activate/deactivate flag (0 = FALSE, deactivate)
-		payload[2] = (byte)params.length;	
-		System.arraycopy(params, 0, payload, 3, params.length);
-		
-		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, payload);
+	public void deactivateFunction(int nodeID, SpineFunctionReq sfr) {
+		sfr.setActivationFlag(false);
+
+		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, sfr);
 	}
 	
 	public void start(boolean radioAlwaysOn) {
@@ -167,14 +154,12 @@ public class SPINEManager implements WSNConnection.Listener {
 	}
 	
 	public void start(boolean radioAlwaysOn, boolean enableTDMA) {
-		byte[] payload = new byte[4];
-		int nodesCount = activeNodes.size();
-		payload[0] = (byte)(nodesCount>>8);
-		payload[1] = (byte)nodesCount;
-		payload[2] = (radioAlwaysOn)? (byte)1: 0;
-		payload[3] = (enableTDMA)? (byte)1: 0;
+		SpineStart ss = new SpineStart();
+		ss.setActiveNodesCount(activeNodes.size());
+		ss.setRadioAlwaysOn(radioAlwaysOn);
+		ss.setEnableTDMA(enableTDMA);
 		
-		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, payload);
+		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, ss);
 	}
 	
 	public void resetWsn() {		
@@ -185,7 +170,7 @@ public class SPINEManager implements WSNConnection.Listener {
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SYNCR, null);
 	}
 
-	private void send(int nodeID, byte pktType, byte[] payload) {
+	private void send(int nodeID, byte pktType, Object payload) {
 		try {
 			Class c = Class.forName(prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY));
 			com.tilab.zigbee.Message msg = (com.tilab.zigbee.Message)c.newInstance();
@@ -193,8 +178,24 @@ public class SPINEManager implements WSNConnection.Listener {
 			msg.setDestinationURL(URL_PREFIX + nodeID);
 			msg.setClusterId(pktType); 
 			msg.setProfileId(MY_GROUP_ID);
-			if (payload != null)
-				msg.setPayload(payload);
+			if (payload != null) {
+				switch(pktType) {
+					case SPINEPacketsConstants.SETUP_FUNCTION:
+							msg.setPayload(((SpineSetupFunction)payload).encode());
+							break;
+					case SPINEPacketsConstants.FUNCTION_REQ:
+							msg.setPayload(((SpineFunctionReq)payload).encode());
+							break;
+					case SPINEPacketsConstants.SETUP_SENSOR:
+						msg.setPayload(((SpineSetupSensor)payload).encode());
+						break;
+					case SPINEPacketsConstants.START:
+						msg.setPayload(((SpineStart)payload).encode());
+						break;	
+					default: break;
+				}
+				
+			}
 			connection.send(msg);
 			
 		} catch (InstantiationException e) {
@@ -223,7 +224,7 @@ public class SPINEManager implements WSNConnection.Listener {
 					this.activeNodes.addElement(new Node(nodeID, msg.getPayload())); 				
 				break;
 			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); break;
-			case SPINEPacketsConstants.SVC_MSG: break;
+			case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); break;
 			default: break;
 		}
 		
@@ -244,7 +245,7 @@ public class SPINEManager implements WSNConnection.Listener {
 					((SPINEListener)this.listeners.elementAt(i)).dataReceived(nodeID, (Data)o); 
 					break;	
 				case SPINEPacketsConstants.SVC_MSG: 
-					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(); 
+					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(nodeID, (ServiceMessage)o); 
 					break;
 				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
@@ -258,18 +259,12 @@ public class SPINEManager implements WSNConnection.Listener {
 	}
 	
 	
-	/*private void printPayload(Message msg) {  // DEBUG CODE
-		System.out.print("in: ");
-		for (int i = 0; i<msg.getPayload().length; i++) {
-			short b =  msg.getPayload()[i];
-			if (b<0) b += 256;
-			System.out.print(Integer.toHexString(b) + " ");
-		}
-		System.out.println("\n");		
-	}*/
-
 	public void readNow(int nodeID, byte sensorCode) {
-		this.setupSensor(nodeID, sensorCode, SPINESensorConstants.NOW, 0);		
+		SpineSetupSensor sss = new SpineSetupSensor();
+		sss.setSensor(sensorCode);
+		sss.setTimeScale(SPINESensorConstants.NOW);
+		sss.setSamplingTime(0);
+		setupSensor(nodeID, sss);	
 	}
 	
 	/**
@@ -306,8 +301,10 @@ public class SPINEManager implements WSNConnection.Listener {
 			} catch (InterruptedException e) {e.printStackTrace();}
 			
 			if (activeNodes.size()==0) 
-				//listener.messageReceived(Constants.BASE_STATION_ADDRESS, ServiceMessageCodes.FATAL_ERROR, ServiceMessageCodes.CONNECTION_FAIL);
-				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, SPINEPacketsConstants.SVC_MSG, null);
+				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, 
+								SPINEPacketsConstants.SVC_MSG, 
+								new ServiceMessage(SPINEPacketsConstants.SPINE_BASE_STATION, 
+												   ServiceMessage.ERROR, ServiceMessage.CONNECTION_FAIL));
 						
 			discoveryCompleted = true;			
 			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);

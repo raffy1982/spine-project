@@ -113,7 +113,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		msg.setSourceURL(TINYOS_URL_PREFIX + header.getSourceID()); 
 		msg.setDestinationURL(TINYOS_URL_PREFIX + header.getDestID());
 		
-		byte[] payload = PacketManager.parse(header.getPktType(), this.payloadBuf); 
+		byte[] payload = PacketManager.decode(header.getPktType(), this.payloadBuf); 
 		
 		msg.setPayload(payload);
 		

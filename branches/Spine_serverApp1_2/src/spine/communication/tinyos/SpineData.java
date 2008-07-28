@@ -36,23 +36,23 @@ package spine.communication.tinyos;
 
 import spine.Properties;
 
-public class SpineData {
+public abstract class SpineData {
 
 	private final static String SPINEDATA_FUNCT_CLASSNAME_KEY_PREFIX = "spineData_function_className_";
 	
-	protected SpineData() {}
-	
-	protected byte[] parse(byte[] payload) {
+	protected static byte[] parse(byte[] payload) {
 		byte functionCode = (byte)((payload[0] & 0xFF)>>3);
 		
 		try {
 			Class c = Class.forName(Properties.getProperties().getProperty(SPINEDATA_FUNCT_CLASSNAME_KEY_PREFIX + functionCode));
-			return ((SpineData)c.newInstance()).parse(payload);
+			return ((SpineData)c.newInstance()).decode(payload);
 		} catch (ClassNotFoundException e) { System.out.println(e); } 
 		  catch (InstantiationException e) { System.out.println(e); } 
 		  catch (IllegalAccessException e) { System.out.println(e);	}
 		
 		return null;  
 	}
+	
+	protected abstract byte[] decode(byte[] payload);
 
 }

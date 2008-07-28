@@ -37,7 +37,7 @@ import spine.SPINESensorConstants;
 
 public class FeatureSpineData extends SpineData {
 	
-	protected byte[] parse(byte[] payload) {
+	protected byte[] decode(byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;

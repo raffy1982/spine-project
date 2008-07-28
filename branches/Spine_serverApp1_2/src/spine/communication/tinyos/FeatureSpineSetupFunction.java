@@ -33,23 +33,39 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import spine.SPINEFunctionConstants;
+
 public class FeatureSpineSetupFunction extends SpineSetupFunction {
 
-	protected byte[] build(byte[] payload) {
-		byte[] data = new byte[payload.length];
 	
-		if (payload.length != 5)
-			return null;
-			
-		data = new byte[payload.length];
-		
-		data[0] = (byte)(payload[0]<<3);
-		data[1] = payload[1];
-		data[2] = (byte)(payload[2]<<4);
-		data[3] = payload[3];
-		data[4] = payload[4];
+	private final static int PARAM_LENGTH = 3; 
+	
+	private byte sensor = -1;
+	private short windowSize = 0;
+	private short shiftSize = 0;
+	
+	public byte[] encode() {
+		byte[] data = new byte[5];
+	
+		data[0] = (byte)(SPINEFunctionConstants.FEATURE<<3);
+		data[1] = PARAM_LENGTH;
+		data[2] = (byte)(this.sensor<<4);
+		data[3] = (byte)this.windowSize;
+		data[4] = (byte)this.shiftSize;
 		
 		return data;	
+	}
+	
+	public void setSensor(byte sensor) {
+		this.sensor = sensor;
+	}
+	
+	public void setWindowSize(short windowSize) {
+		this.windowSize = windowSize;
+	}
+	
+	public void setShiftSize(short shiftSize) {
+		this.shiftSize = shiftSize;
 	}
 	
 }

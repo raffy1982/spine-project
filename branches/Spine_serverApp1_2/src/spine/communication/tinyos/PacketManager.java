@@ -38,28 +38,12 @@ import spine.SPINEPacketsConstants;
 
 public class PacketManager {
 
-	protected static byte[] build(com.tilab.zigbee.Message msg) throws UnknownFunctionException {
-		byte[] payload = msg.getPayload();
-		
-		switch (msg.getClusterId()) {
-			case SPINEPacketsConstants.SERVICE_DISCOVERY: 
-				case SPINEPacketsConstants.RESET: case SPINEPacketsConstants.SYNCR:
-				case SPINEPacketsConstants.START: return payload;
-			case SPINEPacketsConstants.SETUP_SENSOR: return SpineSetupSensor.build(payload);
-			case SPINEPacketsConstants.SETUP_FUNCTION: return new SpineSetupFunction().build(payload);
-			case SPINEPacketsConstants.FUNCTION_REQ: return new SpineFunctionReq().build(payload);
-			default: break;
-		}
-		
-		return payload;
-	}
-
-	protected static byte[] parse(byte pktType, byte[] payloadBuf) {
+	protected static byte[] decode(byte pktType, byte[] payloadBuf) {
 		byte[] payload = payloadBuf;
 		
 		switch (pktType) {
 			case SPINEPacketsConstants.SERVICE_ADV: payload = SpineServiceAdvertisement.parse(payload); break;
-			case SPINEPacketsConstants.DATA: payload = new SpineData().parse(payload); break;
+			case SPINEPacketsConstants.DATA: payload = SpineData.parse(payload); break;
 			case SPINEPacketsConstants.SVC_MSG: break;
 			default: break;
 		}

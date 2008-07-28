@@ -33,19 +33,48 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import java.util.Vector;
+
+import spine.SPINEFunctionConstants;
+import spine.datamodel.Feature;
+
 public class FeatureSpineFunctionReq extends SpineFunctionReq {
 
-	protected byte[] build(byte[] payload) throws UnknownFunctionException {
-		byte[] data = new byte[payload.length];
+	private byte sensor = -1;
+	private Vector features = new Vector();
+
+	public byte[] encode() {
+		int featuresCount = this.features.size();
 		
-		data = new byte[payload.length - 1];
+		byte[] data = new byte[1 + 1 + 1 + 1 + featuresCount*2];
+		
+		byte activationBinaryFlag = (this.isActivationRequest)? (byte)1 : 0;
+		data[0] = (byte)(SPINEFunctionConstants.FEATURE<<3 | activationBinaryFlag<<2 ); 
+		
+		data[1] = (byte)(1 + 1 + featuresCount*2);
+		
+		data[2] = this.sensor;
+		
+		data[3] = (byte)featuresCount;
 				
-		data[0] = (byte)(payload[0]<<3 | ( (payload[1]<<2) & 0x04 )); // 00000100
-				
-		for (int i = 1; i<data.length; i++) 
-			data[i] = payload[i+1];
+		for (int i = 0; i < featuresCount; i++) {
+			data[(4+i*2)] = ((Feature)features.elementAt(i)).getFeatureCode();
+			data[(4+i*2)+1] = ((Feature)features.elementAt(i)).getChannelBitmask();
+		}
 		
 		return data;		
+	}
+
+	public void setSensor(byte sensor) {
+		this.sensor  = sensor;		
+	}
+
+	public void addFeature(byte feature, byte channelBitmask) {
+		this.features.add(new Feature(feature, channelBitmask));		
+	}
+	
+	public void removeFeature(byte feature, byte channelBitmask) {
+		this.features.add(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
 	}
 	
 }

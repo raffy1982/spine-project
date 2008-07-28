@@ -179,7 +179,7 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 			if (curr.destNodeID == nodeID || curr.destNodeID == SPINEPacketsConstants.SPINE_BROADCAST) {
 				try {
 					this.moteIF.send(curr.destNodeID, curr.tosmsg);
-System.out.println("Ota deferred send.");					
+System.out.println("- Ota deferred send.");					
 					this.messagesQueue.removeElementAt(i);
 					Thread.sleep(2);
 				} catch (IOException e) {
@@ -196,7 +196,7 @@ System.out.println("Ota deferred send.");
 		if(this.sendImmediately) {
 			try {
 				this.moteIF.send(destNodeID, tosmsg);
-System.out.println("Ota immediate send.");																										 // check if the flag radioAlwaysOn flag is false
+System.out.println(" - Ota immediate send.\n");																										 // check if the flag radioAlwaysOn flag is false
 				if(tosmsg.getHeader().getPktType() == SPINEPacketsConstants.START && tosmsg.getRawPayload()[2] == 0)
 					this.sendImmediately = false;
 				

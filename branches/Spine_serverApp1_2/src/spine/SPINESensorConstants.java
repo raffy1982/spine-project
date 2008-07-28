@@ -42,7 +42,7 @@ public class SPINESensorConstants {
 	public static final byte INTERNAL_TEMPERATURE_SENSOR = 0x04;
 	
 	
-	public static final byte CH1_CH2_CH3_CH4 = 0x0F;	// 1111
+	public static final byte ALL = 0x0F;				// 1111
 	public static final byte NONE = 0x00;				// 0000
 	
 	public static final byte CH1_ONLY = 0x08;			// 1000
@@ -109,7 +109,7 @@ public class SPINESensorConstants {
 	public static String valueTypesBitmaskToString(byte code) {
 		
 		switch (code) {
-			case CH1_CH2_CH3_CH4: return "ch1, ch2, ch3, ch4";
+			case ALL: return "ch1, ch2, ch3, ch4";
 			case NONE: return "none";
 			
 			case CH1_ONLY: return "ch1";
