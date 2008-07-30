@@ -67,6 +67,7 @@ implementation {
           acquireTypesList[1] = CH_2_ONLY;
           acquireTypesList[2] = ALL;
 
+          // the driver self-registers to the sensor registry
           call SensorsRegistry.registerSensor(GYRO_SENSOR);
 
           registered = TRUE;
@@ -127,7 +128,7 @@ implementation {
 
         gyroX = data;
 
-        if ((acqType == ALL && yReady) || acqType == CH_1_ONLY)
+        if ((acqType == ALL && yReady) || acqType == CH_1_ONLY)  // the acquisitionDone is not signaled until every channel values are ready
            signal Sensor.acquisitionDone(result, acqType);
     }
 
@@ -145,7 +146,7 @@ implementation {
 
         gyroY = data;
 
-        if ((acqType == ALL && xReady) || acqType == CH_2_ONLY)
+        if ((acqType == ALL && xReady) || acqType == CH_2_ONLY)  // the acquisitionDone is not signaled until every channel values are ready
            signal Sensor.acquisitionDone(result, acqType);
     }
 

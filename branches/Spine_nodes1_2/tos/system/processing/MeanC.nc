@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
  /**
- *  Configuration component for Feature 'Max'
+ *  Configuration component for Feature 'Mean'
  * 
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>

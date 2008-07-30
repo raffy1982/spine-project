@@ -51,6 +51,7 @@ implementation {
 
        event void Boot.booted() {
           if (!registered) {
+             // the feature self-registers to the FeatureEngine at boot time
              call FeatureEngine.registerFeature(VARIANCE);
              registered = TRUE;
           }
@@ -69,7 +70,7 @@ implementation {
        }
        
        command uint8_t Feature.getResultSize() {
-         return 4;
+         return 4;   // uint32_t = 4bytes
        }
 }
 

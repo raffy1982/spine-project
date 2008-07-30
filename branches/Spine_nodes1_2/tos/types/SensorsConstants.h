@@ -35,6 +35,7 @@ Boston, MA  02111-1307, USA.
 #define SensorsConstants_H
 
 enum SensorCode {
+  // if a new sensor is added to SPINE, its code must be included here
 
   ACC_SENSOR = 0x01,
   VOLTAGE_SENSOR = 0x02,
@@ -83,7 +84,7 @@ enum BitmaskTypes {
 };
 
 enum {
-   MAX_VALUE_TYPES = 0x04
+   MAX_VALUE_TYPES = 0x04      // is equal to the max number of channel per physical sensor SPINE is able to handle
 };
 
 typedef struct sensor_buffer_map_t {

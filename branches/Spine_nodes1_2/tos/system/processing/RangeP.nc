@@ -48,6 +48,7 @@ implementation {
 
        event void Boot.booted() {
           if (!registered) {
+             // the feature self-registers to the FeatureEngine at boot time
              call FeatureEngine.registerFeature(RANGE);
              registered = TRUE;
           }
@@ -58,6 +59,8 @@ implementation {
             int16_t min = data[0];
             int16_t max = min;
 
+            // we don't use the MathUtils command 'max' and 'min'; 
+            // instead, we can compute both using one single for loop ( O(n) vs O(2n) )
             for(i = 1; i < elemCount; i++) {
                  if( data[i] < min)
                       min = data[i];
@@ -81,7 +84,7 @@ implementation {
        }
        
        command uint8_t Feature.getResultSize() {
-         return 2;
+         return 2;   // uint16_t = 2bytes
        }
 }
 

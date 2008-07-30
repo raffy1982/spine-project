@@ -47,7 +47,8 @@ implementation {
 
 	event void Boot.booted() {
 		if (!registered) {
-			call FeatureEngine.registerFeature(PITCH_ROLL);
+			// the feature self-registers to the FeatureEngine at boot time
+                        call FeatureEngine.registerFeature(PITCH_ROLL);
 			registered = TRUE;
 		}
 	}
@@ -106,7 +107,7 @@ implementation {
 	}
 	
 	command uint8_t Feature.getResultSize() {
-		return 2;
+		return 2;   // uint16_t = 2bytes
 	}
 }
 

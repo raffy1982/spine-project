@@ -50,6 +50,7 @@ Boston, MA  02111-1307, USA.
 
        event void Boot.booted() {
           if (!registered) {
+             // the feature self-registers to the FeatureEngine at boot time
              call FeatureEngine.registerFeature(RMS);
              registered = TRUE;
           }
@@ -80,7 +81,7 @@ Boston, MA  02111-1307, USA.
        }
        
        command uint8_t Feature.getResultSize() {
-         return 2;
+         return 2;   // uint16_t = 2bytes
        }
  }
 

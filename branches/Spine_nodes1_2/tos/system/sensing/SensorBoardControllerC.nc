@@ -48,11 +48,14 @@ implementation {
      components SensorBoardControllerP, SensorsRegistryC, PacketManagerC;
      components BufferPoolP;
 
+     // if new sensors are added, declare their PIL driver components down here
      components VoltageSensorC;
      components AccSensorC;
      components GyroSensorC;
      components InternalTemperatureSensorC;
 
+     // if new sensors are added, also declare a new timer (each timer will be reserved for sampling one sensor)
+     // for each new sensor down here
      components new TimerMilliC() as VoltageSensorTimer;
      components new TimerMilliC() as AccSensorTimer;
      components new TimerMilliC() as GyroSensorTimer;
@@ -65,12 +68,14 @@ implementation {
      SensorBoardControllerP.PacketManager -> PacketManagerC;
 
      SensorBoardControllerP.SensorImpls = SensorImpls;
+     // if new sensors are added, wire the aforedeclared PIL driver components down here
      SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
      SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
 
      SensorBoardControllerP.SamplingTimers = SamplingTimers;
+     // if new sensors are added, also wire the aforedeclared timers down here
      SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
      SensorBoardControllerP.SamplingTimers[GYRO_SENSOR] -> GyroSensorTimer;

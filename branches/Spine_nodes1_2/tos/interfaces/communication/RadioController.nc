@@ -69,13 +69,28 @@ Boston, MA  02111-1307, USA.
        */
        command void setRadioAlwaysOn(bool enable);
        
+       /**
+       * Controls the sw TDMA activation. 
+       * TDMA is disabled by default; it can be tuned at compile time
+       * using the defining the pflag 'ENABLE_TDMA' at TRUE or FALSE.
+       *
+       * @param  networkSize    the network size (number of nodes) is needed to scale correctly the TMDA schema.
+       * @param  myTimeSlotID   the slot ID in which the radio controller can transmit messages.
+       *
+       * @return    void.
+       */
        command void enableTDMA(uint16_t networkSize, uint16_t myTimeSlotID);
 
+       /**
+       * Controls the sw TDMA deactivation.
+       *
+       * @return    void.
+       */
        command void disableTDMA();
 
        /**
        * Send a packet with a data payload of <tt>data</tt> and type <tt>pktType</tt> to address <tt>destination</tt>.
-       * If send returns SUCCESS, then the message is going to be transmitted; 
+       * If send returns SUCCESS, then the message is going to be transmitted;
        * if send returns an error, then the message won't be transmitted.
        *
        * @param destination   address to which to send the message
@@ -87,12 +102,17 @@ Boston, MA  02111-1307, USA.
        */
        command error_t send(uint16_t destination, enum PacketTypes pktType, void* payload, uint8_t len);
        
+       /**
+       * Resets the state of the radio controller.
+       *
+       * @return       void.
+       */
        command void reset();
 
        /**
        * Signals the reception of a message.
        * IMPORTANT: is up to the handling component to copy out the data it needs.
-       *     
+       *
        * @param  source    the source node ID of this message
        * @param  pktType   the AM type of the message
        * @param  payload   a pointer to the message's payload

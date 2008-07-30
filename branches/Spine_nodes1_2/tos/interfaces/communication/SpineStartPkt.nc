@@ -33,9 +33,27 @@ Boston, MA  02111-1307, USA.
  */ 
 interface SpineStartPkt {
 
+    /**
+    * Returns the network size (number of nodes)
+    *
+    *
+    * @return        the number of nodes within the network.
+    */
     command uint16_t getNetworkSize();
-    
+
+    /**
+    * Returns the radio low-power control flag
+    *
+    *
+    * @return        TRUE if the Radio must be kept always on; FALSE otherwise.
+    */
     command bool radioAlwaysOnFlag();
 
+    /**
+    * Returns the TDMA activation control flag
+    *
+    *
+    * @return        TRUE if TDMA must be enabled; FALSE otherwise.
+    */
     command bool enableTDMAFlag();
 }

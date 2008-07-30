@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
  /**
- * Interface of the SPINE Function.
+ * Interface of the generic SPINE Function.
  *
  *
  * @author Raffaele Gravina
@@ -35,57 +35,63 @@ Boston, MA  02111-1307, USA.
  interface Function {
 
        /**
+       * Setup a function with the given parameters array of size 'functionParamsSize'
        *
+       * @param  'functionParams' the setup parameter array
+       * @param  'functionParamsSize' the size of the setup parameter array
        *
-       * @param
-       *
-       * @return
+       * @return TRUE is the setup has succeeded, FALSE otherwise
        */
        command bool setUpFunction(uint8_t* functionParams, uint8_t functionParamsSize);
        
        /**
+       * Activates a function with the given parameters array of size 'functionParamsSize'
        *
+       * @param  'functionParams' the activation parameter array
+       * @param  'functionParamsSize' the size of the activation parameter array
        *
-       * @param
-       *
-       * @return
+       * @return TRUE is the activation has succeeded, FALSE otherwise
        */
        command bool activateFunction(uint8_t* functionParams, uint8_t functionParamsSize);
        
        /**
+       * Disables a function with the given parameters array of size 'functionParamsSize'
        *
+       * @param  'functionParams' the deactivation parameter array
+       * @param  'functionParamsSize' the size of the deactivation parameter array
        *
-       * @param
-       *
-       * @return
+       * @return TRUE is the deactivation has succeeded, FALSE otherwise
        */
        command bool disableFunction(uint8_t* functionParams, uint8_t functionParamsSize);
        
-
-       
        /**
+       * Returns the list of the registered libraries to the function
        *
+       * @param 'functionCount' the number of registered libraries of the function
        *
-       * @param
-       *
-       * @return
+       * @return the pointer to the list of registered libraries to the function
        */
        command uint8_t* getFunctionList(uint8_t* functionCount);
        
        /**
+       * Starts the computing of the function
        *
-       *
-       * @return 'void'
+       * @return void
        */
        command void startComputing();
        
        /**
+       * Stops the computing of the function
        *
-       *
-       * @return 'void'
+       * @return void
        */
        command void stopComputing();
        
+       /**
+       * Resets the state of the Function
+       *
+       * @return void
+       */
        command void reset();
 
  }

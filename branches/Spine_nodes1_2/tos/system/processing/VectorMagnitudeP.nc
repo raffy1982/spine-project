@@ -49,7 +49,8 @@ implementation {
 
 	event void Boot.booted() {
 		if (!registered) {
-			call FeatureEngine.registerFeature(VECTOR_MAGNITUDE);
+			// the feature self-registers to the FeatureEngine at boot time
+                        call FeatureEngine.registerFeature(VECTOR_MAGNITUDE);
 			registered = TRUE;
 		}
 	}
@@ -84,7 +85,7 @@ implementation {
 	}
 	
 	command uint8_t Feature.getResultSize() {
-		return 2;
+		return 2;   // uint16_t = 2bytes
 	}
 }
 

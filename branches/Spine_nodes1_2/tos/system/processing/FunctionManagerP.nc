@@ -47,7 +47,7 @@ module FunctionManagerP {
        uses {
          interface PacketManager;
          interface Function as Functions[uint8_t functionID];
-		 interface SensorBoardController;
+	 interface SensorBoardController;
        }
 }
 
@@ -59,7 +59,7 @@ implementation {
        uint8_t functionLibrariesList[FUNCTION_LIBRARIES_LIST_SIZE];
        uint8_t functLibCount = 0;
        
-       uint8_t data[128];
+       uint8_t data[128];   // just a general purpose temp buffer
 
        command error_t FunctionManager.registerFunction(enum FunctionCodes functionCode) {
           if (functCount < FUNCTION_LIST_SIZE) { // to avoid memory leaks
@@ -98,17 +98,12 @@ implementation {
           return call Functions.disableFunction[functionCode](functionParams, functionParamsSize);
        }
        
-       /**
-       *
-       *
-       * @return 'void'
-       */
        command void FunctionManager.startComputing() {
           uint8_t i;
           for (i = 0; i<functCount; i++)
              call Functions.startComputing[ functionList[i] ]();
        }
-       
+
        void stopComputing() {
           uint8_t i;
           for (i = 0; i<functCount; i++)
@@ -129,27 +124,26 @@ implementation {
        command void FunctionManager.reset() {
           uint8_t i;
           
+          // we request every functions to stop their computing
           stopComputing();
 
+          // we request every functions to reset their state
           for (i = 0; i<functCount; i++)
              call Functions.reset[ functionList[i] ]();
 
           memset(data, 0x00, sizeof data);
        }
 
+
        event void PacketManager.messageReceived(enum PacketTypes pktType){}
 
-       /**
-       * lets the function manager (and therefore registered functions) know
-       * when another sample has been taken to allow the triggering of feature
-       * calculation
-       *
-       */
        event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
           if (result == SUCCESS)
              signal FunctionManager.sensorWasSampled(sensorCode);
        }
 
+
+       // Default commands needed due to the use of parametrized interfaces
 
        default command bool Functions.setUpFunction[uint8_t functionID](uint8_t* functionParams, uint8_t functionParamsSize) {
           dbg(DBG_USR1, "FunctionManagerP.setUpFunction: Executed default operation. Chances are there's an operation miswiring.\n");

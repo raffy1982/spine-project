@@ -37,6 +37,7 @@ Boston, MA  02111-1307, USA.
 #define FUNCTIONS_H
 
 enum FunctionCodes {
+  // if a new function is added to SPINE, its code must be included here
 
   FEATURE = 0x01,
   ALARM = 0x02,
@@ -46,6 +47,7 @@ enum FunctionCodes {
 };
 
 enum FeatureCodes {
+  // if a new feature is added to SPINE, its code must be included here
 
   RAW_DATA = 0x01,
   MAX = 0x02,

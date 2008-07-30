@@ -1,10 +1,9 @@
 PFLAGS += -DSPINE_EXTRA
 
 
-LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [ ! -d $$SUPPORT_MAKE_PATH/support/make ]; do SUPPORT_MAKE_PATH=../$$SUPPORT_MAKE_PATH; done; echo $$SUPPORT_MAKE_PATH)
 TOS_OVERLAY_DIR = $(LOCAL_TOSROOT)/tos
 
-
+#if new folder will be added, they must be included down here
 PFLAGS += -I$(TOS_OVERLAY_DIR)/interfaces/communication
 PFLAGS += -I$(TOS_OVERLAY_DIR)/interfaces/sensing
 PFLAGS += -I$(TOS_OVERLAY_DIR)/interfaces/processing

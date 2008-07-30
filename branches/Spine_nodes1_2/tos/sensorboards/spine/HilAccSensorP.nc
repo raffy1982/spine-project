@@ -109,6 +109,7 @@ implementation {
 	   call CLK_port.makeOutput();
 	   call DIN_port.makeOutput();
 
+           // this specific accelerometer requires an inital bootstrap
            initAccel();
 
            valueTypesList[0] = CH_1;
@@ -118,6 +119,7 @@ implementation {
 
            call SensorsRegistry.registerSensor(ACC_SENSOR);
            
+           // the driver self-registers to the sensor registry
            registered = TRUE;
         }
     }
@@ -206,6 +208,9 @@ implementation {
 
        call CS_accel_port.set();
 
+       // this driver is implemented as a synchronous component; 
+       // hence, at the end of the acuireData command, it's possible to signal the acquisitionDone event 
+       // because the raw data values are already available
        signal Sensor.acquisitionDone(SUCCESS, acquireType);
 
        return SUCCESS;

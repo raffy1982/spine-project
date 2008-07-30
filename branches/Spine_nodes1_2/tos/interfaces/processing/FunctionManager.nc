@@ -39,81 +39,96 @@
 interface FunctionManager {
 	
 	/**
-	 * Used by the specific function managers to register their functions.
-	 * The function code will be placed in a list that is eventually used by the SPINE Application to send the Service Advertisement.
-	 *
-	 * @param 'functionCode' the code of the function to register
-	 *
-	 * @return
-	 */
+	* Registers a new function. This command must be called by each SPINE function at boot time to allow the inclusion of that function
+	* among the service advertisement message.
+	*
+	* @param 'functionCode' the code of the function to register
+	*
+	* @return 'error_t' SUCCESS if the registration has success; FAIL otherwise
+	*/
 	command error_t registerFunction(enum FunctionCodes functionCode);
 	
 	/**
-	 *
-	 *
-	 * @param
-	 *
-	 * @return
-	 */
+        * Returns the list of the libraries of all the registered function
+        *
+        * @param 'functionCount' the number of registered libraries
+        *
+        * @return the pointer to the list of registered libraries
+        */
 	command uint8_t* getFunctionList(uint8_t* functionsCount);
 	
 	/**
-	 *
-	 *
-	 * @param
-	 *
-	 * @return
-	 */
+        * Setup the given function with the given parameters array of size 'functionParamsSize'
+        *
+        * @param  'functionCode' the code of the function to be disabled
+        * @param  'functionParams' the setup parameter array
+        * @param  'functionParamsSize' the size of the setup parameter array
+        *
+        * @return TRUE is the setup has succeeded, FALSE otherwise
+        */
 	command bool setUpFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize);
 	
 	/**
-	 *
-	 *
-	 * @param
-	 *
-	 * @return
-	 */
+        * Activates the given function with the given parameters array of size 'functionParamsSize'
+        *
+        * @param  'functionCode' the code of the function to be disabled
+        * @param  'functionParams' the activation parameter array
+        * @param  'functionParamsSize' the size of the deactivation parameter array
+        *
+        * @return TRUE is the activation has succeeded, FALSE otherwise
+        */
 	command bool activateFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize);
 	
 	/**
-	 *
-	 *
-	 * @param
-	 *
-	 * @return
-	 */
+        * Disables the given function with the given parameters array of size 'functionParamsSize'
+        *
+        * @param  'functionCode' the code of the function to be disabled
+        * @param  'functionParams' the deactivation parameter array
+        * @param  'functionParamsSize' the size of the deactivation parameter array
+        *
+        * @return TRUE is the deactivation has succeeded, FALSE otherwise
+        */
 	command bool disableFunction(enum FunctionCodes functionCode, uint8_t* functionParams, uint8_t functionParamsSize);
 	
 	/**
-	 *
-	 *
-	 * @return 'void'
-	 */
+        * Starts the computing of all the registered functions
+        *
+        * @return void
+        */
 	command void startComputing();
 	
 	/**
-	 *
-	 *
-	 * @return 'void'
-	 */
+        * Stops the computing of all the registered functions
+        *
+        * @return void
+        */
 	command void stopComputing();
 	
 	/**
-	 *
-	 *
-	 * @param
-	 *
-	 * @return
-	 */
+	* This command can be used by the functions that need to send their results over the air
+	*
+	* @param 'functionCode' the code of the function that is asking the Ota send
+	* @param 'functionData' the function result data to be sent
+	* @param 'len' the length of the function result data array
+	*
+	* @return  void
+	*/
 	command void send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len);
-	
+
+        /**
+        * Resets the state of the Function Manager. 
+        * It also calls the 'reset' to all the registered functions.
+        *
+        * @return void
+        */
 	command void reset();
-	
+
 	/**
-	 * lets the function manager (and therefore registered functions) know when another sample has been taken to allow the triggering of feature calculation
-	 *
-	 * @param sensorCode
-	 */
+	* Lets the function manager (and therefore registered functions) know when another sample has been taken
+        * to allow the triggering of feature calculation
+	*
+	* @param the sensor that has been sampled
+	*/
 	event void sensorWasSampled(enum SensorCode sensorCode);
 }
 

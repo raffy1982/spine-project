@@ -25,6 +25,7 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Module component of the SPINE Application.
+ * This module represent the SPINE entry point.
  *
  * @author Raffaele Gravina
  *
@@ -60,10 +61,12 @@ module SPINEApp_C
 }
 implementation
 {
+  // just a temp buffer for general purpose needs
   uint8_t buffer[SPINE_APP_UTILITY_BUFFER_SIZE];
 
 
   void init() {
+     // initially the Radio must be kept ON; the low-power mode will be eventually enabled at the time of START
      call RadioController.setRadioAlwaysOn(TRUE);
   }
 
@@ -125,15 +128,19 @@ implementation
   }
 
   void handle_Start() {
+     // the radio controller is set according to the user specified needs.
      call RadioController.setRadioAlwaysOn(call SpineStartPkt.radioAlwaysOnFlag());
      if (call SpineStartPkt.enableTDMAFlag())
         call RadioController.enableTDMA(call SpineStartPkt.getNetworkSize(), (TOS_NODE_ID-1)); // that currently forces to flash the nodes with sequential IDs starting from 1
 
+     // the sensorboard controller starts sampling its sensors;
      call SensorBoardController.startSensing();
+     // the functions manager starts computing the aforeactivated functions.
      call FunctionManager.startComputing();
   }
 
   void handle_Reset() {
+     // an HW reset is simulated resetting the complete global states of the components.
      call FunctionManager.reset();
      call SensorBoardController.reset();
      call RadioController.reset();

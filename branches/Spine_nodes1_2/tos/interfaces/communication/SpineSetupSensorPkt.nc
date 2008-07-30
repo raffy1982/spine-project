@@ -33,10 +33,30 @@ Boston, MA  02111-1307, USA.
  */ 
 interface SpineSetupSensorPkt {
 
+    /**
+    * Returns the code of the sensor to setup
+    *
+    *
+    * @return  the code of the sensor to setup
+    */
     command uint8_t getSensorCode();
 
+    /**
+    * Returns the time scale by which multiply the sampling time.
+    * Possible time scales are: millisec, sec, min. 
+    * Moreover there is a special value: NOW (0) that is for immediate one-shot sensor sampling.
+    *
+    *
+    * @return  the code of the sensor to setup
+    */
     command uint16_t getTimeScale();
 
+    /**
+    * Returns the sampling time requested for the given sensor
+    *
+    *
+    * @return  the sampling time requested for the given sensor
+    */
     command uint16_t getSamplingTime();
 
 

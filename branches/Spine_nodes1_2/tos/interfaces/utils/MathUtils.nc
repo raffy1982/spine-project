@@ -33,12 +33,48 @@ Boston, MA  02111-1307, USA.
  */ 
  interface MathUtils {
 
+        /*
+        * Returns the MAX value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param 'data' the pointer to the array
+        * @param 'elemCount' the size of the array
+        *
+        * @return the MAX value of the 'data' array
+        */
         command uint16_t max(int16_t* data, uint16_t elemCount);
         
+        /*
+        * Returns the MIN value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param 'data' the pointer to the array
+        * @param 'elemCount' the size of the array
+        *
+        * @return the MIN value of the 'data' array
+        */
         command uint16_t min(int16_t* data, uint16_t elemCount);
 
+        /*
+        * Returns the MEAN value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param 'data' the pointer to the array
+        * @param 'elemCount' the size of the array
+        *
+        * @return the MEAN value of the 'data' array
+        */
         command uint16_t mean(int16_t* data, uint16_t elemCount);
-        
+
+        /*
+        * Returns the VARIANCE value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param 'data' the pointer to the array
+        * @param 'elemCount' the size of the array
+        *
+        * @return the VARIANCE value of the 'data' array
+        */
         command uint32_t variance(int16_t* data, uint16_t elemCount);
 
         /*

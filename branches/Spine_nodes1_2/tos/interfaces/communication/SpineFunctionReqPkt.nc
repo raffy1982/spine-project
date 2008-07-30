@@ -36,10 +36,29 @@ Boston, MA  02111-1307, USA.
 
 interface SpineFunctionReqPkt {
 
+    /**
+    * Returns the code of the function activation/deactivation request
+    *
+    *
+    * @return  'enum FunctionCodes'   the code of the function activation/deactivation request.
+    */
     command enum FunctionCodes getFunctionCode();
 
+    /**
+    * Returns a boolean for identifying if it's a activation rather than a deactivation function request
+    *
+    *
+    * @return        TRUE if it's a activation request; FALSE if it's a deactivation request.
+    */
     command bool isEnableRequest();
 
+    /**
+    * Returns the pointer and the size of the function parameters array
+    *
+    * @param functionParamsSize the variable in which to store the size of the parameters array
+    *
+    * @return        a pointer to the uint8_t array of the params.
+    */
     command uint8_t* getFunctionParams(uint8_t* functionParamsSize);
 
 }

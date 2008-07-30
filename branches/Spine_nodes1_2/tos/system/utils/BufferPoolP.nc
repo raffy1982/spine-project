@@ -33,11 +33,11 @@ Boston, MA  02111-1307, USA.
  */
 
 #ifndef BUFFER_POOL_SIZE
-#define BUFFER_POOL_SIZE 16
+#define BUFFER_POOL_SIZE 16       // the number of buffers the pool is composed of
 #endif
 
 #ifndef BUFFER_LENGTH
-#define BUFFER_LENGTH 80
+#define BUFFER_LENGTH 80         // the size of each buffer
 #endif
 
 module BufferPoolP {

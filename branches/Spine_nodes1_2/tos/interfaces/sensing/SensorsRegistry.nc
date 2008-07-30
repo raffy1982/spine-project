@@ -37,12 +37,13 @@ Boston, MA  02111-1307, USA.
  interface SensorsRegistry {
 
        /**
-       * Registers a sensor to the sensors list
-       *
-       * @param 'sensorCode' the sensor to be registered
-       *
-       * @return 'error_t' SUCCESS if the registration has success; FAIL otherwise
-       */
+	* Registers a new sensor. This command must be called by each SPINE sensor driver at boot time to allow the inclusion of that sensor
+	* among the service advertisement message.
+	*
+	* @param 'SensorCode' the code of the sensor to register
+	*
+	* @return 'error_t' SUCCESS if the registration has success; FAIL otherwise
+	*/
        command error_t registerSensor(enum SensorCode sensorCode);
 
        /**
@@ -73,10 +74,34 @@ Boston, MA  02111-1307, USA.
        */
        command void setSamplingTime(enum SensorCode sensorCode, uint32_t sT);
 
+       /**
+       * Returns the buffer ID reserved for the given channel and sensor code.
+       * This method is here for convenience and it's the same of the corresponding one into the SensorBoard Controller component.
+       *
+       * @param 'sensorCode' the sensor we are interested in
+       * @param 'valueType' the channel code we are interested in
+       *
+       * @return the buffer ID
+       */
        command uint8_t getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType);
        
+       /**
+       * Returns the channel and the sensor code mapped on the given buffer id.
+       * This method is here for convenience and it's the same of the corresponding one into the SensorBoard Controller component.
+       *
+       * @param 'sensorCode' the sensor we are interested in.
+       * @param 'sT' the value of the sampling time (in ms).
+       *
+       * @return SUCCESS if a match is found; FAIL otherwise.
+       */
        command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
 
+       /**
+       * Resets the state of the SensorRegistry.
+       *
+       *
+       * @return 'void'
+       */
        command void reset();
 
  }

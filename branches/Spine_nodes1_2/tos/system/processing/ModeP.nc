@@ -48,6 +48,7 @@ implementation {
 
        event void Boot.booted() {
           if (!registered) {
+             // the feature self-registers to the FeatureEngine at boot time
              call FeatureEngine.registerFeature(MODE);
              registered = TRUE;
           }
@@ -61,9 +62,11 @@ implementation {
 
             memset(tmp, 0x00, sizeof tmp);
 
+            // to boost the algorithm, we first sort the array (mergeSort takes O(nlogn))
             memcpy(orderedData, data, sizeof orderedData);
             call Sort.mergeSort(orderedData, elemCount, 0, elemCount-1);
 
+            // now we look for the max number of occurences per each value
             while(i<elemCount-1)
                for (j = i+1; j<elemCount; j++)
         	  if(orderedData[i] == orderedData[j]) {
@@ -75,6 +78,7 @@ implementation {
         	     break;
                   }
 
+            // we choose the overall max
             for(i = 1; i < elemCount; i++)
                if( tmp[i] > tmp[iMax])
                   iMax = i;
@@ -95,7 +99,7 @@ implementation {
        }
        
        command uint8_t Feature.getResultSize() {
-         return 2;
+         return 2;    // uint16_t = 2bytes
        }
 }
 

@@ -45,7 +45,8 @@ configuration FeatureEngineC {
 implementation {
 	components MainC, FunctionManagerC, SensorsRegistryC, BufferPoolP, FeatureEngineP;
       
-	components MaxC;
+	// if new features are added, declare their component down here
+        components MaxC;
         components MinC;
         components RangeC;
         components MeanC;
@@ -74,7 +75,8 @@ implementation {
 	FeatureEngineP.Leds -> LedsC;
 
 	FeatureEngineP.Features = Features;
-	FeatureEngineP.Features[MAX] -> MaxC;
+	// if new features are added, wire the aforedeclared components down here
+        FeatureEngineP.Features[MAX] -> MaxC;
         FeatureEngineP.Features[MIN] -> MinC;
         FeatureEngineP.Features[RANGE] -> RangeC;
         FeatureEngineP.Features[MEAN] -> MeanC;

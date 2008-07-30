@@ -41,7 +41,7 @@ interface Sensor {
     * Returns the number of significant bits in the readings.
     *
     *
-    * @return 'uint8_t'
+    * @return 'uint8_t'   the number of significant bits in the readings
     */
     command uint8_t getSignificantBits();
     

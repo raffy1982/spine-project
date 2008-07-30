@@ -57,6 +57,7 @@ implementation {
 
     event void Boot.booted() {
        if (!registered) {
+          // the driver self-registers to the sensor registry
           call SensorsRegistry.registerSensor(INTERNAL_TEMPERATURE_SENSOR);
           
           valueTypesList[0] = CH_1;

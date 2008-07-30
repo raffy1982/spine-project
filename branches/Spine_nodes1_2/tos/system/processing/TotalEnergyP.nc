@@ -47,6 +47,7 @@ implementation {
 
        event void Boot.booted() {
           if (!registered) {
+             // the feature self-registers to the FeatureEngine at boot time
              call FeatureEngine.registerFeature(TOTAL_ENERGY);
              registered = TRUE;
           }
@@ -61,7 +62,7 @@ implementation {
 
 	  uint32_t totEn;
 
-	  for (i = 0; i<4; i++) 
+	  for (i = 0; i<4; i++)
 	     if ( (channelMask & (mask>>i)) == (mask>>i))
 	        for (j=0; j<dataLen; j++)
 		   enCh[i] += (int32_t)data[i][j]*(int32_t)data[i][j]/dataLen;
@@ -74,7 +75,7 @@ implementation {
        }
        
        command uint8_t Feature.getResultSize() {
-          return 4;
+          return 4;   // uint32_t = 4bytes
        }
 }
 

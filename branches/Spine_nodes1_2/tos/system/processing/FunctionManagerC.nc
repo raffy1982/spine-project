@@ -41,7 +41,8 @@ Boston, MA  02111-1307, USA.
  implementation {
 
      components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
-	
+
+     // if new functions are added, declare their components down here
      components FeatureEngineC;
 
      FunctionManager = FunctionManagerP;
@@ -50,5 +51,6 @@ Boston, MA  02111-1307, USA.
      FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
 
      FunctionManagerP.Functions = Functions;
+     // if new functions are added, wire the aforedeclared components down here
      FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
  }

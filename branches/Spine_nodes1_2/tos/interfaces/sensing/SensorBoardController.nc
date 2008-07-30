@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
  
  #include "SensorsConstants.h"
  #include "Functions.h"
- 
+
  interface SensorBoardController {
 
        /**
@@ -128,10 +128,32 @@ Boston, MA  02111-1307, USA.
        */
        command void stopSensing();
        
+       /**
+       * Resets the state of the SensorBoardController.
+       *
+       *
+       * @return 'void'
+       */
        command void reset();
 
+       /**
+       * Returns the buffer ID reserved for the given channel and sensor code.
+       *
+       * @param 'sensorCode' the sensor we are interested in
+       * @param 'valueType' the channel code we are interested in
+       *
+       * @return the buffer ID
+       */
        command uint8_t getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType);
        
+       /**
+       * Returns the channel and the sensor code mapped on the given buffer id.
+       *
+       * @param 'sensorCode' the sensor we are interested in.
+       * @param 'sT' the value of the sampling time (in ms).
+       *
+       * @return SUCCESS if a match is found; FAIL otherwise.
+       */
        command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
 
        /**

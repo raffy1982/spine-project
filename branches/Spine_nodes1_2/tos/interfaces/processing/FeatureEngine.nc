@@ -24,8 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Interface of the Function Manager. Each specific function implementation must register itself to the FunctionManager at boot time.
- * This component allows the retrieval of the Function list.
+ * Interface of the Function Engine. Each specific feature implementation must register itself to the FeatureEngine at boot time.
  *
  * @author Raffaele Gravina
  * @author Philip Kuryloski
@@ -38,12 +37,13 @@ Boston, MA  02111-1307, USA.
 interface FeatureEngine {
 
 	/**
-	 * 
-	 *
-	 * @param 'FeatureCode' the code of the feature to register
-	 *
-	 * @return
-	 */
+	* Registers a new feature. This command must be called by each SPINE feature at boot time to allow the inclusion of that feature
+	* among the service advertisement message.
+	*
+	* @param 'FeatureCode' the code of the feature to register
+	*
+	* @return
+	*/
 	command error_t registerFeature(enum FeatureCodes featureCode);
 	 
 }

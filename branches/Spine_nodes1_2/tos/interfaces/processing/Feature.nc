@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
 interface Feature {
 
 	/**
-	 * calculate
+	 * Commands the execution of a feature
 	 *
 	 * @param	data	two dimensional array containing data to be processed referenced by channel then sample
 	 * @param	channelMask	channel mask for the data array
@@ -47,9 +47,9 @@ interface Feature {
 	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result);
 
 	/**
-	 * getResultSize
+	 * Returns the result word lenght (number of bytes of the result)
 	 *
-	 * @return the number of 
+	 * @return the number of bytes of the result
 	 */
 	command uint8_t getResultSize();
 }

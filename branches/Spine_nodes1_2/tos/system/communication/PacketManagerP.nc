@@ -64,6 +64,8 @@ Boston, MA  02111-1307, USA.
           uint8_t lenTmp = SPINE_PKT_PAYLOAD_MAX_SIZE;
           uint8_t i;
 
+          // if necessary, we are going to split the message in multiple fragments
+
           totFragments = ( (builtLen%SPINE_PKT_PAYLOAD_MAX_SIZE) == 0)? (builtLen/SPINE_PKT_PAYLOAD_MAX_SIZE) :
                                                                          ((builtLen/SPINE_PKT_PAYLOAD_MAX_SIZE) + 1);
           for (i = 0; i<totFragments; i++) {
@@ -81,14 +83,14 @@ Boston, MA  02111-1307, USA.
              call RadioController.send(DEFAULT_DEST, pktType, &msgTmp, SPINE_HEADER_PKT_SIZE + lenTmp);
           }
           
-          sequenceNr++;
+          sequenceNr++;     // seqNr is incremented on a per message basis (not each fragment)
 
      }
 
      event void RadioController.radioOn() {}
 
      event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* pkt, uint8_t len) {
-          // TODO: if in the future the coordinator could send to nodes fragmented packets,
+          // TODO: if in the future the coordinator could send fragmented packets to the nodes,
           //       the logic for reconstructing the original message must be implemented here
          if(pktType == AM_SPINE) {
             call Header.parse(pkt);
@@ -101,6 +103,8 @@ Boston, MA  02111-1307, USA.
          }
      }
 
+
+     // Default commands needed due to the use of parametrized interfaces
 
      default command bool InPackets.parse[uint8_t inPktID](void* payload, uint8_t len) {
            bool isSpinePktWithNoPayload = (inPktID == SERVICE_DISCOVERY || inPktID == RESET || inPktID == SYNCR);

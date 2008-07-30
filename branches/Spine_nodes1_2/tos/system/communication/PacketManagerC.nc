@@ -41,9 +41,18 @@ Boston, MA  02111-1307, USA.
 
  implementation {
       components PacketManagerP, RadioControllerC,
-                 SpineHeaderC,
-                 SpineSetupSensorPktC, SpineSetupFunctionPktC, SpineFunctionReqPktC, SpineStartPktC,
-                 SpineServiceAdvertisementPktC, SpineDataPktC, SpineServiceMessagePktC;
+                 SpineHeaderC;
+
+      // if new InPackets are added, declare their components down here
+      components SpineSetupSensorPktC;
+      components SpineSetupFunctionPktC;
+      components SpineFunctionReqPktC;
+      components SpineStartPktC;
+      
+      // if new OutPackets are added, declare their components down here
+      components SpineServiceAdvertisementPktC;
+      components SpineDataPktC;
+      components SpineServiceMessagePktC;
 
       
       PacketManager = PacketManagerP;
@@ -54,12 +63,13 @@ Boston, MA  02111-1307, USA.
       PacketManagerP.RadioController -> RadioControllerC;
       
       PacketManagerP.Header -> SpineHeaderC;
-
+      // if new InPackets are added, wire the aforedeclared components down here
       PacketManagerP.InPackets[SETUP_SENSOR] -> SpineSetupSensorPktC;
       PacketManagerP.InPackets[SETUP_FUNCTION] -> SpineSetupFunctionPktC;
       PacketManagerP.InPackets[FUNCTION_REQ] -> SpineFunctionReqPktC;
       PacketManagerP.InPackets[START] -> SpineStartPktC;
 
+      // if new OutPackets are added, wire the aforedeclared components down here
       PacketManagerP.OutPackets[SERVICE_ADV] -> SpineServiceAdvertisementPktC;
       PacketManagerP.OutPackets[DATA] -> SpineDataPktC;
       PacketManagerP.OutPackets[SVC_MSG] -> SpineServiceMessagePktC;

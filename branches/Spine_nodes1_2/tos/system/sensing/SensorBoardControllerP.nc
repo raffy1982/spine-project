@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
  */ 
 
 #ifndef SENSORS_REGISTRY_SIZE
-#define SENSORS_REGISTRY_SIZE 16
+#define SENSORS_REGISTRY_SIZE 16    // we can have up to 16 sensors because they are addressed with 4bits into the SPINE comm. protocol
 #endif
 
 module SensorBoardControllerP {
@@ -90,7 +90,8 @@ implementation {
        bool buffers4SensorAllocated(uint8_t sensCode) {
           uint8_t i;
           for (i = 0; i<(SENSORS_REGISTRY_SIZE * MAX_VALUE_TYPES); i++)
-            if (sensorBufferMap[i].sensorCode == sensCode) return TRUE;
+            if (sensorBufferMap[i].sensorCode == sensCode) 
+               return TRUE;
 
           return FALSE;
        }
@@ -100,7 +101,7 @@ implementation {
           uint8_t* valueTypesList;
           uint8_t valueTypesCount;
 
-          if (samplingTime == 0)
+          if (samplingTime == 0)  // samplingTime == 0 means we are requesting an immediate one-shot sampling; that's what we are doing
              call SensorImpls.acquireData[sensorCode](ALL);
           else {
              call SensorsRegistry.setSamplingTime(sensorCode, samplingTime);
@@ -174,7 +175,7 @@ implementation {
        event void SensorImpls.acquisitionDone[uint8_t sensorCode](error_t result, int8_t resultCode) {
            uint8_t j;
 
-           uint8_t msg[12];  // 15: feature code 1 byte + params lenght 1byte + sensorCode 1 byte + channel bitmask + values (max 4*2 bytes = 8)
+           uint8_t msg[12];  // 12: feature code 1byte + params lenght 1byte + sensorCode 1byte + channel bitmask 1byte + values (max 4*2bytes = 8)
            uint8_t msgSize = 0;
 
            uint16_t readings[MAX_VALUE_TYPES];
@@ -187,7 +188,9 @@ implementation {
            call SensorImpls.getAllValues[sensorCode](readings, &readingsCount);
            valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
 
-           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {
+           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) { 
+              // if the sensor signaling the acquisitionDone was requested for an immediate one-shot sampling,
+              // we have to send back the current reading.
 
               msg[msgSize++] = ONE_SHOT;
               msg[msgSize++] = 1 + 1 + 2*readingsCount;
@@ -232,8 +235,10 @@ implementation {
           memset(sensorBufferMap, 0x00, sizeof sensorBufferMap);
           count4BufList = 0;
           
+          // we also takes care of clearing the buffer pool
           call BufferPool.clear();
-          
+
+          // ... and the sensor registry
           call SensorsRegistry.reset();
        }
 
@@ -247,6 +252,8 @@ implementation {
 
        event void PacketManager.messageReceived(enum PacketTypes pktType) {}
 
+
+       // Default commands needed due to the use of parametrized interfaces
 
        default command error_t SensorImpls.acquireData[uint8_t sensorCode](enum AcquireTypes acquireType) {
            dbg(DBG_USR1, "SensorBoardControllerP.acquireData: Executed default operation. Chances are there's an operation miswiring.\n");

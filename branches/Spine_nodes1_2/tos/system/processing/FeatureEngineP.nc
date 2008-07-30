@@ -34,15 +34,15 @@
  */
 
 #ifndef FEATURE_LIST_SIZE
-#define FEATURE_LIST_SIZE 32
+#define FEATURE_LIST_SIZE 32       // we can have up to 32 features because function libraries are addressed with 5bits into the SPINE comm. protocol
 #endif
 
 #ifndef ACT_FEATS_LIST_SIZE
-#define ACT_FEATS_LIST_SIZE 64
+#define ACT_FEATS_LIST_SIZE 64     // this is the max number of active feature, on different sensors/channels, we can handle at the same time
 #endif
 
 #ifndef SENSORS_REGISTRY_SIZE
-#define SENSORS_REGISTRY_SIZE 16
+#define SENSORS_REGISTRY_SIZE 16   // we can have up to 16 sensors because they are addressed with 4bits into the SPINE comm. protocol
 #endif
 
 module FeatureEngineP {
@@ -356,7 +356,10 @@ implementation {
            memset(newSamplesSinceLastFeature, 0, sizeof newSamplesSinceLastFeature);
         }
 	
-	default command uint8_t Features.getResultSize[uint8_t featureID]() {
+        
+        // Default commands needed due to the use of parametrized interfaces
+	
+        default command uint8_t Features.getResultSize[uint8_t featureID]() {
 		dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
 		return 0xFF;
 	}
