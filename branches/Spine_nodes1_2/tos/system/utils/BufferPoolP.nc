@@ -88,7 +88,7 @@ implementation {
        }
 
        command void BufferPool.getBufferedData(uint8_t bufferID, uint16_t firstToNow, uint16_t lastToNow, uint16_t* buffer) {
-          uint16_t i = 0;
+          /*uint16_t i = 0;
           uint16_t j = 0;
           uint16_t k;
           uint16_t windowSize = firstToNow - lastToNow;
@@ -105,6 +105,31 @@ implementation {
 
              k = (BUFFER_LENGTH - 1);
              for (j = (BUFFER_LENGTH-(windowSize-buffersIndexes[bufferID])); j<BUFFER_LENGTH; j++)
+                tmpBuffer[i++] = bufferPool[(BUFFER_LENGTH * bufferID) + k--];*/
+            
+          uint16_t i = 0;
+          uint16_t j = 0;
+          uint16_t k;
+          uint16_t windowSize = firstToNow - lastToNow;
+          uint16_t relIndex;
+          
+          if (lastToNow > buffersIndexes[bufferID])
+             relIndex = BUFFER_LENGTH + (buffersIndexes[bufferID] - lastToNow);
+          else
+             relIndex = buffersIndexes[bufferID] - lastToNow;
+
+          if (windowSize > BUFFER_LENGTH)
+            windowSize = BUFFER_LENGTH;
+
+          if (windowSize <= relIndex)
+             for (i = 0; i<windowSize; i++)
+                tmpBuffer[i] = bufferPool[(BUFFER_LENGTH * bufferID) + (relIndex-1 - i)];
+          else {
+             for (i = 0; i<relIndex; i++)
+                tmpBuffer[i] = bufferPool[(BUFFER_LENGTH * bufferID) + (relIndex-1 - i)];
+
+             k = (BUFFER_LENGTH - 1);
+             for (j = (BUFFER_LENGTH-(windowSize-relIndex)); j<BUFFER_LENGTH; j++)
                 tmpBuffer[i++] = bufferPool[(BUFFER_LENGTH * bufferID) + k--];
           }
 
