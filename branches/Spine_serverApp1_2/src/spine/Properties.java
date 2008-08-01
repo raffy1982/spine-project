@@ -24,11 +24,12 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* Abstract class for storing/retrieval of Properties.
+* It has been introduced to allow the abstraction of properties storing/retrieval in J2SE and J2ME
 *
 * @author Raffaele Gravina
 *
-* @version 1.0
+* @version 1.2
 */
 
 package spine;
@@ -43,19 +44,48 @@ public abstract class Properties {
 	
 	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
 
-
+	/**
+	 * Returns an implementation of the Properties abstract class
+	 * 
+	 * @return an implementation of the Properties abstract class
+	 */
 	public static Properties getProperties() {
 		return PropertiesImpl.getInstance();
 	}
 	
-	
+	/**
+	 * Loads the properties set from a properties source (i.e, from a predefined .properties file or a Manifest)
+	 *  
+	 */
 	public abstract void load();
 	
+	/**
+	 * Stores (permanently if possible) a loaded properties set
+	 * 
+	 */
 	public abstract void store();
 	
+	/**
+	 * Returns the value of the given property key 'key'
+	 * 
+	 * @param key the property key to be returned
+	 * @return the property value or null if the property 'key' doesn't exist
+	 */
 	public abstract String getProperty(String key);
 	
+	/**
+	 * Sets the property key 'key' with the value 'value'
+	 * 
+	 * @param key the property key to be set
+	 * @param value the property value
+	 */
 	public abstract void setProperty(String key, String value);
 	
+	/**
+	 * Remove the given property key 'key' from the set
+	 * 
+	 * @param key the property key to be removed
+	 * @return the value mapped to 'key'
+	 */
 	public abstract Object remove(String key);
 }

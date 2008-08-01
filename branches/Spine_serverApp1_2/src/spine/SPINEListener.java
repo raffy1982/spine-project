@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This is the interface representing the SPINE events listener
  *  
  *
  * @author Raffaele Gravina
@@ -42,12 +42,55 @@ import spine.datamodel.ServiceMessage;
 
 public interface SPINEListener {
 	
+	/**
+	 * This method is invoked by the SPINEManager to its registered listeners
+	 * when it receives a ServiceAdvertisement message from a BSN node
+	 * 
+	 * @param newNode the node discovered
+	 * 
+	 * @see spine.datamodel.Node
+	 */
 	public void newNodeDiscovered(Node newNode);
 
-	public void serviceMessageReceived(int nodeID, ServiceMessage msg); // TODO add parameters
+	/**
+	 * This method is invoked by the SPINEManager to its registered listeners
+	 * when a ServiceMessage is received from a particular node.  
+	 * The SPINEManager itself can generate service messages ('nodeID' will be SPINEPacketsConstants.SPINE_BASE_STATION) 
+	 * notifying the application of anomalies or other information. 
+	 * 
+	 * @param nodeID the address of the packet sender
+	 * @param msg the service message 
+	 */
+	public void serviceMessageReceived(int nodeID, ServiceMessage msg); 
 
+	/**
+	 * This method is invoked by the SPINEManager to its registered listeners
+	 * when it receives new data from the specified node.
+	 * The generic Data object contains the information about the type of data carried.
+	 * It's up to the application that handle this event to check what kind of data are in there 
+	 * (thru the Data method getFunctionCode); take the actual data (thru the Data method getData) and 
+	 * cast it properly (i.e.; if the function generating the data is FEATURE, then the data will be 
+	 * a Vector of Feature objects - because this is how the FeatureData class decode the low level packet sent over-the-air 
+	 * by the node to the coordinator.) 
+	 * 
+	 * @param nodeID the address of the packet sender
+	 * @param data the data received from the node 'nodeID'
+	 * 
+	 * @see spine.datamodel.Data
+	 */
 	public void dataReceived(int nodeID, Data data);
 
+	/**
+	 * This method is invoked by the SPINEManager to its registered listeners
+	 * when the discovery procedure timer fires. 
+	 * It provides a Vector of spine.datamodel.Node objects representing the discovered nodes. 
+	 * It's possible to change the timer period, before discovering the WSN, 
+	 * with the method: setDiscoveryProcedureTimeout. 
+	 * 
+	 * @param activeNodes the list of discovered nodes.
+	 * 
+	 * @see spine.datamodel.Node
+	 */
 	public void discoveryCompleted(Vector activeNodes);
 	
 }

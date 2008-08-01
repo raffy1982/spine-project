@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ * This is the SPINE API implementation.
+ * It is responsible for converting high level application requests into SPINE protocol messages; 
+ * it also handles lower level network activity generating higher level events. 
  *
  * @author Raffaele Gravina
  *
@@ -77,7 +79,6 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 	public static SPINEManager instance;
 	
-	
 	private SPINEManager(String port, String speed) {
 		try {
 			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();	
@@ -102,22 +103,83 @@ public class SPINEManager implements WSNConnection.Listener {
 		} 
 	}
 	
-	
+	/**
+	 * Returns the SPINEManager instance connected to the given base-station port and speed
+	 * Those parameters should be retrieved using the Properties instance 
+	 * obtained thru the static SPINEManager.getProperties method
+	 * 
+	 * @param port the port url the base-station is listening on
+	 * @param speed the data-rate speed of the base-station  
+	 * 
+	 * @return the SPINEManager instance
+	 * 
+	 * @see spine.Properties
+	 */
 	public static SPINEManager getInstance(String port, String speed) {
 		if (instance == null) 
 			instance = new SPINEManager(port, speed);
 		return instance;
 	}
 	
+	/**
+	 * Registers a SPINEListener to the manager instance
+	 * 
+	 * @param listener the listener to register
+	 */
 	public void registerListener(SPINEListener listener) {
 		this.listeners.addElement(listener);
 	}
 	
+	/**
+	 * Deregisters a SPINEListener to the manager instance
+	 * 
+	 * @param listener the listener to deregister
+	 */
 	public void deregisterListener(SPINEListener listener) {
 		this.listeners.removeElement(listener);
 	}
 
-
+	/**
+	 * This method sets the timeout for the discovery procedure.
+	 * 
+	 * This method has effect only if used before the 'discoveryWsn()'; if not used, a default timeout of 0.5s, is used.
+	 * 
+	 * A timeout <= 0 will disable the Discovery Timer; 
+	 * this way a 'discovery complete' event will never be signaled and at any time an 
+	 * announcing node is added to the active-nodes list and signaled to the SPINE listeners. 
+	 * 
+	 * @param discoveryTimeout the timeout for the discovery procedure
+	 */
+	public void setDiscoveryProcedureTimeout(long discoveryTimeout) {
+		this.discoveryTimeout = discoveryTimeout;
+	}
+	
+	/**
+	 * Returns an instance of a Properties implementation class which can be queried 
+	 * for retrieving system and framework properties and parameters 
+	 * 
+	 * @return the Properties instance
+	 */
+	public static Properties getProperties() {
+		return prop;
+	}
+	
+	/**
+	 * Returns the list of the discovered nodes as a Vector of spine.datamodel.Node objects
+	 * 
+	 * @return the discovered nodes
+	 * 
+	 * @see spine.datamodel.Node
+	 */
+	public Vector getActiveNodes() {
+		return activeNodes;
+	}
+	
+	
+	
+	/**
+	 * Commands the SPINEManager to discovery the surrounding WSN nodes
+	 */
 	public void discoveryWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SERVICE_DISCOVERY, null);
 		
@@ -125,34 +187,106 @@ public class SPINEManager implements WSNConnection.Listener {
 			new DiscoveryTimer(this.discoveryTimeout).start();
 	}
 	
-	public void bootUpWsn() {		
-		
+	/**
+	 * 
+	 * Currently, it does nothing!
+	 * 
+	 */
+	public void bootUpWsn() {			
 	}
 
-	public void setupSensor(int nodeID, SpineSetupSensor sss) {
-		send(nodeID, SPINEPacketsConstants.SETUP_SENSOR, sss);
+	/**
+	 * Setups a specific sensor of the given node.
+	 * Currently, a sensor is setup by providing a sampling time value and a time scale factor 
+	 * 
+	 * @param nodeID the destination of the request
+	 * @param setupSensor the object containing the setup parameters
+	 */
+	public void setupSensor(int nodeID, SpineSetupSensor setupSensor) {
+		send(nodeID, SPINEPacketsConstants.SETUP_SENSOR, setupSensor);
 	}
 
-	public void setupFunction(int nodeID, SpineSetupFunction ssf) {
-		send(nodeID, SPINEPacketsConstants.SETUP_FUNCTION, ssf);
+	/**
+	 * Setups a specific function of the given node.
+	 * The parameters involved are 'function dependent' and are specified by providing a proper
+	 * SpineSetupFunction instantiation object
+	 * 
+	 * @param nodeID the destination of the request
+	 * @param setupFunction the object containing the setup parameters
+	 */
+	public void setupFunction(int nodeID, SpineSetupFunction setupFunction) {
+		send(nodeID, SPINEPacketsConstants.SETUP_FUNCTION, setupFunction);
 	}
 
-	public void activateFunction(int nodeID, SpineFunctionReq sfr) {
-		sfr.setActivationFlag(true);
+	/**
+	 * Activates a function (or even only function sub-routines) on the given sensor.
+	 * The content of the actual request is 'function dependent' and it's embedded into the
+	 * 'SpineFunctionReq' instantiations.
+	 * 
+	 * @param nodeID the destination of the request
+	 * @param functionReq the specific function activation request
+	 */
+	public void activateFunction(int nodeID, SpineFunctionReq functionReq) {
+		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag 
+		functionReq.setActivationFlag(true);
 
-		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, sfr);
+		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, functionReq);
 	}
 	
-	public void deactivateFunction(int nodeID, SpineFunctionReq sfr) {
-		sfr.setActivationFlag(false);
+	/**
+	 * Deactivates a function (or even only function sub-routines) on the given sensor.
+	 * The content of the actual request is 'function dependent' and it's embedded into the
+	 * 'SpineFunctionReq' instantiations.
+	 * 
+	 * @param nodeID the destination of the request
+	 * @param functionReq the specific function deactivation request
+	 */
+	public void deactivateFunction(int nodeID, SpineFunctionReq functionReq) {
+		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag
+		functionReq.setActivationFlag(false);
 
-		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, sfr);
+		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, functionReq);
 	}
 	
+	/**
+	 * Commands the given node to do a 'immediate one-shot' sampling on the given sensor.
+	 * The method won't have any effects if the node is not provided with the given sensor.
+	 * 
+	 * @param nodeID the destination of the request
+	 * @param sensorCode the sensor to be sampled
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
+	public void readNow(int nodeID, byte sensorCode) {
+		SpineSetupSensor sss = new SpineSetupSensor();
+		sss.setSensor(sensorCode);
+		sss.setTimeScale(SPINESensorConstants.NOW);
+		sss.setSamplingTime(0);
+		setupSensor(nodeID, sss);	
+	}
+	
+	/**
+	 * Starts the WSN sensing and computing the previously requested functions. 
+	 * This is done thru a broadcast SPINE Synchr message.
+	 * This simple start method will let the nodes use their default radio access scheme.
+	 * 
+	 * @param radioAlwaysOn low-power radio mode control flag; set it 'true' to disable the radio low-power mode;
+	 * 'false' to allow radio module turn off during 'idle' periods 
+	 */
 	public void start(boolean radioAlwaysOn) {
 		start(radioAlwaysOn, false);
 	}
 	
+	/**
+	 * Starts the WSN sensing and computing the previously requested functions. 
+	 * This is done thru a broadcast SPINE Synchr message.
+	 * 
+	 * @param radioAlwaysOn low-power radio mode control flag; set it 'true' to disable the radio low-power mode;
+	 * 'false' to allow radio module turn off during 'idle' periods  
+	 * 
+	 * @param enableTDMA TDMA transmission scheme control flag; set it 'true' to enable the TDMA on the nodes;
+	 * 'false' to keep using the default radio access scheme. 
+	 */
 	public void start(boolean radioAlwaysOn, boolean enableTDMA) {
 		SpineStart ss = new SpineStart();
 		ss.setActiveNodesCount(activeNodes.size());
@@ -162,22 +296,36 @@ public class SPINEManager implements WSNConnection.Listener {
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, ss);
 	}
 	
-	public void resetWsn() {		
-		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
-	}
-	
-	public void syncrWsn() {		
+	/**
+	 * Commands a software 'on node local clock' synchronization of the whole WSN.
+	 * This is done thru a broadcast SPINE Synchr message.
+	 */
+	public void synchrWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SYNCR, null);
 	}
+	
+	/**
+	 * Commands a software reset of the whole WSN.
+	 * This is done thru a broadcast SPINE Reset message.
+	 */
+	public void resetWsn() {		
+		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
+	}	
+	
 
+	/*
+	 * Private utility method containing the actual message send code 
+	 */
 	private void send(int nodeID, byte pktType, Object payload) {
 		try {
+			// dynamic class loading of the proper Message implementation
 			Class c = Class.forName(prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY));
 			com.tilab.zigbee.Message msg = (com.tilab.zigbee.Message)c.newInstance();
 			
+			// costruction of the message 
 			msg.setDestinationURL(URL_PREFIX + nodeID);
-			msg.setClusterId(pktType); 
-			msg.setProfileId(MY_GROUP_ID);
+			msg.setClusterId(pktType); // the clusterId is treated as the 'packet type' field
+			msg.setProfileId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
 			if (payload != null) {
 				switch(pktType) {
 					case SPINEPacketsConstants.SETUP_FUNCTION:
@@ -196,6 +344,8 @@ public class SPINEManager implements WSNConnection.Listener {
 				}
 				
 			}
+			
+			// message sending
 			connection.send(msg);
 			
 		} catch (InstantiationException e) {
@@ -210,7 +360,14 @@ public class SPINEManager implements WSNConnection.Listener {
 			System.out.println(e);
 		}			
 	}
+	
+	
 
+	/*
+	 * This method must be implemented because the SPINEManager implements the 
+	 * WSNConnection.Listener interface.
+	 * It's called to notify the SPINEManager of a new SPINE message reception. 
+	 */
 	public void messageReceived(com.tilab.zigbee.Message msg) {
 
 		int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
@@ -223,20 +380,28 @@ public class SPINEManager implements WSNConnection.Listener {
 				if (!this.discoveryCompleted) 
 					this.activeNodes.addElement(new Node(nodeID, msg.getPayload())); 				
 				break;
-			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); break;
-			case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); break;
+			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); 
+				break;
+			case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); 
+				break;
 			default: break;
 		}
 		
+		// SPINEListeners are notified of the reception from the node 'nodeID' of some data  
 		notifyListeners(nodeID, pktType, o);
 		
 		//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
+		// call to the garbage collector to favour the recycling of unused memory
 		System.gc();		
 	}
 
-	private void notifyListeners(int nodeID, short pktType, Object o) {
+	/*
+	 * Regarding to the 'eventType', this method notify the SPINEListeners properly, by
+	 * casting in the right way the Object 'o' 
+	 */
+	private void notifyListeners(int nodeID, short eventType, Object o) {
 		for (int i = 0; i<this.listeners.size(); i++) 
-			switch(pktType) {
+			switch(eventType) {
 				case SPINEPacketsConstants.SERVICE_ADV:
 					if (!this.discoveryCompleted)
 						((SPINEListener)this.listeners.elementAt(i)).newNodeDiscovered((Node)activeNodes.lastElement()); 
@@ -249,44 +414,21 @@ public class SPINEManager implements WSNConnection.Listener {
 					break;
 				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
-				default: break;
+					break;
+				default: 
+					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(nodeID, 
+															new ServiceMessage(nodeID, ServiceMessage.WARNING, 
+																				ServiceMessage.UNKNOWN_PKT_RECEIVED));
+					break;
 			}
 		
 	}
-
-	public Vector getActiveNodes() {
-		return activeNodes;
-	}
 	
-	
-	public void readNow(int nodeID, byte sensorCode) {
-		SpineSetupSensor sss = new SpineSetupSensor();
-		sss.setSensor(sensorCode);
-		sss.setTimeScale(SPINESensorConstants.NOW);
-		sss.setSamplingTime(0);
-		setupSensor(nodeID, sss);	
-	}
-	
-	/**
-	 * This method sets the timeout for the discovery procedure.
-	 * 
-	 * This method has effect only if used before the 'discoveryWsn()'; if not used, a default timeout of 0.5s, is used.
-	 * 
-	 * A timeout <= 0 will disable the Discovery Timer; 
-	 * this way a 'discovery complete' event will never be signaled and at any time an 
-	 * announcing node is added to the active-nodes list and signaled to the SPINE listeners. 
-	 * 
-	 * @param discoveryTimeout the timeout for the discovery procedure
+	/*
+	 * implementation of the discovery timer procedure can be simply seen as a 
+	 * Thread that, after a certain sleep interval, declares the discovery procedure completed 
+	 * (by setting a global boolean flag) and notifies the SPINEListeners of such event 
 	 */
-	public void setDiscoveryProcedureTimeout(long discoveryTimeout) {
-		this.discoveryTimeout = discoveryTimeout;
-	}
-	
-	public static Properties getProperties() {
-		return prop;
-	}
-	
-	
 	private class DiscoveryTimer extends Thread {
 		
 		private long delay = 0;
@@ -300,6 +442,8 @@ public class SPINEManager implements WSNConnection.Listener {
 				sleep(delay);
 			} catch (InterruptedException e) {e.printStackTrace();}
 			
+			// if no nodes has been discovered, it's the symptom of some radio connection problem;
+			// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
 			if (activeNodes.size()==0) 
 				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, 
 								SPINEPacketsConstants.SVC_MSG, 
@@ -309,5 +453,6 @@ public class SPINEManager implements WSNConnection.Listener {
 			discoveryCompleted = true;			
 			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);
 		}
-	}
+	}	
+	
 }

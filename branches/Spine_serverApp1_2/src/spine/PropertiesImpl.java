@@ -25,14 +25,13 @@ Boston, MA  02111-1307, USA.
 
 /**
 *
-* This is the Controller that centralize the Read-Write access to the 
-* application app.properties file. It is used to store and load permanent parameters
-* and other variable configurations.   
+* Implementation of the Properties class for J2SE. 
+* It is used to store and load permanent parameters and other variable configurations.   
 *
 * @author Raffaele Gravina
 * @author Antonio Guerrieri
 *
-* @version 1.0
+* @version 1.2
 */
 
 package spine;
@@ -42,11 +41,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * 
+ * @see spine.Properties
+ */
 public class PropertiesImpl extends spine.Properties {
 	
 	private final static String PROPERTIES_FILE_PATH = "src/spine/app.properties";
 	
-	private final static String DEFAULT_COMMENT = "Created by the SEProperties";
+	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
 	private static PropertiesImpl instance = null;
 	

@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ *  This class represents the Node entity.
+ *  It contains a constructor, a toString and getters methods.
  *
  * @author Raffaele Gravina
  *
@@ -48,6 +49,14 @@ public class Node {
 	
 	private Vector librariesList = new Vector(); // <values:Functionality>
 	
+	
+	/**
+	 * Constructor of a Node object.
+	 * 
+	 * @param nodeID the ID of the node
+	 * @param nodeSpec the specification of the node structured as: 
+	 * [nodeID, sensorsCount, (sensorCode, sensorChannelBitmask){sensorsCount times}, sensorsCount, functionalitiesCount, (functionCode, functionLibraryCode){functionalitiesCount times} ]
+	 */
 	public Node(int nodeID, byte[] nodeSpec) {
 		this.nodeID = nodeID;
 		
@@ -60,18 +69,35 @@ public class Node {
 			librariesList.addElement(new Functionality(nodeSpec[(1+sensorsNr*2+1) + i*2], nodeSpec[(1+sensorsNr*2+1) + (i*2) + 1]));
 	}
 
+	/**
+	 * Getter method of the node id
+	 * @return the node id
+	 */
 	public int getNodeID() {
 		return nodeID;
 	}
 
+	/**
+	 * Getter method of the node sensors list
+	 * @return the sensors list of the node
+	 */
 	public Vector getSensorsList() {
 		return sensorsList;
 	}
 
+	/**
+	 * Getter method of the node functionality (function libraries) list
+	 * @return the functionality list of the node
+	 */
 	public Vector getLibrariesList() {
 		return librariesList;
 	}
 	
+	/**
+	 * 
+	 * Returns a string representation of the Node object.
+	 * 
+	 */
 	public String toString() {
 		String s = "Node ID: " + this.nodeID + NEW_LINE;
 		

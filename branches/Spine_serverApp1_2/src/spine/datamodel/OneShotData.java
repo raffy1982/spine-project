@@ -24,11 +24,12 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* This class represents the OneShotData entity.
+* It contains the decode method for converting low level One-Shot type data into an high level object.
 *
 * @author Raffaele Gravina
 *
-* @version 1.0
+* @version 1.2
 */
 
 package spine.datamodel;
@@ -37,9 +38,13 @@ import spine.SPINEFunctionConstants;
 
 public class OneShotData extends Data {
 
+	/**
+	 * Override of the spine.datamodel.Data decode method
+	 * 
+	 * @see spine.datamodel.Data
+	 * 
+	 */
 	protected Object decode(int nodeID, byte[] payload) {
-		this.functionCode = payload[0];
-		
 		byte sensorCode = payload[1];
 		byte bitmask = payload[2];
 		
@@ -47,9 +52,10 @@ public class OneShotData extends Data {
 		int currCh2Value = convertTwoBytesToInt(payload, 5);
 		int currCh3Value = convertTwoBytesToInt(payload, 7);
 		int currCh4Value = convertTwoBytesToInt(payload, 9);
-		this.data = new Feature(nodeID, this.functionCode, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
 		
-		return this.data;
+		Feature oneShot = new Feature(nodeID, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
+		
+		return oneShot;
 	}
 
 }

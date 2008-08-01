@@ -24,7 +24,8 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This interface contains codes related to the SPINE communication protocol, shared with the SPINE node side, 
+ * such as the reserved network addresses and the packets types. 
  *  
  *
  * @author Raffaele Gravina

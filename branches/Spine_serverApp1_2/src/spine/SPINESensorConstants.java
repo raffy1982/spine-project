@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This class contains codes related to the SPINE node sensors, shared with the SPINE node side, 
+ * such as sensor types, channels bitmask codings, 
+ * and their corresponding labels and utility methods to obtain the labels from the codes.
  *  
  *
  * @author Raffaele Gravina

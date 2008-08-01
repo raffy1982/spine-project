@@ -24,24 +24,30 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* This class represents the FeatureData entity.
+* It contains the decode method for converting low level Feature type data into an high level object.
 *
 * @author Raffaele Gravina
 *
-* @version 1.0
+* @version 1.2
 */
 
 package spine.datamodel;
 
 import java.util.Vector;
 
+import spine.SPINEFunctionConstants;
+
 
 public class FeatureData extends Data {
 
+	/**
+	 * Override of the spine.datamodel.Data decode method
+	 * 
+	 * @see spine.datamodel.Data
+	 */
 	protected Object decode(int nodeID, byte[] payload) {
-		this.functionCode = payload[0];
-		
-		this.data = new Vector();
+		Vector feats = new Vector();
 		
 		byte sensorCode = payload[1];
 		byte featuresCount = payload[2];
@@ -53,15 +59,15 @@ public class FeatureData extends Data {
 			currFeatCode = payload[3+i*18];
 			currBitmask = payload[(3+i*18) + 1];
 			
-			currCh1Value = Data.convertToInt(payload, (3+i*18) + 2);
-			currCh2Value = Data.convertToInt(payload, (3+i*18) + 6);
-			currCh3Value = Data.convertToInt(payload, (3+i*18) + 10);
-			currCh4Value = Data.convertToInt(payload, (3+i*18) + 14);
+			currCh1Value = Data.convertFourBytesToInt(payload, (3+i*18) + 2);
+			currCh2Value = Data.convertFourBytesToInt(payload, (3+i*18) + 6);
+			currCh3Value = Data.convertFourBytesToInt(payload, (3+i*18) + 10);
+			currCh4Value = Data.convertFourBytesToInt(payload, (3+i*18) + 14);
 			
-			((Vector)this.data).addElement(new Feature(nodeID, this.functionCode, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+			feats.addElement(new Feature(nodeID, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
 		}
 		
-		return this.data;
+		return feats;
 	}
 	
 }

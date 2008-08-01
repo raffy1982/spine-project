@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ *  This class represents the Sensor entity.
+ *  It contains a constructor, a toString and getters methods.
  *
  * @author Raffaele Gravina
  *
@@ -41,20 +42,43 @@ public class Sensor {
 	private byte code;
 	private byte channelBitmask;
 	
+	/**
+	 * Constructor of a Sensor object.
+	 * 
+	 * @param code the sensor code
+	 * @param channelBitmask the channels bitmask representing by which channels the sensor is composed of
+	 * 
+	 * @see spine.SPINESensorConstants 
+	 */
 	protected Sensor(byte code, byte channelBitmask) {
 		this.code = code;
 		this.channelBitmask = channelBitmask; 
 	}
 	
+	/**
+	 * 
+	 * Returns a string representation of the Sensor object.
+	 * 
+	 */
 	public String toString() {
 		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
 			   SPINESensorConstants.valueTypesBitmaskToString(channelBitmask);
 	}
 
+	/**
+	 * Getter method of the sensor code
+	 * 
+	 * @return the sensor code
+	 */
 	public byte getCode() {
 		return code;
 	}
 
+	/**
+	 * Getter method of the sensor channels bitmask
+	 * 
+	 * @return the sensor channels bitmask
+	 */
 	public byte getChannelBitmask() {
 		return channelBitmask;
 	}

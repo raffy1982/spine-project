@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ *  This class represents the Functionality entity.
+ *  It contains a constructor, a toString and getters methods.
  *
  * @author Raffaele Gravina
  *
@@ -39,23 +40,41 @@ import spine.SPINEFunctionConstants;
 public class Functionality {
 	
 	private byte functionType;
-	private byte functionCode;
+	private byte functionalityCode;
 	
-	protected Functionality(byte functionType, byte functionCode) {
+	/**
+	 * Constructor of a Functionality object
+	 * @param functionType the function type of the functionality
+	 * @param functionalityCode the code of this functionality
+	 */
+	protected Functionality(byte functionType, byte functionalityCode) {
 		this.functionType = functionType;
-		this.functionCode = functionCode; 
+		this.functionalityCode = functionalityCode; 
 	}
 	
-	public String toString() {
-		return SPINEFunctionConstants.functionCodeToString(functionType) + " - " + 
-			   SPINEFunctionConstants.functionalityCodeToString(functionType, functionCode);
-	}
-
+	/**
+	 * Getter method of the function type of this functionality
+	 * @return the the function type of this functionality
+	 */
 	protected byte getFunctionType() {
 		return functionType;
 	}
 
-	protected byte getFunctionCode() {
-		return functionCode;
+	/**
+	 * Getter method of the code of this functionality
+	 * @return the code of this functionality
+	 */
+	protected byte getFunctionalityCode() {
+		return functionalityCode;
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the Functionality object.
+	 * 
+	 */
+	public String toString() {
+		return SPINEFunctionConstants.functionCodeToString(functionType) + " - " + 
+			   SPINEFunctionConstants.functionalityCodeToString(functionType, functionalityCode);
 	}
 }
