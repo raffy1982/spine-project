@@ -26,7 +26,9 @@ Boston, MA  02111-1307, USA.
 /**
 *
 * Implementation of the Properties class for J2SE. 
-* It is used to store and load permanent parameters and other variable configurations.   
+* It is used to store and load permanent parameters and other variable configurations. 
+* 
+* Note that this class is only used internally at the framework. 
 *
 * @author Raffaele Gravina
 * @author Antonio Guerrieri
