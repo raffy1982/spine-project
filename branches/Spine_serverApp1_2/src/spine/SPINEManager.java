@@ -84,8 +84,8 @@ public class SPINEManager implements WSNConnection.Listener {
 			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();	
 			
 			Vector params = new Vector();
-			params.add(port);
-			params.add(speed);
+			params.addElement(port);
+			params.addElement(speed);
 			nodeAdapter.init(params);
 			
 			nodeAdapter.start();
