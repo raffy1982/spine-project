@@ -43,11 +43,13 @@ import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
 import spine.SPINESensorConstants;
+import spine.communication.tinyos.AlarmSpineFunctionReq;
 import spine.communication.tinyos.FeatureSpineFunctionReq;
 import spine.communication.tinyos.FeatureSpineSetupFunction;
 import spine.communication.tinyos.SpineFunctionReq;
 import spine.communication.tinyos.SpineSetupFunction;
 import spine.communication.tinyos.SpineSetupSensor;
+import spine.datamodel.Alarm;
 import spine.datamodel.Data;
 import spine.datamodel.Feature;
 import spine.datamodel.Node;
@@ -155,7 +157,24 @@ public class SPINETest implements SPINEListener {
 															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					((FeatureSpineFunctionReq)sfr).addFeature(SPINEFunctionConstants.AMPLITUDE, 
 						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					manager.activateFunction(curr.getNodeID(), sfr);					
+					manager.activateFunction(curr.getNodeID(), sfr);	
+					
+					//activate alarm on raw data coming form CH1
+					//alarm sent when the sampled data is in between 2 thresholds
+					
+					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
+					
+					int lowerThreshold = 0x20;
+					int upperThreshold = 0x40;
+					
+					((AlarmSpineFunctionReq)sfr2).setDataType(SPINEFunctionConstants.RAW_DATA);
+					((AlarmSpineFunctionReq)sfr2).setSensor(SPINESensorConstants.ACC_SENSOR);
+					((AlarmSpineFunctionReq)sfr2).setValueType(SPINESensorConstants.CH1);
+					((AlarmSpineFunctionReq)sfr2).setLowerThreshold(lowerThreshold);
+					((AlarmSpineFunctionReq)sfr2).setUpperThreshold(upperThreshold);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType((byte) 0x03);
+
+					manager.activateFunction(curr.getNodeID(), sfr2);
 				}
 				// repeat this process for other desired sensors; after that we can finally ... 
 				else if (sensor == SPINESensorConstants.INTERNAL_TEMPERATURE_SENSOR) {
@@ -233,6 +252,10 @@ public class SPINETest implements SPINEListener {
 			case SPINEFunctionConstants.ONE_SHOT:
 				// if the current data received is a ONE_SHOT function, we just print this one-shot sensor reading
 				System.out.println((Feature)data.getData()); 
+				break;
+				
+			case SPINEFunctionConstants.ALARM:
+				System.out.println((Alarm)data.getData());
 				break;
 		}
 		
