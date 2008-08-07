@@ -24,7 +24,8 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This class represents the generic SPINE Function requests and must be extended
+ * by 'function specific' classes.
  *  
  *
  * @author Raffaele Gravina
@@ -38,8 +39,21 @@ public abstract class SpineFunctionReq {
 	
 	protected boolean isActivationRequest;
 
+	/**
+	 * This method must be implemented by any class extending SpineFunctionReq
+	 * and must contain the logic of converting an high level function request into 
+	 * an actual SPINE Ota message of the request, in terms of a byte[] array
+	 * 
+	 * @return the actual SPINE Ota message of the request
+	 */
 	public abstract byte[] encode();
 
+	/**
+	 * Sets the control flag of the request indicating if it's an activation or a deactivation.
+	 * 
+	 * @param isActivationRequest 'true' if the current request is of activation; 
+	 * 'false' if it's a deactivation request 
+	 */
 	public void setActivationFlag(boolean isActivationRequest) {
 		this.isActivationRequest = isActivationRequest;		
 	}

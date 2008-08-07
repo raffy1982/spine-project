@@ -25,6 +25,11 @@ Boston, MA  02111-1307, USA.
 
 /**
 *
+* This class contains the static method to parse (decompress) a 
+* TinyOS SPINE 'OneShot' Data packet payload into a platform independent one.
+* This class is invoked only by the SpineData class, thru the dynamic class loading.
+* 
+* Note that this class is only used internally at the framework.
 *
 * @author Raffaele Gravina
 *
@@ -37,6 +42,12 @@ import spine.SPINESensorConstants;
 
 public class OneShotSpineData extends SpineData {
 
+	/**
+	 * Decompress 'OneShot' Data packet payload into a platform independent packet payload
+	 * 
+	 * @param payload the low level byte array containing the payload of the 'OneShot' Data packet to parse (decompress)
+	 * @return still a byte array representing the platform independent 'OneShot' Data packet payload.
+	 */
 	protected byte[] decode(byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;

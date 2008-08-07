@@ -24,7 +24,10 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This class implements a dispatcher pattern and it's used internally for decoding
+ * SPINE messages payloads.
+ * 
+ * Note that this class is only used internally at the framework. 
  *  
  *
  * @author Raffaele Gravina
@@ -38,6 +41,13 @@ import spine.SPINEPacketsConstants;
 
 public class PacketManager {
 
+	/**
+	 * Allows the proper decoding of the given payload w.r.t. to its given packet type
+	 * 
+	 * @param pktType the SPINE packet type of the message 
+	 * @param payloadBuf the payload of the message to be decoded
+	 * @return the decoded payload
+	 */
 	protected static byte[] decode(byte pktType, byte[] payloadBuf) {
 		byte[] payload = payloadBuf;
 		

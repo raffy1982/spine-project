@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Feature'
 *
 * @author Raffaele Gravina
 *
@@ -44,6 +44,10 @@ public class FeatureSpineSetupFunction extends SpineSetupFunction {
 	private short windowSize = 0;
 	private short shiftSize = 0;
 	
+	/**
+	 * This method is used internally by the framework and encodes the high Feature function setup request
+	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
+	 */
 	public byte[] encode() {
 		byte[] data = new byte[5];
 	
@@ -56,14 +60,35 @@ public class FeatureSpineSetupFunction extends SpineSetupFunction {
 		return data;	
 	}
 	
+	/**
+	 * Sets the sensor involved on the current Feature function setup request
+	 * Note that a Feature function setup request is always made on a 'per sensor' basis.
+	 * To activate features over different sensors, 
+	 * it's necessary to do a Feature function setup request per each sensor and then
+	 * to activate the required features on the involved sensors.
+	 * 
+	 * @param sensor the sensor code
+	 */
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;
 	}
 	
+	/**
+	 * Sets the size of the window over which computes the features 
+	 * that will eventually activated thru a Feature Spine Function Req
+	 * 
+	 * @param windowSize the window size expressed in number of samples
+	 */
 	public void setWindowSize(short windowSize) {
 		this.windowSize = windowSize;
 	}
 	
+	/**
+	 * Sets the shift size on the window over which computes the features 
+	 * that will eventually activated thru a Feature Spine Function Req
+	 * 
+	 * @param shiftSize the overlap amount (ahead shift) over the previous window
+	 */
 	public void setShiftSize(short shiftSize) {
 		this.shiftSize = shiftSize;
 	}

@@ -24,7 +24,17 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* 
+* Objects of this class are used for expressing at high level function requests 
+* (both activation and deactivation) of type 'Feature'.
+* An application that needs to do a Feature request, must create a new FeatureSpineFunctionReq
+* object, set on it the sensor involved and use the addFeature one or more times 
+* (currently, up to 7 add are supported per each request) 
+* for features activation, or the removeFeature (currently, up to 7 remove are supported per each request) 
+* for features deactivation.
+* 
+* This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
+* to convert the high level request into an actual SPINE Ota message.     
 *
 * @author Raffaele Gravina
 *
@@ -43,6 +53,11 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	private byte sensor = -1;
 	private Vector features = new Vector();
 
+	/**
+	 * Converts an high level request object into an actual SPINE Ota message
+	 * 
+	 * @return the actual SPINE Ota message of the request, in terms of a byte[] array  
+	 */
 	public byte[] encode() {
 		int featuresCount = this.features.size();
 		
@@ -65,16 +80,46 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 		return data;		
 	}
 
+	/**
+	 * Set the sensor involved in the request
+	 * 
+	 * @param sensor the code of the sensor
+	 * 
+	 * @see spine.SPINESensorConstants 
+	 */
 	public void setSensor(byte sensor) {
 		this.sensor  = sensor;		
 	}
 
+	/**
+	 * Add a new feature to the activation request.
+	 * Note that on each request object calling addFeature is mutually exclusive with
+	 * removeFeature calls.  
+	 * 
+	 * @param feature the code of the feature
+	 * @param channelBitmask the channels over which activate the given feature
+	 * 
+	 * @see spine.SPINESensorConstants
+	 * @see spine.SPINEFunctionConstants
+	 */
 	public void addFeature(byte feature, byte channelBitmask) {
-		this.features.add(new Feature(feature, channelBitmask));		
+		this.features.addElement(new Feature(feature, channelBitmask));		
 	}
 	
+	/**
+	 * Add a new feature to the deactivation request.
+	 * 
+	 * Note that on each request object calling removeFeature is mutually exclusive with
+	 * addFeature calls.  
+	 * 
+	 * @param feature the code of the feature
+	 * @param channelBitmask the channels over which deactivate the given feature
+	 * 
+	 * @see spine.SPINESensorConstants
+	 * @see spine.SPINEFunctionConstants
+	 */
 	public void removeFeature(byte feature, byte channelBitmask) {
-		this.features.add(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
+		this.features.addElement(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
 	}
 	
 }

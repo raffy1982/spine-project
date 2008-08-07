@@ -25,7 +25,12 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ * This class contains the static method to parse (decompress) a 
+ * TinyOS SPINE Data packet payload into a platform independent one.
+ * This class, using dynamic class loading, call the actual class 
+ * responsible of decompressing the current Data packet. 
+ * 
+ * Note that this class is only used internally at the framework.
  *
  * @author Raffaele Gravina
  *
@@ -40,6 +45,22 @@ public abstract class SpineData {
 
 	private final static String SPINEDATA_FUNCT_CLASSNAME_KEY_PREFIX = "spineData_function_className_";
 	
+	/**
+	 * Decompress Data packet payload into a platform independent packet payload
+	 * Every derivate class of the SpineData must implement this method to decompress properly the 
+	 * specific type of data inside the Data packet.
+	 * 
+	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
+	 * @return still a byte array representing the platform independent Data packet payload.
+	 */
+	protected abstract byte[] decode(byte[] payload);
+	
+	/**
+	 * Decompress Data packet payload into a platform independent packet payload
+	 * 
+	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
+	 * @return still a byte array 
+	 */
 	protected static byte[] parse(byte[] payload) {
 		byte functionCode = (byte)((payload[0] & 0xFF)>>3);
 		
@@ -51,8 +72,5 @@ public abstract class SpineData {
 		  catch (IllegalAccessException e) { System.out.println(e);	}
 		
 		return null;  
-	}
-	
-	protected abstract byte[] decode(byte[] payload);
-
+	}	
 }
