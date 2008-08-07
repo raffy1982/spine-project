@@ -116,7 +116,7 @@ public class SPINEFunctionConstants {
 					case VECTOR_MAGNITUDE: return VECTOR_MAGNITUDE_LABEL;
 					default: return "?";	
 				}
-			case ALARM: return "?";
+			case ALARM: return "";
 			case ONE_SHOT: return "?";
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
