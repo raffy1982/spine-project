@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * Implementation of the GAL ConfigurationDescriptor
  *  
  *
  * @author Raffaele Gravina

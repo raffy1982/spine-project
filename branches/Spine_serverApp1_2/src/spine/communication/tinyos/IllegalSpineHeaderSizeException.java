@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- *  
+ * This exception is thrown if the coordinator receives a SPINE message with an incorrect header size. 
+ * 
+ * Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
  *
