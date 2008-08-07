@@ -24,12 +24,19 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- *  
+ * Implementation of the GAL LocalNodeAdapter.
+ * This class is responsible to implement the specific logic of accessing a TinyOS base station 
+ * in a way complying to the GAL APIs.
+ * Hence, it's responsible of receiving packets from the serial port thru the TinyOS.jar APIs and to 
+ * provide a standard way of transmitting packets to the attached base-station that will eventually be forwarded Ota. 
+ * 
+ * Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
  *
  * @version 1.2
+ * 
+ * @see LocalNodeAdapter
  */
 
 package spine.communication.tinyos;
@@ -67,7 +74,11 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 	
 	private boolean sendImmediately = true;
 	
-	
+	/**
+	 * This method is called by the TinyOS APIs when a new message is received by the base-station.
+	 * It's also responsible of reassembling the fragments of complete message and of forwarding the 
+	 * messages as soon as they are fully reassembled.  
+	 */
 	public void messageReceived(int srcID, net.tinyos.message.Message tosmsg) {
 System.out.print("messageReceived -> ");		
 		if (tosmsg instanceof SpineTOSMessage) {			
@@ -75,6 +86,7 @@ System.out.print("messageReceived -> ");
 				SPINEHeader h = ((SpineTOSMessage)tosmsg).getHeader();
 				int sourceNodeID = h.getSourceID();
 				
+				// some controls for reducing the risk of start elaborating erroneous received messages 
 				if(sourceNodeID == SPINEPacketsConstants.SPINE_BASE_STATION || 
 					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
@@ -86,6 +98,7 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				
 				sendMessages(sourceNodeID);
 				
+				// re-assembly of fragments into complete messages 
 				if (h.getTotalFragments() != 1) {
 					int index = inPartials(sourceNodeID, h.getSequenceNumber());
 					if (index == -1) {
@@ -118,6 +131,7 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 					}
 				}
 
+				// notification to upper layer of a message reception
 				com.tilab.zigbee.Message msg = ((SpineTOSMessage)tosmsg).parse();					
 				for (int i = 0; i<connections.size(); i++)
 					((TOSWSNConnection)connections.elementAt(i)).messageReceived(msg);				

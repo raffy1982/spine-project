@@ -25,7 +25,10 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
+ *  This class represents a SPINE TinyOS message into its lowest level.
+ *  It is used only by the TinyOS platform dependent classes of the framework.
  *  
+ *  Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
  *

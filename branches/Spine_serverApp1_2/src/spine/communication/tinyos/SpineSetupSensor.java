@@ -24,12 +24,14 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This class represents the SPINE Setup Sensor request.
  *  
  *
  * @author Raffaele Gravina
  *
  * @version 1.2
+ * 
+ * @see spine.SPINESensorConstants
  */
 
 package spine.communication.tinyos;
@@ -42,7 +44,11 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 	private byte timeScale = -1;
 	private int samplingTime = -1;
 	
-	
+	/**
+	 * This method is used internally by the framework and encodes the high level sensor setup 
+	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
+	 * @return
+	 */
 	public byte[] encode() {
 		byte[] data = new byte[LENGTH];
 		
@@ -53,14 +59,32 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 		return data;
 	}
 	
+	/**
+	 * Sets the sensor to setup
+	 * 
+	 * @param sensor the sensor to setup
+	 */
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;
 	}
 	
+	/**
+	 * Sets the time scale of the sampling time.
+	 * 
+	 * 
+	 * @param timeScale the time scale
+	 * 
+	 * @see spine.SPINESensorConstants for the defined time-scales 
+	 */
 	public void setTimeScale(byte timeScale) {
 		this.timeScale = timeScale;	
 	}
 	
+	/**
+	 * Set the absolute value of the sampling time (the actual sampling interval depends on the time scale)
+	 * 
+	 * @param samplingTime the value of the sampling time
+	 */
 	public void setSamplingTime(int samplingTime) {
 		this.samplingTime = samplingTime;
 	}

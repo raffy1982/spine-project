@@ -24,7 +24,8 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
+ * This class represents the generic SPINE Setup Function and must be extended
+ * by 'function specific' classes.
  *  
  *
  * @author Raffaele Gravina
@@ -34,8 +35,15 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-public abstract class SpineSetupFunction extends spine.communication.tinyos.SpineTOSMessage {
+public abstract class SpineSetupFunction {
 	
+	/**
+	 * This method must be implemented by any class extending SpineSetupFunction
+	 * and must contain the logic of converting an high level specific setup function into 
+	 * an actual SPINE Ota message of the setup, in terms of a byte[] array
+	 * 
+	 * @return the actual SPINE Ota message of the setup
+	 */
 	public abstract byte[] encode();
 	
 }

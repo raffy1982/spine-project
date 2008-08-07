@@ -24,8 +24,11 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- *  
+ * Implementation of the GAL WSNConnection.
+ * This class, together with TOSLocalNodeAdapter, implements the generic API to accessing
+ * a TinyOS base-station from the upper layers. 
+ * 
+ * Note that this class is only used internally at the framework.
  *
  * @author Raffaele Gravina
  *
@@ -56,6 +59,7 @@ public class TOSWSNConnection implements WSNConnection {
 	
 	
 	public void messageReceived(com.tilab.zigbee.Message msg) {
+		// just a pass-thru
 		listener.messageReceived(msg);
 	}
 	
@@ -81,15 +85,16 @@ public class TOSWSNConnection implements WSNConnection {
 		byte totalFragments = 1;
 		
 		try {
-			
+			// create a SPINE TinyOS dependent message from a high level Message object
 			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
 			byte[] compressedPayload = msg.getPayload();
 			SpineTOSMessage tosmsg = new SpineTOSMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
 														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
 														 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
 			
-			printPayload(compressedPayload); // DEBUG CODE		
+printPayload(compressedPayload); // DEBUG CODE		
 			
+			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, tosmsg);
 			
 		} catch (NumberFormatException e) {
