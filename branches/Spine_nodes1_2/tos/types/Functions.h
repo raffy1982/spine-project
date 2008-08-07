@@ -72,6 +72,16 @@ typedef struct active_feature_t {
   uint8_t sensorChBitmask;
 } active_feature_t;
 
+typedef struct active_alarm_t {
+  uint8_t dataType;
+  uint8_t sensorCode;
+  uint8_t valueType;
+  uint16_t lowerThreshold;
+  uint16_t upperThreshold;
+  uint8_t alarmType;  
+  uint8_t bufferID;
+} active_alarm_t;
+
 typedef struct feat_params_t {
   uint8_t sensorCode;
   uint8_t windowSize;

@@ -41,16 +41,17 @@ Boston, MA  02111-1307, USA.
  implementation {
 
      components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
-
-     // if new functions are added, declare their components down here
+     components AlarmEngineC;   
      components FeatureEngineC;
-
+    
      FunctionManager = FunctionManagerP;
+     FunctionManagerP.PacketManager -> PacketManagerC;
 
      FunctionManagerP.PacketManager -> PacketManagerC;
      FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
 
      FunctionManagerP.Functions = Functions;
-     // if new functions are added, wire the aforedeclared components down here
      FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
+     
+     FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
  }
