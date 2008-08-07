@@ -114,7 +114,7 @@ public class Data {
 	 * @return the converted integer
 	 */
 	protected static int convertFourBytesToInt(byte[] bytes, int index) {        
-		if(bytes.length != 4) return 0;
+		if(bytes.length < 4) return 0;
 		
 		return ( bytes[index + 3] & 0xFF) 		 |
 	           ((bytes[index + 2] & 0xFF) << 8)  |
@@ -132,7 +132,7 @@ public class Data {
 	 * @return the converted integer
 	 */
 	protected static int convertTwoBytesToInt(byte[] bytes, int index) {
-		if(bytes.length != 2) return 0;
+		if(bytes.length < 2) return 0;
 		
 		return   (bytes[index + 1] & 0xFF) |
 		        ((bytes[index] & 0xFF) << 8);
