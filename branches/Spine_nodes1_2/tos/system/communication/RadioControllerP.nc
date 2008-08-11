@@ -113,8 +113,12 @@ Boston, MA  02111-1307, USA.
 
        error_t sendOneMessage(uint16_t destination, uint8_t type, message_t* msg, uint8_t msgLen) {
            if (msgLen <= TOSH_DATA_LENGTH) {
-               memcpy(call Sender.getPayload(&msgTmp), call Sender.getPayload(msg), msgLen);
-               return call Sender.send(destination, &msgTmp, msgLen);
+		   #ifdef TINYOS_CVS
+           memcpy(call Sender.getPayload(&msgTmp, msgLen), call Sender.getPayload(msg, msgLen), msgLen);	   
+		   #else
+           memcpy(call Sender.getPayload(&msgTmp), call Sender.getPayload(msg), msgLen);
+           #endif
+           return call Sender.send(destination, &msgTmp, msgLen);
            }
            else {
                  // TODO implement the fragmenter ... actually is already implemented within the Packet Manager
@@ -128,8 +132,12 @@ Boston, MA  02111-1307, USA.
            call AMPacket.setDestination(&msgTmp, call AMPacket.destination(&mtmp));
            call AMPacket.setType(&msgTmp, call AMPacket.type(&mtmp));
            call Packet.setPayloadLength(&msgTmp, length);
+		   #ifdef TINYOS_CVS
+           memcpy(call Sender.getPayload(&msgTmp,length), call Sender.getPayload(&mtmp,length), length);	   
+		   #else
            memcpy(call Sender.getPayload(&msgTmp), call Sender.getPayload(&mtmp), length);
-           return sendOneMessage(call AMPacket.destination(&msgTmp), call AMPacket.type(&msgTmp), &msgTmp, length);
+           #endif
+		   return sendOneMessage(call AMPacket.destination(&msgTmp), call AMPacket.type(&msgTmp), &msgTmp, length);
        }
 
 
@@ -215,7 +223,11 @@ Boston, MA  02111-1307, USA.
              call AMPacket.setDestination(&buffer, destination);
              call AMPacket.setType(&buffer, type);
              call Packet.setPayloadLength(&buffer, len);          // CHECK HERE
+			 #ifdef TINYOS_CVS
+			 memcpy(call Sender.getPayload(&buffer,len), payload, len);	   
+		     #else
              memcpy(call Sender.getPayload(&buffer), payload, len);
+             #endif
              return call Queue.enqueue(buffer);
           }
           else {
@@ -232,7 +244,11 @@ Boston, MA  02111-1307, USA.
               call AMPacket.setDestination(&msgTmp, destination);
               call AMPacket.setType(&msgTmp, type);
               call Packet.setPayloadLength(&msgTmp, len);
+			  #ifdef TINYOS_CVS
+			  memcpy(call Sender.getPayload(&msgTmp,len), data, len);	   
+		      #else
               memcpy(call Sender.getPayload(&msgTmp), data, len);
+              #endif
            }
            else
               return bufferData(destination, type, data, len);
