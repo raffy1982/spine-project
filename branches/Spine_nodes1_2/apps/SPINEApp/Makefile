@@ -5,9 +5,11 @@ LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [ ! -d $$SUPPORT_MAKE_PATH/supp
 TOSMAKE_PATH=$(LOCAL_TOSROOT)/support/make
 GOALS += spine
 
-
 #radio channel for TX-RX
-PFLAGS += -DCC2420_DEF_CHANNEL=12
+PFLAGS += -DCC2420_DEF_CHANNEL=15
+
+#uncomment if tinyos cvs version higher than 2.0.2 is used as OS
+//PFLAGS += -DTINYOS_CVS
 
 
 #current spine version used (2 stands for 1.2)
@@ -53,9 +55,14 @@ PFLAGS += -DFUNCTION_LIBRARIES_LIST_SIZE=64
 //PFLAGS += -DFEATURE_LIST_SIZE=32
 //PFLAGS += -DACT_FEATS_LIST_SIZE=64
 
-
+ifeq ($(SENSORBOARD),spine)
+     PFLAGS += -DSPINE_SENSOR_BOARD
+endif
+ifeq ($(SENSORBOARD),shimmer)
+     PFLAGS += -DSHIMMER_SENSOR_BOARD
+endif
 ifeq ($(SENSORBOARD),mts300)
-     PFLAGS += -DNO_GYRO
+     PFLAGS += -DMTS300_SENSOR_BOARD
 endif
 
 
