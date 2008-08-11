@@ -49,17 +49,11 @@ implementation {
      components BufferPoolP;
 
      // if new sensors are added, declare their PIL driver components down here
-     components VoltageSensorC;
-     components AccSensorC;
-     components GyroSensorC;
-     components InternalTemperatureSensorC;
+
 
      // if new sensors are added, also declare a new timer (each timer will be reserved for sampling one sensor)
      // for each new sensor down here
-     components new TimerMilliC() as VoltageSensorTimer;
-     components new TimerMilliC() as AccSensorTimer;
-     components new TimerMilliC() as GyroSensorTimer;
-     components new TimerMilliC() as InternalTemperatureSensorTimer;
+
 
      SensorBoardController = SensorBoardControllerP;
 
@@ -68,17 +62,54 @@ implementation {
      SensorBoardControllerP.PacketManager -> PacketManagerC;
 
      SensorBoardControllerP.SensorImpls = SensorImpls;
-     // if new sensors are added, wire the aforedeclared PIL driver components down here
-     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;
+     SensorBoardControllerP.SamplingTimers = SamplingTimers; 
+     
+     #ifdef SPINE_SENSOR_BOARD
+       /* For the ACC Sensor */
+     components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
-     SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
-     SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
-
-     SensorBoardControllerP.SamplingTimers = SamplingTimers;
-     // if new sensors are added, also wire the aforedeclared timers down here
-     SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
+     
+       /* For the VOLTAGE Sensor */
+     components VoltageSensorC;
+     components new TimerMilliC() as VoltageSensorTimer;
+     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;   
+     SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
+     
+        /* For the GYRO Sensor */
+     components GyroSensorC;
+     components new TimerMilliC() as GyroSensorTimer;
+     SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;  
      SensorBoardControllerP.SamplingTimers[GYRO_SENSOR] -> GyroSensorTimer;
+     
+      /* For the INTERNAL_TEMP Sensor */
+     components InternalTemperatureSensorC;
+     components new TimerMilliC() as InternalTemperatureSensorTimer;
+     SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
      SensorBoardControllerP.SamplingTimers[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorTimer;
+     #endif
+	 
+	 #ifdef SHIMMER_SENSOR_BOARD
+	 /* For the ACC Sensor */
+     components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
+     SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
+     #endif
+	 
+	 #ifdef MTS300_SENSOR_BOARD
+	 /* For the ACC Sensor */
+     components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
+     SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
+     #endif
+	 
+     // if new sensors are added, wire the aforedeclared PIL driver components down here
+
+
+     // if new sensors are added, also wire the aforedeclared timers down here
+
 
 }
