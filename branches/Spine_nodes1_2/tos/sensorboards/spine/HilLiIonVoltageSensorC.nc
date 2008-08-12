@@ -32,12 +32,12 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
-configuration HilVoltageSensorC {
+configuration HilLiIonVoltageSensorC {
   provides interface Sensor;
 }
 
 implementation {
-    components HilVoltageSensorP;
+    components HilLiIonVoltageSensorP;
 
     components new LiIonVoltageC() as Volt;
 
@@ -46,13 +46,13 @@ implementation {
     components SensorsRegistryC;
 
 
-    Sensor = HilVoltageSensorP;
+    Sensor = HilLiIonVoltageSensorP;
 
-    HilVoltageSensorP.Volt -> Volt;
+    HilLiIonVoltageSensorP.Volt -> Volt;
 
-    HilVoltageSensorP.Boot -> MainC;
+    HilLiIonVoltageSensorP.Boot -> MainC;
 
-    HilVoltageSensorP.SensorsRegistry -> SensorsRegistryC;
+    HilLiIonVoltageSensorP.SensorsRegistry -> SensorsRegistryC;
 }
 
 

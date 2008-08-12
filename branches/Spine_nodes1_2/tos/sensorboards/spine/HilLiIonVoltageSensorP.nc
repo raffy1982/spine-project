@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
 
-module HilVoltageSensorP {
+module HilLiIonVoltageSensorP {
   uses {
      interface Read<uint16_t> as Volt;
 
