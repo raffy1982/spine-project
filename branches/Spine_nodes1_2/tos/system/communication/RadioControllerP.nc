@@ -87,7 +87,7 @@ Boston, MA  02111-1307, USA.
  implementation {
 
        uint32_t GUARD_TIMER = 5; // no shorter than 5ms (otherwise the radio isn't able to TX sequential pkts)
-       uint32_t LISTEN_TIMER = 50;
+       uint32_t LISTEN_TIMER = 25;
 
        message_t msgTmp;
 
