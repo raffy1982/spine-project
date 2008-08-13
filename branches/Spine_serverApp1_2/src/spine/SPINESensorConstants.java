@@ -42,6 +42,8 @@ public class SPINESensorConstants {
 	public static final byte VOLTAGE_SENSOR = 0x02;
 	public static final byte GYRO_SENSOR = 0x03;
 	public static final byte INTERNAL_TEMPERATURE_SENSOR = 0x04;
+	public static final byte EIP_SENSOR = 0x05;
+	public static final byte ECG_SENSOR = 0x06;
 	
 	
 	public static final byte ALL = 0x0F;				// 1111
@@ -89,6 +91,8 @@ public class SPINESensorConstants {
 			case VOLTAGE_SENSOR: return "voltage";
 			case GYRO_SENSOR: return "gyroscope";
 			case INTERNAL_TEMPERATURE_SENSOR: return "cpu temperature";
+			case EIP_SENSOR: return "Electrical Impedance Pneumography (EIP) breathing sensor";
+			case ECG_SENSOR: return "Electrocardiography (ECG) sensor";
 			default: return "?";
 		}
 	}
