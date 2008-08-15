@@ -47,7 +47,6 @@ Boston, MA  02111-1307, USA.
      FunctionManager = FunctionManagerP;
      FunctionManagerP.PacketManager -> PacketManagerC;
 
-     FunctionManagerP.PacketManager -> PacketManagerC;
      FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
 
      FunctionManagerP.Functions = Functions;
