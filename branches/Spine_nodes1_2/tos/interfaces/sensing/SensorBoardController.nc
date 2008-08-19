@@ -157,7 +157,8 @@ Boston, MA  02111-1307, USA.
        command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
 
        /**
-       * This events is thrown as soon as the given sensor completes its data acquisition process
+       * This events is thrown as soon as the given sensor completes its data acquisition process and its value(s)
+       * are stored into the Buffer Pool
        *
        * @param 'sensorCode' the sensor that has thrown this event
        * @param 'result' SUCCESS if the acquisition has been completed successfully, FAIL otherwise
@@ -165,7 +166,7 @@ Boston, MA  02111-1307, USA.
        *
        * @return void
        */
-       event void acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode);
+       event void acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode);
 
  }
 

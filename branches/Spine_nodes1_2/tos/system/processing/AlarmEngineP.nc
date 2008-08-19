@@ -187,7 +187,7 @@ Boston, MA  02111-1307, USA.
      command void Function.stopComputing() {
 	//TO DO
      }
-     event void FunctionManager.sensorWasSampled(enum SensorCode sensorCode){
+     event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode){
 	     //RRR meglio qui!!!!!
      	}
      

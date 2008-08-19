@@ -188,7 +188,7 @@ implementation {
            call SensorImpls.getAllValues[sensorCode](readings, &readingsCount);
            valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
 
-           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) { 
+           if (call SensorsRegistry.getSamplingTime(sensorCode) == 0) {
               // if the sensor signaling the acquisitionDone was requested for an immediate one-shot sampling,
               // we have to send back the current reading.
 
@@ -220,10 +220,11 @@ implementation {
            else {
               for (j = 0; j<readingsCount; j++)
                  call BufferPool.putElem(call SensorBoardController.getBufferID(sensorCode, valueTypesList[j] ),
-                                         readings[j]);   // assuming the valueTypesList and the readings buffer is populated in the same order
-           }
-           
-           signal SensorBoardController.acquisitionDone(sensorCode, result, resultCode);
+                                         readings[j]);   // assuming the valueTypesList and the readings buffer is populated in the same order 
+
+              signal SensorBoardController.acquisitionStored(sensorCode, result, resultCode);
+          }
+
        }
        
        command void SensorBoardController.reset() {

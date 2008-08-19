@@ -69,7 +69,7 @@ implementation
     //call SensorBoardController.acquireData(GYRO_SENSOR, ALL);
   }
 
-  event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+  event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
       uint8_t resNr;
       uint8_t i;
       if (result != SUCCESS) {

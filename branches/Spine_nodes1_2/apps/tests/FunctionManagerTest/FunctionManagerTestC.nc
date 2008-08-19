@@ -31,6 +31,7 @@ Boston, MA  02111-1307, USA.
  * @version 1.0
  */
  #include "SensorsConstants.h"
+ #include "SpinePackets.h"
  #include "Functions.h"
  module FunctionManagerTestC {
   uses interface Boot;
@@ -89,6 +90,8 @@ implementation {
 
   event void Boot.booted() { call Timer.startOneShot(1024); }
 
-  event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
+  event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
+  
+   event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode){}
 }
 

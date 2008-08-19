@@ -58,7 +58,7 @@ implementation
     call SensorBoardController.startSensing();
   }
 
-  event void SensorBoardController.acquisitionDone(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+  event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
       
       uint16_t data[4];
       uint8_t msg[8];

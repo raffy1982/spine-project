@@ -125,11 +125,11 @@ interface FunctionManager {
 
 	/**
 	* Lets the function manager (and therefore registered functions) know when another sample has been taken
-        * to allow the triggering of feature calculation
+        * and buffered to allow the triggering of feature calculation
 	*
 	* @param the sensor that has been sampled
 	*/
-	event void sensorWasSampled(enum SensorCode sensorCode);
+	event void sensorWasSampledAndBuffered(enum SensorCode sensorCode);
 }
 
 

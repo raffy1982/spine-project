@@ -297,7 +297,7 @@ implementation {
 		
 	event void BufferPool.newElem(uint8_t bufferID, uint16_t elem) {}
 	
-	event void FunctionManager.sensorWasSampled(enum SensorCode sensorCode) {
+	event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {
 		uint8_t i;
 		uint8_t shift = 0;
 		uint8_t window = 0;
@@ -334,7 +334,7 @@ implementation {
 			}
 			
 			evalFeatsList[1] = evalFeatsCount;
-						
+
 			call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
 			
 			newSamplesSinceLastFeature[sensorCode] = 0;
