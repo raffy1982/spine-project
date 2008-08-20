@@ -3,6 +3,29 @@ PFLAGS += -DSPINE_EXTRA
 
 TOS_OVERLAY_DIR = $(LOCAL_TOSROOT)/tos
 
+
+ifndef SENSORBOARD
+       $(error Error: SENSORBOARD not defined!)
+endif
+
+ifeq ($(SENSORBOARD),spine)
+     PFLAGS += -DSPINE_SENSOR_BOARD
+endif
+ifeq ($(SENSORBOARD),shimmer)
+     PFLAGS += -DSHIMMER_SENSOR_BOARD
+endif
+ifeq ($(SENSORBOARD),mts300)
+     PFLAGS += -DMTS300_SENSOR_BOARD
+endif
+ifeq ($(SENSORBOARD),biosensor)
+     PFLAGS += -DWISEPLA_BIOSENSOR
+endif
+
+
+#current spine version used (2 stands for 1.2)
+PFLAGS += -DSPINE_VERSION=2
+
+
 #if new folder will be added, they must be included down here
 PFLAGS += -I$(TOS_OVERLAY_DIR)/interfaces/communication
 PFLAGS += -I$(TOS_OVERLAY_DIR)/interfaces/sensing
