@@ -46,7 +46,6 @@ Boston, MA  02111-1307, USA.
         uint8_t dataSize;
 
         memcpy(&functionCode, payload, 1);
-        functionCode = functionCode<<3;
         dataBuf[0] = functionCode;
 
         memcpy(&dataSize, (payload+1), 1);

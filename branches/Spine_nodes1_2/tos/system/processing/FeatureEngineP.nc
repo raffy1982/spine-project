@@ -213,7 +213,7 @@ implementation {
 		return TRUE;
 	}
 	
-	command uint8_t* Function.getFunctionList(uint8_t* functionCount) {
+	command uint8_t* Function.getSubFunctionList(uint8_t* functionCount) {
 		*functionCount = featCount;
 		return featureList;
 	}
@@ -231,7 +231,7 @@ implementation {
 	
 	command error_t FeatureEngine.registerFeature(enum FeatureCodes featureCode) {
 		if (featCount < FEATURE_LIST_SIZE) { // to avoid memory leaks
-			featureList[featCount++] = ((FEATURE<<5) | (featureCode & 0x1F));  // The & 0x1F (00011111) is to avoid corruption in the first 'FunctionCode' 3 bits
+			featureList[featCount++] = featureCode;
 			return SUCCESS;
 		}
 		return FAIL;

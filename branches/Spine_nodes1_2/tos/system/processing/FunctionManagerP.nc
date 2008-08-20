@@ -63,7 +63,7 @@ implementation {
 
        command error_t FunctionManager.registerFunction(enum FunctionCodes functionCode) {
           if (functCount < FUNCTION_LIST_SIZE) { // to avoid memory leaks
-             functionList[functCount++] = functionCode;  
+             functionList[functCount++] = functionCode;
              return SUCCESS;
           }
           return FAIL;
@@ -76,8 +76,16 @@ implementation {
           
           functLibCount = 0;
           for (i = 0; i<functCount; i++) {
-             currFunctLibList = call Functions.getFunctionList[ functionList[i] ](&currFunctLibCount);
-             memcpy(functionLibrariesList+functLibCount, currFunctLibList, currFunctLibCount);
+
+             functionLibrariesList[functLibCount++] = functionList[i];
+
+             currFunctLibList = call Functions.getSubFunctionList[ functionList[i] ](&currFunctLibCount);
+             
+             functionLibrariesList[functLibCount++] = currFunctLibCount;
+             
+             if (currFunctLibCount > 0)
+                 memcpy(functionLibrariesList+functLibCount, currFunctLibList, currFunctLibCount);
+
              functLibCount += currFunctLibCount;
           }
 
@@ -160,7 +168,7 @@ implementation {
           return FALSE;
        }
 
-       default command uint8_t* Functions.getFunctionList[uint8_t functionID](uint8_t* functionCount) {
+       default command uint8_t* Functions.getSubFunctionList[uint8_t functionID](uint8_t* functionCount) {
            dbg(DBG_USR1, "FunctionManagerP.getFunctionList: Executed default operation. Chances are there's an operation miswiring.\n");
            return NULL;
        }

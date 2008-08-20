@@ -49,8 +49,8 @@ Boston, MA  02111-1307, USA.
 
     command bool InPacket.parse(void* payload, uint8_t len) {
        memcpy(setFnBuf, payload, len);
-       
-       fnCode = (setFnBuf[0]>>3);
+
+       fnCode = setFnBuf[0];
 
        fnParamsSize = setFnBuf[1];
 

@@ -52,12 +52,12 @@ Boston, MA  02111-1307, USA.
     command bool InPacket.parse(void* payload, uint8_t len) {
        memcpy(fnReqBuf, payload, len);
        
-       fnCode = (fnReqBuf[0]>>3);
-       isEnableReq = ( (fnReqBuf[0]>>2) & 0x01 ); // 0x01 = 00000001
+       fnCode = fnReqBuf[0];
+       isEnableReq = ( fnReqBuf[1] & 0x01 ); // 0x01 = 00000001
        
-       fnParamsSize = fnReqBuf[1];
+       fnParamsSize = fnReqBuf[2];
 
-       fnParams = (fnReqBuf+2);
+       fnParams = (fnReqBuf+3);
 
        return TRUE;
     }

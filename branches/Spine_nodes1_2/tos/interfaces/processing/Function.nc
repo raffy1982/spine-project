@@ -69,9 +69,9 @@ Boston, MA  02111-1307, USA.
        *
        * @param 'functionCount' the number of registered libraries of the function
        *
-       * @return the pointer to the list of registered libraries to the function
+       * @return the pointer to the list of registered libraries to the function or NULL if the Function doesn't have any libraries
        */
-       command uint8_t* getFunctionList(uint8_t* functionCount);
+       command uint8_t* getSubFunctionList(uint8_t* functionCount);
        
        /**
        * Starts the computing of the function

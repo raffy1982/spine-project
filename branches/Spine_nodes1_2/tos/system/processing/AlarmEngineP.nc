@@ -174,7 +174,7 @@ Boston, MA  02111-1307, USA.
         return TRUE;
      }
 
-     command uint8_t* Function.getFunctionList(uint8_t* functionCount) {
+     command uint8_t* Function.getSubFunctionList(uint8_t* functionCount) {
          *functionCount = alarmCount;
          return alarmList;
      }
