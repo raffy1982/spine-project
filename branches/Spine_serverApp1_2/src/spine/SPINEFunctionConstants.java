@@ -64,7 +64,7 @@ public class SPINEFunctionConstants {
 	public static final String FEATURE_LABEL = "Feature";
 	public static final String ALARM_LABEL = "Alarm";
 	public static final String SIGNAL_PROCESSING_LABEL = "DSP";
-	public static final String ONE_SHOT_LABEL = "One Shot";
+	public static final String ONE_SHOT_LABEL = "OneShot";
 	
 	// if new function libraries are added, declare their labels down here
 	public static final String RAW_DATA_LABEL = "Raw Data";

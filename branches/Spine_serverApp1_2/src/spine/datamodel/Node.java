@@ -38,8 +38,14 @@ package spine.datamodel;
 import java.util.Vector;
 
 import spine.Properties;
+import spine.SPINEFunctionConstants;
+import spine.functions.BadFunctionSpecException;
+import spine.functions.Function;
 
 public class Node {
+	
+	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.functions.";
+	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
 	
 	private static final String NEW_LINE = Properties.getProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
 	
@@ -47,7 +53,7 @@ public class Node {
 	
 	private Vector sensorsList = new Vector(); // <values:Sensor>
 	
-	private Vector librariesList = new Vector(); // <values:Functionality>
+	private Vector functionsList = new Vector(); // <values:Function>
 	
 	
 	/**
@@ -64,9 +70,31 @@ public class Node {
 		for (int i = 0; i<sensorsNr; i++) 				
 			sensorsList.addElement(new Sensor(nodeSpec[1+i*2], nodeSpec[1+i*2+1]));		
 		
-		int librariesNr = nodeSpec[1+sensorsNr*2];	
-		for (int i = 0; i<librariesNr; i++) 
-			librariesList.addElement(new Functionality(nodeSpec[(1+sensorsNr*2+1) + i*2], nodeSpec[(1+sensorsNr*2+1) + (i*2) + 1]));
+		int functionsListSize = nodeSpec[1+sensorsNr*2];
+		int parseOfst = 1+sensorsNr*2+1;
+		while(parseOfst<functionsListSize) {
+			byte functionCode = nodeSpec[parseOfst++];
+			byte fParamSize = nodeSpec[parseOfst++];
+			byte[] fParams = new byte[fParamSize];
+			
+			System.arraycopy(nodeSpec, parseOfst, fParams, 0, fParamSize);
+			parseOfst += fParamSize;
+			
+			try {
+				Class c = Class.forName(FUNCTION_CLASSNAME_PREFIX + 
+										SPINEFunctionConstants.functionCodeToString(functionCode) + 
+										FUNCTION_CLASSNAME_SUFFIX);
+				Function currFunction = (Function)c.newInstance();
+				currFunction.init(fParams);
+				functionsList.addElement(currFunction);
+			} catch (ClassNotFoundException e) { System.out.println(e); } 
+			  catch (InstantiationException e) { System.out.println(e); } 
+			  catch (IllegalAccessException e) { System.out.println(e);	} 
+			  catch (BadFunctionSpecException e) { System.out.println(e); }
+		}
+		
+		
+		
 	}
 
 	/**
@@ -89,8 +117,8 @@ public class Node {
 	 * Getter method of the node functionality (function libraries) list
 	 * @return the functionality list of the node
 	 */
-	public Vector getLibrariesList() {
-		return librariesList;
+	public Vector getFunctionsList() {
+		return functionsList;
 	}
 	
 	/**
@@ -105,9 +133,9 @@ public class Node {
 		for (int i = 0; i<this.sensorsList.size(); i++) 
 			s += "  " + (Sensor)this.sensorsList.elementAt(i) + NEW_LINE;
 		
-		s += "Supported Functionalities:" + NEW_LINE;
-		for (int i = 0; i<this.librariesList.size(); i++) 
-			s += "  " + (Functionality)this.librariesList.elementAt(i) + NEW_LINE;
+		s += "Supported Functions:" + NEW_LINE;
+		for (int i = 0; i<this.functionsList.size(); i++) 
+			s += "  " + (Function)this.functionsList.elementAt(i) + NEW_LINE;
 		
 		return s;
 		

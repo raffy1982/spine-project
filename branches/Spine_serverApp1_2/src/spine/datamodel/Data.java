@@ -42,11 +42,12 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
-import spine.Properties;
+import spine.SPINEFunctionConstants;
 
 public class Data {
 
-	private final static String DATA_FUNCT_CLASSNAME_KEY_PREFIX = "data_function_className_";
+	private final static String DATA_FUNCT_CLASSNAME_PREFIX = "spine.datamodel.";
+	private final static String DATA_FUNCT_CLASSNAME_SUFFIX = "Data";
 	
 	protected Object data = null; 
 	
@@ -68,7 +69,9 @@ public class Data {
 		this.functionCode = payload[0];		
 		
 		try {
-			Class c = Class.forName(Properties.getProperties().getProperty(DATA_FUNCT_CLASSNAME_KEY_PREFIX + this.functionCode));
+			Class c = Class.forName(DATA_FUNCT_CLASSNAME_PREFIX + 
+									SPINEFunctionConstants.functionCodeToString(this.functionCode) + 
+									DATA_FUNCT_CLASSNAME_SUFFIX);
 			this.data = ((Data)c.newInstance()).decode(nodeID, payload);
 		} catch (ClassNotFoundException e) { System.out.println(e); } 
 		  catch (InstantiationException e) { System.out.println(e); } 

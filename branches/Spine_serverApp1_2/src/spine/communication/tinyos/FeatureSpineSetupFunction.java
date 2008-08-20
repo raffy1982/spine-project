@@ -51,7 +51,7 @@ public class FeatureSpineSetupFunction extends SpineSetupFunction {
 	public byte[] encode() {
 		byte[] data = new byte[5];
 	
-		data[0] = (byte)(SPINEFunctionConstants.FEATURE<<3);
+		data[0] = SPINEFunctionConstants.FEATURE;
 		data[1] = PARAM_LENGTH;
 		data[2] = (byte)(this.sensor<<4);
 		data[3] = (byte)this.windowSize;

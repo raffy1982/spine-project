@@ -61,20 +61,22 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	public byte[] encode() {
 		int featuresCount = this.features.size();
 		
-		byte[] data = new byte[1 + 1 + 1 + 1 + featuresCount*2];
+		byte[] data = new byte[1 + 1 + 1 + 1 + 1 + featuresCount*2];
 		
 		byte activationBinaryFlag = (this.isActivationRequest)? (byte)1 : 0;
-		data[0] = (byte)(SPINEFunctionConstants.FEATURE<<3 | activationBinaryFlag<<2 ); 
+		data[0] = SPINEFunctionConstants.FEATURE; 
 		
-		data[1] = (byte)(1 + 1 + featuresCount*2);
+		data[1] = activationBinaryFlag;
 		
-		data[2] = this.sensor;
+		data[2] = (byte)(1 + 1 + featuresCount*2);
 		
-		data[3] = (byte)featuresCount;
+		data[3] = this.sensor;
+		
+		data[4] = (byte)featuresCount;
 				
 		for (int i = 0; i < featuresCount; i++) {
-			data[(4+i*2)] = ((Feature)features.elementAt(i)).getFeatureCode();
-			data[(4+i*2)+1] = ((Feature)features.elementAt(i)).getChannelBitmask();
+			data[(5+i*2)] = ((Feature)features.elementAt(i)).getFeatureCode();
+			data[(5+i*2)+1] = ((Feature)features.elementAt(i)).getChannelBitmask();
 		}
 		
 		return data;		

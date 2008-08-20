@@ -46,8 +46,8 @@ public class SpineServiceAdvertisement {
 	 */
 	protected static byte[] parse(byte[] payload) {
 		byte sensorsNr = payload[0];
-		byte librariesNr = payload[1+sensorsNr];		
-		byte[] data = new byte[1 + sensorsNr*2 + 1 + librariesNr*2];
+		byte librariesListSize = payload[1+sensorsNr];		
+		byte[] data = new byte[1 + sensorsNr*2 + 1 + librariesListSize];
 				
 		data[0] = sensorsNr;
 		
@@ -56,12 +56,11 @@ public class SpineServiceAdvertisement {
 			data[(1+i*2) + 1] = (byte)(payload[1+i] & 0x0F);			
 		}
 		
-		data[1+sensorsNr*2] = librariesNr;	
+		data[1+sensorsNr*2] = librariesListSize;	
 		
-		for (int i = 0; i<librariesNr; i++) {
-			data[(1+sensorsNr*2)+1+i*2] = (byte)((payload[1+sensorsNr+1+i] & 0xFF)>>5); 
-			data[(1+sensorsNr*2)+1+i*2+1] = (byte)(payload[1+sensorsNr+1+i] & 0x1F); // 0x1F = 0001 1111 binary
-		}
+		for (int i = 0; i<librariesListSize; i++) 
+			data[(1+sensorsNr*2)+1+i] = payload[1+sensorsNr+1+i];
+		
 		
 		return data;
 	}
