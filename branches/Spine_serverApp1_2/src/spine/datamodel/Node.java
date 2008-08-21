@@ -39,12 +39,12 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEFunctionConstants;
-import spine.functions.BadFunctionSpecException;
-import spine.functions.Function;
+import spine.datamodel.functions.BadFunctionSpecException;
+import spine.datamodel.functions.Function;
 
 public class Node {
 	
-	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.functions.";
+	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
 	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
 	
 	private static final String NEW_LINE = Properties.getProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
