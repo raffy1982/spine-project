@@ -44,6 +44,12 @@ public class SPINEFunctionConstants {
 	public static final byte SIGNAL_PROCESSING = 0x03;
 	public static final byte ONE_SHOT = 0x04;
 	
+	//alarm types
+	public static final byte BELOW_Threshold = 0x01;
+	public static final byte ABOVE_Threshold = 0x02;
+	public static final byte IN_BETWEEN_Thresholds = 0x03;
+	public static final byte OUT_OF_Thresholds = 0x04;
+	
 	// if new function libraries are added, declare their codes down here
 	public static final byte RAW_DATA = 0x01;
 	public static final byte MAX = 0x02;
@@ -80,8 +86,7 @@ public class SPINEFunctionConstants {
 	public static final String MODE_LABEL = "Mode";
 	public static final String MEDIAN_LABEL = "Median";
 	public static final String PITCH_ROLL_LABEL = "Pitch & Roll";
-	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";
-	
+	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";	
 	
 	public static String functionCodeToString(byte code) {
 		switch (code) {

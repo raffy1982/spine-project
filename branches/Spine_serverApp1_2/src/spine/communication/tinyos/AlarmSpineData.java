@@ -41,10 +41,9 @@ public class AlarmSpineData extends SpineData {
 		short dtIndex = 0;
 		short pldIndex = 0;
 		
-		byte functionCode = (byte)((payload[pldIndex++] & 0xFF)>>3);
+		byte functionCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = functionCode;
 		
-		//byte paramLen = (byte)payload[pldIndex++];
 		pldIndex++;
 		
 		byte dataType = payload[pldIndex++];
@@ -58,6 +57,10 @@ public class AlarmSpineData extends SpineData {
 		
 		byte alarmType = payload[pldIndex++];
 		dataTmp[dtIndex++] = alarmType;
+		
+		dataTmp[dtIndex++] = payload[pldIndex++];
+		
+		dataTmp[dtIndex++] = payload[pldIndex++];
 		
 		dataTmp[dtIndex++] = payload[pldIndex++];
 		

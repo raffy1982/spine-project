@@ -72,7 +72,7 @@ public class Node {
 		
 		int functionsListSize = nodeSpec[1+sensorsNr*2];
 		int parseOfst = 1+sensorsNr*2+1;
-		while(parseOfst<functionsListSize) {
+		while(parseOfst<(functionsListSize+1+sensorsNr*2+1)) {
 			byte functionCode = nodeSpec[parseOfst++];
 			byte fParamSize = nodeSpec[parseOfst++];
 			byte[] fParams = new byte[fParamSize];

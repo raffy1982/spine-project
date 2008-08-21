@@ -46,7 +46,7 @@ public class AlarmData extends Data {
 		byte sensorCode = payload[2];
 		byte valueType = payload[3];
 		byte alarmType = payload[4];
-		int currentValue = Data.convertTwoBytesToInt(payload, 5);
+		int currentValue = Data.convertFourBytesToInt(payload, 5);
 		
 		return new Alarm( nodeID, functionCode, dataType, sensorCode, valueType, alarmType, currentValue);
 	}

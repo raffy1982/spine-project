@@ -47,24 +47,30 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 
 	public byte[] encode() {
 		
-		byte[] data = new byte[1 + 1 + 1 + 1 + 1 + 2 + 2 + 1];
+		byte[] data = new byte[1 + 1 + 1 + 1 + 1 + 1 + 4 + 4 + 1];
 		
 		byte activationBinaryFlag = (this.isActivationRequest)? (byte)1 : 0;
-		data[0] = (byte)(SPINEFunctionConstants.ALARM<<3 | activationBinaryFlag<<2 ); 
+
+		data[0] = SPINEFunctionConstants.ALARM; 
 		
-		data[1] = (byte)(8);
+		data[1] = activationBinaryFlag;
+		data[2] = (byte)(12);
 		
-		data[2] = this.dataType;
-		data[3] = this.sensor;
-		data[4] = this.valueType;
+		data[3] = this.dataType;
+		data[4] = this.sensor;
+		data[5] = this.valueType;
 		//lower Threshold 
-		data[5] = (byte) (this.lowerThreshold >> 8);
-		data[6] = (byte) (this.lowerThreshold);
+		data[6] = (byte) (this.lowerThreshold >> 24);
+		data[7] = (byte) (this.lowerThreshold >> 16);
+		data[8] = (byte) (this.lowerThreshold >> 8);
+		data[9] = (byte) (this.lowerThreshold);
 		//upper Threshold 
-		data[7] = (byte) (this.upperThreshold >> 8);
-		data[8] = (byte) (this.upperThreshold);
+		data[10] = (byte) (this.upperThreshold >> 24);
+		data[11] = (byte) (this.upperThreshold >> 16);
+		data[12] = (byte) (this.upperThreshold >> 8);
+		data[13] = (byte) (this.upperThreshold);
 		
-		data[9] = this.alarmType;
+		data[14] = this.alarmType;
 		
 		return data;		
 	}
