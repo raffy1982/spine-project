@@ -33,26 +33,28 @@ Boston, MA  02111-1307, USA.
  */
 
 generic configuration LiIonVoltageC() {
-  provides interface Read<uint16_t>;
-  provides interface ReadStream<uint16_t>;
+  provides {
+    interface Read<uint16_t>;
 
-  provides interface Resource;
-  provides interface ReadNow<uint16_t>;
+    interface ReadStream<uint16_t>;
+
+    interface Resource;
+    interface ReadNow<uint16_t>;
+  }
 }
 implementation {
+  components LiIonVoltageP;
+  
   components new AdcReadClientC();
   Read = AdcReadClientC;
+  AdcReadClientC.AdcConfigure -> LiIonVoltageP;
 
   components new AdcReadStreamClientC();
   ReadStream = AdcReadStreamClientC;
-
-  components LiIonVoltageP;
-  AdcReadClientC.AdcConfigure -> LiIonVoltageP;
   AdcReadStreamClientC.AdcConfigure -> LiIonVoltageP;
-
+  
   components new AdcReadNowClientC();
   Resource = AdcReadNowClientC;
   ReadNow = AdcReadNowClientC;
-  
   AdcReadNowClientC.AdcConfigure -> LiIonVoltageP;
 }

@@ -37,7 +37,12 @@ Boston, MA  02111-1307, USA.
 
 implementation {
     
-    components HilVoltageSensorC;
+    components HilLiIonVoltageSensorC;
+    Sensor = HilLiIonVoltageSensorC;
 
-    Sensor = HilVoltageSensorC;
+    // uncomment the following lines and comment the previous ones 
+    // if you are using the standard batteries of the telosb mote
+    
+    //components HilVoltageSensorC;
+    //Sensor = HilVoltageSensorC;
 }
