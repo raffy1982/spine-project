@@ -114,7 +114,6 @@ Boston, MA  02111-1307, USA.
 //  		if (functionParamsSize !=3) {
 //  			return FALSE;
 //  		}
-	
 
 		sensCode = functionParams[0];
 		windowS = functionParams[1];
@@ -155,7 +154,7 @@ Boston, MA  02111-1307, USA.
         
        if (functionParamsSize != 12)
             return FALSE;
-
+		
 		dataType = functionParams[0];
 		sensCode = functionParams[1];
 		channelMask = functionParams[2];
@@ -181,7 +180,7 @@ Boston, MA  02111-1307, USA.
 	       actAlarmList[actAlarmIndex].channelMask=channelMask;
 	       actAlarmList[actAlarmIndex].lowerThreshold=lowerThreshold;
 	       actAlarmList[actAlarmIndex].upperThreshold=upperThreshold;
-	       actAlarmList[actAlarmIndex].alarmType=alarmType;         
+	       actAlarmList[actAlarmIndex++].alarmType=alarmType;         
         	}
  	
      return TRUE;   
@@ -332,14 +331,13 @@ Boston, MA  02111-1307, USA.
 					calculateFeature(actAlarmList[i].dataType, actAlarmList[i].sensorCode, actAlarmList[i].channelMask, window, bufferPoolCopy);					
 					
 				evalFeatsList[1] = evalFeatsCount;
-				
 				num_ch = countOfChannelsInMask(evalFeatsList[3] >> 4);
 				res_size = evalFeatsList[3] & 0x0F; 
-					
+				
 				for (k=0;k<num_ch;k++){		
 					if (res_size == 1)
 						elem = (uint32_t)((uint32_t)evalFeatsList[4+2*k]);																	
-					else if (res_size == 2)
+					else if (res_size == 2)			
 						elem = (uint32_t)((((uint32_t)evalFeatsList[4+2*k]) << 8) | ((uint32_t)evalFeatsList[5+2*k]));
 					else if (res_size == 4)
 						elem = (uint32_t)(((uint32_t)evalFeatsList[4+4*k]) << 24 | ((uint32_t)evalFeatsList[5+4*k]) << 16 | ((uint32_t)evalFeatsList[6+4*k]) << 8 | (uint32_t)evalFeatsList[7+4*k] );
