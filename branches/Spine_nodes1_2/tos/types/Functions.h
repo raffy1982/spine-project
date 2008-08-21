@@ -46,6 +46,13 @@ enum FunctionCodes {
 
 };
 
+enum AlarmTypes{
+	BELOW_Threshold = 0x01,
+	ABOVE_Threshold = 0x02,
+	IN_BETWEEN_Thresholds = 0x03,
+	OUT_OF_Thresholds = 0x04
+};
+
 enum FeatureCodes {
   // if a new feature is added to SPINE, its code must be included here
 
@@ -63,7 +70,6 @@ enum FeatureCodes {
   MEDIAN = 0x0C,
   PITCH_ROLL = 0x0D,
   VECTOR_MAGNITUDE = 0x0E
-  
 };
 
 typedef struct active_feature_t {
@@ -75,11 +81,12 @@ typedef struct active_feature_t {
 typedef struct active_alarm_t {
   uint8_t dataType;
   uint8_t sensorCode;
-  uint8_t valueType;
-  uint16_t lowerThreshold;
-  uint16_t upperThreshold;
+//  uint8_t valueType;
+  uint8_t channelMask;
+  uint32_t lowerThreshold;
+  uint32_t upperThreshold;
   uint8_t alarmType;  
-  uint8_t bufferID;
+//  uint8_t bufferID;
 } active_alarm_t;
 
 typedef struct feat_params_t {

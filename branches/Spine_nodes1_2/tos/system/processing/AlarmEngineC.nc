@@ -36,15 +36,31 @@ Boston, MA  02111-1307, USA.
 
  configuration AlarmEngineC {
       provides interface Function;
+      uses interface Feature as Features[uint8_t featureID];
  }
 
  implementation {
       components MainC, FunctionManagerC, SensorsRegistryC, BufferPoolP, AlarmEngineP;
       
+	  	// if new features are added, declare their component down here
+	    components MaxC;
+	    components MinC;
+	    components RangeC;
+	    components MeanC;
+	    components AmplitudeC;
+	    components RmsC;
+	    components StandardDeviationC;
+	    components TotalEnergyC;
+	    components VarianceC;
+	    components ModeC;
+	    components MedianC;
+	    components RawDataC;
+	    components PitchRollC;
+	    components VectorMagnitudeC;
 	  components LedsC;
       
       AlarmEngineP.Function = Function;
-
+	  //AlarmEngineP.AlarmEngine = AlarmEngine;
       AlarmEngineP.FunctionManager -> FunctionManagerC;
       AlarmEngineP.SensorsRegistry -> SensorsRegistryC;
 
@@ -52,4 +68,21 @@ Boston, MA  02111-1307, USA.
 
       AlarmEngineP.Boot -> MainC.Boot;
       AlarmEngineP.Leds -> LedsC;
+ 	AlarmEngineP.Features = Features;
+	// if new features are added, wire the aforedeclared components down here
+        AlarmEngineP.Features[MAX] -> MaxC;
+        AlarmEngineP.Features[MIN] -> MinC;
+        AlarmEngineP.Features[RANGE] -> RangeC;
+        AlarmEngineP.Features[MEAN] -> MeanC;
+        AlarmEngineP.Features[AMPLITUDE] -> AmplitudeC;
+        AlarmEngineP.Features[RMS] -> RmsC;
+        AlarmEngineP.Features[ST_DEV] -> StandardDeviationC;
+        AlarmEngineP.Features[TOTAL_ENERGY] -> TotalEnergyC;
+        AlarmEngineP.Features[VARIANCE] -> VarianceC;
+        AlarmEngineP.Features[MODE] -> ModeC;
+        AlarmEngineP.Features[MEDIAN] -> MedianC;
+        AlarmEngineP.Features[RAW_DATA] -> RawDataC;
+        AlarmEngineP.Features[PITCH_ROLL] -> PitchRollC;
+	    AlarmEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;   
+      
  }
