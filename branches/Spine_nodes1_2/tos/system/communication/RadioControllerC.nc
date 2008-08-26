@@ -41,7 +41,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */
 
  #ifndef RADIO_QUEUE_MAX_SIZE

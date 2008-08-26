@@ -4,19 +4,19 @@
  of WSN nodes via an OtA protocol
  
  Copyright (C) 2007 Telecom Italia S.p.A. 
- Â 
+  
  GNU Lesser General Public License
- Â 
+  
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
  License as published by the Free Software Foundation, 
  version 2.1 of the License. 
- Â 
+  
  This library is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the GNU
  Lesser General Public License for more details.
- Â 
+  
  You should have received a copy of the GNU Lesser General Public
  License along with this library; if not, write to the
  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
@@ -30,7 +30,7 @@
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
 
 #include "Functions.h"
@@ -42,16 +42,16 @@ interface FunctionManager {
 	* Registers a new function. This command must be called by each SPINE function at boot time to allow the inclusion of that function
 	* among the service advertisement message.
 	*
-	* @param 'functionCode' the code of the function to register
+	* @param functionCode the code of the function to register
 	*
-	* @return 'error_t' SUCCESS if the registration has success; FAIL otherwise
+	* @return SUCCESS if the registration has success; FAIL otherwise
 	*/
 	command error_t registerFunction(enum FunctionCodes functionCode);
 	
 	/**
         * Returns the list of the libraries of all the registered function
         *
-        * @param 'functionCount' the number of registered libraries
+        * @param functionCount the number of registered libraries
         *
         * @return the pointer to the list of registered libraries
         */
@@ -60,9 +60,9 @@ interface FunctionManager {
 	/**
         * Setup the given function with the given parameters array of size 'functionParamsSize'
         *
-        * @param  'functionCode' the code of the function to be disabled
-        * @param  'functionParams' the setup parameter array
-        * @param  'functionParamsSize' the size of the setup parameter array
+        * @param  functionCode the code of the function to be disabled
+        * @param  functionParams the setup parameter array
+        * @param  functionParamsSize the size of the setup parameter array
         *
         * @return TRUE is the setup has succeeded, FALSE otherwise
         */
@@ -71,9 +71,9 @@ interface FunctionManager {
 	/**
         * Activates the given function with the given parameters array of size 'functionParamsSize'
         *
-        * @param  'functionCode' the code of the function to be disabled
-        * @param  'functionParams' the activation parameter array
-        * @param  'functionParamsSize' the size of the deactivation parameter array
+        * @param  functionCode the code of the function to be disabled
+        * @param  functionParams the activation parameter array
+        * @param  functionParamsSize the size of the deactivation parameter array
         *
         * @return TRUE is the activation has succeeded, FALSE otherwise
         */
@@ -82,9 +82,9 @@ interface FunctionManager {
 	/**
         * Disables the given function with the given parameters array of size 'functionParamsSize'
         *
-        * @param  'functionCode' the code of the function to be disabled
-        * @param  'functionParams' the deactivation parameter array
-        * @param  'functionParamsSize' the size of the deactivation parameter array
+        * @param  functionCode the code of the function to be disabled
+        * @param  functionParams the deactivation parameter array
+        * @param  functionParamsSize the size of the deactivation parameter array
         *
         * @return TRUE is the deactivation has succeeded, FALSE otherwise
         */
@@ -107,9 +107,9 @@ interface FunctionManager {
 	/**
 	* This command can be used by the functions that need to send their results over the air
 	*
-	* @param 'functionCode' the code of the function that is asking the Ota send
-	* @param 'functionData' the function result data to be sent
-	* @param 'len' the length of the function result data array
+	* @param functionCode the code of the function that is asking the Ota send
+	* @param functionData the function result data to be sent
+	* @param len the length of the function result data array
 	*
 	* @return  void
 	*/

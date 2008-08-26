@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */ 
 interface BufferPool {
 
@@ -47,7 +47,7 @@ interface BufferPool {
     /**
     * Releases the buffer 'bufferID'
     *
-    * @param 'bufferID' the ID of the buffer to be released
+    * @param bufferID the ID of the buffer to be released
     *
     * @return void
     */
@@ -57,9 +57,9 @@ interface BufferPool {
     * Returns a pointer to an array containing the last 'windowSize' elements of the buffer 'bufferID',
     * ordered from the newest to the oldest inserted
     *
-    * @param 'bufferID' the ID of the buffer from where to take the window
-    * @param 'windowSize' the number of elements to return
-    * @param 'buffer' the pointer variable in which to store the pointer to the returning window
+    * @param bufferID the ID of the buffer from where to take the window
+    * @param windowSize the number of elements to return
+    * @param buffer the pointer variable in which to store the pointer to the returning window
     *
     * @return void
     */
@@ -68,8 +68,8 @@ interface BufferPool {
     /**
     * Puts a new element 'elem' into the buffer 'bufferID'
     *
-    * @param 'bufferID' the ID of the buffer where to put the new element
-    * @param 'elem' the new element to store in the given buffer
+    * @param bufferID the ID of the buffer where to put the new element
+    * @param elem the new element to store in the given buffer
     *
     * @return  void
     */
@@ -78,7 +78,7 @@ interface BufferPool {
     /**
     * Returns the number of element the buffer 'bufferID' is able to store
     *
-    * @param 'bufferID' the ID of the buffer
+    * @param bufferID the ID of the buffer
     *
     * @return the number of element the given buffer is able to store
     */
@@ -96,10 +96,10 @@ interface BufferPool {
     * Returns a pointer to an array containing the last 'firstToNow - lastToNow' elements of the buffer 'bufferID',
     * ordered from the newest to the oldest inserted
     *
-    * @param 'bufferID' the ID of the buffer from where to take the window
-    * @param 'firstToNow' the position of the first element w.r.t. the current buffer index
-    * @param 'lastToNow' the position of the last element w.r.t. the current buffer index
-    * @param 'buffer' the pointer variable in which to store the pointer to the returning window
+    * @param bufferID the ID of the buffer from where to take the window
+    * @param firstToNow the position of the first element w.r.t. the current buffer index
+    * @param lastToNow the position of the last element w.r.t. the current buffer index
+    * @param buffer the pointer variable in which to store the pointer to the returning window
     *
     * @return void
     */
@@ -108,7 +108,7 @@ interface BufferPool {
     /**
     * Returns the full copy of the whole bufferPool
     *
-    * @param 'buffer' the variable pointer where to store the pointer to the bufferPoll copy array
+    * @param buffer the variable pointer where to store the pointer to the bufferPoll copy array
     *
     * @return void
     */
@@ -125,8 +125,8 @@ interface BufferPool {
     /**
     * This event is signaled when a new element 'elem' has been inserted into the buffer 'bufferID'
     *
-    * @param 'bufferID' the ID of the buffer that has stored the new elem
-    * @param 'elem' the new elem
+    * @param bufferID the ID of the buffer that has stored the new elem
+    * @param elem the new elem
     *
     * @return void
     */

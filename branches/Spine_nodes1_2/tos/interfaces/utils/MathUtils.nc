@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Antonio Guerrieri
  *
- * @version 1.0
+ * @version 1.2
  */ 
  interface MathUtils {
 
@@ -37,8 +37,8 @@ Boston, MA  02111-1307, USA.
         * Returns the MAX value of the given 'data' array of size 'elemCount'.
         *
         *
-        * @param 'data' the pointer to the array
-        * @param 'elemCount' the size of the array
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
         *
         * @return the MAX value of the 'data' array
         */
@@ -48,8 +48,8 @@ Boston, MA  02111-1307, USA.
         * Returns the MIN value of the given 'data' array of size 'elemCount'.
         *
         *
-        * @param 'data' the pointer to the array
-        * @param 'elemCount' the size of the array
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
         *
         * @return the MIN value of the 'data' array
         */
@@ -59,8 +59,8 @@ Boston, MA  02111-1307, USA.
         * Returns the MEAN value of the given 'data' array of size 'elemCount'.
         *
         *
-        * @param 'data' the pointer to the array
-        * @param 'elemCount' the size of the array
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
         *
         * @return the MEAN value of the 'data' array
         */
@@ -70,8 +70,8 @@ Boston, MA  02111-1307, USA.
         * Returns the VARIANCE value of the given 'data' array of size 'elemCount'.
         *
         *
-        * @param 'data' the pointer to the array
-        * @param 'elemCount' the size of the array
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
         *
         * @return the VARIANCE value of the 'data' array
         */
@@ -82,9 +82,9 @@ Boston, MA  02111-1307, USA.
         *
         * This is the most stable method of the ones here provided.
         *
-        * @param y : the value to be processed
+        * @param y the value to be processed
         *
-        * @return 'uint32_t' the truncated integer square root of the value
+        * @return the truncated integer square root of the value
         */
         command uint32_t isqrt(uint32_t y);
 
@@ -99,9 +99,9 @@ Boston, MA  02111-1307, USA.
         *                    For an unsigned type the overflow typically wraps around and yields zero
         *                    as the macro result and zero as the overall function result.
         *
-        * @param number : the value to be processed
+        * @param number the value to be processed
         *
-        * @return 'uint32_t' the truncated integer square root of the value
+        * @return the truncated integer square root of the value
         */
         command uint32_t isqrt_Buchanan(uint32_t number);
 
@@ -113,9 +113,9 @@ Boston, MA  02111-1307, USA.
         * Lawrence Kirby for the rearrangement, improvments and range optimization
         * and Paul Hsieh for the round-then-adjust idea.
         *
-        * @param x : the value to be processed
+        * @param x the value to be processed
         *
-        * @return 'uint32_t' the truncated integer square root of the value
+        * @return the truncated integer square root of the value
         */
         command uint32_t isqrt_Steinarson(uint32_t x);
 

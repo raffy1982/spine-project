@@ -31,7 +31,9 @@ Boston, MA  02111-1307, USA.
  * changed by changing the wirings in this file.
  *
  * @author Ville-Pekka Seppa
- * 
+ *
+ * @version 1.2
+ *
  * @date   December 7, 2007
  */
 

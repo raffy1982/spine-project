@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
 
 interface Feature {
@@ -40,11 +40,11 @@ interface Feature {
 	 * @param	data	two dimensional array containing data to be processed referenced by channel then sample
 	 * @param	channelMask	channel mask for the data array
 	 * @param	dataLen	the number of samples per channel
-	 * @param	result	buffer to store the calculated result (must have size returnedChannelCount x resultSize bytes)
+	 * @param	res	buffer to store the calculated result (must have size returnedChannelCount x resultSize bytes)
 	 *
 	 * @return	the channels written into the 'result', expressed as a channel Bitmask
 	 */
-	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result);
+	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* res);
 
 	/**
 	 * Returns the result word lenght (number of bytes of the result)

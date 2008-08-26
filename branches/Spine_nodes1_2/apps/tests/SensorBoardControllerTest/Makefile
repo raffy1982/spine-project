@@ -11,10 +11,6 @@ GOALS += spine
 PFLAGS += -DCC2420_DEF_CHANNEL=12
 
 
-#uncomment if tinyos cvs version higher than 2.0.2 is used as OS
-//PFLAGS += -DTINYOS_CVS
-
-
 #node group id ( must match with the coordinator one)
 PFLAGS += -DGROUP_ID=0xAB
 

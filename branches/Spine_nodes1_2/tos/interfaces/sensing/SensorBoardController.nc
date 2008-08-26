@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */
  
  #include "SensorsConstants.h"
@@ -43,8 +43,8 @@ Boston, MA  02111-1307, USA.
        /**
        * Commands the specified sensor to make the given data acquisition
        *
-       * @param 'sensorCode' the sensor to command
-       * @param 'acquireType' refers to the type of acquisition the sensor has to make
+       * @param sensorCode the sensor to command
+       * @param acquireType refers to the type of acquisition the sensor has to make
        *        (i.e. if the actual sensor is a 3D accelerometer,
        *        the user might need just the current value on the X-axis, but not on all the three axis)
        *
@@ -57,10 +57,10 @@ Boston, MA  02111-1307, USA.
        * Note that this command must be called within the 'acquisitionDone' event handler
        * to be sure to get the latest valid data
        * 
-       * @param 'sensorCode' the sensor from which get the specified data value
-       * @param 'valueType' the sensor value type in which the caller is interested at
+       * @param sensorCode the sensor from which get the specified data value
+       * @param valueType the sensor value type in which the caller is interested at
        *
-       * @return 'uint16_t'
+       * @return the last acquired value of the given valueType of the specified sensor
        */
        command uint16_t getValue(enum SensorCode sensorCode, enum ValueTypes valueType);
        
@@ -69,10 +69,10 @@ Boston, MA  02111-1307, USA.
        * Note that this command must be called within the 'acquisitionDone' event handler
        * to be sure to get the latest valid data
        * 
-       * @param 'sensorCode'  the sensor from which get the values
-       * @param 'buffer'      the buffer array in which to store the values. 
+       * @param sensorCode  the sensor from which get the values
+       * @param buffer      the buffer array in which to store the values.
                               Note the caller must pre-allocate a buffer big enough to contain all the values
-       * @param 'valuesNr'    the variable in where to store the number of values in the 'buffer' array
+       * @param valuesNr    the variable in where to store the number of values in the 'buffer' array
        *
        * @return void (the result of the command is stored in the given buffer)
        */
@@ -81,25 +81,25 @@ Boston, MA  02111-1307, USA.
        /**
        * Returns serial number or other unique ID for the given sensor
        *
-       * @return 'uint16_t' the sensor ID
+       * @return the sensor ID
        */
        command uint16_t getSensorID(enum SensorCode sensorCode);
 
        /**
        * Returns the value types code list for the given sensor
        *
-       * @param 'valuesTypeNr'  the variable in where to store the number of values (sensor channels) available
+       * @param valuesTypeNr  the variable in where to store the number of values (sensor channels) available
        *
-       * @return 'uint8_t*' the value types code list.
+       * @return the value types code list.
        */
        command uint8_t* getValueTypesList(enum SensorCode sensorCode, uint8_t* valuesTypeNr);
 
        /**
        * Returns the acquire types code list for the given sensor
        *
-       * @param 'acquireTypesNr'  the variable in where to store the number of acquire types
+       * @param acquireTypesNr  the variable in where to store the number of acquire types
        *
-       * @return 'uint8_t*' the acquire types code list.
+       * @return the acquire types code list.
        */
        command uint8_t* getAcquireTypesList(enum SensorCode sensorCode, uint8_t* acquireTypesNr);
        
@@ -108,23 +108,23 @@ Boston, MA  02111-1307, USA.
        * Note samplingTime=0 the sensor board controller doens't set any timer of the given sensor, but
        * request immediately the sensor for a reading and send back Ota the reading.
        *
-       * @param 'samplingTime'  sampling Time (in ms) of the 'sensorCode' sensor
+       * @param samplingTime  sampling Time (in ms) of the 'sensorCode' sensor
        *
-       * @return 'uint8_t*' the acquire types code list.
+       * @return the acquire types code list.
        */
        command void setSamplingTime(enum SensorCode sensorCode, uint32_t samplingTime);
 
        /**
+       * Starts the sampling over all the sensors that has been previously set-up
        *
-       *
-       * @return 'void'
+       * @return void
        */
        command void startSensing();
        
        /**
+       * Stops the sampling over all the sensors that has been previously set-up
        *
-       *
-       * @return 'void'
+       * @return void
        */
        command void stopSensing();
        
@@ -132,15 +132,15 @@ Boston, MA  02111-1307, USA.
        * Resets the state of the SensorBoardController.
        *
        *
-       * @return 'void'
+       * @return void
        */
        command void reset();
 
        /**
        * Returns the buffer ID reserved for the given channel and sensor code.
        *
-       * @param 'sensorCode' the sensor we are interested in
-       * @param 'valueType' the channel code we are interested in
+       * @param sensorCode the sensor we are interested in
+       * @param valueType the channel code we are interested in
        *
        * @return the buffer ID
        */
@@ -149,8 +149,8 @@ Boston, MA  02111-1307, USA.
        /**
        * Returns the channel and the sensor code mapped on the given buffer id.
        *
-       * @param 'sensorCode' the sensor we are interested in.
-       * @param 'sT' the value of the sampling time (in ms).
+       * @param sensorCode the sensor we are interested in.
+       * @param sT the value of the sampling time (in ms).
        *
        * @return SUCCESS if a match is found; FAIL otherwise.
        */
@@ -160,9 +160,9 @@ Boston, MA  02111-1307, USA.
        * This events is thrown as soon as the given sensor completes its data acquisition process and its value(s)
        * are stored into the Buffer Pool
        *
-       * @param 'sensorCode' the sensor that has thrown this event
-       * @param 'result' SUCCESS if the acquisition has been completed successfully, FAIL otherwise
-       * @param 'resultCode' the specific success or fail code signaled by the sensor driver
+       * @param sensorCode the sensor that has thrown this event
+       * @param result SUCCESS if the acquisition has been completed successfully, FAIL otherwise
+       * @param resultCode the specific success or fail code signaled by the sensor driver
        *
        * @return void
        */

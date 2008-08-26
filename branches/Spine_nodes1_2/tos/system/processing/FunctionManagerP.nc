@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
 
 #ifndef FUNCTION_LIST_SIZE

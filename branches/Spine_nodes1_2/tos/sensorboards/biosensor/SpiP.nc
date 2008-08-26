@@ -29,6 +29,8 @@ Boston, MA  02111-1307, USA.
  *
  * @author Ville-Pekka Seppa
  *
+ * @version 1.2
+ *
  * @date   December 7, 2007
  */
 

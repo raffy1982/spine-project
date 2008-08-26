@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
  * @author Antonio Guerrieri <aguerrieri@wsnlabberkeley.com>
  * @author Filippo Tempia <filippo.tempia@telecomitalia.it>
  *
- * @version 1.0
+ * @version 1.2
  */      
 
 #include "Msp430Adc12.h"

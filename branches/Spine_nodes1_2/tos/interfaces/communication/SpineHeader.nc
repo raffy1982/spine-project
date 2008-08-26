@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */ 
 
 #include "SpinePackets.h"
@@ -67,65 +67,65 @@ interface SpineHeader {
     /**
     * Gets the Version field of the parsed header
     *
-    * @return 'uint8_t' : the AMP Version used by the AMP coordinator agent
+    * @return the AMP Version used by the AMP coordinator agent
     */
     command uint8_t getVersion();
 
     /**
     * Gets the Extension field of the parsed header
     *
-    * @return 'bool' : <code>TRUE</code> if the packet has an extension, <code>FALSE</code> otherwise
+    * @return <code>TRUE</code> if the packet has an extension, <code>FALSE</code> otherwise
     */
     command bool isExtended();
 
     /**
     * Gets the Packet Type field of the parsed header
     *
-    * @return 'uint8_t' : the Packet Type code of the packet
+    * @return the Packet Type code of the packet
     */
     command enum PacketTypes getPktType();
 
     /**
     * Gets the Group ID field of the parsed header
     *
-    * @return 'uint8_t' : the Group ID of the sender of the packet
+    * @return the Group ID of the sender of the packet
     */
     command uint8_t getGroupID();
 
     /**
     * Gets the Source ID field of the parsed header
     *
-    * @return 'uint16_t' : the ID of the sender of the packet
+    * @return the ID of the sender of the packet
     */
     command uint16_t getSourceID();
 
     /*
     * Gets the Dest ID field of the parsed header
     *
-    * @return 'uint16_t' : the ID of the recipient of the packet
+    * @return the ID of the recipient of the packet
     */
     command uint16_t getDestID();
 
     /**
     * Gets the Sequence Number field of the parsed header
     *
-    * @return 'uint8_t' : the SequenceNumber of the packet
+    * @return the SequenceNumber of the packet
     */
     command uint8_t getSequenceNumber();
     
     /**
     * Gets the Fragment Number field of the parsed header
     *
-    * @return 'uint8_t' : the fragment number of this packet
-    *                     (if the Total Fragments field is = 1, also this field must be = 1.
-    *                     That means the original packet hasn't been fragmented)
+    * @return the fragment number of this packet
+    *             (if the Total Fragments field is = 1, also this field must be = 1.
+    *             That means the original packet hasn't been fragmented)
     */
     command uint8_t getFragmentNumber();
 
     /**
     * Gets the Total Fragments field of the parsed header
     *
-    * @return 'uint8_t' : the total fragments of the original packet
+    * @return the total fragments of the original packet
     */
     command uint8_t getTotalFragments();
 

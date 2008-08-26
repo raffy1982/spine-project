@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
- * @version 1.0
+ * @version 1.2
  */
  configuration VoltageSensorC {
     provides interface Sensor;
@@ -42,7 +42,7 @@ implementation {
 
     // uncomment the following lines and comment the previous ones 
     // if you are using the standard batteries of the telosb mote
-    
+
     //components HilVoltageSensorC;
     //Sensor = HilVoltageSensorC;
 }

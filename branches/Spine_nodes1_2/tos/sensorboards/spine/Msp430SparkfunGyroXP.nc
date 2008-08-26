@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Filippo Tempia <filippo.tempia@telecomitalia.it>
  *
- * @version 1.0
+ * @version 1.2
  */
 module Msp430SparkfunGyroXP {
   provides interface AdcConfigure<const msp430adc12_channel_config_t*>;

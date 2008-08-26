@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */ 
 
 #include "Functions.h"
@@ -40,7 +40,7 @@ interface SpineSetupFunctionPkt {
     * Returns the code of the function to setup
     *
     *
-    * @return  'enum FunctionCodes'   the code of the function to setup.
+    * @return  enum FunctionCodes   the code of the function to setup.
     */
     command enum FunctionCodes getFunctionCode();
 

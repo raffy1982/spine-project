@@ -30,7 +30,7 @@
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
 
 #ifndef FEATURE_LIST_SIZE
@@ -335,7 +335,8 @@ implementation {
 			
 			evalFeatsList[1] = evalFeatsCount;
 
-			call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
+                        if (evalFeatsCount > 0)
+			   call FunctionManager.send(FEATURE, evalFeatsList, evalFeatsIndex);
 			
 			newSamplesSinceLastFeature[sensorCode] = 0;
 		}

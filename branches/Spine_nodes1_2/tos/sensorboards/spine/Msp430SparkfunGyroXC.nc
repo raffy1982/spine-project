@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Filippo Tempia <filippo.tempia@telecomitalia.it>
  *
- * @version 1.0
+ * @version 1.2
  */ 
 generic configuration Msp430SparkfunGyroXC() {
   provides interface Read<uint16_t>;

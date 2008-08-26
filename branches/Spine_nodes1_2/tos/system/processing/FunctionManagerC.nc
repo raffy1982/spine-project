@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */
  
  configuration FunctionManagerC {
@@ -41,9 +41,9 @@ Boston, MA  02111-1307, USA.
  implementation {
 
      components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
-     components AlarmEngineC;   
+     components AlarmEngineC;
      components FeatureEngineC;
-    
+
      FunctionManager = FunctionManagerP;
      FunctionManagerP.PacketManager -> PacketManagerC;
 
@@ -51,6 +51,6 @@ Boston, MA  02111-1307, USA.
 
      FunctionManagerP.Functions = Functions;
      FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
-     
+
      FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
  }

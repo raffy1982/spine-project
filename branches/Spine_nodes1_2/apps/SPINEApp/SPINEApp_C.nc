@@ -27,9 +27,9 @@ Boston, MA  02111-1307, USA.
  * Module component of the SPINE Application.
  * This module represent the SPINE entry point.
  *
- * @author Raffaele Gravina
+ * @author Raffaele Gravina <raffale.gravina@gmail.com>
  *
- * @version 1.0
+ * @version 1.2
  */
 
 #include "SpinePackets.h"

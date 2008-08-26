@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
  
 #include "Functions.h"
@@ -40,7 +40,7 @@ interface FeatureEngine {
 	* Registers a new feature. This command must be called by each SPINE feature at boot time to allow the inclusion of that feature
 	* among the service advertisement message.
 	*
-	* @param 'FeatureCode' the code of the feature to register
+	* @param FeatureCode the code of the feature to register
 	*
 	* @return
 	*/

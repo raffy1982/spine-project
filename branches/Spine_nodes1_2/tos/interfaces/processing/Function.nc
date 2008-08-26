@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.0
+ * @version 1.2
  */
  
  interface Function {
@@ -37,8 +37,8 @@ Boston, MA  02111-1307, USA.
        /**
        * Setup a function with the given parameters array of size 'functionParamsSize'
        *
-       * @param  'functionParams' the setup parameter array
-       * @param  'functionParamsSize' the size of the setup parameter array
+       * @param  functionParams the setup parameter array
+       * @param  functionParamsSize the size of the setup parameter array
        *
        * @return TRUE is the setup has succeeded, FALSE otherwise
        */
@@ -47,8 +47,8 @@ Boston, MA  02111-1307, USA.
        /**
        * Activates a function with the given parameters array of size 'functionParamsSize'
        *
-       * @param  'functionParams' the activation parameter array
-       * @param  'functionParamsSize' the size of the activation parameter array
+       * @param  functionParams the activation parameter array
+       * @param  functionParamsSize the size of the activation parameter array
        *
        * @return TRUE is the activation has succeeded, FALSE otherwise
        */
@@ -57,8 +57,8 @@ Boston, MA  02111-1307, USA.
        /**
        * Disables a function with the given parameters array of size 'functionParamsSize'
        *
-       * @param  'functionParams' the deactivation parameter array
-       * @param  'functionParamsSize' the size of the deactivation parameter array
+       * @param  functionParams the deactivation parameter array
+       * @param  functionParamsSize the size of the deactivation parameter array
        *
        * @return TRUE is the deactivation has succeeded, FALSE otherwise
        */
@@ -67,7 +67,7 @@ Boston, MA  02111-1307, USA.
        /**
        * Returns the list of the registered libraries to the function
        *
-       * @param 'functionCount' the number of registered libraries of the function
+       * @param functionCount the number of registered libraries of the function
        *
        * @return the pointer to the list of registered libraries to the function or NULL if the Function doesn't have any libraries
        */

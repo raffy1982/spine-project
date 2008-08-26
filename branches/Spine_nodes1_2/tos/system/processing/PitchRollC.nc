@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Philip Kuryloski
  *
- * @version 1.0
+ * @version 1.2
  */
 configuration PitchRollC {
 	provides interface Feature;
