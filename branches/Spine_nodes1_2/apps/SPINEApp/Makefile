@@ -10,6 +10,10 @@ GOALS += spine
 #radio channel for TX-RX
 PFLAGS += -DCC2420_DEF_CHANNEL=12
 
+#uncomment if TinyOS 2.0.2 or older is used
+//PFLAGS += -DTINYOS_2_0_2
+
+PFLAGS += -I$(TOSDIR)/lib/printf/
 
 #node group id ( must match with the coordinator one)
 PFLAGS += -DGROUP_ID=0xAB
