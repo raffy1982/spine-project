@@ -308,8 +308,6 @@ implementation {
 		}
 						
 		newSamplesSinceLastFeature[sensorCode]++;
-
-		call BufferPool.getBufferPoolCopy(bufferPoolCopy);
 		
 		// determine the shift for the given sensor
 		for (i = 0; i < featParamsIndex; i++) {
@@ -321,6 +319,9 @@ implementation {
 		
 		// check if it is time to calculate a feature
 		if (newSamplesSinceLastFeature[sensorCode] == shift) {
+			
+			call BufferPool.getBufferPoolCopy(bufferPoolCopy);
+			
 			// if so calculate all active features for that sensor
 			evalFeatsIndex = 0;
 			evalFeatsCount = 0;

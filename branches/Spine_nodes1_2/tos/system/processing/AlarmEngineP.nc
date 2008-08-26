@@ -308,8 +308,6 @@ Boston, MA  02111-1307, USA.
 		}
 							
 		newSamplesSinceLastFeatureAlarm[sensorCode]++;
-
-		call BufferPool.getBufferPoolCopy(bufferPoolCopy);
 		
 		// determine the shift for the given sensor
 		for (i = 0; i < alarmParamsIndex; i++) {
@@ -321,6 +319,9 @@ Boston, MA  02111-1307, USA.
 
 		// check if it is time to calculate a feature
 		if (newSamplesSinceLastFeatureAlarm[sensorCode] == shift) {
+			
+			call BufferPool.getBufferPoolCopy(bufferPoolCopy);
+			
 			// if so calculate all active features for that sensor
 			evalFeatsIndex = 0;
 			evalFeatsCount = 0;

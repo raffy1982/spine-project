@@ -77,16 +77,18 @@ implementation {
           functLibCount = 0;
           for (i = 0; i<functCount; i++) {
 
-             functionLibrariesList[functLibCount++] = functionList[i];
-
              currFunctLibList = call Functions.getSubFunctionList[ functionList[i] ](&currFunctLibCount);
              
-             functionLibrariesList[functLibCount++] = currFunctLibCount;
+             if(currFunctLibCount != 0xFF) {
+	             functionLibrariesList[functLibCount++] = functionList[i];
              
-             if (currFunctLibCount > 0)
-                 memcpy(functionLibrariesList+functLibCount, currFunctLibList, currFunctLibCount);
-
-             functLibCount += currFunctLibCount;
+             	functionLibrariesList[functLibCount++] = currFunctLibCount;
+             
+             	if (currFunctLibCount > 0)            
+	               memcpy(functionLibrariesList+functLibCount, currFunctLibList, currFunctLibCount);
+				
+             	functLibCount += currFunctLibCount;
+         	}
           }
 
           *functionsCount = functLibCount;
@@ -170,6 +172,7 @@ implementation {
 
        default command uint8_t* Functions.getSubFunctionList[uint8_t functionID](uint8_t* functionCount) {
            dbg(DBG_USR1, "FunctionManagerP.getFunctionList: Executed default operation. Chances are there's an operation miswiring.\n");
+           *functionCount = 0xFF;
            return NULL;
        }
        
