@@ -108,12 +108,10 @@ Boston, MA  02111-1307, USA.
 		uint8_t windowS;
 		uint8_t shiftS; 
 
-//check why this does not work		
 				
-//  		// get the job parameters
-//  		if (functionParamsSize !=3) {
-//  			return FALSE;
-//  		}
+  		if (functionParamsSize !=3) {
+  			return FALSE;
+  		}
 
 		sensCode = functionParams[0];
 		windowS = functionParams[1];
@@ -167,7 +165,7 @@ Boston, MA  02111-1307, USA.
 
         for(j = 0; j<actAlarmIndex; j++)
         //refresh settings if the activate function is for a sensor-axis already active
-         if (actAlarmList[j].sensorCode == sensCode && actAlarmList[j].channelMask == channelMask && actAlarmList[j].alarmType==alarmType && actAlarmList[j].dataType==dataType) 
+        if (actAlarmList[j].sensorCode == sensCode && actAlarmList[j].channelMask == channelMask && actAlarmList[j].alarmType==alarmType && actAlarmList[j].dataType==dataType) 
 	        {	
 	         actAlarmList[j].lowerThreshold=lowerThreshold;
 	         actAlarmList[j].upperThreshold=upperThreshold;
@@ -294,7 +292,7 @@ Boston, MA  02111-1307, USA.
 	}
 		
      event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode){
-	    uint8_t i,k,num_ch,res_size;
+	    uint8_t j,i,k,num_ch,res_size;
 	    uint8_t notifyAlarmList[8];
 		uint8_t notifyAlarmIndex=0;
 		bool alarm = FALSE;
@@ -322,62 +320,63 @@ Boston, MA  02111-1307, USA.
 			
 			call BufferPool.getBufferPoolCopy(bufferPoolCopy);
 			
-			// if so calculate all active features for that sensor
-			evalFeatsIndex = 0;
-			evalFeatsCount = 0;
-			evalFeatsList[evalFeatsIndex++] = sensorCode;
-			evalFeatsList[evalFeatsIndex++] = 0;
 			for (i=0; i<actAlarmIndex; i++){
 				if (actAlarmList[i].sensorCode == sensorCode)
-					calculateFeature(actAlarmList[i].dataType, actAlarmList[i].sensorCode, actAlarmList[i].channelMask, window, bufferPoolCopy);					
-					
-				evalFeatsList[1] = evalFeatsCount;
-				num_ch = countOfChannelsInMask(evalFeatsList[3] >> 4);
-				res_size = evalFeatsList[3] & 0x0F; 
-				
-				for (k=0;k<num_ch;k++){		
-					if (res_size == 1)
-						elem = (uint32_t)((uint32_t)evalFeatsList[4+2*k]);																	
-					else if (res_size == 2)			
-						elem = (uint32_t)((((uint32_t)evalFeatsList[4+2*k]) << 8) | ((uint32_t)evalFeatsList[5+2*k]));
-					else if (res_size == 4)
-						elem = (uint32_t)(((uint32_t)evalFeatsList[4+4*k]) << 24 | ((uint32_t)evalFeatsList[5+4*k]) << 16 | ((uint32_t)evalFeatsList[6+4*k]) << 8 | (uint32_t)evalFeatsList[7+4*k] );
-								
-		 			switch (actAlarmList[i].alarmType){
-			 			case BELOW_Threshold:
-			 				alarm = (elem < actAlarmList[i].lowerThreshold);
-			 				break;
-			 			case ABOVE_Threshold:
-			 				alarm = (elem > actAlarmList[i].upperThreshold);
-			 				break;
-			 			case IN_BETWEEN_Thresholds:	
-			 				alarm = (elem > actAlarmList[i].lowerThreshold && elem < actAlarmList[i].upperThreshold);
-			 				break;
-			 			case OUT_OF_Thresholds:	
-			 				alarm = (elem < actAlarmList[i].lowerThreshold || elem > actAlarmList[i].upperThreshold);
-			 				break;
-			 			}
-			 			if (alarm){
-							notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].dataType;
-			 				notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].sensorCode;
-				 			notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].channelMask;
-				 			notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].alarmType;
-				 			
-				 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 24);
-				 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 16);
-				 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 8);
-				 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem);
+				{
+					evalFeatsIndex = 0;
+					evalFeatsCount = 0;
+					evalFeatsList[evalFeatsIndex++] = sensorCode;
+					evalFeatsList[evalFeatsIndex++] = 0;
 
-				 			call FunctionManager.send(ALARM, notifyAlarmList, notifyAlarmIndex);
-				 			
-				 			alarm = FALSE;
-				 			notifyAlarmIndex = 0;
-				 			elem = 0;
-						}
+					calculateFeature(actAlarmList[i].dataType, actAlarmList[i].sensorCode, actAlarmList[i].channelMask, window, bufferPoolCopy);					
+						
+					evalFeatsList[1] = evalFeatsCount;
+					num_ch = countOfChannelsInMask(evalFeatsList[3] >> 4);
+					res_size = evalFeatsList[3] & 0x0F; 
 					
-			 		}		
-	 		}	
-		 	newSamplesSinceLastFeatureAlarm[sensorCode] = 0;									
+					for (k=0;k<num_ch;k++){		
+						if (res_size == 1)
+							elem = (uint32_t)((uint32_t)evalFeatsList[4+2*k]);																	
+						else if (res_size == 2)			
+							elem = (uint32_t)((((uint32_t)evalFeatsList[4+2*k]) << 8) | ((uint32_t)evalFeatsList[5+2*k]));
+						else if (res_size == 4)
+							elem = (uint32_t)(((uint32_t)evalFeatsList[4+4*k]) << 24 | ((uint32_t)evalFeatsList[5+4*k]) << 16 | ((uint32_t)evalFeatsList[6+4*k]) << 8 | (uint32_t)evalFeatsList[7+4*k] );
+									
+			 			switch (actAlarmList[i].alarmType){
+				 			case BELOW_Threshold:
+				 				alarm = (elem < actAlarmList[i].lowerThreshold);
+				 				break;
+				 			case ABOVE_Threshold:
+				 				alarm = (elem > actAlarmList[i].upperThreshold);
+				 				break;
+				 			case IN_BETWEEN_Thresholds:	
+				 				alarm = (elem > actAlarmList[i].lowerThreshold && elem < actAlarmList[i].upperThreshold);
+				 				break;
+				 			case OUT_OF_Thresholds:	
+				 				alarm = (elem < actAlarmList[i].lowerThreshold || elem > actAlarmList[i].upperThreshold);
+				 				break;
+				 			}
+				 			if (alarm){
+								notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].dataType;
+				 				notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].sensorCode;
+					 			notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].channelMask;
+					 			notifyAlarmList[notifyAlarmIndex++]=actAlarmList[i].alarmType;
+					 			
+					 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 24);
+					 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 16);
+					 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem >> 8);
+					 			notifyAlarmList[notifyAlarmIndex++]= (uint8_t)(elem);
+	
+					 			call FunctionManager.send(ALARM, notifyAlarmList, notifyAlarmIndex);
+					 							 							 			 
+							    alarm = FALSE;
+					 			notifyAlarmIndex = 0;
+					 			elem = 0;			 			
+								}			
+				 			}		
+	 				}	
+ 			}
+		 		newSamplesSinceLastFeatureAlarm[sensorCode] = 0;									
 		}			
 	}
 
