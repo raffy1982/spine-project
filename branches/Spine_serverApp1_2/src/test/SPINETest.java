@@ -44,6 +44,7 @@ import spine.SPINEListener;
 import spine.SPINEManager;
 import spine.SPINESensorConstants;
 import spine.communication.tinyos.AlarmSpineFunctionReq;
+import spine.communication.tinyos.AlarmSpineSetupFunction;
 import spine.communication.tinyos.FeatureSpineFunctionReq;
 import spine.communication.tinyos.FeatureSpineSetupFunction;
 import spine.communication.tinyos.SpineFunctionReq;
@@ -159,22 +160,48 @@ public class SPINETest implements SPINEListener {
 						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					manager.activateFunction(curr.getNodeID(), sfr);	
 					
-					//activate alarm on raw data coming form CH1
-					//alarm sent when the sampled data is in between 2 thresholds
+					// SetUp Alarm Engine
+					// Window and Shift may be set to value different from the feature engine ones.
+					//here we use the same values for debigging proposes
 					
+					SpineSetupFunction ssf2 = new AlarmSpineSetupFunction();
+					((AlarmSpineSetupFunction)ssf2).setSensor(sensor);
+					((AlarmSpineSetupFunction)ssf2).setWindowSize(WINDOW_SIZE);
+					((AlarmSpineSetupFunction)ssf2).setShiftSize(SHIFT_SIZE);
+					manager.setupFunction(curr.getNodeID(), ssf2);					
+
+					//Activate alarm on MAX value (one of the features computed above) on CH1
+					//alarm sent when MAX > upperThresold
 					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
+
 					
-					int lowerThreshold = 0x20;
-					int upperThreshold = 0x40;
+					int lowerThreshold = 20;
+					int upperThreshold = 40;
 					
-					((AlarmSpineFunctionReq)sfr2).setDataType(SPINEFunctionConstants.RAW_DATA);
+					((AlarmSpineFunctionReq)sfr2).setDataType(SPINEFunctionConstants.MAX);
 					((AlarmSpineFunctionReq)sfr2).setSensor(SPINESensorConstants.ACC_SENSOR);
-					((AlarmSpineFunctionReq)sfr2).setValueType(SPINESensorConstants.CH1);
+					((AlarmSpineFunctionReq)sfr2).setValueType((SPINESensorConstants.CH1_ONLY));
 					((AlarmSpineFunctionReq)sfr2).setLowerThreshold(lowerThreshold);
 					((AlarmSpineFunctionReq)sfr2).setUpperThreshold(upperThreshold);
-					((AlarmSpineFunctionReq)sfr2).setAlarmType((byte) 0x03);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.ABOVE_Threshold);
 
 					manager.activateFunction(curr.getNodeID(), sfr2);
+
+					//Activate alarm on AMPLITUDE value (one of the features computed above) on CH2
+					//alarm sent when AMPLITUDE < lowerThreshold
+					
+					lowerThreshold = 2000;
+					upperThreshold = 1000;
+
+					((AlarmSpineFunctionReq)sfr2).setDataType(SPINEFunctionConstants.AMPLITUDE);
+					((AlarmSpineFunctionReq)sfr2).setSensor(SPINESensorConstants.ACC_SENSOR);
+					((AlarmSpineFunctionReq)sfr2).setValueType((SPINESensorConstants.CH2_ONLY));
+					((AlarmSpineFunctionReq)sfr2).setLowerThreshold(lowerThreshold);
+					((AlarmSpineFunctionReq)sfr2).setUpperThreshold(upperThreshold);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.BELOW_Threshold);
+
+					manager.activateFunction(curr.getNodeID(), sfr2);
+					
 				}
 				// repeat this process for other desired sensors; after that we can finally ... 
 				else if (sensor == SPINESensorConstants.INTERNAL_TEMPERATURE_SENSOR) {
@@ -200,7 +227,33 @@ public class SPINETest implements SPINEListener {
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					((FeatureSpineFunctionReq)sfr).addFeature(SPINEFunctionConstants.MIN, 
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					manager.activateFunction(curr.getNodeID(), sfr);		
+					manager.activateFunction(curr.getNodeID(), sfr);	
+					
+					// SetUp Alarm Engine
+					// Same Window and Shift as before
+					SpineSetupFunction ssf3 = new AlarmSpineSetupFunction();
+					((AlarmSpineSetupFunction)ssf3).setSensor(sensor);
+					((AlarmSpineSetupFunction)ssf3).setWindowSize(WINDOW_SIZE);
+					((AlarmSpineSetupFunction)ssf3).setShiftSize(SHIFT_SIZE);
+					manager.setupFunction(curr.getNodeID(), ssf3);	
+					
+					//Activate alarm on MIN value (one of the features computed above)on CH1
+					//alarm sent when lowerThreshold < MIN < upperThreshold
+					SpineFunctionReq sfr3 = new AlarmSpineFunctionReq();
+
+					
+					int lowerThreshold = 1000;
+					int upperThreshold = 3000;
+					
+					((AlarmSpineFunctionReq)sfr3).setDataType(SPINEFunctionConstants.MIN);
+					((AlarmSpineFunctionReq)sfr3).setSensor(sensor);
+					((AlarmSpineFunctionReq)sfr3).setValueType((SPINESensorConstants.CH1_ONLY));
+					((AlarmSpineFunctionReq)sfr3).setLowerThreshold(lowerThreshold);
+					((AlarmSpineFunctionReq)sfr3).setUpperThreshold(upperThreshold);
+					((AlarmSpineFunctionReq)sfr3).setAlarmType(SPINEFunctionConstants.IN_BETWEEN_Thresholds);
+
+					manager.activateFunction(curr.getNodeID(), sfr3);
+
 				}				
 			}			
 		}
