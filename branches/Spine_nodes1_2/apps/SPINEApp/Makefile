@@ -12,7 +12,7 @@ PFLAGS += -DCC2420_DEF_CHANNEL=12
 
 #uncomment if TinyOS 2.0.2 or older is used
 //PFLAGS += -DTINYOS_2_0_2
-
+#and if TinyOS 2.0.2 or older is used, comment the following line
 PFLAGS += -I$(TOSDIR)/lib/printf/
 
 #node group id ( must match with the coordinator one)
