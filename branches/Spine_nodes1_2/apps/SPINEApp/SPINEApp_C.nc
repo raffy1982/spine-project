@@ -76,49 +76,6 @@ implementation
      call RadioController.setRadioAlwaysOn(TRUE);
   }
 
-
-//   void handle_Svc_Discovery() {
-//      uint16_t currBufferSize = 0;
-//      uint8_t i,j;
-//      uint8_t sensorsCount;
-//      uint8_t* sensorsList;
-//      uint8_t currSensorValueTypeCount;
-//      uint8_t* currSensorValueTypeList;
-//      uint8_t currSensorValueType;
-//      uint8_t functionsCount;
-//      uint8_t* functionList;
-
-//      sensorsList = call SensorsRegistry.getSensorList(&sensorsCount);
-//      buffer[currBufferSize++] = sensorsCount;
-
-//      for (i = 0; i<sensorsCount; i++) {
-//         buffer[currBufferSize++] = sensorsList[i];
-//         currSensorValueTypeList = call SensorBoardController.getValueTypesList(sensorsList[i], &currSensorValueTypeCount);
-
-//         memset(buffer+currBufferSize, 0x00, MAX_VALUE_TYPES);
-//         for(j = 0; j<currSensorValueTypeCount; j++) {
-//            currSensorValueType = currSensorValueTypeList[j];
-//            
-//            switch(currSensorValueType) {
-//               case CH_1 : buffer[currBufferSize] = TRUE; break;
-//               case CH_2 : buffer[currBufferSize+1] = TRUE; break;
-//               case CH_3 : buffer[currBufferSize+2] = TRUE; break;
-//               case CH_4 : buffer[currBufferSize+3] = TRUE; break;
-//               default: break;
-//            }
-//         }
-//         currBufferSize += MAX_VALUE_TYPES;
-//      }
-
-//      functionList = call FunctionManager.getFunctionList(&functionsCount);
-//      buffer[currBufferSize++] = functionsCount;
-
-//      for (i = 0; i<functionsCount; i++)
-//         buffer[currBufferSize++] = functionList[i];
-//      
-//      call PacketManager.build(SERVICE_ADV, &buffer, currBufferSize);
-//   }
-
   void handle_Svc_Discovery(){
 	  call Annce_timer.startOneShot(TOS_NODE_ID*ANNCE_DELAY);
   }
