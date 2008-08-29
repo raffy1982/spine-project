@@ -292,7 +292,7 @@ Boston, MA  02111-1307, USA.
 	}
 		
      event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode){
-	    uint8_t j,i,k,num_ch,res_size;
+	    uint8_t i,k,num_ch,res_size;
 	    uint8_t notifyAlarmList[8];
 		uint8_t notifyAlarmIndex=0;
 		bool alarm = FALSE;

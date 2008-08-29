@@ -42,13 +42,14 @@ implementation {
   components SpineSetupSensorPktC;
   components SpineFunctionReqPktC;
   components SpineSetupFunctionPktC;
+  
+  components new TimerMilliC() as Annce_timer;
 
   components SensorsRegistryC;
   components SensorBoardControllerC;
 
   components FunctionManagerC;
   
-
   SPINEApp_C.Boot -> MainC.Boot;
   
   SPINEApp_C.RadioController -> RadioControllerC;
@@ -62,4 +63,7 @@ implementation {
   SPINEApp_C.SensorBoardController -> SensorBoardControllerC;
 
   SPINEApp_C.FunctionManager -> FunctionManagerC;
+   
+  SPINEApp_C.Annce_timer -> Annce_timer; 
+  
 }
