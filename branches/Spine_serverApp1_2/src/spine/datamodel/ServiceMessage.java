@@ -128,4 +128,20 @@ public class ServiceMessage {
 				messageTypeToString(this.messageType) + ": " + messageDetailToString(this.messageDetail);
 	}
 
+	/**
+	 * Getter method for the message type attribute 
+	 * 
+	 */
+	public byte getMessageType() {
+		return messageType;
+	}
+
+	/**
+	 * Getter method for the message detail attribute 
+	 * 
+	 */
+	public byte getMessageDetail() {
+		return messageDetail;
+	}
+
 }
