@@ -62,7 +62,7 @@ public class Sensor {
 	 */
 	public String toString() {
 		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
-			   SPINESensorConstants.valueTypesBitmaskToString(channelBitmask);
+			   SPINESensorConstants.channelBitmaskToString(channelBitmask);
 	}
 
 	/**
