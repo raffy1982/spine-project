@@ -30,6 +30,7 @@ import spine.SPINEFunctionConstants;
 public class AlarmFunction extends Function {
 
 	public void init(byte[] spec) throws BadFunctionSpecException {
+		this.functionCode = SPINEFunctionConstants.ALARM;
 	}
 	
 	public String toString() {
