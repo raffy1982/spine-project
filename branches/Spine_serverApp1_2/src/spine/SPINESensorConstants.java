@@ -45,6 +45,13 @@ public class SPINESensorConstants {
 	public static final byte EIP_SENSOR = 0x05;
 	public static final byte ECG_SENSOR = 0x06;
 	
+	public static final String ACC_SENSOR_LABEL = "accelerometer";
+	public static final String VOLTAGE_SENSOR_LABEL = "voltage";
+	public static final String GYRO_SENSOR_LABEL = "gyroscope";
+	public static final String INTERNAL_TEMPERATURE_SENSOR_LABEL = "cpu temperature";
+	public static final String EIP_SENSOR_LABEL = "Electrical Impedance Pneumography (EIP) breathing";
+	public static final String ECG_SENSOR_LABEL = "Electrocardiography (ECG)";
+	
 	
 	public static final byte ALL = 0x0F;				// 1111
 	public static final byte NONE = 0x00;				// 0000
@@ -73,6 +80,11 @@ public class SPINESensorConstants {
 	public static final byte SEC = 0x02;				// 10
 	public static final byte MIN = 0x03;				// 11
 	
+	public static final String NOW_LABEL = "now";				
+	public static final String MILLISEC_LABEL = "ms";			
+	public static final String SEC_LABEL = "sec";				
+	public static final String MIN_LABEL = "min";				
+	
 	public static final int MAX_VALUE_TYPES = 4;
 	
 	public static final byte CH1 = 0x00;
@@ -87,12 +99,12 @@ public class SPINESensorConstants {
 	
 	public static String sensorCodeToString(byte code) {
 		switch (code) {
-			case ACC_SENSOR: return "accelerometer";
-			case VOLTAGE_SENSOR: return "voltage";
-			case GYRO_SENSOR: return "gyroscope";
-			case INTERNAL_TEMPERATURE_SENSOR: return "cpu temperature";
-			case EIP_SENSOR: return "Electrical Impedance Pneumography (EIP) breathing sensor";
-			case ECG_SENSOR: return "Electrocardiography (ECG) sensor";
+			case ACC_SENSOR: return ACC_SENSOR_LABEL;
+			case VOLTAGE_SENSOR: return VOLTAGE_SENSOR_LABEL;
+			case GYRO_SENSOR: return GYRO_SENSOR_LABEL;
+			case INTERNAL_TEMPERATURE_SENSOR: return INTERNAL_TEMPERATURE_SENSOR_LABEL;
+			case EIP_SENSOR: return EIP_SENSOR_LABEL;
+			case ECG_SENSOR: return ECG_SENSOR_LABEL;
 			default: return "?";
 		}
 	}
@@ -112,7 +124,7 @@ public class SPINESensorConstants {
 		return code;
 	}
 	
-	public static String valueTypesBitmaskToString(byte code) {
+	public static String channelBitmaskToString(byte code) {
 		
 		switch (code) {
 			case ALL: return "ch1, ch2, ch3, ch4";
@@ -135,6 +147,16 @@ public class SPINESensorConstants {
 			case CH3_CH4_ONLY: return "ch3, ch4";
 			
 			case CH4_ONLY: return "ch4";
+			default: return "?";
+		}
+	}
+	
+	public static String timeScaleToString(byte code) {
+		switch (code) {
+			case NOW: return NOW_LABEL;
+			case MILLISEC: return MILLISEC_LABEL;
+			case SEC: return SEC_LABEL;
+			case MIN: return MIN_LABEL;
 			default: return "?";
 		}
 	}
