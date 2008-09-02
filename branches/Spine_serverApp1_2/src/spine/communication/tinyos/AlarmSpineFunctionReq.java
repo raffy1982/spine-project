@@ -40,8 +40,8 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	private byte sensor = -1;
 	private byte dataType = -1;
 	private byte valueType = -1;
-	private int lowerThreshold;	
-	private int upperThreshold;
+	private int lowerThreshold = 0;	
+	private int upperThreshold = 0;
 	private byte alarmType;
 		
 
