@@ -54,6 +54,13 @@ public class Feature {
 	private int ch4Value;
 	
 	/**
+	 * Default Constructor of a Feature object.
+	 *  
+	 */
+	public Feature() {
+	}
+	
+	/**
 	 * Constructor of a Feature object. 
 	 * This is used only for convenience by the FeatureSpineFunctionReq class
 	 * 
@@ -131,8 +138,14 @@ public class Feature {
 	 * Getter method of the sensor channels bitmask
 	 * @return the sensor channels bitmask
 	 */
-	public byte getChannelBitmask() {
-		return channelBitmask;
+	public byte getChannelBitmask() {		
+		switch(channelBitmask) {
+			case SPINESensorConstants.CH1: return SPINESensorConstants.CH1_ONLY; 
+			case SPINESensorConstants.CH2: return SPINESensorConstants.CH2_ONLY;
+			case SPINESensorConstants.CH3: return SPINESensorConstants.CH3_ONLY;
+			case SPINESensorConstants.CH4: return SPINESensorConstants.CH4_ONLY;
+			default: return channelBitmask;
+		}
 	}
 
 	/**
@@ -169,16 +182,53 @@ public class Feature {
 	
 	/**
 	 * 
+	 * Setter method of the node id
+	 * 
+	 */
+	public void setNodeId(int nodeId) {
+		this.nodeID = nodeId;		
+	}
+
+	/**
+	 * 
+	 * Setter method of the feature code
+	 * 
+	 */
+	public void setFeatureCode(byte featureCode) {
+		this.featureCode = featureCode;	
+	}
+
+	/**
+	 * 
+	 * Setter method of the sensor code
+	 * 
+	 */
+	public void setSensorCode(byte sensorCode) {
+		this.sensorCode = sensorCode;			
+	}
+
+	/**
+	 * 
+	 * Setter method of the channel Bitmask
+	 * 
+	 */
+	public void setChannelBitmask(byte channelBitmask) {
+		this.channelBitmask = channelBitmask;			
+	}
+	
+	/**
+	 * 
 	 * Returns a string representation of the Feature object.
 	 * 
 	 */
 	public String toString() {
 		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
 				" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
-				" (now on " + SPINESensorConstants.valueTypesBitmaskToString(this.channelBitmask) + ") " + 
+				" (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
 				" - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
 				"; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
 				"; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
 				"; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
 	}
+	
 }
