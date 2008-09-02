@@ -45,10 +45,10 @@ public class SPINEFunctionConstants {
 	public static final byte ONE_SHOT = 0x04;
 	
 	//alarm types
-	public static final byte BELOW_Threshold = 0x01;
-	public static final byte ABOVE_Threshold = 0x02;
-	public static final byte IN_BETWEEN_Thresholds = 0x03;
-	public static final byte OUT_OF_Thresholds = 0x04;
+	public static final byte BELOW_THRESHOLD = 0x01;
+	public static final byte ABOVE_THRESHOLD = 0x02;
+	public static final byte IN_BETWEEN_THRESHOLDS = 0x03;
+	public static final byte OUT_OF_THRESHOLDS = 0x04;
 	
 	// if new function libraries are added, declare their codes down here
 	public static final byte RAW_DATA = 0x01;
@@ -122,7 +122,7 @@ public class SPINEFunctionConstants {
 					default: return "?";	
 				}
 			case ALARM: return "";
-			case ONE_SHOT: return "?";
+			case ONE_SHOT: return RAW_DATA_LABEL;
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
 		}

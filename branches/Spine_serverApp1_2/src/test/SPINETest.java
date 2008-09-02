@@ -183,7 +183,7 @@ public class SPINETest implements SPINEListener {
 					((AlarmSpineFunctionReq)sfr2).setValueType((SPINESensorConstants.CH1_ONLY));
 					((AlarmSpineFunctionReq)sfr2).setLowerThreshold(lowerThreshold);
 					((AlarmSpineFunctionReq)sfr2).setUpperThreshold(upperThreshold);
-					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.ABOVE_Threshold);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.ABOVE_THRESHOLD);
 
 					manager.activateFunction(curr.getNodeID(), sfr2);
 
@@ -198,7 +198,7 @@ public class SPINETest implements SPINEListener {
 					((AlarmSpineFunctionReq)sfr2).setValueType((SPINESensorConstants.CH2_ONLY));
 					((AlarmSpineFunctionReq)sfr2).setLowerThreshold(lowerThreshold);
 					((AlarmSpineFunctionReq)sfr2).setUpperThreshold(upperThreshold);
-					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.BELOW_Threshold);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.BELOW_THRESHOLD);
 
 					manager.activateFunction(curr.getNodeID(), sfr2);
 					
@@ -250,7 +250,7 @@ public class SPINETest implements SPINEListener {
 					((AlarmSpineFunctionReq)sfr3).setValueType((SPINESensorConstants.CH1_ONLY));
 					((AlarmSpineFunctionReq)sfr3).setLowerThreshold(lowerThreshold);
 					((AlarmSpineFunctionReq)sfr3).setUpperThreshold(upperThreshold);
-					((AlarmSpineFunctionReq)sfr3).setAlarmType(SPINEFunctionConstants.IN_BETWEEN_Thresholds);
+					((AlarmSpineFunctionReq)sfr3).setAlarmType(SPINEFunctionConstants.IN_BETWEEN_THRESHOLDS);
 
 					manager.activateFunction(curr.getNodeID(), sfr3);
 
