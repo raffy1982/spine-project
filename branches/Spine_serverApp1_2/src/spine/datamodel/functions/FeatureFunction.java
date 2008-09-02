@@ -31,21 +31,29 @@ import spine.SPINEFunctionConstants;
 
 public class FeatureFunction extends Function {
 
-	private Vector functionalities = null;
+	private Vector features = null;
 	
 	public FeatureFunction() {		
 	}
 	
 	public void init(byte[] spec) throws BadFunctionSpecException {
-		functionalities = new Vector();
+		this.functionCode = SPINEFunctionConstants.FEATURE;
+		
+		features = new Vector();
 		
 		for (int i = 0; i < spec.length; i++)
-			functionalities.addElement(SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE, spec[i]));
+			features.addElement(SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE, spec[i]));
 		
+	}
+	
+	
+	public Vector getFeatures() {
+		return features;
 	}
 	
 	
 	public String toString() {
-		return SPINEFunctionConstants.FEATURE_LABEL + " : " + functionalities;
+		return SPINEFunctionConstants.FEATURE_LABEL + " : " + features;
 	}
+	
 }
