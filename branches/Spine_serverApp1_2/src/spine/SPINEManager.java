@@ -73,6 +73,8 @@ public class SPINEManager implements WSNConnection.Listener {
 	private boolean discoveryCompleted = false;
 	private long discoveryTimeout = DISCOVERY_TIMEOUT;
 	
+	private boolean started = false;
+	
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;	
 	
@@ -174,8 +176,14 @@ public class SPINEManager implements WSNConnection.Listener {
 	public Vector getActiveNodes() {
 		return activeNodes;
 	}
-	
-	
+	/**
+	 * Returns true if the manager has been asked to start the processing in the wsn; false otherwise
+	 * 
+	 * @return true if the manager has been asked to start the processing in the wsn; false otherwise  
+	 */
+	public boolean started() {
+		return this.started;
+	}
 	
 	/**
 	 * Commands the SPINEManager to discovery the surrounding WSN nodes
@@ -294,6 +302,8 @@ public class SPINEManager implements WSNConnection.Listener {
 		ss.setEnableTDMA(enableTDMA);
 		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, ss);
+		
+		started = true;
 	}
 	
 	/**
@@ -310,9 +320,11 @@ public class SPINEManager implements WSNConnection.Listener {
 	 */
 	public void resetWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
+		
+		started = false;
 	}	
 	
-
+	
 	/*
 	 * Private utility method containing the actual message send code 
 	 */
@@ -453,6 +465,6 @@ public class SPINEManager implements WSNConnection.Listener {
 			discoveryCompleted = true;			
 			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);
 		}
-	}	
+	}
 	
 }
