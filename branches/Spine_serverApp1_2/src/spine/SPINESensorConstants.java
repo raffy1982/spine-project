@@ -109,6 +109,23 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	public static byte sensorCodeByString(String label) {
+		if(label.equals(ACC_SENSOR_LABEL))
+			return ACC_SENSOR;
+		if(label.equals(VOLTAGE_SENSOR_LABEL))
+			return VOLTAGE_SENSOR;
+		if(label.equals(GYRO_SENSOR_LABEL))
+			return GYRO_SENSOR;
+		if(label.equals(INTERNAL_TEMPERATURE_SENSOR_LABEL))
+			return INTERNAL_TEMPERATURE_SENSOR;
+		if(label.equals(EIP_SENSOR_LABEL))
+			return EIP_SENSOR;
+		if(label.equals(ECG_SENSOR_LABEL))
+			return ECG_SENSOR;
+		else 
+			return -1;	
+	}
+	
 	public static byte getValueTypesCodeByBitmask(boolean hasCh1, boolean hasCh2, boolean hasCh3, boolean hasCh4) {
 		byte code = 0;
 		
@@ -159,6 +176,19 @@ public class SPINESensorConstants {
 			case MIN: return MIN_LABEL;
 			default: return "?";
 		}
+	}
+	
+	public static byte timeScaleByString(String label) {
+		if(label.equals(NOW_LABEL))
+			return NOW;
+		if(label.equals(MILLISEC_LABEL))
+			return MILLISEC;
+		if(label.equals(SEC_LABEL))
+			return SEC;
+		if(label.equals(MIN_LABEL))
+			return MIN;
+		else 
+			return -1;
 	}
 
 	public static boolean chPresent(int chID, byte channelBitmask) {

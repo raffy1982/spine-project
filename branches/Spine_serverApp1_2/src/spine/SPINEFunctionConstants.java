@@ -88,6 +88,11 @@ public class SPINEFunctionConstants {
 	public static final String PITCH_ROLL_LABEL = "Pitch & Roll";
 	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";	
 	
+	public static final String BELOW_THRESHOLD_LABEL = "< LT";
+	public static final String ABOVE_THRESHOLD_LABEL = "> UT";
+	public static final String IN_BETWEEN_THRESHOLDS_LABEL = ">=LT & <=UT";
+	public static final String OUT_OF_THRESHOLDS_LABEL = "<=LT | >=UT";
+	
 	public static String functionCodeToString(byte code) {
 		switch (code) {
 			// if new functions are added, define the corresponding 'switch case' down here
@@ -97,6 +102,19 @@ public class SPINEFunctionConstants {
 			case ONE_SHOT: return ONE_SHOT_LABEL;
 			default: return "?";
 		}
+	}
+	
+	public static byte functionCodeByString(String label) {
+		if(label.equals(FEATURE_LABEL))
+			return FEATURE;
+		if(label.equals(ALARM_LABEL))
+			return ALARM;
+		if(label.equals(SIGNAL_PROCESSING_LABEL))
+			return SIGNAL_PROCESSING;
+		if(label.equals(ONE_SHOT_LABEL))
+			return ONE_SHOT;
+		else 
+			return -1;
 	}
 	
 	public static String functionalityCodeToString(byte functionCode, byte functionalityCode) {
@@ -121,10 +139,67 @@ public class SPINEFunctionConstants {
 					case VECTOR_MAGNITUDE: return VECTOR_MAGNITUDE_LABEL;
 					default: return "?";	
 				}
-			case ALARM: return "";
+			case ALARM: 
+				switch (functionalityCode) {
+				// if new alarm type are added, define the corresponding 'switch case' down here
+				case BELOW_THRESHOLD: return BELOW_THRESHOLD_LABEL;
+				case ABOVE_THRESHOLD: return ABOVE_THRESHOLD_LABEL;
+				case IN_BETWEEN_THRESHOLDS: return IN_BETWEEN_THRESHOLDS_LABEL;
+				case OUT_OF_THRESHOLDS: return OUT_OF_THRESHOLDS_LABEL;
+				default: return "?";	
+			}
 			case ONE_SHOT: return RAW_DATA_LABEL;
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
 		}
+	}
+	
+	public static byte functionalityCodeByString(String functionLabel, String functionalityLabel) {
+		if(functionLabel.equals(FEATURE_LABEL)) {
+			if(functionalityLabel.equals(RAW_DATA_LABEL)) 
+					return RAW_DATA;
+			if(functionalityLabel.equals(MAX_LABEL)) 
+				return MAX;
+			if(functionalityLabel.equals(MIN_LABEL)) 
+				return MIN;
+			if(functionalityLabel.equals(RANGE_LABEL)) 
+				return RANGE;
+			if(functionalityLabel.equals(MEAN_LABEL)) 
+				return MEAN;
+			if(functionalityLabel.equals(AMPLITUDE_LABEL)) 
+				return AMPLITUDE;
+			if(functionalityLabel.equals(RMS_LABEL)) 
+				return RMS;
+			if(functionalityLabel.equals(ST_DEV_LABEL)) 
+				return ST_DEV;
+			if(functionalityLabel.equals(TOTAL_ENERGY_LABEL)) 
+				return TOTAL_ENERGY;
+			if(functionalityLabel.equals(VARIANCE_LABEL)) 
+				return VARIANCE;
+			if(functionalityLabel.equals(MODE_LABEL)) 
+				return MODE;
+			if(functionalityLabel.equals(MEDIAN_LABEL)) 
+				return MEDIAN;
+			if(functionalityLabel.equals(PITCH_ROLL_LABEL)) 
+				return PITCH_ROLL;
+			if(functionalityLabel.equals(VECTOR_MAGNITUDE_LABEL)) 
+				return VECTOR_MAGNITUDE;
+			else
+				return -1;	
+		}
+		if (functionLabel.equals(ALARM_LABEL)) {
+			if(functionalityLabel.equals(BELOW_THRESHOLD_LABEL)) 
+				return BELOW_THRESHOLD;
+			if(functionalityLabel.equals(ABOVE_THRESHOLD_LABEL)) 
+				return ABOVE_THRESHOLD;
+			if(functionalityLabel.equals(IN_BETWEEN_THRESHOLDS_LABEL)) 
+				return IN_BETWEEN_THRESHOLDS;
+			if(functionalityLabel.equals(OUT_OF_THRESHOLDS_LABEL)) 
+				return OUT_OF_THRESHOLDS;
+			else
+				return -1;
+		}
+		else
+			return -1;
 	}
 }
