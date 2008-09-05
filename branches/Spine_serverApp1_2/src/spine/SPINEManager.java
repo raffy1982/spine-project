@@ -389,8 +389,17 @@ public class SPINEManager implements WSNConnection.Listener {
 		short pktType = msg.getClusterId(); 
 		switch(pktType) {
 			case SPINEPacketsConstants.SERVICE_ADV: 
-				if (!this.discoveryCompleted) 
-					this.activeNodes.addElement(new Node(nodeID, msg.getPayload())); 				
+				if (!this.discoveryCompleted) {
+					boolean alreadyDiscovered = false;
+					for(int i = 0; i<this.activeNodes.size(); i++) {
+						if(((Node)this.activeNodes.elementAt(i)).getNodeID() == nodeID) {
+							alreadyDiscovered = true;
+							break;
+						}
+					}
+					if (!alreadyDiscovered)
+						this.activeNodes.addElement(new Node(nodeID, msg.getPayload()));
+				}
 				break;
 			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); 
 				break;
@@ -451,6 +460,7 @@ public class SPINEManager implements WSNConnection.Listener {
 		
 		public void run () {
 			try {
+				discoveryCompleted = false;
 				sleep(delay);
 			} catch (InterruptedException e) {e.printStackTrace();}
 			
