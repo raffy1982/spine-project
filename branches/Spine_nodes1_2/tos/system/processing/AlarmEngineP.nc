@@ -189,24 +189,27 @@ Boston, MA  02111-1307, USA.
 	    uint8_t sensCode;			//sensor code to monitor
         uint8_t channelMask;
         uint8_t alarmType;			
+        uint8_t dataType;
 
-        if (functionParamsSize < 3)
-          return FALSE;
+       if (functionParamsSize != 12)
+            return FALSE;
 
-        sensCode = functionParams[0];
-        channelMask = functionParams[1];
-        alarmType = functionParams[2];
-
+        sensCode = functionParams[1];
+        channelMask = functionParams[2];
+        alarmType = functionParams[11];
+		dataType = functionParams[0];
 
        for(j = 0; j<actAlarmIndex; j++) {
-        if (actAlarmList[j].sensorCode == sensCode && actAlarmList[j].channelMask == channelMask && actAlarmList[j].alarmType==alarmType) {
+        if (actAlarmList[j].dataType == dataType && actAlarmList[j].sensorCode == sensCode && actAlarmList[j].channelMask == channelMask && actAlarmList[j].alarmType==alarmType) {
                 for ( k = j; k<actAlarmIndex; k++) {
+	               actAlarmList[k].dataType = actAlarmList[k+1].dataType;  
                    actAlarmList[k].sensorCode = actAlarmList[k+1].sensorCode;
                    actAlarmList[k].channelMask = actAlarmList[k+1].channelMask;
                    actAlarmList[k].lowerThreshold = actAlarmList[k+1].lowerThreshold;
                    actAlarmList[k].upperThreshold = actAlarmList[k+1].upperThreshold;
                    actAlarmList[k].alarmType = actAlarmList[k+1].alarmType;
                 }
+                actAlarmList[actAlarmIndex].dataType = actAlarmList[k+1].dataType;
                 actAlarmList[actAlarmIndex].sensorCode = actAlarmList[k+1].sensorCode;
                 actAlarmList[actAlarmIndex].channelMask = actAlarmList[k+1].channelMask;
                 actAlarmList[actAlarmIndex].lowerThreshold = actAlarmList[k+1].lowerThreshold;
@@ -231,7 +234,7 @@ Boston, MA  02111-1307, USA.
      }
 
      command void Function.stopComputing() {
-	//TO DO
+	     start = FALSE;
      }
      
      void calculateFeature(uint8_t featureCode, uint8_t sensorCode, uint8_t sensorChBitmask, uint8_t windowSize, uint16_t* bufferPoolCopy) {
@@ -387,7 +390,15 @@ Boston, MA  02111-1307, USA.
  
 
      command void Function.reset(){
-	       //need to implement the reset
+       memset(actAlarmList, 0x00, sizeof actAlarmList);
+       actAlarmIndex = 0;
+
+       memset(alarmParamsList, 0x00, sizeof alarmParamsList);
+       alarmParamsIndex = 0;
+       
+       start = FALSE;
+       memset(newSamplesSinceLastFeatureAlarm, 0, sizeof newSamplesSinceLastFeatureAlarm);
+	       
      }
 
          // Default commands needed due to the use of parametrized interfaces
