@@ -138,14 +138,8 @@ public class Feature {
 	 * Getter method of the sensor channels bitmask
 	 * @return the sensor channels bitmask
 	 */
-	public byte getChannelBitmask() {		
-		switch(channelBitmask) {
-			case SPINESensorConstants.CH1: return SPINESensorConstants.CH1_ONLY; 
-			case SPINESensorConstants.CH2: return SPINESensorConstants.CH2_ONLY;
-			case SPINESensorConstants.CH3: return SPINESensorConstants.CH3_ONLY;
-			case SPINESensorConstants.CH4: return SPINESensorConstants.CH4_ONLY;
-			default: return channelBitmask;
-		}
+	public byte getChannelBitmask() {
+		return channelBitmask;
 	}
 
 	/**
@@ -209,11 +203,19 @@ public class Feature {
 
 	/**
 	 * 
-	 * Setter method of the channel Bitmask
+	 * Add the given channel to the channel bitmask.
+	 * Available channels are CH1, CH2, CH3, CH4
+	 * 
+	 * @see spine.SPINESensorConstants
 	 * 
 	 */
-	public void setChannelBitmask(byte channelBitmask) {
-		this.channelBitmask = channelBitmask;			
+	public void addChannelToBitmask(byte channel) {
+		switch(channel) {
+			case SPINESensorConstants.CH1: this.channelBitmask |= SPINESensorConstants.CH1_ONLY; break; 
+			case SPINESensorConstants.CH2: this.channelBitmask |= SPINESensorConstants.CH2_ONLY; break;
+			case SPINESensorConstants.CH3: this.channelBitmask |= SPINESensorConstants.CH3_ONLY; break;
+			case SPINESensorConstants.CH4: this.channelBitmask |= SPINESensorConstants.CH4_ONLY; break;
+		}		
 	}
 	
 	/**
