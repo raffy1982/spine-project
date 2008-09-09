@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+Â 
 GNU Lesser General Public License
- 
+Â 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+Â 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the GNU
 Lesser General Public License for more details.
- 
+Â 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAÂ  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -75,15 +75,15 @@ public class SPINETest implements SPINEListener {
 	
 	public static void main(String[] args) {
 		
-		System.setProperty(LocalNodeAdapter.LOCALNODEADAPTER_CLASSNAME_KEY, "spine.communication.tinyos.TOSLocalNodeAdapter");
+		System.setProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY, SPINEManager.getProperties().getProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY));
 		
 		new SPINETest();
 	}
 	
 	public SPINETest() {
 		// the first step is to get the SPINEManager instance; then ... 
-		manager = SPINEManager.getInstance(SPINEManager.getProperties().getProperty(Properties.BASE_STATION_PORT_KEY), 
-										   SPINEManager.getProperties().getProperty(Properties.BASE_STATION_SPEED_KEY));		
+		String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
+		manager = SPINEManager.getInstance(args);		
 		
 		// ... we need to register a SPINEListener implementation to the SPINE manager instance
 		// (I register myself since I'm a SPINEListener implementation!)

@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+â€ 
 GNU Lesser General Public License
- 
+â€ 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+â€ 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.â€  See the GNU
 Lesser General Public License for more details.
- 
+â€ 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAâ€  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -46,7 +46,7 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
-import spine.communication.tinyos.SpineTOSMessage.SPINEHeader;
+import spine.communication.tinyos.SPINEHeader;
 
 import net.tinyos.message.MessageListener;
 import net.tinyos.message.MoteIF;
@@ -64,8 +64,9 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 	
 	private Vector connections = new Vector(); // <values: WSNConnection>
 	
-	private String port = null;
-	private String speed = null;
+	protected String motecom = null;
+	protected String port = null;
+	protected String speed = null;
 	private MoteIF moteIF = null;
 	
 	private Vector partials = new Vector(); // <values: Partial>
@@ -157,8 +158,12 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 	}
 
 	public void init(Vector parms) {
-		this.port = (String)parms.elementAt(0);
-		this.speed = (String)parms.elementAt(1);
+		if (parms.size() == 1) {
+			this.motecom = (String)parms.elementAt(0);
+		} else {
+			this.port = (String)parms.elementAt(0);
+			this.speed = (String)parms.elementAt(1);
+		}
 	}
 
 	public void reset() {
@@ -166,18 +171,25 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 	}
 
 	public void start() {
-		String prefix = "serial@";
-		String osName = System.getProperty("os.name").toLowerCase();
-		if (osName.matches("[ a-z]*windows[ a-z]*"))
-			prefix += "COM";
-		else if (osName.matches("[ a-z]*linux[ a-z]*"))
-			prefix += "/dev/ttyUSB";
-		else prefix += ""; 
+		if (motecom == null) {
+			String prefix = "serial@";
+			String osName = System.getProperty("os.name").toLowerCase();
+			if (osName.matches("[ a-z]*windows[ a-z]*"))
+				prefix += "COM";
+			else if (osName.matches("[ a-z]*linux[ a-z]*"))
+				prefix += "/dev/ttyUSB";
+			else prefix += ""; 
+			
+			String baseStation = prefix + this.port + ":" + this.speed;
+
+			moteIF = new MoteIF(BuildSource.makePhoenix(BuildSource.makePacketSource(baseStation), 
+														PrintStreamMessenger.err)); 
+		}
+		else {
+			moteIF = new MoteIF(BuildSource.makePhoenix(BuildSource.makePacketSource(motecom), 
+														PrintStreamMessenger.err)); 
+		}
 		
-		String baseStation = prefix + this.port + ":" + this.speed;
-		
-		moteIF = new MoteIF(BuildSource.makePhoenix(BuildSource.makePacketSource(baseStation), 
-													PrintStreamMessenger.err)); 
         
 	    moteIF.registerListener(new SpineTOSMessage(), this);		
 	}

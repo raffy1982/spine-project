@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+â€ 
 GNU Lesser General Public License
- 
+â€ 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+â€ 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.â€  See the GNU
 Lesser General Public License for more details.
- 
+â€ 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAâ€  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -49,6 +49,8 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 
 	private static final int AM_TYPE = SPINEPacketsConstants.AM_SPINE;
 	
+	protected static final int AM_HEADER_SIZE = 8;
+	
 	private byte[] payloadBuf = null;
 	
 
@@ -70,6 +72,34 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	System.arraycopy(payload, 0, msgBuf, SPINEHeader.SPINE_HEADER_SIZE, payload.length);
     	
     	this.dataSet(msgBuf);        
+	}
+	
+	/**
+	 * Construct a SpineTOSMessage from a raw SERIAL ACTIVE MESSAGE from a
+	 * Serial Forwarder.
+	 *
+	 * @param	rawsfmessage raw message bytes from a serial forwarder
+	 */
+	public static SpineTOSMessage Construct(byte[] rawsfmessage) {
+		byte[] payload;
+		
+		SPINEHeader h;
+		
+		byte[] sh_bytes = new byte[SPINEHeader.SPINE_HEADER_SIZE];
+		System.arraycopy(rawsfmessage, AM_HEADER_SIZE, sh_bytes, 0, sh_bytes.length);
+		try {
+			h = new SPINEHeader(sh_bytes);
+		}
+		catch (IllegalSpineHeaderSizeException ishse) {
+			return null;
+		}
+		
+		payload = new byte[rawsfmessage.length - SPINEHeader.SPINE_HEADER_SIZE - AM_HEADER_SIZE];
+		System.arraycopy(rawsfmessage, AM_HEADER_SIZE+SPINEHeader.SPINE_HEADER_SIZE,
+						 payload, 0, payload.length);
+		
+		
+		return new SpineTOSMessage(h.getPktType(), h.getGroupID(), h.getSourceID(), h.getDestID(), h.getSequenceNumber(), h.getFragmentNumber(), h.getTotalFragments(), payload);
 	}
     
 	protected SPINEHeader getHeader() throws IllegalSpineHeaderSizeException {
@@ -123,147 +153,149 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		return msg;
 	}
     
-    class SPINEHeader {
-    	
-    	public final static byte SPINE_HEADER_SIZE = 9;
-    	
-    	
-    	private byte headerBuf[] = new byte[SPINE_HEADER_SIZE];
-    	
-    	private boolean canParse = false;
-    	private boolean canBuild = false;
-    	
 
-    	private byte vers;      // 2 bits
-    	private boolean ext;    // 1 bit
-    	private byte pktT;      // 5 bits
+}
 
-    	private byte grpID;     // 8 bits
 
-    	private int srcID;    	// 16 bits
+class SPINEHeader {
+	
+	public final static byte SPINE_HEADER_SIZE = 9;
+	
+	
+	private byte headerBuf[] = new byte[SPINE_HEADER_SIZE];
+	
+	private boolean canParse = false;
+	private boolean canBuild = false;
+	
 
-    	private int dstID;    	// 16 bits
+	private byte vers;      // 2 bits
+	private boolean ext;    // 1 bit
+	private byte pktT;      // 5 bits
 
-    	private byte seqNr;     // 8 bits
+	private byte grpID;     // 8 bits
 
-    	private byte fragNr;    // 8 bits
-    	private byte totFrags;  // 8 bits
-        
-    	private SPINEHeader (byte version, boolean extension, byte pktType, byte groupID, int sourceID, int destID, 
-    			   			byte sequenceNumber, byte fragmentNr, byte totalFragments) {
-    		
-    		this.vers = version;
-    		this.ext = extension;       
-    		this.pktT = pktType;      
-    		this.grpID = groupID;
-    		this.srcID = sourceID;
-    		this.dstID = destID; 
-    		this.seqNr = sequenceNumber; 
-    		this.fragNr = fragmentNr;    
-    		this.totFrags = totalFragments;
-    		
-    		this.canBuild = true;
-    	}
-    	
-    	private SPINEHeader(byte[] header) throws IllegalSpineHeaderSizeException {
-    		if (header.length != SPINE_HEADER_SIZE) 
-    			throw new IllegalSpineHeaderSizeException(SPINE_HEADER_SIZE, header.length);
-    		else {
-    			this.headerBuf = header;
-    			this.canParse = true;
-    			parse();
-    		}
-    	}
-    	
-        private byte[] build() {
-        	
-        	if (!canBuild)
-        		return null;
-        	
-        	byte e = (this.ext)? (byte)1: (byte)0;    	
-        	headerBuf[0] = (byte)((this.vers<<6) | (e<<5) | this.pktT);
-    		
-        	headerBuf[1] = this.grpID;
-    		
-    		headerBuf[2] = (byte)(this.srcID>>8);
-    		headerBuf[3] = (byte)this.srcID;
-    		
-    		headerBuf[4] = (byte)(this.dstID>>8);
-    		headerBuf[5] = (byte)this.dstID;
-    		
-    		headerBuf[6] = this.seqNr;
-    		
-    		headerBuf[7] = this.fragNr;
-    		
-    		headerBuf[8] = this.totFrags;
-    		
-    		return headerBuf;
-        }
+	private int srcID;    	// 16 bits
 
-        private boolean parse() {       
-        	if (!canParse)
-        		return false;
-        	
-        	vers = (byte)((headerBuf[0] & 0xC0)>>6);    		//  0xC0 = 11000000 binary
-        	ext = ((byte)((headerBuf[0] & 0x20)>>5) == 1);     	//  0x20 = 00100000 binary
-        	pktT = (byte)(headerBuf[0] & 0x1F);       			//  0x1F = 00011111 binary
-        	grpID = headerBuf[1];
-           
-        	srcID = headerBuf[2];                  // check
-        	srcID = ((srcID<<8) | headerBuf[3]);
+	private int dstID;    	// 16 bits
 
-        	dstID = headerBuf[4];  	              // check
-        	dstID = ((dstID<<8) | headerBuf[5]);
+	private byte seqNr;     // 8 bits
 
-        	seqNr = headerBuf[6];
-           
-        	fragNr = headerBuf[7];
+	private byte fragNr;    // 8 bits
+	private byte totFrags;  // 8 bits
+	
+	protected SPINEHeader (byte version, boolean extension, byte pktType, byte groupID, int sourceID, int destID, 
+						byte sequenceNumber, byte fragmentNr, byte totalFragments) {
+		
+		this.vers = version;
+		this.ext = extension;       
+		this.pktT = pktType;      
+		this.grpID = groupID;
+		this.srcID = sourceID;
+		this.dstID = destID; 
+		this.seqNr = sequenceNumber; 
+		this.fragNr = fragmentNr;    
+		this.totFrags = totalFragments;
+		
+		this.canBuild = true;
+	}
+	
+	protected SPINEHeader(byte[] header) throws IllegalSpineHeaderSizeException {
+		if (header.length != SPINE_HEADER_SIZE) 
+			throw new IllegalSpineHeaderSizeException(SPINE_HEADER_SIZE, header.length);
+		else {
+			this.headerBuf = header;
+			this.canParse = true;
+			parse();
+		}
+	}
+	
+	protected byte[] build() {
+		
+		if (!canBuild)
+			return null;
+		
+		byte e = (this.ext)? (byte)1: (byte)0;    	
+		headerBuf[0] = (byte)((this.vers<<6) | (e<<5) | this.pktT);
+		
+		headerBuf[1] = this.grpID;
+		
+		headerBuf[2] = (byte)(this.srcID>>8);
+		headerBuf[3] = (byte)this.srcID;
+		
+		headerBuf[4] = (byte)(this.dstID>>8);
+		headerBuf[5] = (byte)this.dstID;
+		
+		headerBuf[6] = this.seqNr;
+		
+		headerBuf[7] = this.fragNr;
+		
+		headerBuf[8] = this.totFrags;
+		
+		return headerBuf;
+	}
 
-        	totFrags = headerBuf[8];
+	private boolean parse() {       
+		if (!canParse)
+			return false;
+		
+		vers = (byte)((headerBuf[0] & 0xC0)>>6);    		//  0xC0 = 11000000 binary
+		ext = ((byte)((headerBuf[0] & 0x20)>>5) == 1);     	//  0x20 = 00100000 binary
+		pktT = (byte)(headerBuf[0] & 0x1F);       			//  0x1F = 00011111 binary
+		grpID = headerBuf[1];
+	   
+		srcID = headerBuf[2];                  // check
+		srcID = ((srcID<<8) | headerBuf[3]);
 
-        	return true;
-        }
+		dstID = headerBuf[4];  	              // check
+		dstID = ((dstID<<8) | headerBuf[5]);
 
-        protected byte getVersion() {
-           return vers;
-        }
+		seqNr = headerBuf[6];
+	   
+		fragNr = headerBuf[7];
 
-        protected boolean isExtended() {
-           return ext;
-        }
+		totFrags = headerBuf[8];
 
-        protected byte getPktType() {
-           return pktT;
-        }
+		return true;
+	}
 
-        protected byte getGroupID() {
-           return grpID;
-        }
+	protected byte getVersion() {
+	   return vers;
+	}
 
-        protected int getSourceID() {
-           return srcID;
-        }
+	protected boolean isExtended() {
+	   return ext;
+	}
 
-        protected int getDestID() {
-           return dstID;
-        }
-        
-        protected byte getSequenceNumber() {
-          return seqNr;
-        }
+	protected byte getPktType() {
+	   return pktT;
+	}
 
-        protected byte getFragmentNumber() {
-           return fragNr;
-        }
+	protected byte getGroupID() {
+	   return grpID;
+	}
 
-        protected byte getTotalFragments() {
-           return totFrags;
-        }
-        
-        protected byte[] getHeaderBuf() {
-        	return headerBuf;
-        }
-        
-    }
+	protected int getSourceID() {
+	   return srcID;
+	}
 
+	protected int getDestID() {
+	   return dstID;
+	}
+	
+	protected byte getSequenceNumber() {
+	  return seqNr;
+	}
+
+	protected byte getFragmentNumber() {
+	   return fragNr;
+	}
+
+	protected byte getTotalFragments() {
+	   return totFrags;
+	}
+	
+	protected byte[] getHeaderBuf() {
+		return headerBuf;
+	}
+	
 }

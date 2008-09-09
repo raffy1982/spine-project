@@ -36,6 +36,7 @@ package spine;
 
 public abstract class Properties {
 	
+	public static final String MOTECOM_KEY = "MOTECOM";
 	public static final String BASE_STATION_PORT_KEY = "BS_PORT";
 	public static final String BASE_STATION_SPEED_KEY = "BS_SPEED";
 	public static final String URL_PREFIX_KEY = "url_prefix";
@@ -43,7 +44,8 @@ public abstract class Properties {
 	public static final String LINE_SEPARATOR_KEY = "line_separator";
 	
 	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
-
+	public static final String LOCALNODEADAPTER_CLASSNAME_KEY = "LocalNodeAdapter_ClassName";
+	
 	/**
 	 * Returns an implementation of the Properties abstract class
 	 * 

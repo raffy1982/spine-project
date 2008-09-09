@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+Â 
 GNU Lesser General Public License
- 
+Â 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+Â 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the GNU
 Lesser General Public License for more details.
- 
+Â 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAÂ  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -81,21 +81,22 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 	public static SPINEManager instance;
 	
-	private SPINEManager(String port, String speed) {
+	private SPINEManager(String[] args) {
 		try {
 			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();	
-			
+
 			Vector params = new Vector();
-			params.addElement(port);
-			params.addElement(speed);
+			for (int i = 0; i < args.length; i++) {
+				params.addElement(args[i]);
+			}
 			nodeAdapter.init(params);
-			
+
 			nodeAdapter.start();
-			
+
 			connection = nodeAdapter.createAPSConnection();			
-			
+
 			connection.setListener(this);
-			
+
 		} catch (ClassNotFoundException e) {
 			System.out.println(e);
 		} catch (InstantiationException e) {
@@ -104,7 +105,7 @@ public class SPINEManager implements WSNConnection.Listener {
 			System.out.println(e);
 		} 
 	}
-	
+
 	/**
 	 * Returns the SPINEManager instance connected to the given base-station port and speed
 	 * Those parameters should be retrieved using the Properties instance 
@@ -118,11 +119,27 @@ public class SPINEManager implements WSNConnection.Listener {
 	 * @see spine.Properties
 	 */
 	public static SPINEManager getInstance(String port, String speed) {
+		String[] args = { port, speed };
+		return getInstance(args);
+	}
+
+	/**
+	 * Returns the SPINEManager instance connected to the given base-station
+	 * Those parameters should be retrieved using the Properties instance 
+	 * obtained thru the static SPINEManager.getProperties method
+	 * 
+	 * @param args an array of Strings used to configure the selected LocalNodeAdapter
+	 * 
+	 * @return the SPINEManager instance
+	 * 
+	 * @see spine.Properties
+	 */
+	public static SPINEManager getInstance(String[] args) {
 		if (instance == null) 
-			instance = new SPINEManager(port, speed);
+			instance = new SPINEManager(args);
 		return instance;
 	}
-	
+
 	/**
 	 * Registers a SPINEListener to the manager instance
 	 * 
@@ -319,7 +336,12 @@ public class SPINEManager implements WSNConnection.Listener {
 	 * This is done thru a broadcast SPINE Reset message.
 	 */
 	public void resetWsn() {		
-		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
+		//send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.RESET, null);
+		
+		// broadcast reset is translated into multiple unicast reset as a workaround in the case node are 
+		// communicating in radio low power mode. 
+		for(int i = 0; i<activeNodes.size(); i++) 
+			send(((Node)activeNodes.elementAt(i)).getNodeID(), SPINEPacketsConstants.RESET, null);
 		
 		started = false;
 	}	

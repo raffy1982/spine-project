@@ -74,7 +74,7 @@ public class FeatureSpineData extends SpineData {
 			dataTmp[dtIndex++] = currSensBitmask;
 			
 			byte resultLen = (byte)(payload[pldIndex++] & 0x0F);					
-			for (int j = 1; j<=SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
+			for (int j = 0; j<SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
 				if (SPINESensorConstants.chPresent(j, currSensBitmask)) {						
 					if (resultLen == 1) {
 						dataTmp[dtIndex++] = 0;

@@ -192,7 +192,7 @@ public class SPINESensorConstants {
 	}
 
 	public static boolean chPresent(int chID, byte channelBitmask) {
-		return (( (channelBitmask>>(MAX_VALUE_TYPES - chID)) & 0x01 ) == 1);
+		return (( (channelBitmask>>(MAX_VALUE_TYPES - (chID+1))) & 0x01 ) == 1);
 	}
 	
 }

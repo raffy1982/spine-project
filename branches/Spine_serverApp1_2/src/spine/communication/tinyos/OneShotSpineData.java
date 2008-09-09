@@ -65,7 +65,7 @@ public class OneShotSpineData extends SpineData {
 		byte bitmask = payload[pldIndex++];
 		dataTmp[dtIndex++] = bitmask;				
 		
-		for (int j = 1; j<=SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
+		for (int j = 0; j<SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
 			if (SPINESensorConstants.chPresent(j, bitmask)) {						
 					dataTmp[dtIndex++] = payload[pldIndex++]; 
 					dataTmp[dtIndex++] = payload[pldIndex++]; 
