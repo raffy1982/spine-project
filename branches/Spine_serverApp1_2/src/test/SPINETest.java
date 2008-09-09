@@ -71,7 +71,7 @@ public class SPINETest implements SPINEListener {
 	private static SPINEManager manager;
 	
 	private static int counter = 0;
-	
+	private static int counter_alarm = 0;
 	
 	public static void main(String[] args) {
 		
@@ -174,7 +174,6 @@ public class SPINETest implements SPINEListener {
 					//alarm sent when MAX > upperThresold
 					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
 
-					
 					int lowerThreshold = 20;
 					int upperThreshold = 40;
 					
@@ -259,7 +258,7 @@ public class SPINETest implements SPINEListener {
 		}
 		
 		// ... start the sensor network sensing and computing our aforeactivated services. 
-		manager.start(false, true); // we can tune a few node parameters at run-time for reducing the power consumption and the packets drop. 
+		manager.start(true, true); // we can tune a few node parameters at run-time for reducing the power consumption and the packets drop. 
 	}
 
 	private Vector features;
@@ -297,7 +296,7 @@ public class SPINETest implements SPINEListener {
 					/* manager.resetWsn(); */
 					
 					// or just deregister ourself to further SPINE events. 
-					manager.deregisterListener(this);
+					//manager.deregisterListener(this);
 				}				
 								
 				break;
@@ -309,6 +308,17 @@ public class SPINETest implements SPINEListener {
 				
 			case SPINEFunctionConstants.ALARM:
 				System.out.println((Alarm)data.getData());
+				counter_alarm ++;
+				if(counter_alarm == 20) {
+					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
+					((AlarmSpineFunctionReq)sfr2).setSensor(SPINESensorConstants.ACC_SENSOR);
+					((AlarmSpineFunctionReq)sfr2).setAlarmType(SPINEFunctionConstants.ABOVE_THRESHOLD);
+					((AlarmSpineFunctionReq)sfr2).setDataType(SPINEFunctionConstants.MAX);
+					((AlarmSpineFunctionReq)sfr2).setValueType((SPINESensorConstants.CH1_ONLY));
+					
+					manager.deactivateFunction(nodeID, sfr2);
+				}
+
 				break;
 		}
 		
