@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
-�
+ 
 GNU Lesser General Public License
-�
+ 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
-�
+ 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the GNU
 Lesser General Public License for more details.
-�
+ 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAÂ  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -41,19 +41,8 @@ import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
 import spine.SPINESensorConstants;
-import spine.communication.tinyos.AlarmSpineFunctionReq;
-import spine.communication.tinyos.AlarmSpineSetupFunction;
-import spine.communication.tinyos.FeatureSpineFunctionReq;
-import spine.communication.tinyos.FeatureSpineSetupFunction;
-import spine.communication.tinyos.SpineFunctionReq;
-import spine.communication.tinyos.SpineSetupFunction;
-import spine.communication.tinyos.SpineSetupSensor;
-import spine.datamodel.Alarm;
-import spine.datamodel.Data;
-import spine.datamodel.Feature;
-import spine.datamodel.Node;
-import spine.datamodel.Sensor;
-import spine.datamodel.ServiceMessage;
+import spine.communication.tinyos.*;
+import spine.datamodel.*;
 
 public class SPINETest implements SPINEListener {
 
@@ -172,6 +161,7 @@ public class SPINETest implements SPINEListener {
 					//alarm sent when MAX > upperThresold
 					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
 
+					
 					int lowerThreshold = 20;
 					int upperThreshold = 40;
 					
@@ -260,14 +250,16 @@ public class SPINETest implements SPINEListener {
 			manager.start(true, true); // we can tune a few node parameters at run-time for reducing the power consumption and the packets drop. 
 	}
 
-	private Vector features;
+	private Feature[] features;
 	public void dataReceived(int nodeID, Data data) {
 		// the specific application logic behaves w.r.t. the type of data received 
+		
+		System.out.println(data);
+
 		switch (data.getFunctionCode()) {
 			case SPINEFunctionConstants.FEATURE: {
-				features = (Vector)(data.getData());
-				for (int i = 0; i<features.size(); i++)
-					System.out.println((Feature)features.elementAt(i));
+				
+				features = ((FeatureData)data).getFeatures();
 				
 				counter++;
 				
@@ -275,15 +267,15 @@ public class SPINETest implements SPINEListener {
 				if(counter == 5) {
 					// it's possible to deactivate functions computation at runtime (even when the radio on the node works in low-power mode)
 					SpineFunctionReq sfr = new FeatureSpineFunctionReq();
-					((FeatureSpineFunctionReq)sfr).setSensor(((Feature)features.elementAt(0)).getSensorCode());
-					((FeatureSpineFunctionReq)sfr).removeFeature(((Feature)features.elementAt(0)).getFeatureCode(), SPINESensorConstants.ALL);
+					((FeatureSpineFunctionReq)sfr).setSensor(features[0].getSensorCode());
+					((FeatureSpineFunctionReq)sfr).removeFeature(features[0].getFeatureCode(), SPINESensorConstants.ALL);
 					manager.deactivateFunction(nodeID, sfr);
 				}	
 				
 				if(counter == 10) {
 					// and, of course, we can activate new functions at runtime
 					SpineFunctionReq sfr = new FeatureSpineFunctionReq();
-					((FeatureSpineFunctionReq)sfr).setSensor(((Feature)features.elementAt(0)).getSensorCode());
+					((FeatureSpineFunctionReq)sfr).setSensor(features[0].getSensorCode());
 					((FeatureSpineFunctionReq)sfr).addFeature(SPINEFunctionConstants.RANGE, SPINESensorConstants.CH1_ONLY);
 					manager.activateFunction(nodeID, sfr);
 				}
@@ -301,12 +293,9 @@ public class SPINETest implements SPINEListener {
 				break;
 			}
 			case SPINEFunctionConstants.ONE_SHOT:
-				// if the current data received is a ONE_SHOT function, we just print this one-shot sensor reading
-				System.out.println((Feature)data.getData()); 
 				break;
 				
 			case SPINEFunctionConstants.ALARM:
-				System.out.println((Alarm)data.getData());
 				counter_alarm ++;
 				if(counter_alarm == 20) {
 					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();
@@ -317,7 +306,6 @@ public class SPINETest implements SPINEListener {
 					
 					manager.deactivateFunction(nodeID, sfr2);
 				}
-
 				break;
 		}
 		

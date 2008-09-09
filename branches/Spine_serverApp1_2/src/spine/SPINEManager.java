@@ -49,6 +49,7 @@ import spine.communication.tinyos.SpineSetupFunction;
 import spine.communication.tinyos.SpineSetupSensor;
 import spine.communication.tinyos.SpineStart;
 import spine.datamodel.Data;
+import spine.datamodel.DataFactory;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 
@@ -423,7 +424,7 @@ public class SPINEManager implements WSNConnection.Listener {
 						this.activeNodes.addElement(new Node(nodeID, msg.getPayload()));
 				}
 				break;
-			case SPINEPacketsConstants.DATA: o = new Data(nodeID, msg.getPayload()); 
+			case SPINEPacketsConstants.DATA: o = DataFactory.newData(nodeID, msg.getPayload()); 
 				break;
 			case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); 
 				break;

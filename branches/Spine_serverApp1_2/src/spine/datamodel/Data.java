@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+Â 
 GNU Lesser General Public License
- 
+Â 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+Â 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.Â  See the GNU
 Lesser General Public License for more details.
- 
+Â 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MAÂ  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -36,58 +36,49 @@ Boston, MA  02111-1307, USA.
  * Refer to spine.datamodel.FeatureData or spine.datamodel.OneShotData as good examples.    
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski
  *
  * @version 1.2
  */
 
 package spine.datamodel;
 
+import java.lang.reflect.Method;
+
 import spine.SPINEFunctionConstants;
 
-public class Data {
+public abstract class Data {
+	
+	protected long timestamp = 0;
 
-	private final static String DATA_FUNCT_CLASSNAME_PREFIX = "spine.datamodel.";
-	private final static String DATA_FUNCT_CLASSNAME_SUFFIX = "Data";
-	
-	protected Object data = null; 
-	
+	protected int nodeID = 0;
 	protected byte functionCode = -1;
 	
 	protected Data() {}
+		
+	/**
+	 * Initialize a new data object with a message
+	 *
+	 * @param nodeID ID of the node from which the message originated
+	 * @param payload raw payload of the message
+	 * @return the newly initialized object or null if the init fails
+	 */
+	public abstract Data init(int nodeID, byte[] payload);
+	
 	
 	/**
-	 * Constructor of a Data object. 
-	 * Note that Data in just a generic container and the actual Data implementations must be provided and
-	 * configured properly within the Properties set. That is done declaring a new "data_function_className_myFunctionCode" property
-	 * equal to the full path name of the class that will be responsible of decoding the byte[] data payload.
-	 * The usage of properties is to allow the dynamic loading of the classes involved.
-	 * 
-	 * @param nodeID the source node generating the data
-	 * @param payload the data represented as a byte[] array. Its length and content are 'function specific' 
+	 * Initialization which should be in Data.init and called by super in child
+	 * init methods, but is instead put here because Data.init must be abstract
+	 * to be appropriately used by DataFactory
+	 *
+	 * @see spine.datamodel.DataFactory
 	 */
-	public Data(int nodeID, byte[] payload) {
-		this.functionCode = payload[0];		
-		
-		try {
-			Class c = Class.forName(DATA_FUNCT_CLASSNAME_PREFIX + 
-									SPINEFunctionConstants.functionCodeToString(this.functionCode) + 
-									DATA_FUNCT_CLASSNAME_SUFFIX);
-			this.data = ((Data)c.newInstance()).decode(nodeID, payload);
-		} catch (ClassNotFoundException e) { System.out.println(e); } 
-		  catch (InstantiationException e) { System.out.println(e); } 
-		  catch (IllegalAccessException e) { System.out.println(e);	}
+	protected void baseInit(int nodeID, byte[] payload) {
+		timestamp = System.currentTimeMillis();
+		this.nodeID = nodeID;
+		functionCode = payload[0];
 	}
 	
-	/**
-	 * This method MUST be overridden by any class that extends spine.datamodel.Data 
-	 * and must return their own specific high level organization of the given data payload array.
-	 * 
-	 * @param nodeID the source node generating the data
-	 * @param payload the data represented as a byte[] array. Its length and content are 'function specific'
-	 *  
-	 * @return the specific object resulting from the decoding of the byte[] payload
-	 */
-	protected Object decode(int nodeID, byte[] payload){ return null; }
 
 	/**
 	 * Getter method of the code of the function generating of the data 
@@ -99,12 +90,12 @@ public class Data {
 	}
 	
 	/**
-	 * Return an Object that can be casted w.r.t. the specific 'function'Data class data type 
+	 * Getter method of the data creation timestamp
 	 * 
-	 * @return the Object returned by the specific 'function'Data class decode process 
+	 * @return the data creation timestamp
 	 */
-	public Object getData() {
-		return this.data;
+	public long getTimestamp() {
+		return this.timestamp;
 	}
 	
 	/**
@@ -141,14 +132,5 @@ public class Data {
 		        ((bytes[index] & 0xFF) << 8);
 	}
 	
-	/**
-	 * 
-	 * Returns a string representation of the Data object.
-	 * 
-	 */
-	public String toString() {
-		return "" + this.data;
-	}
-
 }
 
