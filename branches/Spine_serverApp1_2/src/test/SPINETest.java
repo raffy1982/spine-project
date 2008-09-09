@@ -293,9 +293,11 @@ public class SPINETest implements SPINEListener {
 				break;
 			}
 			case SPINEFunctionConstants.ONE_SHOT:
+				// OneShotData oneShot = (OneShotData)data; // if needed 'data' can be casted to spine.datamodel.AlarmData 
 				break;
 				
 			case SPINEFunctionConstants.ALARM:
+				// AlarmData alarm = (AlarmData)data; // if needed 'data' can be casted to spine.datamodel.AlarmData  
 				counter_alarm ++;
 				if(counter_alarm == 20) {
 					SpineFunctionReq sfr2 = new AlarmSpineFunctionReq();

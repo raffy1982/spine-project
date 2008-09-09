@@ -74,11 +74,20 @@ public class OneShotData extends Data {
 
 	/**
 	 * 
+	 * Returns the one shot feature contained into the OneShot Data message received.
+	 * 
+	 */
+	public Feature getFeature() {
+		return oneShot;
+	}
+	
+	
+	/**
+	 * 
 	 * Returns a string representation of the OneShotData object.
 	 * 
 	 */
 	public String toString() {
 		return "" + oneShot;
 	}
-
 }

@@ -38,7 +38,6 @@ package spine.datamodel;
 import java.util.Vector;
 
 import spine.SPINEFunctionConstants;
-import spine.SPINESensorConstants;
 
 
 public class FeatureData extends Data {

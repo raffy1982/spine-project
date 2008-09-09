@@ -43,10 +43,6 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
-import java.lang.reflect.Method;
-
-import spine.SPINEFunctionConstants;
-
 public abstract class Data {
 	
 	protected long timestamp = 0;
