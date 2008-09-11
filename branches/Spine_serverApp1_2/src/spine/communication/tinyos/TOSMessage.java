@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-public class TOSMessage implements com.tilab.zigbee.Message {
+public class TOSMessage implements com.tilab.gal.Message {
 	
 	private short pktType;
 	
@@ -76,7 +76,7 @@ public class TOSMessage implements com.tilab.zigbee.Message {
 	}
 
 	public int getSecurityStatus() {
-		return com.tilab.zigbee.Message.SECURITYSTATUS_UNSECURE;
+		return com.tilab.gal.Message.SECURITYSTATUS_UNSECURE;
 	}
 
 	public String getSourceURL() {

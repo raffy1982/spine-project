@@ -34,7 +34,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-import com.tilab.zigbee.ConfigurationDescriptor;
+import com.tilab.gal.ConfigurationDescriptor;
 
 public class TOSConfigurationDescriptor implements ConfigurationDescriptor {
 

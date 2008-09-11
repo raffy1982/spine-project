@@ -53,9 +53,9 @@ import net.tinyos.message.MoteIF;
 import net.tinyos.packet.BuildSource;
 import net.tinyos.util.PrintStreamMessenger;
 
-import com.tilab.zigbee.ConfigurationDescriptor;
-import com.tilab.zigbee.LocalNodeAdapter;
-import com.tilab.zigbee.WSNConnection;
+import com.tilab.gal.ConfigurationDescriptor;
+import com.tilab.gal.LocalNodeAdapter;
+import com.tilab.gal.WSNConnection;
 
 
 public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
@@ -133,7 +133,7 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				}
 
 				// notification to upper layer of a message reception
-				com.tilab.zigbee.Message msg = ((SpineTOSMessage)tosmsg).parse();					
+				com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();					
 				for (int i = 0; i<connections.size(); i++)
 					((TOSWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				

@@ -39,8 +39,8 @@ package spine;
 import java.io.InterruptedIOException;
 import java.util.Vector;
 
-import com.tilab.zigbee.LocalNodeAdapter;
-import com.tilab.zigbee.WSNConnection;
+import com.tilab.gal.LocalNodeAdapter;
+import com.tilab.gal.WSNConnection;
 
 import spine.SPINEPacketsConstants;
 
@@ -70,7 +70,7 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 	private Vector listeners = new Vector(); // <values:SPINEListener>
 	
-	private Vector activeNodes = new Vector(); // <values:SpineNode>
+	private Vector activeNodes = new Vector(); // <values:Node>
 	private boolean discoveryCompleted = false;
 	private long discoveryTimeout = DISCOVERY_TIMEOUT;
 	
@@ -80,7 +80,7 @@ public class SPINEManager implements WSNConnection.Listener {
 	private LocalNodeAdapter nodeAdapter;	
 	
 	
-	public static SPINEManager instance;
+	private static SPINEManager instance;
 	
 	private SPINEManager(String[] args) {
 		try {
@@ -105,23 +105,6 @@ public class SPINEManager implements WSNConnection.Listener {
 		} catch (IllegalAccessException e) {
 			System.out.println(e);
 		} 
-	}
-
-	/**
-	 * Returns the SPINEManager instance connected to the given base-station port and speed
-	 * Those parameters should be retrieved using the Properties instance 
-	 * obtained thru the static SPINEManager.getProperties method
-	 * 
-	 * @param port the port url the base-station is listening on
-	 * @param speed the data-rate speed of the base-station  
-	 * 
-	 * @return the SPINEManager instance
-	 * 
-	 * @see spine.Properties
-	 */
-	public static SPINEManager getInstance(String port, String speed) {
-		String[] args = { port, speed };
-		return getInstance(args);
 	}
 
 	/**
@@ -355,7 +338,7 @@ public class SPINEManager implements WSNConnection.Listener {
 		try {
 			// dynamic class loading of the proper Message implementation
 			Class c = Class.forName(prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY));
-			com.tilab.zigbee.Message msg = (com.tilab.zigbee.Message)c.newInstance();
+			com.tilab.gal.Message msg = (com.tilab.gal.Message)c.newInstance();
 			
 			// costruction of the message 
 			msg.setDestinationURL(URL_PREFIX + nodeID);
@@ -403,7 +386,7 @@ public class SPINEManager implements WSNConnection.Listener {
 	 * WSNConnection.Listener interface.
 	 * It's called to notify the SPINEManager of a new SPINE message reception. 
 	 */
-	public void messageReceived(com.tilab.zigbee.Message msg) {
+	public void messageReceived(com.tilab.gal.Message msg) {
 
 		int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
 		

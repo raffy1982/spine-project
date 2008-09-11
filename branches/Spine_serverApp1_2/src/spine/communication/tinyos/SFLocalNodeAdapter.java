@@ -45,9 +45,9 @@ import spine.communication.tinyos.SPINEHeader;
 
 import net.tinyos.message.MessageListener;
 
-import com.tilab.zigbee.ConfigurationDescriptor;
-import com.tilab.zigbee.LocalNodeAdapter;
-import com.tilab.zigbee.WSNConnection;
+import com.tilab.gal.ConfigurationDescriptor;
+import com.tilab.gal.LocalNodeAdapter;
+import com.tilab.gal.WSNConnection;
 
 public final class SFLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
     /** Version control identifier strings. */
@@ -205,7 +205,7 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 				}
 				
 				// notification to upper layer of a message reception
-				com.tilab.zigbee.Message msg = ((SpineTOSMessage)tosmsg).parse();					
+				com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();					
 				for (int i = 0; i<connections.size(); i++)
 					((SFWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				

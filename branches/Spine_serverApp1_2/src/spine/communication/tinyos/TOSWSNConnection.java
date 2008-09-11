@@ -39,7 +39,7 @@ package spine.communication.tinyos;
 
 import java.io.InterruptedIOException;
 
-import com.tilab.zigbee.WSNConnection;
+import com.tilab.gal.WSNConnection;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
@@ -58,7 +58,7 @@ public class TOSWSNConnection implements WSNConnection {
 	}
 	
 	
-	public void messageReceived(com.tilab.zigbee.Message msg) {
+	public void messageReceived(com.tilab.gal.Message msg) {
 		// just a pass-thru
 		listener.messageReceived(msg);
 	}
@@ -69,17 +69,17 @@ public class TOSWSNConnection implements WSNConnection {
 	}
 
 
-	public com.tilab.zigbee.Message poll() {
+	public com.tilab.gal.Message poll() {
 		// TODO 
 		return null;
 	}
 
-	public com.tilab.zigbee.Message receive() {
+	public com.tilab.gal.Message receive() {
 		// TODO 
 		return null;
 	}
 
-	public void send(com.tilab.zigbee.Message msg) throws InterruptedIOException, UnsupportedOperationException {
+	public void send(com.tilab.gal.Message msg) throws InterruptedIOException, UnsupportedOperationException {
 		
 		byte fragmentNr = 1;
 		byte totalFragments = 1;
