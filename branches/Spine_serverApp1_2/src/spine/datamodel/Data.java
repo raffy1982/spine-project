@@ -86,6 +86,15 @@ public abstract class Data {
 	}
 	
 	/**
+	 * Getter method of the ID of the node generating the data
+	 * 
+	 * @return the nodeID of the function generating of the data
+	 */
+	public int getNodeID() {
+		return this.nodeID;
+	}
+	
+	/**
 	 * Getter method of the data creation timestamp
 	 * 
 	 * @return the data creation timestamp

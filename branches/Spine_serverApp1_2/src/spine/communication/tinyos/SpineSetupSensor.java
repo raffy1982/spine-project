@@ -36,6 +36,8 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import spine.SPINESensorConstants;
+
 public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage {
 	
 	private final static int LENGTH = 3;
@@ -87,6 +89,21 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 	 */
 	public void setSamplingTime(int samplingTime) {
 		this.samplingTime = samplingTime;
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the SpineSetupSensor object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Sensor Setup {";
+		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
+		s += "timeScale = " + SPINESensorConstants.timeScaleToString(timeScale) + ", ";
+		s += "samplingTime = " + samplingTime + "}";
+		
+		return s;
 	}
 	
 }

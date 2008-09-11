@@ -46,6 +46,7 @@ package spine.communication.tinyos;
 import java.util.Vector;
 
 import spine.SPINEFunctionConstants;
+import spine.SPINESensorConstants;
 import spine.datamodel.Feature;
 
 public class FeatureSpineFunctionReq extends SpineFunctionReq {
@@ -122,6 +123,29 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	 */
 	public void removeFeature(byte feature, byte channelBitmask) {
 		this.features.addElement(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the FeatureSpineFunctionReq object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Feature Function ";
+		
+		s += (this.isActivationRequest)? "Activation {": "Deactivation {";
+		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
+		
+		for (int i = 0; i < features.size(); i++) {
+			s += "feature = " + SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE, ((Feature)features.elementAt(i)).getFeatureCode()) + ", ";
+			s += "channels = " + SPINESensorConstants.channelBitmaskToString(((Feature)features.elementAt(i)).getChannelBitmask());
+			if (i < features.size() - 1)
+				s += ", ";
+		}
+		s += "}";
+		
+		return s;
 	}
 	
 }

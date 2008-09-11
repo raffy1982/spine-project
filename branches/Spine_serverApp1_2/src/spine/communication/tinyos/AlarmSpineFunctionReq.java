@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 package spine.communication.tinyos;
 
 import spine.SPINEFunctionConstants;
+import spine.SPINESensorConstants;
 
 public class AlarmSpineFunctionReq extends SpineFunctionReq {
 
@@ -98,5 +99,25 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	public void setAlarmType(byte AlarmType) {
 		this.alarmType  = AlarmType;		
 	}	
+	
+	/**
+	 * 
+	 * Returns a string representation of the AlarmSpineFunctionReq object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Alarm Function ";
+		
+		s += (this.isActivationRequest)? "Activation {": "Deactivation {";
+		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
+		s += "dataType = " + SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE, dataType) + ", ";
+		s += "valueType = " + SPINESensorConstants.channelBitmaskToString(valueType) + ", ";
+		s += "lowerThreshold = " + lowerThreshold + ", ";
+		s += "upperThreshold = " + upperThreshold + ", ";
+		s += "alarmType = " + SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.ALARM, alarmType) + "}";
+		
+		return s;
+	}
 	
 }

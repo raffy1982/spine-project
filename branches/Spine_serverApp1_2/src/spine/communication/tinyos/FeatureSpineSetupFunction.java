@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 package spine.communication.tinyos;
 
 import spine.SPINEFunctionConstants;
+import spine.SPINESensorConstants;
 
 public class FeatureSpineSetupFunction extends SpineSetupFunction {
 
@@ -91,6 +92,21 @@ public class FeatureSpineSetupFunction extends SpineSetupFunction {
 	 */
 	public void setShiftSize(short shiftSize) {
 		this.shiftSize = shiftSize;
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the FeatureSpineSetupFunction object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Feature Function Setup {";
+		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
+		s += "window = " + windowSize + ", ";
+		s += "shift = " + shiftSize + "}";
+		
+		return s;
 	}
 	
 }
