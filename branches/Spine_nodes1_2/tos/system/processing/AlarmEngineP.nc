@@ -396,6 +396,10 @@ Boston, MA  02111-1307, USA.
        memset(alarmParamsList, 0x00, sizeof alarmParamsList);
        alarmParamsIndex = 0;
        
+       memset(evalFeatsList, 0, sizeof evalFeatsList);
+	   evalFeatsIndex = 0;
+	   evalFeatsCount = 0;
+
        start = FALSE;
        memset(newSamplesSinceLastFeatureAlarm, 0, sizeof newSamplesSinceLastFeatureAlarm);
 	       
