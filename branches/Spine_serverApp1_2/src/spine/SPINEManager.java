@@ -53,7 +53,7 @@ import spine.datamodel.DataFactory;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 
-public class SPINEManager implements WSNConnection.Listener {
+public class SPINEManager {
 
 	private static Properties prop = Properties.getProperties();
 	
@@ -96,7 +96,7 @@ public class SPINEManager implements WSNConnection.Listener {
 
 			connection = nodeAdapter.createAPSConnection();			
 
-			connection.setListener(this);
+			connection.setListener(new WSNConnectionListenerImpl());
 
 		} catch (ClassNotFoundException e) {
 			System.out.println(e);
@@ -382,47 +382,6 @@ public class SPINEManager implements WSNConnection.Listener {
 	
 
 	/*
-	 * This method must be implemented because the SPINEManager implements the 
-	 * WSNConnection.Listener interface.
-	 * It's called to notify the SPINEManager of a new SPINE message reception. 
-	 */
-	public void messageReceived(com.tilab.gal.Message msg) {
-
-		int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
-		
-		Object o = null;
-		
-		short pktType = msg.getClusterId(); 
-		switch(pktType) {
-			case SPINEPacketsConstants.SERVICE_ADV: 
-				if (!this.discoveryCompleted) {
-					boolean alreadyDiscovered = false;
-					for(int i = 0; i<this.activeNodes.size(); i++) {
-						if(((Node)this.activeNodes.elementAt(i)).getNodeID() == nodeID) {
-							alreadyDiscovered = true;
-							break;
-						}
-					}
-					if (!alreadyDiscovered)
-						this.activeNodes.addElement(new Node(nodeID, msg.getPayload()));
-				}
-				break;
-			case SPINEPacketsConstants.DATA: o = DataFactory.newData(nodeID, msg.getPayload()); 
-				break;
-			case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); 
-				break;
-			default: break;
-		}
-		
-		// SPINEListeners are notified of the reception from the node 'nodeID' of some data  
-		notifyListeners(nodeID, pktType, o);
-		
-		//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
-		// call to the garbage collector to favour the recycling of unused memory
-		System.gc();		
-	}
-
-	/*
 	 * Regarding to the 'eventType', this method notify the SPINEListeners properly, by
 	 * casting in the right way the Object 'o' 
 	 */
@@ -480,6 +439,48 @@ public class SPINEManager implements WSNConnection.Listener {
 						
 			discoveryCompleted = true;			
 			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);
+		}
+	}
+	
+	private class WSNConnectionListenerImpl implements WSNConnection.Listener {
+		
+		/*
+		 * This method is called to notify the SPINEManager of a new SPINE message reception. 
+		 */
+		public void messageReceived(com.tilab.gal.Message msg) {
+
+			int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
+			
+			Object o = null;
+			
+			short pktType = msg.getClusterId(); 
+			switch(pktType) {
+				case SPINEPacketsConstants.SERVICE_ADV: 
+					if (!discoveryCompleted) {
+						boolean alreadyDiscovered = false;
+						for(int i = 0; i<activeNodes.size(); i++) {
+							if(((Node)activeNodes.elementAt(i)).getNodeID() == nodeID) {
+								alreadyDiscovered = true;
+								break;
+							}
+						}
+						if (!alreadyDiscovered)
+							activeNodes.addElement(new Node(nodeID, msg.getPayload()));
+					}
+					break;
+				case SPINEPacketsConstants.DATA: o = DataFactory.newData(nodeID, msg.getPayload()); 
+					break;
+				case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); 
+					break;
+				default: break;
+			}
+			
+			// SPINEListeners are notified of the reception from the node 'nodeID' of some data  
+			notifyListeners(nodeID, pktType, o);
+			
+			//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
+			// call to the garbage collector to favour the recycling of unused memory
+			System.gc();		
 		}
 	}
 	
