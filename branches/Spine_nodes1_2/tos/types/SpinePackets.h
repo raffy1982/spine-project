@@ -76,6 +76,12 @@ enum {
   SPINE_BROADCAST = 0xFFFF      // reserved address: any SPINE node can't be assigned with this address
 };
 
+enum ServiceMessageTypes {
+  ERROR = 0x00,
+  WARNING = 0x01,
+  ACK = 0x02
+};
+
 #endif
 
 

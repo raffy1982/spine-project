@@ -90,15 +90,36 @@ Boston, MA  02111-1307, USA.
      event void RadioController.radioOn() {}
 
      event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* pkt, uint8_t len) {
-          // TODO: if in the future the coordinator could send fragmented packets to the nodes,
-          //       the logic for reconstructing the original message must be implemented here
+         // TODO: if in the future the coordinator could send fragmented packets to the nodes,
+         //       the logic for reconstructing the original message must be implemented here
+
+         uint8_t* ackHeader;
+         uint8_t* ackBuiltPld;
+         uint8_t ackPld[SPINE_SVC_MSG_SIZE];
+         uint8_t ackMsg[SPINE_HEADER_PKT_SIZE + SPINE_SVC_MSG_SIZE];
+         uint8_t builtAckPldLen;
+
          if(pktType == AM_SPINE) {
             call Header.parse(pkt);
             // if the type of the incoming message is not a recognized spine packet, it won't be signaled
             if (call  InPackets.parse[call Header.getPktType()](pkt + SPINE_HEADER_PKT_SIZE, len - SPINE_HEADER_PKT_SIZE)) {
                 if (call Header.getVersion() == SPINE_VERSION && call Header.getGroupID() == GROUP_ID &&
-                       (call Header.getDestID() == TOS_NODE_ID || call Header.getDestID() == SPINE_BROADCAST) )
+                       (call Header.getDestID() == TOS_NODE_ID || call Header.getDestID() == SPINE_BROADCAST) ) {
+                    
+                    // BEGIN ACKs transmission for received SPINE pkts
+                    ackHeader = call Header.build(SPINE_VERSION, 0, SVC_MSG, GROUP_ID, TOS_NODE_ID, call Header.getSourceID(), sequenceNr++, 1, 1);
+                    ackPld[0] = ACK;
+                    ackPld[1] = call Header.getSequenceNumber();
+                    ackBuiltPld = call OutPackets.build[SVC_MSG](ackPld, sizeof(ackPld), &builtAckPldLen);
+
+                    memcpy(ackMsg, ackHeader, SPINE_HEADER_PKT_SIZE);
+                    memcpy(ackMsg + SPINE_HEADER_PKT_SIZE, ackBuiltPld, builtAckPldLen);
+
+                    call RadioController.send(call Header.getDestID(), SVC_MSG, &ackMsg, sizeof(ackMsg));
+                    // END ACKs transmission for received SPINE pkts
+
                     signal PacketManager.messageReceived(call Header.getPktType()); // it's supposed to be the same of the 'pktType' param
+                }
             }
          }
      }
