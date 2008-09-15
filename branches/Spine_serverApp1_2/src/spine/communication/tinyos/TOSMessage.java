@@ -55,7 +55,7 @@ public class TOSMessage implements com.tilab.gal.Message {
 	//private byte txSettingsBitMask;
 	
 	
-	public short getClusterId() {
+	public short getMessageId() {
 		return pktType;
 	}
 
@@ -71,7 +71,7 @@ public class TOSMessage implements com.tilab.gal.Message {
 		return payload;
 	}
 
-	public short getProfileId() {
+	public short getApplicationId() {
 		return groupID;
 	}
 
@@ -92,8 +92,8 @@ public class TOSMessage implements com.tilab.gal.Message {
 		isBroadcast = true;		
 	}
 
-	public void setClusterId(short clusterId) {
-		this.pktType = clusterId;		
+	public void setMessageId(short messageId) {
+		this.pktType = messageId;		
 	}
 
 	public void setDestinationURL(String serviceConnectionURL) {
@@ -104,8 +104,8 @@ public class TOSMessage implements com.tilab.gal.Message {
 		this.payload = payload; 
 	}
 
-	public void setProfileId(short profileId) {
-		this.groupID = profileId;
+	public void setApplicationId(short applicationId) {
+		this.groupID = applicationId;
 	}
 	
 	public void setMaxHopsNumber(int maxHopsNumber) {

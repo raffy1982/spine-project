@@ -342,8 +342,8 @@ public class SPINEManager {
 			
 			// costruction of the message 
 			msg.setDestinationURL(URL_PREFIX + nodeID);
-			msg.setClusterId(pktType); // the clusterId is treated as the 'packet type' field
-			msg.setProfileId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
+			msg.setMessageId(pktType); // the clusterId is treated as the 'packet type' field
+			msg.setApplicationId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
 			if (payload != null) {
 				switch(pktType) {
 					case SPINEPacketsConstants.SETUP_FUNCTION:
@@ -453,7 +453,7 @@ public class SPINEManager {
 			
 			Object o = null;
 			
-			short pktType = msg.getClusterId(); 
+			short pktType = msg.getMessageId(); 
 			switch(pktType) {
 				case SPINEPacketsConstants.SERVICE_ADV: 
 					if (!discoveryCompleted) {

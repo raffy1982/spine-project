@@ -141,8 +141,8 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		
 		SPINEHeader header = new SPINEHeader(headerBuf); 
 		
-		msg.setClusterId(header.getPktType());
-		msg.setProfileId(header.getGroupID());
+		msg.setMessageId(header.getPktType());
+		msg.setApplicationId(header.getGroupID());
 		msg.setSourceURL(TINYOS_URL_PREFIX + header.getSourceID()); 
 		msg.setDestinationURL(TINYOS_URL_PREFIX + header.getDestID());
 		
