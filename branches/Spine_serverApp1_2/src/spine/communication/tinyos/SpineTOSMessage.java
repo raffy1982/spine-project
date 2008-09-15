@@ -298,4 +298,13 @@ class SPINEHeader {
 		return headerBuf;
 	}
 	
+	public String toString() {
+		String s = "Spine Header { ";
+		
+		s += "ver: 1." + vers + ", ext: " + ext + ", pktType: " + pktT + ", groupID: " + grpID + 
+			 ", sourceID: " + srcID + ", destID: " + dstID + ", seqNr: " + seqNr + 
+			 ", fragNr: " + fragNr + ", totFrags: " + totFrags + " }";
+		return s;
+	}
+	
 }
