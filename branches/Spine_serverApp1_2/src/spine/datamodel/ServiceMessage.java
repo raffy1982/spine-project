@@ -40,14 +40,16 @@ public class ServiceMessage {
 	// MESSAGE TYPES
 	public static final byte ERROR = 0;
 	public static final byte WARNING = 1;
+	public static final byte ACK = 2;
 	
 	// MESSAGE DATAILS
-	public static final byte CONNECTION_FAIL = 0;
-	public static final byte UNKNOWN_PKT_RECEIVED = 10;
+	public static final byte CONNECTION_FAIL = 10;
+	public static final byte UNKNOWN_PKT_RECEIVED = 11;
 	
 	// MESSAGE TYPES LABELS
 	public static final String ERROR_LABEL = "Error";
 	public static final String WARNING_LABEL = "Warning";
+	public static final String ACK_LABEL = "Ack";
 	
 	// MESSAGE DATAILS LABELS
 	public static final String CONNECTION_FAIL_LABEL = "Connection Fail";
@@ -95,10 +97,11 @@ public class ServiceMessage {
 	 * 
 	 * @return the message type string label mapped to the given message type code
 	 */
-	public static String messageTypeToString(byte messageType) {
-		switch(messageType) {
+	public String messageTypeToString() {
+		switch(this.messageType) {
 			case ERROR: return ERROR_LABEL;
 			case WARNING: return WARNING_LABEL;
+			case ACK: return ACK_LABEL;
 			default: return "?";
 		}
 	}
@@ -106,26 +109,22 @@ public class ServiceMessage {
 	/**
 	 * Returns the string label mapped to the given message detail code
 	 * 
+	 * @param messageType the message type 
 	 * @param messageDetail the message detail to be returned as a string label
 	 * 
 	 * @return the message detail string label mapped to the given message detail code 
 	 */
-	public static String messageDetailToString(byte messageDetail) {
-		switch(messageDetail) {
-			case CONNECTION_FAIL: return CONNECTION_FAIL_LABEL;
-			case UNKNOWN_PKT_RECEIVED: return UNKNOWN_PKT_RECEIVED_LABEL;
-			default: return "?";
+	public String messageDetailToString() {
+		switch(this.messageType) {
+			case ERROR: 
+				switch(this.messageDetail) {
+					case CONNECTION_FAIL: return CONNECTION_FAIL_LABEL;
+					case UNKNOWN_PKT_RECEIVED: return UNKNOWN_PKT_RECEIVED_LABEL;
+				}
+			case WARNING: return "" + this.messageDetail;
+			case ACK: return "seq# " + this.messageDetail;
+			default: return "" + this.messageDetail;
 		}
-	}
-
-	/**
-	 * 
-	 * Returns a string representation of the ServiceMessage object.
-	 * 
-	 */
-	public String toString() {
-		return "Service Message From Node: " + this.nodeID + " - " + 
-				messageTypeToString(this.messageType) + ": " + messageDetailToString(this.messageDetail);
 	}
 
 	/**
@@ -143,5 +142,14 @@ public class ServiceMessage {
 	public byte getMessageDetail() {
 		return messageDetail;
 	}
-
+	
+	/**
+	 * 
+	 * Returns a string representation of the ServiceMessage object.
+	 * 
+	 */
+	public String toString() {
+		return "Service Message From Node " + this.nodeID + " - " + 
+				messageTypeToString() + ": " + messageDetailToString();
+	}	
 }
