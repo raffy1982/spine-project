@@ -47,6 +47,7 @@ import java.util.Vector;
 import spine.Properties;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SPINEHeader;
+import spine.datamodel.ServiceMessage;
 
 import net.tinyos.message.MessageListener;
 import net.tinyos.message.MoteIF;
@@ -92,12 +93,25 @@ System.out.print("messageReceived -> ");
 					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
 					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION || 
-					h.getGroupID() != MY_GROUP_ID) 
+					h.getGroupID() != MY_GROUP_ID) {
+					System.out.println("[ERRONEOUS, " + h + " ]... discarded!");	
 					return;
+				}
 
 printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
-				
-				sendMessages(sourceNodeID);
+
+				// ACKs handling
+				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
+					com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
+					ServiceMessage svcMsg = new ServiceMessage(sourceNodeID, msg.getPayload());
+					if (svcMsg.getMessageType() == ServiceMessage.ACK) {
+						// if an ACK is received for a certain msg, I can remove that message from the messages-to-send queue
+						byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
+						removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);
+					}
+				}
+				else 
+					sendMessages(sourceNodeID);
 				
 				// re-assembly of fragments into complete messages 
 				if (h.getTotalFragments() != 1) {
@@ -137,8 +151,12 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 				for (int i = 0; i<connections.size(); i++)
 					((TOSWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				
-			} catch (IllegalSpineHeaderSizeException e) {}			
+			} catch (IllegalSpineHeaderSizeException e) {
+				System.out.println("[SPINE1.2-MALFORMED-HEADER]... discarded!");
+			}			
 		}
+		else
+			System.out.println("[NON-SPINE]... discarded!");
 	}
 	
 	private int inPartials(int sourceID, byte sequenceNumber) {
@@ -146,6 +164,19 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 			if (((Partial)partials.elementAt(i)).equal(sourceID, sequenceNumber)) return i;
 		return -1;
 	}
+	
+	private void removeAcknowledgedMsg(int nodeID, byte seqNr) {
+		for (int i = 0; i < this.messagesQueue.size(); i++) {
+			try {
+				Msg tmp = (Msg)this.messagesQueue.elementAt(i);
+				if(tmp.destNodeID == nodeID && tmp.tosmsg.getHeader().getSequenceNumber() == seqNr) {
+					this.messagesQueue.removeElementAt(i);
+					return;
+				}
+			} catch (IllegalSpineHeaderSizeException e) {}
+		}
+	}
+	
 
 	public WSNConnection createAPSConnection() {
 		WSNConnection newConnection = new TOSWSNConnection(this);
@@ -204,9 +235,15 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 			curr = (Msg)this.messagesQueue.elementAt(i);
 			if (curr.destNodeID == nodeID || curr.destNodeID == SPINEPacketsConstants.SPINE_BROADCAST) {
 				try {
-					this.moteIF.send(curr.destNodeID, curr.tosmsg);
+					if (!curr.transmitted || --curr.retransmissionCounter == 0) {
+						this.moteIF.send(curr.destNodeID, curr.tosmsg);
+						curr.transmitted = true;
+					}
+					else if(curr.retransmissionCounter <= 0)
+						this.messagesQueue.removeElementAt(i);
+						
 System.out.println("- Ota deferred send.");					
-					this.messagesQueue.removeElementAt(i);
+					//this.messagesQueue.removeElementAt(i);
 					Thread.sleep(2);
 				} catch (IOException e) {
 					System.out.println(e);
@@ -267,13 +304,19 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 		
 	}
 	
+	static int DEFAULT_RECEIVED_PKTS_BEFORE_RETRANSMISSION = 5;
+	
 	private class Msg {
 		int destNodeID;
 		SpineTOSMessage tosmsg;
+		boolean transmitted;
+		int retransmissionCounter;
 		
 		private Msg(int destNodeID, SpineTOSMessage tosmsg) {
 			this.destNodeID = destNodeID;
 			this.tosmsg = tosmsg;
+			this.transmitted = false;
+			this.retransmissionCounter = DEFAULT_RECEIVED_PKTS_BEFORE_RETRANSMISSION;
 		}
 	}
 	
