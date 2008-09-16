@@ -26,16 +26,10 @@
          _______________________________________________ -->
   <target name="jar" description="generate the jar files" depends="compile">
     <!-- Compile the java code from src into classes -->
-    <mkdir dir="lib"/>
-    <jar jarfile="lib/SPINE.jar">
+    <mkdir dir="jar"/>
+    <jar jarfile="jar/SPINE.jar">
      <fileset dir="classes"> 
        <exclude name="test/*.class" />
-     </fileset>
-    </jar>
-    <mkdir dir="test"/>
-    <jar jarfile="test/SPINETest.jar">
-     <fileset dir="classes"> 
-       <include name="test/*.class" />
      </fileset>
     </jar>
   </target>
@@ -67,12 +61,16 @@
 
   <jar jarfile="../../SPINE${version}.zip">
       <fileset dir="../.." includes="spine/*"/>
-      <fileset dir="../.." includes="spine/Spine_nodes/**"/>
+      <fileset dir="../.." includes="spine/Spine_nodes/apps/SPINEApp/**"/>
+      <fileset dir="../.." includes="spine/Spine_nodes/tos/**"/>
+      <fileset dir="../.." includes="spine/Spine_nodes/support/**"/>
+      <fileset dir="../.." includes="spine/Spine_nodes/*"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/src/**"/>
+	  <fileset dir="../.." includes="spine/Spine_serverApp/jar/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/doc/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/lib/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/test/**"/>
-      <fileset dir="../.." includes="spine/Spine_serverApp/*"/>
+      <fileset dir="../.." includes="spine/Spine_serverApp/*" excludes="spine/Spine_serverApp/classes"/>
     </jar>
   </target>
 
