@@ -47,10 +47,8 @@ import java.util.Properties;
  * 
  * @see spine.Properties
  */
-public class PropertiesImpl extends spine.Properties {
-	
-	private final static String PROPERTIES_FILE_PATH = "src/spine/app.properties";
-	
+public class PropertiesImpl extends spine.Properties {	
+	private final static String PROPERTIES_FILE_PATH = "app.properties";
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
 	private static PropertiesImpl instance = null;
@@ -72,7 +70,9 @@ public class PropertiesImpl extends spine.Properties {
 	public void load() {
 		if (!loaded)
 			try {
-				p.load(new FileInputStream(PROPERTIES_FILE_PATH));
+				String fileName = System.getProperty(PROPERTIES_FILE_PATH_PROPERTYKEY);
+				fileName = (fileName == null ? PROPERTIES_FILE_PATH : fileName); 
+				p.load(new FileInputStream(fileName));
 				loaded = true;
 			} catch (IOException e) {
 				e.printStackTrace();
