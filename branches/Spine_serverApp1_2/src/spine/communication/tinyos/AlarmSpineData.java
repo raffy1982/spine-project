@@ -24,8 +24,10 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
-*
+* This class contains the static method to parse (decompress) a 
+* TinyOS SPINE 'Alarm' Data packet payload into a platform independent one.
+* This class is invoked only by the SpineData class, thru the dynamic class loading.
+* 
 * @author Roberta Giannantonio
 *
 * @version 1.2

@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 /**
 * Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
 *
-* @author 
+* @author Raffaele Gravina
 *
 * @version 1.2
 */
