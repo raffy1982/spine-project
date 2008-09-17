@@ -48,7 +48,7 @@ import java.util.Properties;
  * @see spine.Properties
  */
 public class PropertiesImpl extends spine.Properties {	
-	private final static String PROPERTIES_FILE_PATH = "app.properties";
+	private final static String PROPERTIES_FILE_PATH = "defaults.properties";
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
 	private static PropertiesImpl instance = null;
