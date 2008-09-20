@@ -23,6 +23,16 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
+/**
+ *
+ * Represents the function 'Alarm' specs
+ *
+ * @author Raffaele Gravina
+ * @author Philip Kuryloski
+ *
+ * @version 1.2
+ */
+
 package spine.datamodel.functions;
 
 import spine.SPINEFunctionConstants;

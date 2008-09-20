@@ -23,6 +23,16 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
+/**
+ *
+ * This exception should be thrown if a particular Function object receives a wrong specification 
+ *
+ * @author Raffaele Gravina
+ * @author Philip Kuryloski
+ *
+ * @version 1.2
+ */
+
 package spine.datamodel.functions;
 
 import spine.SPINEFunctionConstants;

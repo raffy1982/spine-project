@@ -48,7 +48,6 @@ public class SpineStart extends spine.communication.tinyos.SpineTOSMessage {
 	/**
 	 * This method is used internally by the framework and encodes the high level start command 
 	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
-	 * @return
 	 */
 	public byte[] encode() {
 		byte[] data = new byte[LENGTH];
