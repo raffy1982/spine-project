@@ -91,9 +91,7 @@ public class ServiceMessage {
 	}
 	
 	/**
-	 * Returns the string label mapped to the given message type code
-	 * 
-	 * @param messageType the message type to be returned as a string label
+	 * Returns the string label mapped to the message type code of the current ServiceMessage object
 	 * 
 	 * @return the message type string label mapped to the given message type code
 	 */
@@ -108,9 +106,6 @@ public class ServiceMessage {
 	
 	/**
 	 * Returns the string label mapped to the given message detail code
-	 * 
-	 * @param messageType the message type 
-	 * @param messageDetail the message detail to be returned as a string label
 	 * 
 	 * @return the message detail string label mapped to the given message detail code 
 	 */
