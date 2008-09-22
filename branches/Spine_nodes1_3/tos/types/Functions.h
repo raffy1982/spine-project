@@ -42,7 +42,8 @@ enum FunctionCodes {
   FEATURE = 0x01,
   ALARM = 0x02,
   SIGNAL_PROCESSING = 0x03,
-  ONE_SHOT = 0x04
+  ONE_SHOT = 0x04,
+  STEP_COUNTER = 0x05
 
 };
 

@@ -10,7 +10,7 @@ GNU Lesser General Public License
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
-version 2.1 of the License. 
+version 2.1 of the License.
  
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,37 +23,30 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
- /**
- * Configuration Component of the Function Manager. Each specific function implementation must register itself to the FunctionManager at boot time.
- * This component allows the retrieval of the Function list.
+/**
+ * Configuration component of the SPINE StepCounter Engine.
+ *
  *
  * @author Raffaele Gravina
  *
  * @version 1.2
  */
- 
- configuration FunctionManagerC {
-     provides interface FunctionManager;
 
-     uses interface Function as Functions[uint8_t functionID];
- }
+configuration StepCounterEngineC {
+	
+        provides interface Function;
 
- implementation {
+}
 
-     components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
-     components AlarmEngineC;
-     components FeatureEngineC;
-     components StepCounterEngineC;
+implementation {
+	components MainC, FunctionManagerC, SensorBoardControllerC, StepCounterEngineP;
+	
+	components LedsC;
 
-     FunctionManager = FunctionManagerP;
-     FunctionManagerP.PacketManager -> PacketManagerC;
+	StepCounterEngineP.Function = Function;
 
-     FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
+	StepCounterEngineP.FunctionManager -> FunctionManagerC;
+	StepCounterEngineP.SensorBoardController -> SensorBoardControllerC;
 
-     FunctionManagerP.Functions = Functions;
-     FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
-
-     FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
-     
-     FunctionManagerP.Functions[STEP_COUNTER] ->StepCounterEngineC;
- }
+	StepCounterEngineP.Boot -> MainC.Boot;
+}
