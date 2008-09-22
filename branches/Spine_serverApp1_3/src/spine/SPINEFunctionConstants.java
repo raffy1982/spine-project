@@ -43,6 +43,7 @@ public class SPINEFunctionConstants {
 	public static final byte ALARM = 0x02;
 	public static final byte SIGNAL_PROCESSING = 0x03;
 	public static final byte ONE_SHOT = 0x04;
+	public static final byte STEP_COUNTER = 0x05;
 	
 	//alarm types
 	public static final byte BELOW_THRESHOLD = 0x01;
@@ -71,6 +72,7 @@ public class SPINEFunctionConstants {
 	public static final String ALARM_LABEL = "Alarm";
 	public static final String SIGNAL_PROCESSING_LABEL = "DSP";
 	public static final String ONE_SHOT_LABEL = "OneShot";
+	public static final String STEP_COUNTER_LABEL = "StepCounter";
 	
 	// if new function libraries are added, declare their labels down here
 	public static final String RAW_DATA_LABEL = "Raw Data";
@@ -100,6 +102,7 @@ public class SPINEFunctionConstants {
 			case ALARM: return ALARM_LABEL;
 			case SIGNAL_PROCESSING: return SIGNAL_PROCESSING_LABEL;
 			case ONE_SHOT: return ONE_SHOT_LABEL;
+			case STEP_COUNTER: return STEP_COUNTER_LABEL;
 			default: return "?";
 		}
 	}
@@ -113,6 +116,8 @@ public class SPINEFunctionConstants {
 			return SIGNAL_PROCESSING;
 		if(label.equals(ONE_SHOT_LABEL))
 			return ONE_SHOT;
+		if(label.equals(STEP_COUNTER_LABEL))
+			return STEP_COUNTER;
 		else 
 			return -1;
 	}
@@ -149,6 +154,7 @@ public class SPINEFunctionConstants {
 				default: return "?";	
 			}
 			case ONE_SHOT: return RAW_DATA_LABEL;
+			case STEP_COUNTER: return STEP_COUNTER_LABEL;
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
 		}
@@ -199,6 +205,8 @@ public class SPINEFunctionConstants {
 			else
 				return -1;
 		}
+		if (functionLabel.equals(STEP_COUNTER_LABEL)) 
+			return STEP_COUNTER;
 		else
 			return -1;
 	}
