@@ -41,7 +41,7 @@
          _______________________________________________ -->
   <target name="doc" description="generate the javadoc files">
     <mkdir dir="doc"/>
-    <javadoc sourcepath="src" destdir="doc" doctitle="SPINE Signal Processing In Node Environment" author="true" windowtitle="SPINE Java API" packagenames="spine, spine.*, test"/> 
+    <javadoc sourcepath="src" destdir="doc" doctitle="SPINE Signal Processing In Node Environment" author="true" windowtitle="SPINE Java API" packagenames="spine, spine.*, test" classpath="${tinyos.jar};lib/localNodeAdapter.jar"/> 
   </target>
 
 
