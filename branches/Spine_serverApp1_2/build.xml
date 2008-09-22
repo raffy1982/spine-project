@@ -70,7 +70,7 @@
       <fileset dir="../.." includes="spine/Spine_serverApp/doc/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/lib/**"/>
       <fileset dir="../.." includes="spine/Spine_serverApp/test/**"/>
-      <fileset dir="../.." includes="spine/Spine_serverApp/*" excludes="spine/Spine_serverApp/classes"/>
+      <fileset dir="../.." includes="spine/Spine_serverApp/*" excludes="spine/Spine_serverApp/classes, spine/Spine_serverApp/ext-lib"/>
     </jar>
   </target>
 
