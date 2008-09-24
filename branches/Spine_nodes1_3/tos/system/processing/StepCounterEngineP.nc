@@ -33,11 +33,11 @@
  */
 
 #ifndef DEFAULT_WAIT
-#define DEFAULT_WAIT 10
+#define DEFAULT_WAIT 15
 #endif
 
 #ifndef STEP_X_THRESHOLD_WAIST
-#define STEP_X_THRESHOLD_WAIST -1150
+#define STEP_X_THRESHOLD_WAIST -1250
 #endif
 
 #ifndef STEP_X_THRESHOLD_THIGH
