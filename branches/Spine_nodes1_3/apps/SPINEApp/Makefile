@@ -31,10 +31,6 @@ PFLAGS += -DTDMA_FRAME_PERIOD=600
 PFLAGS += -DRADIO_LOW_POWER=TRUE
 
 
-#registry size for handling sensor self-registration; set this value equal to the number of sensors on the node (the array is preallocated, so this parameter affects the global memory usage)
-PFLAGS += -DSENSORS_REGISTRY_SIZE=4
-
-
 #buffer pool size; set this value equal to the total number of channels of all sensors on the node (the pool is preallocated, so this parameter affects the global memory usage)
 #each buffer of the pool will be used to store data from a single channel
 PFLAGS += -DBUFFER_POOL_SIZE=6
