@@ -220,7 +220,7 @@ public final class SFReadWriteThread extends Thread {
 	}
 	
 	protected synchronized void sendMessage(int moteID, Message message) throws SFWriteException {
-		if (!handshakedone) {
+		while (!handshakedone) {
 			try { Thread.sleep(100); } catch (InterruptedException ie) { System.out.println("Handshake wait sleep interrupted in SFReadWriteThread.sendMessage()");}
 		}
 		
