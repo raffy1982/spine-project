@@ -4,23 +4,23 @@ allows dynamic configuration of feature extraction capabilities
 of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+
 GNU Lesser General Public License
- 
+
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
- 
+
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MA 02111-1307, USA.
 *****************************************************************/
 
  /**
@@ -56,38 +56,15 @@ Boston, MA  02111-1307, USA.
        * @return    void.
        */
        event void radioOn();
-       
-       /**
-       * Controls the low-power radio mode of the Radio Controller. 
-       * Low-power mode is active by default and can also be tuned at compile time 
-       * using the defining the pflag 'RADIO_LOW_POWER' at TRUE or FALSE.
-       * Here "low power" means the functionality of turning off the radio when not sending packets.
-       *
-       * @param  enable    TRUE to enable the low-power radio mode; FALSE to disable it.
-       *
-       * @return    void.
-       */
-       command void setRadioAlwaysOn(bool enable);
-       
-       /**
-       * Controls the sw TDMA activation. 
-       * TDMA is disabled by default; it can be tuned at compile time
-       * using the defining the pflag 'ENABLE_TDMA' at TRUE or FALSE.
-       *
-       * @param  networkSize    the network size (number of nodes) is needed to scale correctly the TMDA schema.
-       * @param  myTimeSlotID   the slot ID in which the radio controller can transmit messages.
-       *
-       * @return    void.
-       */
-       command void enableTDMA(uint16_t networkSize, uint16_t myTimeSlotID);
 
+      
        /**
-       * Controls the sw TDMA deactivation.
+       * Resets the state of the radio controller.
        *
-       * @return    void.
+       * @return       void.
        */
-       command void disableTDMA();
-
+       command void reset();
+       
        /**
        * Send a packet with a data payload of <tt>data</tt> and type <tt>pktType</tt> to address <tt>destination</tt>.
        * If send returns SUCCESS, then the message is going to be transmitted;
@@ -101,13 +78,6 @@ Boston, MA  02111-1307, USA.
        * @return              SUCCESS if the request to send succeeded.
        */
        command error_t send(uint16_t destination, enum PacketTypes pktType, void* payload, uint8_t len);
-       
-       /**
-       * Resets the state of the radio controller.
-       *
-       * @return       void.
-       */
-       command void reset();
 
        /**
        * Signals the reception of a message.
@@ -121,7 +91,6 @@ Boston, MA  02111-1307, USA.
        * @return           void.
        */
        event void receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len);
-
  }
 
 
