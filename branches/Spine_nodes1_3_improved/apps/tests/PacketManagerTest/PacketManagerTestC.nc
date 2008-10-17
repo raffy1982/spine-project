@@ -4,23 +4,23 @@ allows dynamic configuration of feature extraction capabilities
 of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+
 GNU Lesser General Public License
- 
+
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
- 
+
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MA 02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -91,11 +91,11 @@ implementation {
      msg5[4] = 0x1E;  // acc ch1,ch2,ch3
      msg5[5] = 0x28;  // volt ch1
 
-     //call PacketManager.build(SVC_MSG, &msg2, sizeof msg2);
+     call PacketManager.build(SVC_MSG, &msg2, sizeof msg1);
      //call SpineHeader.parse(&msg1);
      //call InPacket.parse(&msg3, sizeof msg3);
      //call InPacket.parse(&msg4, sizeof msg4);
-     call InPacket.parse(&msg5, sizeof msg5);
+     //call InPacket.parse(&msg5, sizeof msg5);
 
      //if (call SpineHeader.getVersion() == 0x02) call Leds.led0Toggle();
      //if (!call SpineHeader.isExtended() && call SpineHeader.getPktType() == SERVICE_DISCOVERY)  call Leds.led1Toggle();
@@ -110,9 +110,9 @@ implementation {
      //    && call SpineSetupSensorPkt.getSamplingTime() == 0x03E9) call Leds.led0Toggle();
      //if (call SpineStartPkt.getNetworkSize() == 0x000A) call Leds.led0Toggle();
      
-     if (call SpineFunctionReqPkt.getFunctionCode()==0x01 && call SpineFunctionReqPkt.isEnableRequest()) call Leds.led0Toggle();
-     tmpBuf = call SpineFunctionReqPkt.getFunctionParams(&tmpByte);
-     if (tmpByte == 0x04 && tmpBuf[0]==0x01 && tmpBuf[1]==0x01 && tmpBuf[2]==0x1E && tmpBuf[3]==0x28)  call Leds.led1Toggle();
+     //if (call SpineFunctionReqPkt.getFunctionCode()==0x01 && call SpineFunctionReqPkt.isEnableRequest()) call Leds.led0Toggle();
+     //tmpBuf = call SpineFunctionReqPkt.getFunctionParams(&tmpByte);
+     //if (tmpByte == 0x04 && tmpBuf[0]==0x01 && tmpBuf[1]==0x01 && tmpBuf[2]==0x1E && tmpBuf[3]==0x28)  call Leds.led1Toggle();
   }
 
   event void PacketManager.messageReceived(enum PacketTypes pktType) {
