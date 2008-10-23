@@ -1,0 +1,6 @@
+configuration TopologyControlC
+{
+}
+implementation
+{
+}
