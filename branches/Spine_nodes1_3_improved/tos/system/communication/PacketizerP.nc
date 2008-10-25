@@ -35,6 +35,7 @@ generic module PacketizerP() {
   }
   uses {
     interface BufferedSendWithHeader as SubBufferedSend;
+    interface Leds;
   }
 }
 
@@ -62,7 +63,7 @@ implementation {
 
     for(; header.fragNr<=header.totFrags; header.fragNr++) {
       if(header.fragNr == header.totFrags)
-        len_ = PACKET_LENGTH - (len % PACKET_LENGTH);
+        len_ = ((len % PACKET_LENGTH) == 0) ? PACKET_LENGTH : (len % PACKET_LENGTH);
       if( (error = call SubBufferedSend.send(dest, &header, sizeof(header), data_, len_)) != SUCCESS)
         return error;
       data_ += PACKET_LENGTH;

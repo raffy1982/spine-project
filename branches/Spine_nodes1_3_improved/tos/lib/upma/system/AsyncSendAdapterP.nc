@@ -30,6 +30,7 @@ module AsyncSendAdapterP
 {
 	provides interface Send;
 	uses interface AsyncSend;
+	uses interface Leds;
 }
 implementation
 {

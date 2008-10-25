@@ -1,6 +1,7 @@
-COMPONENT = TestSendingAppC
+COMPONENT=PacketizerTestAppC
 
-UPMA_MAC = xmac
+PFLAGS += -I..
+PFLAGS += -DCC2420_DEF_CHANNEL=14
 
 include ../../../Makefile.spine
 include ../../../Makefile.upma

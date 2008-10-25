@@ -29,35 +29,45 @@ Boston, MA 02111-1307, USA.
  *
  */
 
-#include "AM.h"
+#include "spine_constants.h"
 
-generic configuration AMQueuedSendWithHeaderC(am_id_t AM_ID, uint8_t QUEUE_SIZE) {
-  provides {
-    interface BufferedSendWithHeader as Send;
-    interface Packet;
+module PacketizerTestC {
+  uses {
+    interface Boot;
+    interface SplitControl as AMControl;
+    interface BufferedSend;
     interface AMPacket;
+    interface Timer<TMilli> as SendTimer;
+    interface Leds;
+    interface LowPowerListening;
+    interface Interval as SyncInterval;
   }
 }
 
-implementation {          
+implementation {
+  uint8_t msg1[100];
+  uint16_t destination1 = AM_BROADCAST_ADDR;
 
-  components new AMQueuedSendWithHeaderP() as QueuedSend;
-  Send = QueuedSend;
+  event void Boot.booted() {
+    int i;
+    for(i=0; i<100; i++)
+      msg1[i] = i;
+    call AMControl.start();
+  }
 
-  components new AMSenderC(AM_ID) as SenderC;
-  QueuedSend.Sender -> SenderC;
-  
-  components ActiveMessageC;
-  Packet= ActiveMessageC;
-  AMPacket= ActiveMessageC;
-  QueuedSend.Packet -> ActiveMessageC;
-  QueuedSend.AMPacket -> ActiveMessageC;
-      
-  components new QueueC(message_t*, QUEUE_SIZE) as Queue;
-  components new PoolC(message_t, QUEUE_SIZE) as Pool;
-  QueuedSend.MsgQueue -> Queue;
-  QueuedSend.MsgPool -> Pool;
+  event void AMControl.startDone(error_t error) {
+     call SyncInterval.set(SPINE_SCP_SYNC_INTERVAL);
+     call LowPowerListening.setLocalSleepInterval(SPINE_SCP_SLEEP_INTERVAL);
+     call SendTimer.startPeriodic(5000);
+  }
 
-  components LedsC;
-  QueuedSend.Leds -> LedsC;
+  event void SendTimer.fired() {
+    if(call BufferedSend.send(destination1, &msg1, sizeof msg1) == SUCCESS)
+      call Leds.led0Toggle();
+    else call Leds.led1Toggle();
+  }
+
+  event void AMControl.stopDone(error_t error) {
+  }
 }
+

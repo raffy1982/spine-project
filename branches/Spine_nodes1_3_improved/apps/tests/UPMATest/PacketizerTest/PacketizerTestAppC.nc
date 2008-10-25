@@ -29,35 +29,31 @@ Boston, MA 02111-1307, USA.
  *
  */
 
-#include "AM.h"
-
-generic configuration AMQueuedSendWithHeaderC(am_id_t AM_ID, uint8_t QUEUE_SIZE) {
-  provides {
-    interface BufferedSendWithHeader as Send;
-    interface Packet;
-    interface AMPacket;
-  }
+#include "SpinePackets.h"
+ 
+configuration PacketizerTestAppC {
 }
 
-implementation {          
+implementation {
+  components MainC;
+  components PacketizerTestC as App;
+  App.Boot -> MainC.Boot;
 
-  components new AMQueuedSendWithHeaderP() as QueuedSend;
-  Send = QueuedSend;
-
-  components new AMSenderC(AM_ID) as SenderC;
-  QueuedSend.Sender -> SenderC;
-  
   components ActiveMessageC;
-  Packet= ActiveMessageC;
-  AMPacket= ActiveMessageC;
-  QueuedSend.Packet -> ActiveMessageC;
-  QueuedSend.AMPacket -> ActiveMessageC;
-      
-  components new QueueC(message_t*, QUEUE_SIZE) as Queue;
-  components new PoolC(message_t, QUEUE_SIZE) as Pool;
-  QueuedSend.MsgQueue -> Queue;
-  QueuedSend.MsgPool -> Pool;
+  App.AMControl -> ActiveMessageC;
+  
+  components new PacketizerC(AM_SPINE);
+  App.BufferedSend -> PacketizerC.BufferedSend[SVC_MSG];
+
+  components new TimerMilliC() as SendTimer;
+  App.SendTimer -> SendTimer;
 
   components LedsC;
-  QueuedSend.Leds -> LedsC;
+  App.Leds -> LedsC;
+
+  components MacControlC;
+  App.SyncInterval -> MacControlC.SyncInterval;
+  App.LowPowerListening -> MacControlC.LowPowerListening;
+
 }
+

@@ -131,7 +131,6 @@ implementation {
   
   task void startRadio() {
     error_t err;
-    call Leds.led0On();
     err = call RadioPowerControl.start();
     if(err == EALREADY) {
       post getCca();

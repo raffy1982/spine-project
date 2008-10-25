@@ -42,4 +42,7 @@ implementation
 	
 	RecvAdapter.AsyncReceive = AsyncReceive;
 	SendAdapter.AsyncSend = AsyncSend;
+
+	components LedsC;
+	SendAdapter.Leds -> LedsC;
 }

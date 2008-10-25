@@ -44,4 +44,7 @@ implementation {
 
   components new AMQueuedSendWithHeaderC(AM_ID, SPINE_MSQ_QUEUE_SIZE);
   PacketizerP.SubBufferedSend -> AMQueuedSendWithHeaderC;
+
+  components LedsC;
+  PacketizerP.Leds -> LedsC;
 }

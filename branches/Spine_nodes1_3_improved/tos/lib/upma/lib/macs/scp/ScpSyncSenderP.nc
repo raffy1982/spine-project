@@ -84,7 +84,7 @@ implementation
 		if(call AMPacket.type(msg) == AM_PREAMBLEPACKET)
 			return call SubSend.send(msg, len);
 		// Pass preamble packets straight through
-		
+
 		atomic piggybacked = TRUE;
 		// Record that we've piggypacked a sync message
 		addSyncFooter(msg, len - call AMPacket.headerSize());

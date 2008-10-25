@@ -1,6 +1,7 @@
-COMPONENT = TestSendingAppC
+COMPONENT=RadioStressAppC
 
-UPMA_MAC = xmac
+PFLAGS += -I..
+GOALS += threads
 
 include ../../../Makefile.spine
 include ../../../Makefile.upma

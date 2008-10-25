@@ -63,16 +63,16 @@ enum spine_packet_type {
 };
 typedef uint8_t spine_packet_type_t;
 
-typedef struct spine_header {
-  uint8_t vers       :2;      // 2 bits
-  uint8_t ext        :1;      // 1 bit
-  uint8_t pktT       :5;      // 5 bits
-  uint8_t grpID      :8;      // 8 bits
-  uint16_t srcID     :16;     // 16 bits
-  uint16_t dstID     :16;     // 16 bits
-  uint8_t seqNr      :8;      // 8 bits
-  uint8_t fragNr     :8;      // 8 bits
-  uint8_t totFrags   :8;      // 8 bits
+typedef nx_struct spine_header {
+  nx_uint8_t vers       :2;      // 2 bits
+  nx_uint8_t ext        :1;      // 1 bit
+  nx_uint8_t pktT       :5;      // 5 bits
+  nx_uint8_t grpID      :8;      // 8 bits
+  nx_uint16_t srcID     :16;     // 16 bits
+  nx_uint16_t dstID     :16;     // 16 bits
+  nx_uint8_t seqNr      :8;      // 8 bits
+  nx_uint8_t fragNr     :8;      // 8 bits
+  nx_uint8_t totFrags   :8;      // 8 bits
 } spine_header_t;
 #define SPINE_HEADER_PKT_SIZE sizeof(spine_header_t) //9 bytes
 
