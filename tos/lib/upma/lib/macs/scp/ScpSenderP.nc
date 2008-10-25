@@ -204,7 +204,7 @@ implementation
 	{
 		uint16_t preambleTime;
 		preambleBackoff = (call Random.rand16() % SCP_TONE_CONT_WIN) + 1;
-    	preambleTime = SCP_TONE_CONT_WIN + MIN_TONE_LEN + 1 - preambleBackoff;
+    		preambleTime = SCP_TONE_CONT_WIN + MIN_TONE_LEN + 1 - preambleBackoff;
 		// Calculate the preamble length
 
 		if(call SendState.getState() != S_STARTING)

@@ -67,16 +67,18 @@ configuration CC2420ActiveMessageC {
     interface SplitControl;
     interface AMSend[am_id_t id];
     interface Receive[am_id_t id];
+    interface Receive as ReceiveDefault[am_id_t id];
     interface Receive as Snoop[am_id_t id];
+    interface Receive as SnoopDefault[am_id_t id];
     interface AMPacket;
     interface Packet;
     interface PacketAcknowledgements;
     interface PacketLink;
     interface PacketQuality;
     interface PacketPower;
-	interface LinkPacketMetadata;
-	interface CcaControl[am_id_t amId];
-	interface SendNotifier[am_id_t amId];
+    interface LinkPacketMetadata;
+    interface CcaControl[am_id_t amId];
+    interface SendNotifier[am_id_t amId];
   }
 }
 implementation {
@@ -105,7 +107,9 @@ implementation {
   AMSend = AM;
   SendNotifier = AM;
   Receive = AM.Receive;
+  ReceiveDefault = AM.ReceiveDefault;
   Snoop = AM.Snoop;
+  SnoopDefault = AM.SnoopDefault;
   AMPacket = AM;
   PacketLink = LinkC;
   PacketAcknowledgements = CC2420PacketC;
@@ -117,7 +121,18 @@ implementation {
   SplitControl = MacC;
   CcaControl = AM;
   AM.SubCcaControl -> MacC;
-  
+
+  // Send Layers
+  AM.SubSend -> AsyncAdapterC.Send;
+  AsyncAdapterC.AsyncSend -> MacC;
+  MacC.SubSend -> CsmaC;
+
+  // Receive Layers
+  AM.SubReceive -> AsyncAdapterC.Receive;
+  AsyncAdapterC.AsyncReceive -> MacC;
+  MacC.SubReceive -> CsmaC;
+
+/*  
   // Send Layers
   AM.SubSend -> UniqueSendC;
   UniqueSendC.SubSend -> LinkC;
@@ -126,7 +141,7 @@ implementation {
   AsyncAdapterC.AsyncSend -> TopologyC;
   TopologyC.SubSend -> MacC;
   MacC.SubSend -> CsmaC;
-  
+
   // Receive Layers
   AM.SubReceive -> UniqueReceiveC.Receive;
   UniqueReceiveC.SubReceive -> CC2420TinyosNetworkC.Receive;
@@ -134,6 +149,7 @@ implementation {
   AsyncAdapterC.AsyncReceive -> TopologyC;
   TopologyC.SubReceive -> MacC;
   MacC.SubReceive -> CsmaC;
+*/
   
   MacC.PacketAcknowledgements -> CC2420PacketC;
   MacC.ChannelMonitor -> PowerCycleC;
@@ -147,4 +163,7 @@ implementation {
   AM.CC2420Config -> CC2420ControlC;
   
   TopologyC.PacketPower -> CC2420PacketC; 
+
+  components LedsC;
+  AM.Leds -> LedsC;
 }

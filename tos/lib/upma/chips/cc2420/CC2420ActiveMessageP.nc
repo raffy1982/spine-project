@@ -63,7 +63,9 @@ module CC2420ActiveMessageP @safe() {
   provides {
     interface AMSend[am_id_t id];
     interface Receive[am_id_t id];
+    interface Receive as ReceiveDefault[am_id_t id];
     interface Receive as Snoop[am_id_t id];
+    interface Receive as SnoopDefault[am_id_t id];
     interface AMPacket;
     interface Packet;
     interface CcaControl[am_id_t id];
@@ -77,6 +79,7 @@ module CC2420ActiveMessageP @safe() {
     interface CC2420Config;
     interface ActiveMessageAddress;
     interface CcaControl as SubCcaControl[am_id_t id];
+    interface Leds;
   }
 }
 implementation {
@@ -235,10 +238,18 @@ implementation {
   
   /***************** Defaults ****************/
   default event message_t* Receive.receive[am_id_t id](message_t* msg, void* payload, uint8_t len) {
-    return msg;
+    return signal ReceiveDefault.receive[id](msg, payload, len);
   }
   
   default event message_t* Snoop.receive[am_id_t id](message_t* msg, void* payload, uint8_t len) {
+    return signal SnoopDefault.receive[id](msg, payload, len);
+  }
+
+  default event message_t* ReceiveDefault.receive[am_id_t id](message_t* msg, void* payload, uint8_t len) {
+    return msg;
+  }
+  
+  default event message_t* SnoopDefault.receive[am_id_t id](message_t* msg, void* payload, uint8_t len) {
     return msg;
   }
 

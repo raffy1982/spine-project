@@ -3,4 +3,5 @@ COMPONENT=AMQueuedSendTestAppC
 PFLAGS += -DCC2420_DEF_CHANNEL=12
 
 include ../../Makefile.spine
+include ../../Makefile.upma
 include $(MAKERULES)

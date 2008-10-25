@@ -29,35 +29,12 @@ Boston, MA 02111-1307, USA.
  *
  */
 
-#include "AM.h"
+#ifndef SPINE_CONSTANTS
+#define SPINE_CONSTANTS
 
-generic configuration AMQueuedSendWithHeaderC(am_id_t AM_ID, uint8_t QUEUE_SIZE) {
-  provides {
-    interface BufferedSendWithHeader as Send;
-    interface Packet;
-    interface AMPacket;
-  }
-}
+enum {
+  SPINE_SCP_SYNC_INTERVAL = 10000,
+  SPINE_SCP_SLEEP_INTERVAL = 3000
+};
 
-implementation {          
-
-  components new AMQueuedSendWithHeaderP() as QueuedSend;
-  Send = QueuedSend;
-
-  components new AMSenderC(AM_ID) as SenderC;
-  QueuedSend.Sender -> SenderC;
-  
-  components ActiveMessageC;
-  Packet= ActiveMessageC;
-  AMPacket= ActiveMessageC;
-  QueuedSend.Packet -> ActiveMessageC;
-  QueuedSend.AMPacket -> ActiveMessageC;
-      
-  components new QueueC(message_t*, QUEUE_SIZE) as Queue;
-  components new PoolC(message_t, QUEUE_SIZE) as Pool;
-  QueuedSend.MsgQueue -> Queue;
-  QueuedSend.MsgPool -> Pool;
-
-  components LedsC;
-  QueuedSend.Leds -> LedsC;
-}
+#endif

@@ -37,6 +37,7 @@ generic module AMQueuedSendWithHeaderP() {
 
     interface Queue<message_t*> as MsgQueue;
     interface Pool<message_t> as MsgPool;
+    interface Leds;
   }
   provides {
     interface BufferedSendWithHeader as Send;
@@ -46,12 +47,25 @@ generic module AMQueuedSendWithHeaderP() {
 implementation {
   /* Module variables */
   bool busySending = FALSE;   
+  message_t* p_msg;
+  message_t* prepareToSend(am_addr_t dest, void* header, uint8_t header_len, void* data, uint8_t data_len);
+  task void sendNextTask();
+
+  void sendNext() {
+    uint16_t destination = call AMPacket.destination(p_msg); 
+    uint8_t length = call Packet.payloadLength(p_msg); 
+
+    if( call Sender.send(destination, p_msg, length) != SUCCESS )
+      post sendNextTask();
+  }
+
+  task void sendNextTask() {
+    sendNext();
+  }
 
   /* Function Prototypes */
-  message_t* prepareToSend(am_addr_t dest, void* header, uint8_t header_len, void* data, uint8_t data_len);
 
   command error_t Send.send(am_addr_t dest, void* header, uint8_t header_len, void* data, uint8_t data_len) {
-    message_t* p_msg;
     uint8_t total_len = header_len + data_len;
 
     if(total_len > TOSH_DATA_LENGTH)
@@ -62,14 +76,14 @@ implementation {
 
     if (call MsgQueue.empty() && busySending == FALSE) {
       busySending = TRUE;
-      return call Sender.send(dest, p_msg, total_len);
+      sendNext();
+      return SUCCESS;
     }
 
     return call MsgQueue.enqueue(p_msg);
   }
   
   message_t* prepareToSend(am_addr_t dest, void* header, uint8_t header_len, void* data, uint8_t data_len) {
-      message_t* p_msg;
       uint8_t* p_msg_payload;
       uint8_t total_len = header_len + data_len;
 
@@ -87,21 +101,16 @@ implementation {
   }
        
   event void Sender.sendDone(message_t* msg, error_t error) {
-    uint16_t destination; 
-    uint8_t length;
-    
+    call Leds.led2Toggle();
     if(error == SUCCESS) {
       call MsgPool.put(msg);
       if( call MsgQueue.empty() == TRUE) {
         busySending = FALSE;
         return;
       }
-      msg = call MsgQueue.dequeue();
+      p_msg = call MsgQueue.dequeue();
     }
-    destination = call AMPacket.destination(msg); 
-    length = call Packet.payloadLength(msg); 
-
-    call Sender.send(destination, msg, length); 
+    sendNext();
   }
 }
 
