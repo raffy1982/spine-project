@@ -33,5 +33,5 @@ configuration TestSendingAppC
 implementation
 {
 	components SerialActiveMessageC;
-	components new SendingAppC(3000, TRUE) as SendingApp;
+	components new SendingAppC() as SendingApp;
 }

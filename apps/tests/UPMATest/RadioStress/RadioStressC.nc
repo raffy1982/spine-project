@@ -64,7 +64,6 @@ module RadioStressC {
     interface Leds;
 
     interface LowPowerListening;
-    interface Interval as SyncInterval;
   }
 }
 
@@ -81,8 +80,7 @@ implementation {
 
   event void RadioStressThread0.run(void* arg) {
     call BlockingAMControl.start();
-    call SyncInterval.set(SPINE_SCP_SYNC_INTERVAL);
-    call LowPowerListening.setLocalSleepInterval(SPINE_SCP_SLEEP_INTERVAL);
+    call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
     for(;;) {
       if(TOS_NODE_ID == 0) {
         call BlockingReceive0.receive(&m0, 5000);

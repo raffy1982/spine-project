@@ -27,7 +27,8 @@
  * @date $Date: 2007/11/06 23:58:57 $
  */
 
-generic configuration SendingAppC(uint16_t interval, bool sends)
+#include "TestMsg.h"
+generic configuration SendingAppC()
 {
 }
 implementation
@@ -36,19 +37,17 @@ implementation
 	components ActiveMessageC;
 	components MacControlC;
 	
-	components new SendingC(interval, sends) as App;
-	components new AMSenderC(240) as AMSender;
+	components new SendingC() as App;
+	components new AMSenderC(AM_TESTMSG) as AMSender;
+	components new AMReceiverC(AM_TESTMSG) as AMReceiver;
 	components LedsC;
-	components new TimerMilliC();
-	components new AMReceiverC(240) as AMReceiver;
 
 	App.Boot -> MainC;
 	App.Leds -> LedsC;
-	App.AMSender -> AMSender;
-	App.AMReceiver -> AMReceiver;
+	App.AMSend -> AMSender;
+	App.Receive -> AMReceiver;
 	App.Packet -> ActiveMessageC;
-	App.SendTimer -> TimerMilliC;
-	App.SplitControl -> ActiveMessageC;
+	App.RadioControl -> ActiveMessageC;
 	App.LowPowerListening -> MacControlC;
 }
 

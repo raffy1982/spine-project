@@ -123,12 +123,17 @@ implementation {
   AM.SubCcaControl -> MacC;
 
   // Send Layers
-  AM.SubSend -> AsyncAdapterC.Send;
+  AM.SubSend -> UniqueSendC;
+  UniqueSendC.SubSend -> LinkC;
+  LinkC.SubSend -> CC2420TinyosNetworkC.Send;
+  CC2420TinyosNetworkC.SubSend -> AsyncAdapterC.Send;
   AsyncAdapterC.AsyncSend -> MacC;
   MacC.SubSend -> CsmaC;
 
   // Receive Layers
-  AM.SubReceive -> AsyncAdapterC.Receive;
+  AM.SubReceive -> UniqueReceiveC.Receive;
+  UniqueReceiveC.SubReceive -> CC2420TinyosNetworkC.Receive;
+  CC2420TinyosNetworkC.SubReceive -> AsyncAdapterC.Receive;
   AsyncAdapterC.AsyncReceive -> MacC;
   MacC.SubReceive -> CsmaC;
 

@@ -1,5 +1,7 @@
 
 UPMA_TOSROOT = $(SPINE_TOSROOT)/tos/lib/upma
 TOSMAKE_PATH += $(UPMA_TOSROOT)/support/make
+PFLAGS += -DPACKET_LINK
+
 GOALS += upma
 

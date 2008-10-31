@@ -67,7 +67,6 @@ module BaseStationP @safe() {
     interface Leds;
 
     interface LowPowerListening;
-    interface Interval as SyncInterval;
   }
 }
 
@@ -120,8 +119,7 @@ implementation
 
   event void RadioControl.startDone(error_t error) {
     if (error == SUCCESS) {
-      call SyncInterval.set(SPINE_SCP_SYNC_INTERVAL);
-      call LowPowerListening.setLocalSleepInterval(SPINE_SCP_SLEEP_INTERVAL);
+      call LowPowerListening.setLocalSleepInterval(0);
       radioFull = FALSE;
     }
   }
@@ -279,6 +277,7 @@ implementation
     call RadioPacket.clear(msg);
     call RadioAMPacket.setSource(msg, source);
     
+    call LowPowerListening.setRxSleepInterval(msg, SPINE_SLEEP_INTERVAL);
     if (call RadioSend.send[id](addr, msg, len) == SUCCESS)
       call Leds.led0Toggle();
     else
