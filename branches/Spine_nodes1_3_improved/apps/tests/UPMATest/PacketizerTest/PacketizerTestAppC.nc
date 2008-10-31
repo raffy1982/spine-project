@@ -51,8 +51,7 @@ implementation {
   components LedsC;
   App.Leds -> LedsC;
 
-  components MacControlC;
-  App.SyncInterval -> MacControlC.SyncInterval;
+  components CC2420ActiveMessageC as MacControlC;
   App.LowPowerListening -> MacControlC.LowPowerListening;
 
 }

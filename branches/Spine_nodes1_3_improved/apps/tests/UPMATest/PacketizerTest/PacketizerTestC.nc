@@ -40,24 +40,22 @@ module PacketizerTestC {
     interface Timer<TMilli> as SendTimer;
     interface Leds;
     interface LowPowerListening;
-    interface Interval as SyncInterval;
   }
 }
 
 implementation {
-  uint8_t msg1[100];
+  uint8_t msg1[470];
   uint16_t destination1 = AM_BROADCAST_ADDR;
 
   event void Boot.booted() {
     int i;
-    for(i=0; i<100; i++)
+    for(i=0; i<470; i++)
       msg1[i] = i;
     call AMControl.start();
   }
 
   event void AMControl.startDone(error_t error) {
-     call SyncInterval.set(SPINE_SCP_SYNC_INTERVAL);
-     call LowPowerListening.setLocalSleepInterval(SPINE_SCP_SLEEP_INTERVAL);
+     call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
      call SendTimer.startPeriodic(5000);
   }
 

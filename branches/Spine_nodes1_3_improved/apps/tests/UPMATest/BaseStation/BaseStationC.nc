@@ -88,8 +88,7 @@ implementation {
   
   BaseStationP.Leds -> LedsC;
 
-  components MacControlC;
-  BaseStationP.SyncInterval -> MacControlC.SyncInterval;
-  BaseStationP.LowPowerListening -> MacControlC.LowPowerListening;
+  components CC2420ActiveMessageC;
+  BaseStationP.LowPowerListening -> CC2420ActiveMessageC.LowPowerListening;
 
 }

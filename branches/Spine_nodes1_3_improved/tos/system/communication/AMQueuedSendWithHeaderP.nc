@@ -101,7 +101,6 @@ implementation {
   }
        
   event void Sender.sendDone(message_t* msg, error_t error) {
-    call Leds.led2Toggle();
     if(error == SUCCESS) {
       call MsgPool.put(msg);
       if( call MsgQueue.empty() == TRUE) {

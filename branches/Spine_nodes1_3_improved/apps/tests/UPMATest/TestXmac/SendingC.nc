@@ -27,71 +27,68 @@
  * @date $Date: 2007/11/06 23:58:57 $
  */
 
-generic module SendingC(uint16_t interval, bool sends)
+#include "spine_constants.h"
+generic module SendingC()
 {
 	uses
 	{
 		interface Boot;
 		interface Leds;
 		interface LowPowerListening;
-//		interface RadioDutyCycling;
-		interface AMSend as AMSender;
-		interface Receive as AMReceiver;
+		interface AMSend;
+		interface Receive;
 		interface Packet;
-		interface Timer<TMilli> as SendTimer;
-		interface SplitControl;
-//		interface Random;
+		interface SplitControl as RadioControl;
 	}
 }
 
 implementation
 {
-	message_t packet;
+	message_t msg;
+	task void sendTask();
+
+	void send() {
+		if(call AMSend.send(!TOS_NODE_ID, &msg, sizeof(TestMsg)) == SUCCESS)
+			call Leds.led0Toggle();
+		else {
+			call Leds.led2Toggle();
+			post sendTask();
+		}
+	}
+	
+	task void sendTask() {
+		send();
+	}
 
 	event void Boot.booted()
 	{
-		call SplitControl.start();
-	}
-
-	event void AMSender.sendDone(message_t * bufPtr, error_t error)
-	{
-		if(error != SUCCESS)
-		{
-			call Leds.led0On();
-			call Leds.led1On();
-			call Leds.led2On();
-		}
-		else
-			call Leds.led2Off();
-	}
-
-	event void SendTimer.fired()
-	{
-		if(sends)
-		{
-			call Leds.led2On();
-			call AMSender.send(AM_BROADCAST_ADDR, &packet, 2 * sizeof(uint8_t));
-		}
+		TestMsg * payload = (TestMsg *)call AMSend.getPayload(&msg, sizeof(TestMsg));
+		payload->payload[0] = 'T';
+		payload->payload[1] = 'e';
+		payload->payload[2] = 's';
+		payload->payload[3] = 't';
+		payload->payload[4] = '\0';
+		call RadioControl.start();
 	}
 	
-	event message_t * AMReceiver.receive(message_t * message, void * payload, uint8_t length)
+	event void RadioControl.startDone(error_t err)
+	{
+		call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
+		send();
+	}
+	
+	event void RadioControl.stopDone(error_t err)
+	{
+	}
+	
+	event void AMSend.sendDone(message_t * m, error_t error)
+	{
+		send();
+	}
+	
+	event message_t * Receive.receive(message_t * m, void * payload, uint8_t len)
 	{
 		call Leds.led1Toggle();
-		return message;
-	}
-	
-	event void SplitControl.startDone(error_t err)
-	{
-		uint8_t * nodeId;
-		call LowPowerListening.setLocalSleepInterval(interval);
-			
-		nodeId = (uint8_t *)call Packet.getPayload(&packet, sizeof(uint8_t));
-		*nodeId = TOS_NODE_ID;
-
-		call SendTimer.startPeriodic(8000);
-	}
-
-	event void SplitControl.stopDone(error_t err)
-	{
+		return m;
 	}
 }

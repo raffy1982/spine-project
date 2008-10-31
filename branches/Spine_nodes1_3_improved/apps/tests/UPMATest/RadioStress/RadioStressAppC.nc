@@ -72,7 +72,6 @@ implementation {
   RadioStressC.BlockingReceive2 -> BlockingAMReceiver2;
 
   components MacControlC;
-  RadioStressC.SyncInterval -> MacControlC;
   RadioStressC.LowPowerListening -> MacControlC;
 
 }
