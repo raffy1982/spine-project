@@ -72,15 +72,35 @@ implementation
             return  (mu / dataLen);
       }
       
-      command uint32_t MathUtils.variance(int16_t* data, uint16_t elemCount) {
+      command uint32_t MathUtils.varianceOld(int16_t* data, uint16_t elemCount) {
           uint32_t var = 0;
           uint16_t i;
           int16_t mu = call MathUtils.mean(data, elemCount);
 
-          for(i = 0; i<elemCount; i++)
+          for(i = 0; i<elemCount; i++) {
                 var += (  ((int32_t)data[i] - mu) * ((int32_t)data[i] - mu)  );
-
+            }
+		  
           return  (var/elemCount);
+       }
+       //variance implementation changed to have computation time linear with # samples
+       command uint32_t MathUtils.variance(int16_t* data, uint16_t elemCount) {
+          uint32_t var = 0;
+          uint16_t i;
+          //int16_t mu = call MathUtils.mean(data, elemCount);
+		  int16_t mu = 0;	
+          int32_t val = 0;
+          for(i = 0; i<elemCount; i++) {
+                //var += (  ((int32_t)data[i] - mu) * ((int32_t)data[i] - mu)  );
+                val = (int32_t)data[i];
+                mu += val;
+                var += (  val*val );
+            }
+          mu /= elemCount;  
+          var /= elemCount;
+          var -= (mu*mu); 
+		  return (var);
+          //return  (var/elemCount);
        }
 
       /*
