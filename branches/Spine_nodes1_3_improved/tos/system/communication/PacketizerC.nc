@@ -32,18 +32,24 @@ Boston, MA 02111-1307, USA.
 #include "AM.h"
 #include "SpinePackets.h"
 
-generic configuration PacketizerC(am_id_t AM_ID) {
+generic configuration PacketizerC(am_id_t AM_ID, uint8_t MSG_QUEUE_SIZE) {
   provides {
     interface BufferedSend[spine_packet_type_t type];
+    interface Receive[spine_packet_type_t type];
   }
 }
 
 implementation {
   components new PacketizerP();
   BufferedSend = PacketizerP;
+  Receive = PacketizerP;
 
-  components new AMQueuedSendWithHeaderC(AM_ID, SPINE_MSQ_QUEUE_SIZE);
+  components new AMQueuedSendWithHeaderC(AM_ID, MSG_QUEUE_SIZE);
   PacketizerP.SubBufferedSend -> AMQueuedSendWithHeaderC;
+
+  components new AMReceiverC(AM_ID) as ReceiverC;
+  PacketizerP.SubReceive -> ReceiverC;
+  PacketizerP.AMPacket -> ReceiverC;
 
   components LedsC;
   PacketizerP.Leds -> LedsC;

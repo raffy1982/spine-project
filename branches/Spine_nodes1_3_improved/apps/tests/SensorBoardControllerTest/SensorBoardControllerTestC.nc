@@ -4,23 +4,23 @@ allows dynamic configuration of feature extraction capabilities
 of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
- 
+
 GNU Lesser General Public License
- 
+
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
- 
+
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 Lesser General Public License for more details.
- 
+
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA.
+Boston, MA 02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 
 #include "Timer.h"
 #include "SensorsConstants.h"
+#include "SpinePackets.h"
 
 module SensorBoardControllerTestC
 {
@@ -41,7 +42,8 @@ module SensorBoardControllerTestC
     interface Timer<TMilli>;
 
     interface SensorBoardController;
-    interface RadioController;
+    interface BufferedSend[spine_packet_type_t];
+    interface SplitControl as AMControl;
   }
 }
 implementation
@@ -50,17 +52,20 @@ implementation
   uint16_t bufTmp[6];
 
 
-  event void Boot.booted() {}
+  event void Boot.booted() {
+    call AMControl.start();
+  }
 
   void startTimer() {
     call Timer.startPeriodic(20);
   }
           
-  event void RadioController.radioOn() {
+  event void AMControl.startDone(error_t error) {
     startTimer();
   }
 
-  event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {}
+  event void AMControl.stopDone(error_t error) {
+  }
 
   event void Timer.fired() {
     call SensorBoardController.acquireData(ACC_SENSOR, ALL);
@@ -89,7 +94,7 @@ implementation
           // 'CH_1' indicate the specific sensor driver to return the last acquired value of the first channel.
           // Tipically those parameters will be provided by the coordinator, then are transparent to the core node system
       }
-      call RadioController.send(AM_BROADCAST_ADDR, AM_SPINE, &readings, sizeof readings);
+      call BufferedSend.send[DATA](AM_BROADCAST_ADDR, &readings, sizeof readings);
 
    }
 

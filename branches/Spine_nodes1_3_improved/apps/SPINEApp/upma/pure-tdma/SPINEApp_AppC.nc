@@ -1,5 +1,5 @@
 /*****************************************************************
-SPINE - Signal Processing In-Note Environment is a framework that
+SPINE - Signal Processing In-Node Environment is a framework that
 allows dynamic configuration of feature extraction capabilities 
 of WSN nodes via an OtA protocol
 
@@ -24,35 +24,49 @@ Boston, MA 02111-1307, USA.
 *****************************************************************/
 
 /**
+ * Configuration component of the SPINE Application.
  *
- * @author Kevin Klues <klueska@wsnlabberkeley.com>
+ * @author Raffaele Gravina <raffale.gravina@gmail.com>
  *
+ * @version 1.2
  */
-
-#include "SpinePackets.h"
- 
-configuration PacketizerTestAppC {
+configuration SPINEApp_AppC {
 }
 
 implementation {
-  components MainC;
-  components PacketizerTestC as App;
+  components MainC, SPINEApp_C as App;  
   App.Boot -> MainC.Boot;
 
-  components ActiveMessageC;
-  App.AMControl -> ActiveMessageC;
-  
-  components new PacketizerC(AM_SPINE);
-  App.BufferedSend -> PacketizerC.BufferedSend[SVC_MSG];
+  components SpinePacketizerC as PacketizerC;
+  App.BufferedSend -> PacketizerC;
+  App.Receive -> PacketizerC;
 
-  components new TimerMilliC() as SendTimer;
-  App.SendTimer -> SendTimer;
+  components ActiveMessageC;
+  components GenericSlotterC;
+  App.FrameConfiguration -> GenericSlotterC;
+  App.AMControl -> ActiveMessageC;
+
+  components SpineStartPktC;
+  components SpineSetupSensorPktC;
+  components SpineFunctionReqPktC;
+  components SpineSetupFunctionPktC;
+  App.SpineStartPkt -> SpineStartPktC;
+  App.SpineSetupSensorPkt -> SpineSetupSensorPktC;
+  App.SpineFunctionReqPkt -> SpineFunctionReqPktC;
+  App.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;
+  
+  components SensorsRegistryC;
+  components SensorBoardControllerC;
+  App.SensorsRegistry -> SensorsRegistryC;
+  App.SensorBoardController -> SensorBoardControllerC;
+
+  components FunctionManagerC;
+  App.FunctionManager -> FunctionManagerC;
+   
+  components new TimerMilliC() as Annce_timer;
+  App.Annce_timer -> Annce_timer; 
 
   components LedsC;
   App.Leds -> LedsC;
-
-  components CC2420ActiveMessageC as MacControlC;
-  App.LowPowerListening -> MacControlC.LowPowerListening;
-
+  
 }
-

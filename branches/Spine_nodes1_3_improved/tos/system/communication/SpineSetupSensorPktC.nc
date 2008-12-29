@@ -31,49 +31,34 @@ Boston, MA 02111-1307, USA.
  *
  * @version 1.2
  */ 
- module SpineSetupSensorPktC {
-       provides interface InPacket;
-       
-       provides interface SpineSetupSensorPkt;
- }
+module SpineSetupSensorPktC {
+  provides interface InPacket;
+  provides interface SpineSetupSensorPkt;
+}
 
- implementation {
+implementation {
+  spine_setup_sensor_t setup_sensor;
 
-    uint8_t setSensBuf[SPINE_SETUP_SENSOR_PKT_SIZE];
+  command bool InPacket.parse(void* payload, uint8_t len) { 
+    setup_sensor = *((spine_setup_sensor_t*)payload);
+    return TRUE;
+  }
     
-    uint8_t sensCode;          // 4 bits
-    uint8_t timeScale = 0;     // 2 bits
-    uint16_t samplingTime = 0; // 16 bits
-
-
-    command bool InPacket.parse(void* payload, uint8_t len) {
-       memcpy(setSensBuf, payload, SPINE_SETUP_SENSOR_PKT_SIZE);
-
-       sensCode = (setSensBuf[0] & 0xF0)>>4;    // 0xF0 = 11110000 binary
-       timeScale = (setSensBuf[0] & 0x0C)>>2;   // 0x0C = 00001100 binary
-
-       samplingTime = setSensBuf[1];
-       samplingTime = (samplingTime)<<8 | setSensBuf[2];
-
-       return TRUE;
-    }
+  command uint8_t SpineSetupSensorPkt.getSensorCode() {
+    return setup_sensor.sensCode;
+  }
     
-    command uint8_t SpineSetupSensorPkt.getSensorCode() {
-       return sensCode;
-    }
-    
-    command uint16_t SpineSetupSensorPkt.getTimeScale() {
-       switch (timeScale) {
-              case 0 : return 0x0000; // NOW
-              case 1 : return 0x0001; // 1ms
-              case 2 : return 0x03E8; // 0x03E8 =  1000 (1000ms = 1sec)
-              case 3 : return 0xEA60; // 0xEA60 = 60000 (1000ms x 60sec = 1min)
-              default : return 0x0000;
-       }
-    }
+  command uint16_t SpineSetupSensorPkt.getTimeScale() {
+    switch (setup_sensor.timeScale) {
+      case 0 : return 0x0000; // NOW
+      case 1 : return 0x0001; // 1ms
+      case 2 : return 0x03E8; // 0x03E8 =  1000 (1000ms = 1sec)
+      case 3 : return 0xEA60; // 0xEA60 = 60000 (1000ms x 60sec = 1min)
+      default : return 0x0000;
+     }
+   }
 
-    command uint16_t SpineSetupSensorPkt.getSamplingTime() {
-       return samplingTime;
-    }
-
+   command uint16_t SpineSetupSensorPkt.getSamplingTime() {
+     return setup_sensor.samplingTime;
+   }
 }

@@ -45,7 +45,7 @@
 
 #include "AM.h"
 #include "Serial.h"
-#include "spine_constants.h"
+#include "SpinePackets.h"
 
 module BaseStationP @safe() {
   uses {

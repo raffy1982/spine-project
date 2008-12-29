@@ -29,12 +29,43 @@ Boston, MA 02111-1307, USA.
  *
  */
 
-#ifndef SPINE_CONSTANTS
-#define SPINE_CONSTANTS
+#include "SpinePackets.h"
 
-enum {
-  SPINE_SYNC_INTERVAL = 10000,
-  SPINE_SLEEP_INTERVAL = 3000
-};
+module PacketizerTestC {
+  uses {
+    interface Boot;
+    interface SplitControl as AMControl;
+    interface BufferedSend;
+    interface AMPacket;
+    interface Timer<TMilli> as SendTimer;
+    interface Leds;
+    interface LowPowerListening;
+  }
+}
 
-#endif
+implementation {
+  uint8_t msg1[470];
+  uint16_t destination1 = AM_BROADCAST_ADDR;
+
+  event void Boot.booted() {
+    int i;
+    for(i=0; i<470; i++)
+      msg1[i] = i;
+    call AMControl.start();
+  }
+
+  event void AMControl.startDone(error_t error) {
+     call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
+     call SendTimer.startPeriodic(5000);
+  }
+
+  event void SendTimer.fired() {
+    if(call BufferedSend.send(destination1, &msg1, sizeof msg1) == SUCCESS)
+      call Leds.led0Toggle();
+    else call Leds.led1Toggle();
+  }
+
+  event void AMControl.stopDone(error_t error) {
+  }
+}
+

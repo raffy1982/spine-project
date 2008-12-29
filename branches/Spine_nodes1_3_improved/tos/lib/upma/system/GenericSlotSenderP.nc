@@ -57,8 +57,8 @@ generic module GenericSlotSenderP(uint16_t offset, uint16_t backoff, bool cca)  
 		S_END = 3,
 	};
 	
-	message_t *toSend;
-	uint8_t toSendLen;
+	norace message_t* toSend;
+	norace uint8_t toSendLen;
 	uint8_t state;
 
 	event void Boot.booted()
@@ -101,7 +101,7 @@ generic module GenericSlotSenderP(uint16_t offset, uint16_t backoff, bool cca)  
 		}
 		
 	
-		if (state == S_OFFSET) {
+		if (state_ == S_OFFSET) {
 			err = call SubSend.send(toSend, toSendLen);			
 			if (err != SUCCESS) {
 				atomic state = S_END;
