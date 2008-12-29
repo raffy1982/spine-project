@@ -42,7 +42,7 @@
  */
 
 #include "AM.h"
-#include "spine_constants.h"
+#include "SpinePackets.h"
 
 module RadioStressC {
   uses {

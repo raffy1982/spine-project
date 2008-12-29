@@ -21,37 +21,36 @@
  */
  
 /**
- *
+ * 
  * @author Greg Hackmann
  * @version $Revision: 1.1 $
- * @date $Date: 2007/11/06 23:58:57 $
+ * @date $Date: 2007/11/06 23:58:56 $
  */
 
-#include "spine_constants.h"
-generic module SendingC()
-{
-	uses
-	{
-		interface Boot;
-		interface Leds;
-		interface LowPowerListening;
-		interface AMSend;
-		interface Receive;
-		interface Packet;
-		interface SplitControl as RadioControl;
-	}
-}
+#include "TestMsg.h"
+#include "SpinePackets.h"
 
+module TestC
+{
+	uses interface Boot;
+	uses interface LowPowerListening;
+	uses interface Interval as SyncInterval;
+	uses interface Timer<TMilli> as Timer;
+	uses interface Leds;
+	uses interface SplitControl as RadioControl;
+	uses interface AMSend;
+	uses interface Receive;
+}
 implementation
 {
 	message_t msg;
 	task void sendTask();
 
 	void send() {
-		if(call AMSend.send(!TOS_NODE_ID, &msg, sizeof(TestMsg)) == SUCCESS)
+		if(call AMSend.send(AM_BROADCAST_ADDR, &msg, sizeof(TestMsg)) == SUCCESS)
 			call Leds.led0Toggle();
 		else {
-			call Leds.led2Toggle();
+			call Leds.led1Toggle();
 			post sendTask();
 		}
 	}
@@ -73,11 +72,16 @@ implementation
 	
 	event void RadioControl.startDone(error_t err)
 	{
+		call SyncInterval.set(SPINE_SYNC_INTERVAL);
 		call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
 		send();
 	}
 	
 	event void RadioControl.stopDone(error_t err)
+	{
+	}
+	
+	event void Timer.fired()
 	{
 	}
 	
@@ -88,7 +92,6 @@ implementation
 	
 	event message_t * Receive.receive(message_t * m, void * payload, uint8_t len)
 	{
-		call Leds.led1Toggle();
 		return m;
 	}
 }

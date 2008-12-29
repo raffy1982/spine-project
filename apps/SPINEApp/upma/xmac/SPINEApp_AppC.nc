@@ -35,29 +35,38 @@ configuration SPINEApp_AppC {
 
 implementation {
   components MainC, SPINEApp_C as App;  
-  SPINEApp_C.Boot -> MainC.Boot;
+  App.Boot -> MainC.Boot;
 
-  components PacketizerC;
-  SPINEApp_C.BufferedSend -> PacketizerC;
+  components SpinePacketizerC as PacketizerC;
+  App.BufferedSend -> PacketizerC;
+  App.Receive -> PacketizerC;
+
+  components ActiveMessageC;
+  components MacControlC;
+  App.LowPowerListening -> MacControlC;
+  App.AMControl -> ActiveMessageC;
 
   components SpineStartPktC;
   components SpineSetupSensorPktC;
   components SpineFunctionReqPktC;
   components SpineSetupFunctionPktC;
-  SPINEApp_C.SpineStartPkt -> SpineStartPktC;
-  SPINEApp_C.SpineSetupSensorPkt -> SpineSetupSensorPktC;
-  SPINEApp_C.SpineFunctionReqPkt -> SpineFunctionReqPktC;
-  SPINEApp_C.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;
+  App.SpineStartPkt -> SpineStartPktC;
+  App.SpineSetupSensorPkt -> SpineSetupSensorPktC;
+  App.SpineFunctionReqPkt -> SpineFunctionReqPktC;
+  App.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;
   
   components SensorsRegistryC;
   components SensorBoardControllerC;
-  SPINEApp_C.SensorsRegistry -> SensorsRegistryC;
-  SPINEApp_C.SensorBoardController -> SensorBoardControllerC;
+  App.SensorsRegistry -> SensorsRegistryC;
+  App.SensorBoardController -> SensorBoardControllerC;
 
   components FunctionManagerC;
-  SPINEApp_C.FunctionManager -> FunctionManagerC;
+  App.FunctionManager -> FunctionManagerC;
    
   components new TimerMilliC() as Annce_timer;
-  SPINEApp_C.Annce_timer -> Annce_timer; 
+  App.Annce_timer -> Annce_timer; 
+
+  components LedsC;
+  App.Leds -> LedsC;
   
 }

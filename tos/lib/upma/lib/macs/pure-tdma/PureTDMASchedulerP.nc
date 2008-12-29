@@ -65,7 +65,7 @@ implementation {
 	uint32_t slotSize;
 	uint8_t bi, sd, cap;
 	uint8_t coordinatorId;
-	message_t *toSend;
+	norace message_t *toSend;
 	uint8_t toSendLen;
 	uint8_t currentSlot;
 	bool sync;

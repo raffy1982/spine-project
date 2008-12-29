@@ -37,7 +37,8 @@ Boston, MA 02111-1307, USA.
  }
 
  implementation {
-    spine_svc_adv svc_adv;    
+ 
+    uint8_t svcAdvBuf[SPINE_SVC_ADV_PKT_MAX_SIZE];
 
     command void* OutPacket.build(void* payload, uint8_t len, uint8_t* builtLen) {
        uint8_t tmp;

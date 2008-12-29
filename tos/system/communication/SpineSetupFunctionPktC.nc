@@ -31,40 +31,32 @@ Boston, MA� 02111-1307, USA.
  *
  * @version 1.2
  */ 
- module SpineSetupFunctionPktC {
-       provides {
-         interface InPacket;
-         interface SpineSetupFunctionPkt;
-       }
- }
+module SpineSetupFunctionPktC {
+  provides {
+    interface InPacket;
+    interface SpineSetupFunctionPkt;
+  }
+}
 
- implementation {
+implementation {
+  spine_setup_func_t setup_func;
 
-    uint8_t fnCode = 0;
-    uint8_t* fnParams;
-    uint8_t fnParamsSize = 0;
-    
-    uint8_t setFnBuf[SPINE_SETUP_FUNCTION_PKT_MAX_SIZE];
-
-
-    command bool InPacket.parse(void* payload, uint8_t len) {
-       memcpy(setFnBuf, payload, len);
-
-       fnCode = setFnBuf[0];
-
-       fnParamsSize = setFnBuf[1];
-
-       fnParams = (setFnBuf+2);
-
-       return TRUE;
-    }
+  command bool InPacket.parse(void* payload, uint8_t len) {
+    int i;
+    spine_setup_func_t* temp = (spine_setup_func_t*)payload;
+    setup_func.fnCode = temp->fnCode;
+    setup_func.fnParamsSize = temp->fnParamsSize;
+    for(i=0; i<setup_func.fnParamsSize; i++)
+      setup_func.fnBuf[i] = temp->fnBuf[i];
+    return TRUE;
+  }
     
     command enum FunctionCodes SpineSetupFunctionPkt.getFunctionCode() {
-      return fnCode;
+      return setup_func.fnCode;
     }
 
     command uint8_t* SpineSetupFunctionPkt.getFunctionParams(uint8_t* functionParamsSize) {
-      *functionParamsSize = fnParamsSize;
-      return  fnParams;
+      *functionParamsSize = setup_func.fnParamsSize;
+      return setup_func.fnBuf;
     }
 }

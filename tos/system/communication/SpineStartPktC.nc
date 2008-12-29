@@ -42,9 +42,7 @@ implementation {
   spine_start_t start; 
 
   command bool InPacket.parse(void* payload, uint8_t len) {
-    start.netSize = ((uint16_t)payload)[0];
-    radioAlwaysOnFlag = ((uint8_t)payload)[2];
-    enableTDMAFlag = ((uint8_t)payload)[3];
+    start = *((spine_start_t*)payload);
     return TRUE;
   }
     

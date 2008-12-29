@@ -49,7 +49,10 @@ module SPINEApp_C
   uses {
     interface Boot;
     
-    interface BufferedSend[uint8_t];
+    interface BufferedSend[spine_packet_type_t];
+    interface Receive[spine_packet_type_t];
+    interface SplitControl as AMControl;
+    interface LowPowerListening;
 
     interface SpineStartPkt;
     interface SpineSetupSensorPkt;
@@ -62,6 +65,7 @@ module SPINEApp_C
     interface FunctionManager;
     
     interface Timer<TMilli> as Annce_timer;
+    interface Leds;
   }
 }
 implementation
@@ -117,7 +121,7 @@ implementation
      for (i = 0; i<functionsCount; i++)
         buffer[currBufferSize++] = functionList[i];
      
-     call PacketManager.build(SERVICE_ADV, &buffer, currBufferSize);
+     call BufferedSend.send[SERVICE_ADV](SPINE_BASE_STATION, &buffer, currBufferSize);
 
   }
 
@@ -132,11 +136,6 @@ implementation
   }
 
   void handle_Start() {
-     // the radio controller is set according to the user specified needs.
-     call RadioController.setRadioAlwaysOn(call SpineStartPkt.radioAlwaysOnFlag());
-     if (call SpineStartPkt.enableTDMAFlag())
-        call RadioController.enableTDMA(call SpineStartPkt.getNetworkSize(), (TOS_NODE_ID-1)); // that currently forces to flash the nodes with sequential IDs starting from 1
-
      // the sensorboard controller starts sampling its sensors;
      call SensorBoardController.startSensing();
      // the functions manager starts computing the aforeactivated functions.
@@ -147,11 +146,8 @@ implementation
      // an HW reset is simulated resetting the complete global states of the components.
      call FunctionManager.reset();
      call SensorBoardController.reset();
-     call RadioController.reset();
 
      memset(buffer, 0x00, sizeof buffer);
-     
-     init();
   }
 
   void handle_Syncr() {
@@ -172,26 +168,32 @@ implementation
   }
 
 
-  event void PacketManager.messageReceived(enum PacketTypes pktType) {
-      switch(pktType) {
-        case SERVICE_DISCOVERY: handle_Svc_Discovery(); break;
-        case SETUP_SENSOR: handle_Setup_Sensor(); break;
-        case SETUP_FUNCTION: handle_Setup_Function(); break;
-        case START: handle_Start(); break;
-        case RESET: handle_Reset(); break;
-        case SYNCR: handle_Syncr(); break;
-        case FUNCTION_REQ: handle_Function_Req(); break;
-        default: break;
-      }
+  event message_t* Receive.receive[spine_packet_type_t pktType](message_t* msg, void* payload, uint8_t len) {
+    call Leds.led1Toggle();
+    switch(pktType) {
+      case SERVICE_DISCOVERY: handle_Svc_Discovery(); break;
+      case SETUP_SENSOR: handle_Setup_Sensor(); break;
+      case SETUP_FUNCTION: handle_Setup_Function(); break;
+      case START: handle_Start(); break;
+      case RESET: handle_Reset(); break;
+      case SYNCR: handle_Syncr(); break;
+      case FUNCTION_REQ: handle_Function_Req(); break;
+      default: break;
+    }
+    return msg;
   }
 
 
   event void Boot.booted() {
-      init();
+    //call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
+    call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
+    call AMControl.start();
+  }
+  event void AMControl.startDone(error_t error) {
+  }
+  event void AMControl.stopDone(error_t error) {
   }
 
-  event void RadioController.radioOn() {}
-  event void RadioController.receive(uint16_t source, enum PacketTypes pktType, void* payload, uint8_t len) {}
   event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {}
   event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {}
 }

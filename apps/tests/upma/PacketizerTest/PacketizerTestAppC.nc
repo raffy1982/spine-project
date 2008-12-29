@@ -29,43 +29,30 @@ Boston, MA 02111-1307, USA.
  *
  */
 
-#include "spine_constants.h"
-
-module PacketizerTestC {
-  uses {
-    interface Boot;
-    interface SplitControl as AMControl;
-    interface BufferedSend;
-    interface AMPacket;
-    interface Timer<TMilli> as SendTimer;
-    interface Leds;
-    interface LowPowerListening;
-  }
+#include "SpinePackets.h"
+ 
+configuration PacketizerTestAppC {
 }
 
 implementation {
-  uint8_t msg1[470];
-  uint16_t destination1 = AM_BROADCAST_ADDR;
+  components MainC;
+  components PacketizerTestC as App;
+  App.Boot -> MainC.Boot;
 
-  event void Boot.booted() {
-    int i;
-    for(i=0; i<470; i++)
-      msg1[i] = i;
-    call AMControl.start();
-  }
+  components ActiveMessageC;
+  App.AMControl -> ActiveMessageC;
+  
+  components new PacketizerC(AM_SPINE, SPINE_MSG_QUEUE_SIZE);
+  App.BufferedSend -> PacketizerC.BufferedSend[SVC_MSG];
 
-  event void AMControl.startDone(error_t error) {
-     call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
-     call SendTimer.startPeriodic(5000);
-  }
+  components new TimerMilliC() as SendTimer;
+  App.SendTimer -> SendTimer;
 
-  event void SendTimer.fired() {
-    if(call BufferedSend.send(destination1, &msg1, sizeof msg1) == SUCCESS)
-      call Leds.led0Toggle();
-    else call Leds.led1Toggle();
-  }
+  components LedsC;
+  App.Leds -> LedsC;
 
-  event void AMControl.stopDone(error_t error) {
-  }
+  components CC2420ActiveMessageC as MacControlC;
+  App.LowPowerListening -> MacControlC.LowPowerListening;
+
 }
 
