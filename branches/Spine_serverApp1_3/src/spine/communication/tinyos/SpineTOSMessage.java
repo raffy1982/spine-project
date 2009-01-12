@@ -31,8 +31,9 @@ Boston, MA† 02111-1307, USA.
  *  Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
+ * @author Alessia Salmeri
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.communication.tinyos;
@@ -145,10 +146,8 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		msg.setApplicationId(header.getGroupID());
 		msg.setSourceURL(TINYOS_URL_PREFIX + header.getSourceID()); 
 		msg.setDestinationURL(TINYOS_URL_PREFIX + header.getDestID());
-		
-		byte[] payload = PacketManager.decode(header.getPktType(), this.payloadBuf); 
-		
-		msg.setPayload(payload);
+				
+		msg.setPayload(this.payloadBuf);
 		
 		return msg;
 	}
