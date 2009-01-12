@@ -30,13 +30,17 @@ Boston, MA  02111-1307, USA.
  * Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
+ * @author Alessia Salmeri
  *
- * @version 1.2
+ * @version 1.3
  */
 
-package spine.communication.tinyos;
+package spine.payload.codec.tinyos;
 
-public class SpineServiceAdvertisement {
+import spine.datamodel.functions.*;
+
+
+public class ServiceAdvertisement implements SpineServiceAdvertisement {
 
 	/**
 	 * Decompress Service Advertisement packet payload into a platform independent packet payload
@@ -44,7 +48,7 @@ public class SpineServiceAdvertisement {
 	 * @param payload the low level byte array containing the payload of the Spine Service Advertisement packet to parse (decompress)
 	 * @return still a byte array representing the platform independent Spine Service Advertisement packet payload.
 	 */
-	protected static byte[] parse(byte[] payload) {
+	public byte[] decode(byte[] payload) {
 		byte sensorsNr = payload[0];
 		byte librariesListSize = payload[1+sensorsNr];		
 		byte[] data = new byte[1 + sensorsNr*2 + 1 + librariesListSize];
@@ -60,8 +64,7 @@ public class SpineServiceAdvertisement {
 		
 		for (int i = 0; i<librariesListSize; i++) 
 			data[(1+sensorsNr*2)+1+i] = payload[1+sensorsNr+1+i];
-		
-		
+			
 		return data;
 	}
 

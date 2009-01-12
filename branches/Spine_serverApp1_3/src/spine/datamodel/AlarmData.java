@@ -29,8 +29,9 @@ Boston, MA  02111-1307, USA.
 *
 * @author Roberta Giannantonio
 * @author Philip Kuryloski
+* @author Alessia Salmeri
 *
-* @version 1.2
+* @version 1.3
 */
 
 package spine.datamodel;

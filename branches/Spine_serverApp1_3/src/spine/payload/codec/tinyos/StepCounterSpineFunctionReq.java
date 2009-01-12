@@ -35,36 +35,52 @@ Boston, MA  02111-1307, USA.
 *
 *
 * @author Raffaele Gravina
+* @author Alessia Salmeri
 *
-* @version 1.2
+* @version 1.3
 */
 
-package spine.communication.tinyos;
+package spine.payload.codec.tinyos;
 
 import spine.SPINEFunctionConstants;
 
-public class StepCounterSpineFunctionReq extends SpineFunctionReq {
+import spine.datamodel.functions.*;
+import spine.datamodel.functions.Exception.*;
 
-	public byte[] encode() {		
+
+public class StepCounterSpineFunctionReq extends SpineCodec {
+
+	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
+		return super.decode(payload);
+	};
+    
+
+	public byte[] encode(Object payload) {
+		
+		spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
+		
 		byte[] data = new byte[3];
-		
-		byte activationBinaryFlag = (this.isActivationRequest)? (byte)1 : 0;
-
-		data[0] = SPINEFunctionConstants.STEP_COUNTER; 
-		
+		byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;
+		data[0] = SPINEFunctionConstants.STEP_COUNTER; 	
 		data[1] = activationBinaryFlag;
 		data[2] = (byte)1;
+
+		printPayload(data);
 		return data;		
 	}
 
-	/**
-	 * 
-	 * Returns a string representation of the AlarmSpineFunctionReq object.
-	 * 
-	 */
-	public String toString() {
-		String s = "Steps Counter Req";
-		return s;
+	
+	private void printPayload(byte[] payload) {  // DEBUG CODE
+		if(payload == null || payload.length == 0)
+			System.out.print("empty payload");
+		else{
+			for (int i = 0; i<payload.length; i++) {
+				short b =  payload[i];
+				if (b<0) b += 256;
+				System.out.print(Integer.toHexString(b) + " ");
+			}
+		}
+		System.out.println("");		
 	}
 	
 }

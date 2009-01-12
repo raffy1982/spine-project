@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic on node configuration for feature extraction and a 
-OtA protocol for the management for WSN
+allows dynamic configuration of feature extraction capabilities 
+of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -24,26 +24,26 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This class represents the generic SPINE Setup Function and must be extended
- * by 'function specific' classes.
- *  
+ *
+ * This exception should be thrown if a particular Function object receives a wrong specification 
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski
  *
- * @version 1.2
+ * @version 1.3
  */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions.Exception;
 
-public abstract class SpineSetupFunction {
-	
-	/**
-	 * This method must be implemented by any class extending SpineSetupFunction
-	 * and must contain the logic of converting an high level specific setup function into 
-	 * an actual SPINE Ota message of the setup, in terms of a byte[] array
-	 * 
-	 * @return the actual SPINE Ota message of the setup
-	 */
-	public abstract byte[] encode();
+import spine.SPINEFunctionConstants;
+
+public class BadFunctionSpecException extends Exception {
+
+	private static final long serialVersionUID = 0;
+
+	public BadFunctionSpecException(byte functionCode) {
+		super("Function " + SPINEFunctionConstants.functionCodeToString(functionCode) + 
+				": spec cannot be decoded!");
+	}
 	
 }

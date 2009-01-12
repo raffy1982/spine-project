@@ -24,24 +24,56 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- * Abstract class that any actual function must extends
- *
- * @author Raffaele Gravina
- * @author Philip Kuryloski
- * @author Alessia Salmeri
- *
- * @version 1.3
- */
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+*
+* @author Raffaele Gravina
+* @author Alessia Salmeri
+*
+* @version 1.3
+*/
 
-package spine.datamodel.functions;
+package spine.payload.codec.tinyos;
 
+import spine.SPINEFunctionConstants;
+
+import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
-public abstract class Function {
 
-	public byte functionCode;
+public class StepCounterSpineSetupFunction extends SpineCodec {
+
 	
-	public abstract void init(byte[] spec) throws BadFunctionSpecException ;
+	private final static int PARAM_LENGTH = 1; 
+		
+	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
+		return super.decode(payload);
+	};
+    
+
+	public byte[] encode(Object payload) {
+		
+		byte[] data = new byte[3];
 	
+		data[0] = SPINEFunctionConstants.STEP_COUNTER;
+		data[1] = PARAM_LENGTH;
+		data[2] = (byte)1;
+		
+		printPayload(data);
+		
+		return data;	
+	}
+	
+	
+	private void printPayload(byte[] payload) {  // DEBUG CODE
+		if(payload == null || payload.length == 0)
+			System.out.print("empty payload");
+		else{
+			for (int i = 0; i<payload.length; i++) {
+				short b =  payload[i];
+				if (b<0) b += 256;
+				System.out.print(Integer.toHexString(b) + " ");
+			}
+		}
+		System.out.println("");		
+	}
 }

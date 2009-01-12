@@ -29,8 +29,9 @@ Boston, MA  02111-1307, USA.
  *  It contains a constructor, a toString and getters methods.
  *
  * @author Raffaele Gravina
+ * @author Alessia Salmeri
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.datamodel;

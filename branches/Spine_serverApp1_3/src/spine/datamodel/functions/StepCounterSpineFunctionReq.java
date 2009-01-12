@@ -24,26 +24,35 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- * This exception should be thrown if a particular Function object receives a wrong specification 
- *
- * @author Raffaele Gravina
- * @author Philip Kuryloski
- *
- * @version 1.2
- */
+*
+* Objects of this class are used for expressing at high level function requests 
+* (both activation and deactivation) of type 'StepCounter'.
+* An application that needs to do a StepCounter request, must create a new StepCounterSpineFunctionReq
+* object for alarm activation, or deactivation.
+* 
+* This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
+* to convert the high level request into an actual SPINE Ota message.     
+*
+*
+* @author Raffaele Gravina
+*
+* @version 1.3
+*/
 
 package spine.datamodel.functions;
 
-import spine.SPINEFunctionConstants;
 
-public class BadFunctionSpecException extends Exception {
+public class StepCounterSpineFunctionReq extends SpineFunctionReq {
 
-	private static final long serialVersionUID = 0;
 
-	public BadFunctionSpecException(byte functionCode) {
-		super("Function " + SPINEFunctionConstants.functionCodeToString(functionCode) + 
-				": spec cannot be decoded!");
+	/**
+	 * 
+	 * Returns a string representation of the AlarmSpineFunctionReq object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Steps Counter Req";
+		return s;
 	}
 	
 }

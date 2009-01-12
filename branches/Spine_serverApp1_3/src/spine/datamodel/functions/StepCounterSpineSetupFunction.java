@@ -24,24 +24,25 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- * Abstract class that any actual function must extends
- *
- * @author Raffaele Gravina
- * @author Philip Kuryloski
- * @author Alessia Salmeri
- *
- * @version 1.3
- */
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+*
+* @author Raffaele Gravina
+*
+* @version 1.3
+*/
 
 package spine.datamodel.functions;
 
-import spine.datamodel.functions.Exception.*;
+public class StepCounterSpineSetupFunction implements SpineSetupFunction {
 
-public abstract class Function {
-
-	public byte functionCode;
-	
-	public abstract void init(byte[] spec) throws BadFunctionSpecException ;
+	/**
+	 * 
+	 * Returns a string representation of the StepCounterSpineSetupFunction object.
+	 * 
+	 */
+	public String toString() {
+		String s = "Steps Counter Function Setup";
+		return s;
+	}
 	
 }

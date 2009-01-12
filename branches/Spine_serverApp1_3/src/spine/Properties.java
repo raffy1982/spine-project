@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 *
 * @author Raffaele Gravina
 *
-* @version 1.2
+* @version 1.3
 */
 
 package spine;
@@ -43,7 +43,9 @@ public abstract class Properties {
 	
 	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
 	public static final String LOCALNODEADAPTER_CLASSNAME_KEY = "LocalNodeAdapter_ClassName";
-
+	
+	public static final String SPINEDATACODEC_PACKAGE_SUFFIX_KEY = "SpineDataCodec_Package_Suffix";
+	
 	public static final String PROPERTIES_FILE_PATH_PROPERTYKEY = "spine_PropertiesImpl_configFileName";
 
 	

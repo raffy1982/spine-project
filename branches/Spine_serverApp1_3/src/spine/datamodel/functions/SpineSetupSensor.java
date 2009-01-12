@@ -29,37 +29,22 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  * 
  * @see spine.SPINESensorConstants
  */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions;
 
 import spine.SPINESensorConstants;
 
 public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage {
 	
-	private final static int LENGTH = 3;
-	
 	private byte sensor = -1;
 	private byte timeScale = -1;
 	private int samplingTime = -1;
-	
-	/**
-	 * This method is used internally by the framework and encodes the high level sensor setup 
-	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
-	 */
-	public byte[] encode() {
-		byte[] data = new byte[LENGTH];
-		
-		data[0] = (byte)((this.sensor<<4) | (this.timeScale<<2 & 0x0C)); // 0x0C = 0000 1100
-		data[1] = (byte)((this.samplingTime & 0x0000FFFF)>>8);
-		data[2] = (byte)(this.samplingTime & 0x000000FF);
-		
-		return data;
-	}
-	
+
+
 	/**
 	 * Sets the sensor to setup
 	 * 
@@ -68,6 +53,14 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;
 	}
+	
+
+	public byte getSensor() {
+		byte sensor;
+		sensor=this.sensor;
+		return sensor;
+	}
+	
 	
 	/**
 	 * Sets the time scale of the sampling time.
@@ -81,6 +74,14 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 		this.timeScale = timeScale;	
 	}
 	
+
+	public byte getTimeScale() {
+		byte timeScale;
+		timeScale=this.timeScale;
+		return timeScale;
+	}
+	
+	
 	/**
 	 * Set the absolute value of the sampling time (the actual sampling interval depends on the time scale)
 	 * 
@@ -89,6 +90,14 @@ public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage
 	public void setSamplingTime(int samplingTime) {
 		this.samplingTime = samplingTime;
 	}
+	
+	
+	public int getSamplingTime() {
+		int samplingTime;
+		samplingTime=this.samplingTime;
+		return samplingTime;
+	}
+	
 	
 	/**
 	 * 

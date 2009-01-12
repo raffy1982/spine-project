@@ -29,7 +29,7 @@ Boston, MAÂ  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package test;
@@ -41,8 +41,11 @@ import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
 import spine.SPINESensorConstants;
-import spine.communication.tinyos.*;
+
 import spine.datamodel.*;
+
+//functions sub-package to import for running apps on SPINE1.3 
+import spine.datamodel.functions.*;
 
 public class SPINETest implements SPINEListener {
 
@@ -149,8 +152,7 @@ public class SPINETest implements SPINEListener {
 					
 					// SetUp Alarm Engine
 					// Window and Shift may be set to value different from the feature engine ones.
-					//here we use the same values for debigging proposes
-					
+					//here we use the same values for debigging proposes		
 					AlarmSpineSetupFunction ssf2 = new AlarmSpineSetupFunction();
 					ssf2.setSensor(sensor);
 					ssf2.setWindowSize(WINDOW_SIZE);

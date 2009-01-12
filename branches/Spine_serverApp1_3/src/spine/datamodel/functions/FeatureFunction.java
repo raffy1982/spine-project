@@ -30,10 +30,12 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.datamodel.functions;
+
+import spine.datamodel.functions.Exception.*;
 
 import java.util.Vector;
 
@@ -45,6 +47,7 @@ public class FeatureFunction extends Function {
 	
 	public FeatureFunction() {		
 	}
+	
 	
 	public void init(byte[] spec) throws BadFunctionSpecException {
 		this.functionCode = SPINEFunctionConstants.FEATURE;

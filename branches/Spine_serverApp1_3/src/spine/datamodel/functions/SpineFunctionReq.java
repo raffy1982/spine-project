@@ -24,41 +24,36 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This class implements a dispatcher pattern and it's used internally for decoding
- * SPINE messages payloads.
- * 
- * Note that this class is only used internally at the framework. 
+ * This class represents the generic SPINE Function requests and must be extended
+ * by 'function specific' classes.
  *  
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions;
 
-import spine.SPINEPacketsConstants;
-
-public class PacketManager {
+public abstract class SpineFunctionReq {
+	
+	protected boolean isActivationRequest;
 
 	/**
-	 * Allows the proper decoding of the given payload w.r.t. to its given packet type
+	 * Sets the control flag of the request indicating if it's an activation or a deactivation.
 	 * 
-	 * @param pktType the SPINE packet type of the message 
-	 * @param payloadBuf the payload of the message to be decoded
-	 * @return the decoded payload
+	 * @param isActivationRequest 'true' if the current request is of activation; 
+	 * 'false' if it's a deactivation request 
 	 */
-	protected static byte[] decode(byte pktType, byte[] payloadBuf) {
-		byte[] payload = payloadBuf;
-		
-		switch (pktType) {
-			case SPINEPacketsConstants.SERVICE_ADV: payload = SpineServiceAdvertisement.parse(payload); break;
-			case SPINEPacketsConstants.DATA: payload = SpineData.parse(payload); break;
-			case SPINEPacketsConstants.SVC_MSG: break;
-			default: break;
-		}
-		
-		return payload;
+	public void setActivationFlag(boolean isActivationRequest) {
+		this.isActivationRequest = isActivationRequest;		
 	}
-
+	
+	
+	public boolean getActivationFlag() {
+		boolean isActivationRequest;
+		isActivationRequest=this.isActivationRequest;
+		return isActivationRequest;
+	}
+	
 }

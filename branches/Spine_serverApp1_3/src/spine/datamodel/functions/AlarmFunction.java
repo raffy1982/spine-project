@@ -30,11 +30,12 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  * @author Philip Kuryloski
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.datamodel.functions;
 
+import spine.datamodel.functions.Exception.*;
 import spine.SPINEFunctionConstants;
 
 public class AlarmFunction extends Function {

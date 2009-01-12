@@ -24,24 +24,29 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- * Abstract class that any actual function must extends
- *
- * @author Raffaele Gravina
- * @author Philip Kuryloski
- * @author Alessia Salmeri
- *
- * @version 1.3
- */
+* This class contains the static method to parse (decompress) a 
+* TinyOS SPINE 'StepCounter' Data packet payload into a platform independent one.
+* This class is invoked only by the SpineData class, thru the dynamic class loading.
+* 
+* @author Raffaele Gravina
+* @author Alessia Salmeri
+*
+* @version 1.3
+*/
 
-package spine.datamodel.functions;
+package spine.payload.codec.tinyos;
 
+import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
-public abstract class Function {
 
-	public byte functionCode;
+public class StepCounterSpineData extends SpineCodec {
 	
-	public abstract void init(byte[] spec) throws BadFunctionSpecException ;
+	public byte[] encode(Object payload) throws MethodNotSupportedException{
+		return super.encode(payload);
+	};
 	
+	public byte[] decode(byte[] payload) {
+		return payload;
+	}
 }

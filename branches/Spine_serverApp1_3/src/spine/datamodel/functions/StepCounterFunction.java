@@ -29,12 +29,14 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.datamodel.functions;
 
 import spine.SPINEFunctionConstants;
+
+import spine.datamodel.functions.Exception.*;
 
 public class StepCounterFunction extends Function {
 

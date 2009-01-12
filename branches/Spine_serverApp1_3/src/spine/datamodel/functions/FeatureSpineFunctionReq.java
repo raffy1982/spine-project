@@ -38,10 +38,10 @@ Boston, MA  02111-1307, USA.
 *
 * @author Raffaele Gravina
 *
-* @version 1.2
+* @version 1.3
 */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions;
 
 import java.util.Vector;
 
@@ -51,38 +51,11 @@ import spine.datamodel.Feature;
 
 public class FeatureSpineFunctionReq extends SpineFunctionReq {
 
+
 	private byte sensor = -1;
 	private Vector features = new Vector();
-
-	/**
-	 * Converts an high level request object into an actual SPINE Ota message
-	 * 
-	 * @return the actual SPINE Ota message of the request, in terms of a byte[] array  
-	 */
-	public byte[] encode() {
-		int featuresCount = this.features.size();
-		
-		byte[] data = new byte[1 + 1 + 1 + 1 + 1 + featuresCount*2];
-		
-		byte activationBinaryFlag = (this.isActivationRequest)? (byte)1 : 0;
-		data[0] = SPINEFunctionConstants.FEATURE; 
-		
-		data[1] = activationBinaryFlag;
-		
-		data[2] = (byte)(1 + 1 + featuresCount*2);
-		
-		data[3] = this.sensor;
-		
-		data[4] = (byte)featuresCount;
-				
-		for (int i = 0; i < featuresCount; i++) {
-			data[(5+i*2)] = ((Feature)features.elementAt(i)).getFeatureCode();
-			data[(5+i*2)+1] = ((Feature)features.elementAt(i)).getChannelBitmask();
-		}
-		
-		return data;		
-	}
-
+    
+	
 	/**
 	 * Set the sensor involved in the request
 	 * 
@@ -94,6 +67,21 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 		this.sensor  = sensor;		
 	}
 
+
+	public byte getSensor() {
+		byte sensor;
+		sensor = this.sensor; 
+		return sensor;		
+	}
+	
+
+	public Vector getFeatures() {
+		Vector features;
+		features = this.features; 
+		return features;		
+	}
+	
+	
 	/**
 	 * Add a new feature to the activation request.
 	 * Note that on each request object calling addFeature is mutually exclusive with
@@ -108,6 +96,7 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	public void addFeature(byte feature, byte channelBitmask) {
 		this.features.addElement(new Feature(feature, channelBitmask));		
 	}
+	
 	
 	/**
 	 * Add a new feature to the deactivation request.
@@ -124,6 +113,7 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	public void removeFeature(byte feature, byte channelBitmask) {
 		this.features.addElement(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
 	}
+	
 	
 	/**
 	 * 

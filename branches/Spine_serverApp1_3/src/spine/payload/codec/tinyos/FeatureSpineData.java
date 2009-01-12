@@ -32,23 +32,26 @@ Boston, MA  02111-1307, USA.
 * Note that this class is only used internally at the framework.
 *
 * @author Raffaele Gravina
+* @author Alessia Salmeri
 *
-* @version 1.2
+* @version 1.3
 */
 
-package spine.communication.tinyos;
+package spine.payload.codec.tinyos;
 
 import spine.SPINESensorConstants;
 
-public class FeatureSpineData extends SpineData {
+import spine.datamodel.functions.*;
+import spine.datamodel.functions.Exception.*;
+
+
+public class FeatureSpineData extends SpineCodec {
 	
-	/**
-	 * Decompress 'Feature' Data packet payload into a platform independent packet payload
-	 * 
-	 * @param payload the low level byte array containing the payload of the 'Feature' Data packet to parse (decompress)
-	 * @return still a byte array representing the platform independent 'Feature' Data packet payload.
-	 */
-	protected byte[] decode(byte[] payload) {
+	public byte[] encode(Object payload) throws MethodNotSupportedException{
+		return super.encode(payload);
+	};
+	
+	public byte[] decode(byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
@@ -56,7 +59,6 @@ public class FeatureSpineData extends SpineData {
 		byte functionCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = functionCode;
 		
-		//byte paramLen = (byte)payload[pldIndex++];
 		pldIndex++;
 		
 		byte sensorCode = payload[pldIndex++];

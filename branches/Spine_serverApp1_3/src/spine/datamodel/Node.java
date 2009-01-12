@@ -30,7 +30,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine.datamodel;
@@ -39,7 +39,7 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEFunctionConstants;
-import spine.datamodel.functions.BadFunctionSpecException;
+import spine.datamodel.functions.Exception.BadFunctionSpecException;
 import spine.datamodel.functions.Function;
 
 public class Node {

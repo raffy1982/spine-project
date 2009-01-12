@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic configuration of feature extraction capabilities 
-of WSN nodes via an OtA protocol
+allows dynamic on node configuration for feature extraction and a 
+OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -22,26 +22,42 @@ License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
-
 /**
  *
- * Abstract class that any actual function must extends
+ * Abstract class that any data packet payload codec must extends
  *
- * @author Raffaele Gravina
- * @author Philip Kuryloski
  * @author Alessia Salmeri
  *
  * @version 1.3
  */
 
+
 package spine.datamodel.functions;
 
 import spine.datamodel.functions.Exception.*;
 
-public abstract class Function {
+public abstract class SpineCodec {
+	
+	/**
+	 * Converting an high level data packet payload into 
+	 * an actual SPINE Ota message, in terms of a byte[] array
+	 * 
+	 * @param payload the platform independent data packet payload
+	 * @return the actual SPINE Ota message 
+	 */
+	public byte[] encode (Object payload)throws MethodNotSupportedException{
+		throw new MethodNotSupportedException("encode");
+	};
 
-	public byte functionCode;
+	/**
+	 * Decompress data packet payload into a platform independent packet payload
+	 * 
+	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
+	 * @return a byte array representing the platform independent data packet payload.
+	 */
+	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
+		throw new MethodNotSupportedException("decode");
+	};
+	}
 	
-	public abstract void init(byte[] spec) throws BadFunctionSpecException ;
-	
-}
+

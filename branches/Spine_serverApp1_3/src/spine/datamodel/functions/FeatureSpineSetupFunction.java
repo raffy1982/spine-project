@@ -24,42 +24,26 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Feature'
 *
 * @author Raffaele Gravina
+* @author Alessia Salmeri
 *
-* @version 1.2
+* @version 1.3
 */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions;
 
-import spine.SPINEFunctionConstants;
+
 import spine.SPINESensorConstants;
 
-public class AlarmSpineSetupFunction extends SpineSetupFunction {
 
-	
-	private final static int PARAM_LENGTH = 3; 
-	
+public class FeatureSpineSetupFunction implements SpineSetupFunction {
+
 	private byte sensor = -1;
 	private short windowSize = 0;
 	private short shiftSize = 0;
-	
-	/**
-	 * This method is used internally by the framework and encodes the high Feature function setup request
-	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
-	 */
-	public byte[] encode() {
-		byte[] data = new byte[5];
-	
-		data[0] = SPINEFunctionConstants.ALARM;
-		data[1] = PARAM_LENGTH;
-		data[2] = (byte)(this.sensor<<4);
-		data[3] = (byte)this.windowSize;
-		data[4] = (byte)this.shiftSize;
-		
-		return data;	
-	}
+
 	
 	/**
 	 * Sets the sensor involved on the current Feature function setup request
@@ -74,6 +58,14 @@ public class AlarmSpineSetupFunction extends SpineSetupFunction {
 		this.sensor = sensor;
 	}
 	
+
+	public byte getSensor() {
+		byte sensor;
+		sensor=this.sensor;
+		return sensor;
+	}
+	
+	
 	/**
 	 * Sets the size of the window over which computes the features 
 	 * that will eventually activated thru a Feature Spine Function Req
@@ -83,6 +75,14 @@ public class AlarmSpineSetupFunction extends SpineSetupFunction {
 	public void setWindowSize(short windowSize) {
 		this.windowSize = windowSize;
 	}
+	
+
+	public short getWindowSize() {
+		short windowSize;
+		windowSize=this.windowSize;
+		return windowSize;
+	}
+	
 	
 	/**
 	 * Sets the shift size on the window over which computes the features 
@@ -94,13 +94,21 @@ public class AlarmSpineSetupFunction extends SpineSetupFunction {
 		this.shiftSize = shiftSize;
 	}
 	
+
+	public short getShiftSize() {
+		short shiftSize;
+		shiftSize=this.shiftSize;
+		return shiftSize;
+	}
+	
+	
 	/**
 	 * 
-	 * Returns a string representation of the AlarmSpineSetupFunction object.
+	 * Returns a string representation of the FeatureSpineSetupFunction object.
 	 * 
 	 */
 	public String toString() {
-		String s = "Alarm Function Setup {";
+		String s = "Feature Function Setup {";
 		
 		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
 		s += "window = " + windowSize + ", ";

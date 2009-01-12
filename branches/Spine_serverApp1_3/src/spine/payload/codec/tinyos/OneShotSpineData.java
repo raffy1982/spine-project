@@ -24,21 +24,35 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
+*
 * This class contains the static method to parse (decompress) a 
-* TinyOS SPINE 'Alarm' Data packet payload into a platform independent one.
+* TinyOS SPINE 'OneShot' Data packet payload into a platform independent one.
 * This class is invoked only by the SpineData class, thru the dynamic class loading.
 * 
-* @author Roberta Giannantonio
+* Note that this class is only used internally at the framework.
 *
-* @version 1.2
+* @author Raffaele Gravina
+* @author Alessia Salmeri
+*
+* @version 1.3
 */
 
-package spine.communication.tinyos;
+package spine.payload.codec.tinyos;
+
+import spine.SPINESensorConstants;
+
+import spine.datamodel.functions.*;
+
+import spine.datamodel.functions.Exception.*;
 
 
-public class AlarmSpineData extends SpineData {
+public class OneShotSpineData extends SpineCodec {
 	
-	protected byte[] decode(byte[] payload) {
+	public byte[] encode(Object payload) throws MethodNotSupportedException{
+		return super.encode(payload);
+	};
+	
+	public byte[] decode(byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
@@ -48,29 +62,27 @@ public class AlarmSpineData extends SpineData {
 		
 		pldIndex++;
 		
-		byte dataType = payload[pldIndex++];
-		dataTmp[dtIndex++] = dataType;
-		
 		byte sensorCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = sensorCode;
 		
-		byte valueType = payload[pldIndex++];
-		dataTmp[dtIndex++] = valueType;
+		byte bitmask = payload[pldIndex++];
+		dataTmp[dtIndex++] = bitmask;				
 		
-		byte alarmType = payload[pldIndex++];
-		dataTmp[dtIndex++] = alarmType;
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
+		for (int j = 0; j<SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
+			if (SPINESensorConstants.chPresent(j, bitmask)) {						
+					dataTmp[dtIndex++] = payload[pldIndex++]; 
+					dataTmp[dtIndex++] = payload[pldIndex++]; 
+			}
+			else {
+				dataTmp[dtIndex++] = 0; 
+				dataTmp[dtIndex++] = 0;
+			}
+		}
+				
 		byte[] data = new byte[dtIndex];
 		System.arraycopy(dataTmp, 0, data, 0, data.length);
 		
 		return data;
 	}
+	
 }

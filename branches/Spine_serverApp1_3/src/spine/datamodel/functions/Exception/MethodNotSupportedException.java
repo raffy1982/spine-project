@@ -24,44 +24,22 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
-*
-* @author Raffaele Gravina
-*
-* @version 1.2
-*/
+ *
+ * This exception is thrown if an encode or decode method is not supported 
+ *
+ * @author Alessia Salmeri
+ *
+ * @version 1.3
+ */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions.Exception;
 
-import spine.SPINEFunctionConstants;
+public class MethodNotSupportedException extends Exception {
 
-public class StepCounterSpineSetupFunction extends SpineSetupFunction {
+	private static final long serialVersionUID = 1;
 
-	
-	private final static int PARAM_LENGTH = 1; 
-	
-	/**
-	 * This method is used internally by the framework and encodes the high StepCounter function setup request
-	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
-	 */
-	public byte[] encode() {
-		byte[] data = new byte[3];
-	
-		data[0] = SPINEFunctionConstants.STEP_COUNTER;
-		data[1] = PARAM_LENGTH;
-		data[2] = (byte)1;
-		
-		return data;	
-	}
-	
-	/**
-	 * 
-	 * Returns a string representation of the StepCounterSpineSetupFunction object.
-	 * 
-	 */
-	public String toString() {
-		String s = "Steps Counter Function Setup";
-		return s;
+	public MethodNotSupportedException(String method) {
+		super("MethodNotSupported:" + method);
 	}
 	
 }

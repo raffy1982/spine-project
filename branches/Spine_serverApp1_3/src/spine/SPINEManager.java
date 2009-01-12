@@ -30,28 +30,33 @@ Boston, MA  02111-1307, USA.
  * it also handles lower level network activity generating higher level events. 
  *
  * @author Raffaele Gravina
+ * @author Alessia Salmeri
  *
- * @version 1.2
+ * @version 1.3
  */
 
 package spine;
 
+import spine.datamodel.functions.Exception.*;
+
 import java.io.InterruptedIOException;
 import java.util.Vector;
+import java.util.Hashtable;
 
 import com.tilab.gal.LocalNodeAdapter;
 import com.tilab.gal.WSNConnection;
 
 import spine.SPINEPacketsConstants;
 
-import spine.communication.tinyos.SpineFunctionReq;
-import spine.communication.tinyos.SpineSetupFunction;
-import spine.communication.tinyos.SpineSetupSensor;
-import spine.communication.tinyos.SpineStart;
 import spine.datamodel.Data;
 import spine.datamodel.DataFactory;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
+
+
+import spine.datamodel.functions.*;
+
+
 
 public class SPINEManager {
 
@@ -81,6 +86,20 @@ public class SPINEManager {
 	
 	
 	private static SPINEManager instance;
+	
+	// Hash Table class instance
+	private Hashtable htInstance = new Hashtable();
+	
+	private SpineCodec spineCodec = null;
+	private SpineServiceAdvertisement spineServiceAdvertisement  = null;
+	private com.tilab.gal.Message msg;
+	
+	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
+	private static final String SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
+								prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
+	private static final String SPINEDATA_FUNCT_CLASSNAME_SUFFIX = "SpineData";
+	private static final String messageClassName = prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY);
+	
 	
 	private SPINEManager(String[] args) {
 		try {
@@ -124,23 +143,54 @@ public class SPINEManager {
 		return instance;
 	}
 
+		
 	/**
 	 * Registers a SPINEListener to the manager instance
 	 * 
 	 * @param listener the listener to register
 	 */
+	/**
+	 *@deprecated Please now use addListener(SPINEListener)
+	 *@see #addListener(SPINEListener)
+	 */
 	public void registerListener(SPINEListener listener) {
 		this.listeners.addElement(listener);
 	}
+
+	
+	/**
+	 * Registers a SPINEListener to the manager instance
+	 * 
+	 * @param listener the listener to register
+	 */
+	public void addListener(SPINEListener listener) {
+		this.listeners.addElement(listener);
+	}
+	
 	
 	/**
 	 * Deregisters a SPINEListener to the manager instance
 	 * 
 	 * @param listener the listener to deregister
 	 */
+	/**
+	 *@deprecated Please now use removeListener(SPINEListener)
+	 *@see #removeListener(SPINEListener)
+	 */
 	public void deregisterListener(SPINEListener listener) {
 		this.listeners.removeElement(listener);
 	}
+	
+	
+	/**
+	 * Deregisters a SPINEListener to the manager instance
+	 * 
+	 * @param listener the listener to deregister
+	 */
+	public void removeListener(SPINEListener listener) {
+		this.listeners.removeElement(listener);
+	}
+	
 
 	/**
 	 * This method sets the timeout for the discovery procedure.
@@ -152,10 +202,15 @@ public class SPINEManager {
 	 * announcing node is added to the active-nodes list and signaled to the SPINE listeners. 
 	 * 
 	 * @param discoveryTimeout the timeout for the discovery procedure
+	 */	
+	/**
+	 *@deprecated Please now use discoveryWsn(long)
+	 *@see #discoveryWsn(long)
 	 */
 	public void setDiscoveryProcedureTimeout(long discoveryTimeout) {
 		this.discoveryTimeout = discoveryTimeout;
 	}
+	
 	
 	/**
 	 * Returns an instance of a Properties implementation class which can be queried 
@@ -167,6 +222,7 @@ public class SPINEManager {
 		return prop;
 	}
 	
+	
 	/**
 	 * Returns the list of the discovered nodes as a Vector of spine.datamodel.Node objects
 	 * 
@@ -177,17 +233,35 @@ public class SPINEManager {
 	public Vector getActiveNodes() {
 		return activeNodes;
 	}
+	
+	
 	/**
 	 * Returns true if the manager has been asked to start the processing in the wsn; false otherwise
 	 * 
 	 * @return true if the manager has been asked to start the processing in the wsn; false otherwise  
 	 */
+	/**
+	 *@deprecated Please now use isStarted()
+	 *@see #isStarted()
+	 */
 	public boolean started() {
 		return this.started;
 	}
 	
+	
+	/**
+	 * Returns true if the manager has been asked to start the processing in the wsn; false otherwise
+	 * 
+	 * @return true if the manager has been asked to start the processing in the wsn; false otherwise  
+	 */
+	public boolean isStarted() {
+		return this.started;
+	}
+	
+	
 	/**
 	 * Commands the SPINEManager to discovery the surrounding WSN nodes
+	 * A default timeout of 0.5s, is used
 	 */
 	public void discoveryWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SERVICE_DISCOVERY, null);
@@ -196,6 +270,27 @@ public class SPINEManager {
 			new DiscoveryTimer(this.discoveryTimeout).start();
 	}
 	
+
+	/**
+	 * 
+	 * Commands the SPINEManager to discovery the surrounding WSN nodes
+	 * This method sets the timeout for the discovery procedure.
+	 * 
+	 * A timeout <= 0 will disable the Discovery Timer; 
+	 * this way a 'discovery complete' event will never be signaled and at any time an 
+	 * announcing node is added to the active-nodes list and signaled to the SPINE listeners. 
+	 * 
+	 * @param discoveryTimeout the timeout for the discovery procedure
+	 */
+	public void discoveryWsn(long discoveryTimeout) {
+		this.discoveryTimeout = discoveryTimeout;
+		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SERVICE_DISCOVERY, null);
+		
+		if(this.discoveryTimeout > 0)
+			new DiscoveryTimer(this.discoveryTimeout).start();
+	}
+	
+
 	/**
 	 * 
 	 * Currently, it does nothing!
@@ -204,6 +299,7 @@ public class SPINEManager {
 	public void bootUpWsn() {			
 	}
 
+	
 	/**
 	 * Setups a specific sensor of the given node.
 	 * Currently, a sensor is setup by providing a sampling time value and a time scale factor 
@@ -211,10 +307,27 @@ public class SPINEManager {
 	 * @param nodeID the destination of the request
 	 * @param setupSensor the object containing the setup parameters
 	 */
+	/**
+	 *@deprecated Please now use setup(Node, SpineSetupSensor)
+	 *@see #setup(Node, SpineSetupSensor)
+	 */
 	public void setupSensor(int nodeID, SpineSetupSensor setupSensor) {
 		send(nodeID, SPINEPacketsConstants.SETUP_SENSOR, setupSensor);
 	}
 
+
+	/**
+	 * Setups a specific sensor of the given node.
+	 * Currently, a sensor is setup by providing a sampling time value and a time scale factor 
+	 * 
+	 * @param node the destination of the request
+	 * @param setupSensor the object containing the setup parameters
+	 */
+	public void setup(Node node, SpineSetupSensor setupSensor) {
+		send(node.getNodeID(), SPINEPacketsConstants.SETUP_SENSOR, setupSensor);
+	}
+
+	
 	/**
 	 * Setups a specific function of the given node.
 	 * The parameters involved are 'function dependent' and are specified by providing a proper
@@ -223,10 +336,28 @@ public class SPINEManager {
 	 * @param nodeID the destination of the request
 	 * @param setupFunction the object containing the setup parameters
 	 */
+	/**
+	 *@deprecated Please now use setup(Node, SpineSetupFunction)
+	 *@see #setup(Node, SpineSetupFunction)
+	 */
 	public void setupFunction(int nodeID, SpineSetupFunction setupFunction) {
 		send(nodeID, SPINEPacketsConstants.SETUP_FUNCTION, setupFunction);
 	}
 
+
+	/**
+	 * Setups a specific function of the given node.
+	 * The parameters involved are 'function dependent' and are specified by providing a proper
+	 * SpineSetupFunction instantiation object
+	 * 
+	 * @param node the destination of the request
+	 * @param setupFunction the object containing the setup parameters
+	 */
+	public void setup(Node node, SpineSetupFunction setupFunction) {
+		send(node.getNodeID(), SPINEPacketsConstants.SETUP_FUNCTION, setupFunction);
+	}
+	
+		
 	/**
 	 * Activates a function (or even only function sub-routines) on the given sensor.
 	 * The content of the actual request is 'function dependent' and it's embedded into the
@@ -235,12 +366,33 @@ public class SPINEManager {
 	 * @param nodeID the destination of the request
 	 * @param functionReq the specific function activation request
 	 */
+	/**
+	 *@deprecated Please now use activate(Node, SpineFunctionReq)
+	 *@see #activate(Node, SpineFunctionReq)
+	 */
 	public void activateFunction(int nodeID, SpineFunctionReq functionReq) {
 		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag 
 		functionReq.setActivationFlag(true);
 
 		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, functionReq);
 	}
+	
+	
+	/**
+	 * Activates a function (or even only function sub-routines) on the given sensor.
+	 * The content of the actual request is 'function dependent' and it's embedded into the
+	 * 'SpineFunctionReq' instantiations.
+	 * 
+	 * @param node the destination of the request
+	 * @param functionReq the specific function activation request
+	 */
+	public void activate(Node node, SpineFunctionReq functionReq) {
+		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag 
+		functionReq.setActivationFlag(true);
+
+		send(node.getNodeID(), SPINEPacketsConstants.FUNCTION_REQ, functionReq);
+	}
+	
 	
 	/**
 	 * Deactivates a function (or even only function sub-routines) on the given sensor.
@@ -250,12 +402,33 @@ public class SPINEManager {
 	 * @param nodeID the destination of the request
 	 * @param functionReq the specific function deactivation request
 	 */
+	/**
+	 *@deprecated Please now use deactivate(Node, SpineFunctionReq)
+	 *@see #deactivate(Node, SpineFunctionReq)
+	 */
 	public void deactivateFunction(int nodeID, SpineFunctionReq functionReq) {
 		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag
 		functionReq.setActivationFlag(false);
 
 		send(nodeID, SPINEPacketsConstants.FUNCTION_REQ, functionReq);
 	}
+	
+	
+	/**
+	 * Deactivates a function (or even only function sub-routines) on the given sensor.
+	 * The content of the actual request is 'function dependent' and it's embedded into the
+	 * 'SpineFunctionReq' instantiations.
+	 * 
+	 * @param node the destination of the request
+	 * @param functionReq the specific function deactivation request
+	 */
+	public void deactivate(Node node, SpineFunctionReq functionReq) {
+		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag
+		functionReq.setActivationFlag(false);
+
+		send(node.getNodeID(), SPINEPacketsConstants.FUNCTION_REQ, functionReq);
+	}
+	
 	
 	/**
 	 * Commands the given node to do a 'immediate one-shot' sampling on the given sensor.
@@ -266,6 +439,10 @@ public class SPINEManager {
 	 * 
 	 * @see spine.SPINESensorConstants
 	 */
+	/**
+	 *@deprecated Please now use getOneShotData(Node, byte sensorCode)
+	 *@see #getOneShotData(Node, byte sensorCode)
+	 */
 	public void readNow(int nodeID, byte sensorCode) {
 		SpineSetupSensor sss = new SpineSetupSensor();
 		sss.setSensor(sensorCode);
@@ -273,6 +450,25 @@ public class SPINEManager {
 		sss.setSamplingTime(0);
 		setupSensor(nodeID, sss);	
 	}
+	
+	
+	/**
+	 * Commands the given node to do a 'immediate one-shot' sampling on the given sensor.
+	 * The method won't have any effects if the node is not provided with the given sensor.
+	 * 
+	 * @param node the destination of the request
+	 * @param sensorCode the sensor to be sampled
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
+	public void getOneShotData(Node node, byte sensorCode) {
+		SpineSetupSensor sss = new SpineSetupSensor();
+		sss.setSensor(sensorCode);
+		sss.setTimeScale(SPINESensorConstants.NOW);
+		sss.setSamplingTime(0);
+		setup(node, sss);	
+	}
+	
 	
 	/**
 	 * Starts the WSN sensing and computing the previously requested functions. 
@@ -282,10 +478,28 @@ public class SPINEManager {
 	 * @param radioAlwaysOn low-power radio mode control flag; set it 'true' to disable the radio low-power mode;
 	 * 'false' to allow radio module turn off during 'idle' periods 
 	 */
+	/**
+	 *@deprecated Please now use startWsn(boolean)
+	 *@see #startWsn(boolean)
+	 */
 	public void start(boolean radioAlwaysOn) {
 		start(radioAlwaysOn, false);
 	}
 	
+	
+	/**
+	 * Starts the WSN sensing and computing the previously requested functions. 
+	 * This is done thru a broadcast SPINE Synchr message.
+	 * This simple start method will let the nodes use their default radio access scheme.
+	 * 
+	 * @param radioAlwaysOn low-power radio mode control flag; set it 'true' to disable the radio low-power mode;
+	 * 'false' to allow radio module turn off during 'idle' periods 
+	 */
+	public void startWsn(boolean radioAlwaysOn) {
+		startWsn(radioAlwaysOn, false);
+	}
+	
+
 	/**
 	 * Starts the WSN sensing and computing the previously requested functions. 
 	 * This is done thru a broadcast SPINE Synchr message.
@@ -295,6 +509,10 @@ public class SPINEManager {
 	 * 
 	 * @param enableTDMA TDMA transmission scheme control flag; set it 'true' to enable the TDMA on the nodes;
 	 * 'false' to keep using the default radio access scheme. 
+	 */
+	/**
+	 *@deprecated Please now use startWsn(boolean, boolean)
+	 *@see #startWsn(boolean, boolean)
 	 */
 	public void start(boolean radioAlwaysOn, boolean enableTDMA) {
 		SpineStart ss = new SpineStart();
@@ -307,13 +525,50 @@ public class SPINEManager {
 		started = true;
 	}
 	
+	
+	/**
+	 * Starts the WSN sensing and computing the previously requested functions. 
+	 * This is done thru a broadcast SPINE Synchr message.
+	 * 
+	 * @param radioAlwaysOn low-power radio mode control flag; set it 'true' to disable the radio low-power mode;
+	 * 'false' to allow radio module turn off during 'idle' periods  
+	 * 
+	 * @param enableTDMA TDMA transmission scheme control flag; set it 'true' to enable the TDMA on the nodes;
+	 * 'false' to keep using the default radio access scheme. 
+	 */
+	public void startWsn(boolean radioAlwaysOn, boolean enableTDMA) {
+		SpineStart ss = new SpineStart();
+		ss.setActiveNodesCount(activeNodes.size());
+		ss.setRadioAlwaysOn(radioAlwaysOn);
+		ss.setEnableTDMA(enableTDMA);
+		
+		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.START, ss);
+		
+		started = true;
+	}
+	
+	
 	/**
 	 * Commands a software 'on node local clock' synchronization of the whole WSN.
 	 * This is done thru a broadcast SPINE Synchr message.
 	 */
+	/**
+	 *@deprecated Please now use syncWsn()
+	 *@see #syncWsn()
+	 */
 	public void synchrWsn() {		
 		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SYNCR, null);
 	}
+	
+	
+	/**
+	 * Commands a software 'on node local clock' synchronization of the whole WSN.
+	 * This is done thru a broadcast SPINE Synchr message.
+	 */
+	public void syncWsn() {		
+		send(SPINEPacketsConstants.SPINE_BROADCAST, SPINEPacketsConstants.SYNCR, null);
+	}
+	
 	
 	/**
 	 * Commands a software reset of the whole WSN.
@@ -336,31 +591,38 @@ public class SPINEManager {
 	 */
 	private void send(int nodeID, byte pktType, Object payload) {
 		try {
+			
+			//	dynamic class loading of the proper SpineCodec implementation
+			if (payload != null){
+				    spineCodec = (SpineCodec)htInstance.get (payload.getClass().getSimpleName());
+				    if (spineCodec==null){
+				    	Class p =  Class.forName(SPINEDATACODEC_PACKAGE +
+			    		      payload.getClass().getSimpleName());
+				    	spineCodec = (SpineCodec)p.newInstance();
+				    	htInstance.put (payload.getClass().getSimpleName(), spineCodec);	
+				    } 
+			}
+			
+			
 			// dynamic class loading of the proper Message implementation
-			Class c = Class.forName(prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY));
-			com.tilab.gal.Message msg = (com.tilab.gal.Message)c.newInstance();
+			// String messageClassName = prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY);
+			Class c = (Class)htInstance.get (messageClassName);
+			if (c == null){
+				c = Class.forName(messageClassName);
+				htInstance.put (messageClassName, c);
+			} 
+			msg = (com.tilab.gal.Message)c.newInstance();
 			
 			// costruction of the message 
 			msg.setDestinationURL(URL_PREFIX + nodeID);
 			msg.setMessageId(pktType); // the clusterId is treated as the 'packet type' field
 			msg.setApplicationId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
 			if (payload != null) {
-				switch(pktType) {
-					case SPINEPacketsConstants.SETUP_FUNCTION:
-							msg.setPayload(((SpineSetupFunction)payload).encode());
-							break;
-					case SPINEPacketsConstants.FUNCTION_REQ:
-							msg.setPayload(((SpineFunctionReq)payload).encode());
-							break;
-					case SPINEPacketsConstants.SETUP_SENSOR:
-						msg.setPayload(((SpineSetupSensor)payload).encode());
-						break;
-					case SPINEPacketsConstants.START:
-						msg.setPayload(((SpineStart)payload).encode());
-						break;	
-					default: break;
-				}
-				
+				try {
+					msg.setPayload(spineCodec.encode(payload));
+				}catch (MethodNotSupportedException e){
+					System.out.println(e);
+				}	      
 			}
 			
 			// message sending
@@ -378,7 +640,6 @@ public class SPINEManager {
 			System.out.println(e);
 		}			
 	}
-	
 	
 
 	/*
@@ -409,6 +670,7 @@ public class SPINEManager {
 			}
 		
 	}
+	
 	
 	/*
 	 * implementation of the discovery timer procedure can be simply seen as a 
@@ -442,6 +704,7 @@ public class SPINEManager {
 		}
 	}
 	
+	
 	private class WSNConnectionListenerImpl implements WSNConnection.Listener {
 		
 		/*
@@ -454,8 +717,33 @@ public class SPINEManager {
 			Object o = null;
 			
 			short pktType = msg.getMessageId(); 
+			byte[] payload;
+	
 			switch(pktType) {
 				case SPINEPacketsConstants.SERVICE_ADV: 
+
+					payload = msg.getPayload();
+					
+					try {
+						// dynamic class loading of the proper SpineServiceAdvertisement implementation
+						spineServiceAdvertisement = (SpineServiceAdvertisement)htInstance.get ("ServiceAdvertisement");
+						if (spineServiceAdvertisement==null){
+							Class e = Class.forName(SPINEDATACODEC_PACKAGE + 
+							       "ServiceAdvertisement");
+							spineServiceAdvertisement = (SpineServiceAdvertisement)e.newInstance();	
+							htInstance.put ("ServiceAdvertisement", spineServiceAdvertisement);
+						} 
+						payload=spineServiceAdvertisement.decode(payload);
+					} catch (ClassNotFoundException e) { 
+						System.out.println(e); 
+					} catch (InstantiationException e) { 
+						System.out.println(e); 
+					} catch (IllegalAccessException e) { 
+						System.out.println(e);	
+					}
+					
+					msg.setPayload(payload);
+					
 					if (!discoveryCompleted) {
 						boolean alreadyDiscovered = false;
 						for(int i = 0; i<activeNodes.size(); i++) {
@@ -468,9 +756,39 @@ public class SPINEManager {
 							activeNodes.addElement(new Node(nodeID, msg.getPayload()));
 					}
 					break;
-				case SPINEPacketsConstants.DATA: o = DataFactory.newData(nodeID, msg.getPayload()); 
+				case SPINEPacketsConstants.DATA:
+					
+					payload = msg.getPayload();
+					byte functionCode = payload[0];
+					
+					try {
+						// dynamic class loading of the proper SpineCodec implementation
+						String className = SPINEFunctionConstants.functionCodeToString(functionCode) + 
+							               SPINEDATA_FUNCT_CLASSNAME_SUFFIX;
+						spineCodec = (SpineCodec)htInstance.get (className);
+						 if (spineCodec==null){
+							 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
+								   className);
+							 spineCodec = (SpineCodec)d.newInstance();
+						    htInstance.put (className, spineCodec);
+						 }
+						payload= spineCodec.decode(payload);
+					} catch (ClassNotFoundException e) { 
+						System.out.println(e); 
+					} catch (InstantiationException e) { 
+						System.out.println(e); 
+					} catch (IllegalAccessException e) { 
+						System.out.println(e);	
+					} catch (MethodNotSupportedException e) { 
+						System.out.println(e);	
+					}
+					
+					msg.setPayload(payload);
+					
+					o = DataFactory.newData(nodeID, msg.getPayload()); 
 					break;
-				case SPINEPacketsConstants.SVC_MSG: o = new ServiceMessage(nodeID, msg.getPayload()); 
+				case SPINEPacketsConstants.SVC_MSG: 
+					o = new ServiceMessage(nodeID, msg.getPayload()); 
 					break;
 				default: break;
 			}

@@ -32,34 +32,18 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
-package spine.communication.tinyos;
+package spine.datamodel.functions;
 
 public class SpineStart extends spine.communication.tinyos.SpineTOSMessage {
-	
-	private final static int LENGTH = 4;
 	
 	private int activeNodesCount = -1;
 	private boolean radioAlwaysOn;
 	private boolean enableTDMA;
 	
-	/**
-	 * This method is used internally by the framework and encodes the high level start command 
-	 * into an actual SPINE Ota message of the request, in terms of a byte[] array
-	 */
-	public byte[] encode() {
-		byte[] data = new byte[LENGTH];
-		
-		data[0] = (byte)(this.activeNodesCount>>8);
-		data[1] = (byte)this.activeNodesCount;
-		data[2] = (this.radioAlwaysOn)? (byte)1: 0;
-		data[3] = (this.enableTDMA)? (byte)1: 0;
-		
-		return data;
-	}
-
+	
 	/**
 	 * Sets the the size of the discovered WSN.
 	 * Note that this info is actually used by the node only if it's requested 
@@ -71,6 +55,14 @@ public class SpineStart extends spine.communication.tinyos.SpineTOSMessage {
 		this.activeNodesCount = activeNodesCount;
 	}
 
+
+	public int getActiveNodesCount() {
+		int activeNodesCount;
+		activeNodesCount=this.activeNodesCount;
+		return activeNodesCount;
+	}
+
+	
 	/**
 	 *  Sets the control flag for enabling the radio low-power mode.
 	 *  
@@ -78,17 +70,32 @@ public class SpineStart extends spine.communication.tinyos.SpineTOSMessage {
 	 * 'false' to let the node optimizing the radio consumption by turning the radio off
 	 * when it's not needed.
 	 */
-	public void setRadioAlwaysOn(boolean radioAlwaysOn) {
+	 public void setRadioAlwaysOn(boolean radioAlwaysOn) {
 		this.radioAlwaysOn = radioAlwaysOn;
 	}
 
+	
+	 public boolean getRadioAlwaysOn() {
+		    boolean radioAlwaysOn;
+		    radioAlwaysOn=this.radioAlwaysOn;
+		    return radioAlwaysOn;
+		}
+	 
+	 
 	/**
 	 * Sets the control flag for enabling the on-node TDMA radio access scheme
 	 * 
 	 * @param enableTDMA 'true' if the radio access scheme must be TDMA; 
 	 * 'false' to rely on the default one.
 	 */
-	public void setEnableTDMA(boolean enableTDMA) {
+     public void setEnableTDMA(boolean enableTDMA) {
 		this.enableTDMA = enableTDMA;
 	}
+     
+   
+     public boolean getEnableTDMA() {
+    	boolean enableTDMA;
+    	enableTDMA=this.enableTDMA;
+    	return enableTDMA;
+ 	}
 }
