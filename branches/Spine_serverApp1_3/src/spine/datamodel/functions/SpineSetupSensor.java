@@ -38,7 +38,7 @@ package spine.datamodel.functions;
 
 import spine.SPINESensorConstants;
 
-public class SpineSetupSensor extends spine.communication.tinyos.SpineTOSMessage {
+public class SpineSetupSensor  {
 	
 	private byte sensor = -1;
 	private byte timeScale = -1;
