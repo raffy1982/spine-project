@@ -759,7 +759,27 @@ public class SPINEManager {
 				case SPINEPacketsConstants.DATA:
 					
 					payload = msg.getPayload();
-					byte functionCode = payload[0];
+					//byte functionCode = payload[0];
+					byte functionCode;
+					// **************
+					
+					try {
+						// dynamic class loading of the proper CodecInformation
+						CodecInfo codecInformation = (CodecInfo)htInstance.get ("CodecInformation");
+						if (codecInformation==null){
+							Class g = Class.forName(SPINEDATACODEC_PACKAGE + 
+							       "CodecInformation");
+							codecInformation = (CodecInfo)g.newInstance();	
+							htInstance.put ("CodecInformation", codecInformation);
+						} 
+						functionCode=codecInformation.getFunctionCode(payload);
+					} catch (Exception e) { 
+						System.out.println(e); 
+						return;
+					} 
+					
+					// ********
+					
 					
 					try {
 						// dynamic class loading of the proper SpineCodec implementation
@@ -772,7 +792,7 @@ public class SPINEManager {
 							 spineCodec = (SpineCodec)d.newInstance();
 						    htInstance.put (className, spineCodec);
 						 }
-						payload= spineCodec.decode(payload);
+						o= spineCodec.decode(payload);
 					} catch (ClassNotFoundException e) { 
 						System.out.println(e); 
 					} catch (InstantiationException e) { 
@@ -783,9 +803,9 @@ public class SPINEManager {
 						System.out.println(e);	
 					}
 					
-					msg.setPayload(payload);
+					//msg.setPayload(payload);
 					
-					o = DataFactory.newData(nodeID, msg.getPayload()); 
+					//o = DataFactory.newData(nodeID, msg.getPayload()); 
 					break;
 				case SPINEPacketsConstants.SVC_MSG: 
 					o = new ServiceMessage(nodeID, msg.getPayload()); 

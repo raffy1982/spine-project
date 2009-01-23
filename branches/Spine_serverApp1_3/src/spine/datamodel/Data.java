@@ -43,7 +43,9 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
-public abstract class Data {
+import spine.datamodel.functions.SpineObject;
+
+public abstract class Data implements SpineObject{
 	
 	protected long timestamp = 0;
 

@@ -55,7 +55,7 @@ public abstract class SpineCodec {
 	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
 	 * @return a byte array representing the platform independent data packet payload.
 	 */
-	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
+	public SpineObject decode(byte[] payload)throws MethodNotSupportedException{
 		throw new MethodNotSupportedException("decode");
 	};
 	}
