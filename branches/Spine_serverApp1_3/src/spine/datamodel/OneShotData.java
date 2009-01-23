@@ -90,4 +90,18 @@ public class OneShotData extends Data {
 	public String toString() {
 		return "" + oneShot;
 	}
+
+	/**
+	 * @return the oneShot
+	 */
+	public Feature getOneShot() {
+		return oneShot;
+	}
+
+	/**
+	 * @param oneShot the oneShot to set
+	 */
+	public void setOneShot(Feature oneShot) {
+		this.oneShot = oneShot;
+	}
 }

@@ -63,4 +63,11 @@ public class StepCounterData extends Data {
 		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.STEP_COUNTER_LABEL + 
 				" update: "	+ this.stepsCount;
 	}
+
+	/**
+	 * @param stepsCount the stepsCount to set
+	 */
+	public void setStepsCount(int stepsCount) {
+		this.stepsCount = stepsCount;
+	}
 }

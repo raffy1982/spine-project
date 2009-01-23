@@ -94,7 +94,9 @@ public class FeatureData extends Data {
 	public Feature[] getFeatures() {
 	    return features;
 	}
-	
+	public void setFeatures(Feature[] features) {
+		this.features = features;
+	}
 		
 	/**
 	 * 

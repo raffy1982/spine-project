@@ -76,8 +76,29 @@ public abstract class Data implements SpineObject{
 		this.nodeID = nodeID;
 		functionCode = payload[0];
 	}
-	
+	/**
+	 * 
+	 * @param functionCode
+	 */
+	public void setFunctionCode(byte functionCode) {
+		this.functionCode = functionCode;
+	}
+	/**
+	 * 
+	 * @param nodeID
+	 */
+	public void setNodeID(int nodeID) {
+		this.nodeID = nodeID;
+	}
+	/**
+	 * 
+	 * @param timestamp
+	 */
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 
+	}
+	
 	/**
 	 * Getter method of the code of the function generating of the data 
 	 * 

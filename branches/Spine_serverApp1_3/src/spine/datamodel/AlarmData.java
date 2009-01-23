@@ -141,4 +141,39 @@ public class AlarmData extends Data {
 				" VALUE " + this.currentValue ;
 	}
 
+	/**
+	 * @param dataType the dataType to set
+	 */
+	public void setDataType(byte dataType) {
+		this.dataType = dataType;
+	}
+
+	/**
+	 * @param sensorCode the sensorCode to set
+	 */
+	public void setSensorCode(byte sensorCode) {
+		this.sensorCode = sensorCode;
+	}
+
+	/**
+	 * @param valueType the valueType to set
+	 */
+	public void setValueType(byte valueType) {
+		this.valueType = valueType;
+	}
+
+	/**
+	 * @param alarmType the alarmType to set
+	 */
+	public void setAlarmType(byte alarmType) {
+		this.alarmType = alarmType;
+	}
+
+	/**
+	 * @param currentValue the currentValue to set
+	 */
+	public void setCurrentValue(int currentValue) {
+		this.currentValue = currentValue;
+	}
+
 }
