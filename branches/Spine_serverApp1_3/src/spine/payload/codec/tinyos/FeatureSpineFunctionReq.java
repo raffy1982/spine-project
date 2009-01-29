@@ -54,8 +54,8 @@ import spine.datamodel.functions.Exception.*;
 
 public class FeatureSpineFunctionReq extends SpineCodec {
 
-	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
-		return super.decode(payload);
+	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
+		return super.decode(nodeID, payload);
 	};
     
 	public byte[] encode(Object payload) {

@@ -39,13 +39,7 @@ import spine.SPINEFunctionConstants;
 public class StepCounterData extends Data {
 	
 	private int stepsCount;
-	
-	public Data init(int nodeID, byte[] payload) {
-		this.baseInit(nodeID, payload);
-		this.stepsCount = (payload[2]<<8) | payload[3]; 
-		return this;
-	}
-	
+		
 	/**
 	 * Getter method of the steps count
 	 * @return the steps count

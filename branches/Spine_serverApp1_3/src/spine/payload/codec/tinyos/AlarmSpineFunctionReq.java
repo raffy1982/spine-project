@@ -51,8 +51,8 @@ import spine.datamodel.functions.Exception.*;
 
 public class AlarmSpineFunctionReq extends SpineCodec {
 
-		public byte[] decode(byte[] payload)throws MethodNotSupportedException{
-			return super.decode(payload);
+		public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
+			return super.decode(nodeID, payload);
 		};
 	    
 

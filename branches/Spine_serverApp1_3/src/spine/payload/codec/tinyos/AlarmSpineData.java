@@ -38,7 +38,9 @@ package spine.payload.codec.tinyos;
 
 import spine.datamodel.functions.*;
 
-import spine.datamodel.functions.Exception.*;;
+import spine.datamodel.functions.Exception.*;
+
+import spine.datamodel.*;
 
 
 public class AlarmSpineData extends SpineCodec {
@@ -46,41 +48,18 @@ public class AlarmSpineData extends SpineCodec {
 	public byte[] encode(Object payload)throws MethodNotSupportedException {
 		return super.encode(payload);
 	};
-	
-	
-	public byte[] decode(byte[] payload){
-		byte[] dataTmp = new byte[579]; 
-		short dtIndex = 0;
-		short pldIndex = 0;
+
+	public SpineObject decode(int nodeID, byte[] payload){
 		
-		byte functionCode = payload[pldIndex++];
-		dataTmp[dtIndex++] = functionCode;
+		AlarmData data =  new AlarmData();
 		
-		pldIndex++;
-		
-		byte dataType = payload[pldIndex++];
-		dataTmp[dtIndex++] = dataType;
-		
-		byte sensorCode = payload[pldIndex++];
-		dataTmp[dtIndex++] = sensorCode;
-		
-		byte valueType = payload[pldIndex++];
-		dataTmp[dtIndex++] = valueType;
-		
-		byte alarmType = payload[pldIndex++];
-		dataTmp[dtIndex++] = alarmType;
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		dataTmp[dtIndex++] = payload[pldIndex++];
-		
-		byte[] data = new byte[dtIndex];
-		System.arraycopy(dataTmp, 0, data, 0, data.length);
-		
+		// set data.nodeID, data.functionCode e data.timestamp
+		data.baseInit(nodeID, payload);
+		data.setDataType(payload[2]);
+		data.setSensorCode(payload[3]);
+		data.setValueType(payload[4]);
+		data.setAlarmType(payload[5]);
+		data.setCurrentValue(Data.convertFourBytesToInt(payload, 6));
 		return data;
 	}
 }

@@ -39,11 +39,17 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
+import java.util.Vector;
+
+import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
 
+import spine.datamodel.Data;
+import spine.datamodel.Feature;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
+import spine.datamodel.*;
 
 public class FeatureSpineData extends SpineCodec {
 	
@@ -51,19 +57,22 @@ public class FeatureSpineData extends SpineCodec {
 		return super.encode(payload);
 	};
 	
-	public byte[] decode(byte[] payload) {
+	public SpineObject decode(int nodeID, byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
 		
+		// functionCode = payload[0];
 		byte functionCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = functionCode;
 		
 		pldIndex++;
 		
+		// sensorCode = payload[1];
 		byte sensorCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = sensorCode;
 		
+		//featuresCount = payload[2];
 		byte featuresCount = payload[pldIndex++];
 		dataTmp[dtIndex++] = featuresCount;
 		
@@ -111,10 +120,40 @@ public class FeatureSpineData extends SpineCodec {
 				}
 			}
 		}
+				
+		FeatureData data =  new FeatureData();
 		
-		byte[] data = new byte[dtIndex];
-		System.arraycopy(dataTmp, 0, data, 0, data.length);
-		
+				
+		try {
+			
+			// set data.nodeID, data.functionCode e data.timestamp
+			data.baseInit(nodeID, payload);
+			
+			Vector feats = new Vector();
+
+			byte currBitmask;	
+			int currCh1Value, currCh2Value, currCh3Value, currCh4Value;
+			
+			for (int i = 0; i<featuresCount; i++) {
+				currFeatCode = dataTmp[3+i*18];
+				currBitmask = dataTmp[(3+i*18) + 1];
+			
+				currCh1Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 2);
+				currCh2Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 6);
+				currCh3Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 10);
+				currCh4Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 14);
+							
+				feats.addElement(new Feature(nodeID, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+			}
+			
+			data.setFeatures((Feature[]) feats.toArray(new Feature[0]));
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
+				
 		return data;
 	}
 }

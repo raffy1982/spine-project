@@ -47,33 +47,7 @@ public class AlarmData extends Data {
 	private byte alarmType;
 	private int currentValue;
 	
-	/**
-	 * Constructor of a Data object. 
-	 * Note that Data in just a generic container and the actual Data implementations must be provided and
-	 * configured properly within the Properties set. That is done declaring a new "data_function_className_myFunctionCode" property
-	 * equal to the full path name of the class that will be responsible of decoding the byte[] data payload.
-	 * The usage of properties is to allow the dynamic loading of the classes involved.
-	 * 
-	 * @param nodeID the source node generating the data
-	 * @param payload the data represented as a byte[] array. Its length and content are 'function specific' 
-	 */
-	public Data init(int nodeID, byte[] payload) {
-		try {
-			this.baseInit(nodeID, payload);
-			
-			dataType = payload[1];
-			sensorCode = payload[2];
-			valueType = payload[3];
-			alarmType = payload[4];
-			currentValue = Data.convertFourBytesToInt(payload, 5);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return this;
-	}
-	
+
 	/**
 	 * Getter method of the node id
 	 * @return the node id

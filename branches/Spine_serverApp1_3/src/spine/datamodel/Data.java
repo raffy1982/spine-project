@@ -43,9 +43,19 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import spine.Properties;
+import spine.datamodel.functions.CodecInfo;
 import spine.datamodel.functions.SpineObject;
 
 public abstract class Data implements SpineObject{
+	
+	private static Properties prop = Properties.getProperties();
+	
+	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
+	private static final String SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
+								prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
+	
+	protected static CodecInfo codecInformation=null;
 	
 	protected long timestamp = 0;
 
@@ -54,28 +64,30 @@ public abstract class Data implements SpineObject{
 	
 	protected Data() {}
 		
+
 	/**
-	 * Initialize a new data object with a message
-	 *
-	 * @param nodeID ID of the node from which the message originated
-	 * @param payload raw payload of the message
-	 * @return the newly initialized object or null if the init fails
+	 * @param nodeID
+	 * @param payload
 	 */
-	public abstract Data init(int nodeID, byte[] payload);
-	
-	
-	/**
-	 * Initialization which should be in Data.init and called by super in child
-	 * init methods, but is instead put here because Data.init must be abstract
-	 * to be appropriately used by DataFactory
-	 *
-	 * @see spine.datamodel.DataFactory
-	 */
-	protected void baseInit(int nodeID, byte[] payload) {
+	public void baseInit(int nodeID, byte[] payload) {
 		timestamp = System.currentTimeMillis();
 		this.nodeID = nodeID;
-		functionCode = payload[0];
+		
+		//  Setting functionCode
+		try {
+			// dynamic class loading of the proper CodecInformation
+			if (codecInformation==null){
+				Class g = Class.forName(SPINEDATACODEC_PACKAGE + 
+				       "CodecInformation");
+				codecInformation = (CodecInfo)g.newInstance();
+			} 
+			functionCode=codecInformation.getFunctionCode(payload);
+		} catch (Exception e) { 
+			System.out.println(e); 
+			return;
+		} 	
 	}
+	
 	/**
 	 * 
 	 * @param functionCode
@@ -134,8 +146,8 @@ public abstract class Data implements SpineObject{
 	 * @param index the starting index on the interested portion to convert
 	 * 
 	 * @return the converted integer
-	 */
-	protected static int convertFourBytesToInt(byte[] bytes, int index) {        
+	 */  
+	public static int convertFourBytesToInt(byte[] bytes, int index) {    
 		if(bytes.length < 4) return 0;
 		
 		return ( bytes[index + 3] & 0xFF) 		 |
@@ -153,7 +165,7 @@ public abstract class Data implements SpineObject{
 	 * 
 	 * @return the converted integer
 	 */
-	protected static int convertTwoBytesToInt(byte[] bytes, int index) {
+	public static int convertTwoBytesToInt(byte[] bytes, int index) {
 		if(bytes.length < 2) return 0;
 		
 		return   (bytes[index + 1] & 0xFF) |

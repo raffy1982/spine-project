@@ -49,7 +49,6 @@ import com.tilab.gal.WSNConnection;
 import spine.SPINEPacketsConstants;
 
 import spine.datamodel.Data;
-import spine.datamodel.DataFactory;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 
@@ -59,7 +58,7 @@ import spine.datamodel.functions.*;
 
 
 public class SPINEManager {
-
+	
 	private static Properties prop = Properties.getProperties();
 	
 	
@@ -89,6 +88,7 @@ public class SPINEManager {
 	
 	// Hash Table class instance
 	private Hashtable htInstance = new Hashtable();
+	
 	
 	private SpineCodec spineCodec = null;
 	private SpineServiceAdvertisement spineServiceAdvertisement  = null;
@@ -759,10 +759,10 @@ public class SPINEManager {
 				case SPINEPacketsConstants.DATA:
 					
 					payload = msg.getPayload();
-					//byte functionCode = payload[0];
-					byte functionCode;
-					// **************
 					
+					byte functionCode;
+					
+					//  Setting functionCode
 					try {
 						// dynamic class loading of the proper CodecInformation
 						CodecInfo codecInformation = (CodecInfo)htInstance.get ("CodecInformation");
@@ -777,9 +777,7 @@ public class SPINEManager {
 						System.out.println(e); 
 						return;
 					} 
-					
-					// ********
-					
+										
 					
 					try {
 						// dynamic class loading of the proper SpineCodec implementation
@@ -792,7 +790,10 @@ public class SPINEManager {
 							 spineCodec = (SpineCodec)d.newInstance();
 						    htInstance.put (className, spineCodec);
 						 }
-						o= spineCodec.decode(payload);
+						 // Invoking decode and setting SpineObject data
+						 // (AlarmSpineData, FeatureSpineData, OneShotSpineData, StepCounterSpineData)
+						o= spineCodec.decode(nodeID,payload);
+						
 					} catch (ClassNotFoundException e) { 
 						System.out.println(e); 
 					} catch (InstantiationException e) { 
@@ -802,10 +803,6 @@ public class SPINEManager {
 					} catch (MethodNotSupportedException e) { 
 						System.out.println(e);	
 					}
-					
-					//msg.setPayload(payload);
-					
-					//o = DataFactory.newData(nodeID, msg.getPayload()); 
 					break;
 				case SPINEPacketsConstants.SVC_MSG: 
 					o = new ServiceMessage(nodeID, msg.getPayload()); 

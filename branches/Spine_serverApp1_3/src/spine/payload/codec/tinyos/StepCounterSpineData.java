@@ -39,6 +39,7 @@ package spine.payload.codec.tinyos;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
+import spine.datamodel.*;
 
 public class StepCounterSpineData extends SpineCodec {
 	
@@ -46,7 +47,14 @@ public class StepCounterSpineData extends SpineCodec {
 		return super.encode(payload);
 	};
 	
-	public byte[] decode(byte[] payload) {
-		return payload;
+	public SpineObject decode(int nodeID, byte[] payload) {
+				
+		StepCounterData data =  new StepCounterData();
+		
+		// set data.nodeID, data.functionCode e data.timestamp
+		data.baseInit(nodeID, payload);
+		data.setStepsCount((payload[2]<<8) | payload[3]);
+		
+		return data;
 	}
 }

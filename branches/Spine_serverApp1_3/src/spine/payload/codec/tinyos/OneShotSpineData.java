@@ -39,12 +39,15 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
+import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
 
+import spine.datamodel.Feature;
 import spine.datamodel.functions.*;
 
 import spine.datamodel.functions.Exception.*;
 
+import spine.datamodel.*;
 
 public class OneShotSpineData extends SpineCodec {
 	
@@ -52,21 +55,25 @@ public class OneShotSpineData extends SpineCodec {
 		return super.encode(payload);
 	};
 	
-	public byte[] decode(byte[] payload) {
+	public SpineObject decode(int nodeID, byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
 		
+		// functionCode = payload[0];
 		byte functionCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = functionCode;
 		
 		pldIndex++;
 		
+		// sensorCode = payload[1];
 		byte sensorCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = sensorCode;
 		
+		// bitmask = payload[2];
 		byte bitmask = payload[pldIndex++];
 		dataTmp[dtIndex++] = bitmask;				
+		
 		
 		for (int j = 0; j<SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
 			if (SPINESensorConstants.chPresent(j, bitmask)) {						
@@ -78,9 +85,25 @@ public class OneShotSpineData extends SpineCodec {
 				dataTmp[dtIndex++] = 0;
 			}
 		}
-				
-		byte[] data = new byte[dtIndex];
-		System.arraycopy(dataTmp, 0, data, 0, data.length);
+		
+		OneShotData data =  new OneShotData();
+		
+		try {
+			
+			// set data.nodeID, data.functionCode e data.timestamp
+			data.baseInit(nodeID, payload);
+		
+			int currCh1Value = Data.convertTwoBytesToInt(dataTmp, 3);
+			int currCh2Value = Data.convertTwoBytesToInt(dataTmp, 5);
+			int currCh3Value = Data.convertTwoBytesToInt(dataTmp, 7);
+			int currCh4Value = Data.convertTwoBytesToInt(dataTmp, 9);
+					
+			data.setOneShot(new Feature(nodeID, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		
 		return data;
 	}

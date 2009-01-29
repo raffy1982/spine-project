@@ -44,9 +44,9 @@ public class StepCounterSpineSetupFunction extends SpineCodec {
 
 	
 	private final static int PARAM_LENGTH = 1; 
-		
-	public byte[] decode(byte[] payload)throws MethodNotSupportedException{
-		return super.decode(payload);
+
+	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
+		return super.decode(nodeID, payload);
 	};
     
 

@@ -88,7 +88,8 @@ public class Feature {
 	 * @param ch3Value the first feature channel value
 	 * @param ch4Value the first feature channel value
 	 */
-	protected Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
+	public Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
+		
 		this.nodeID = nodeID;
 
 		this.functionCode = functionCode;

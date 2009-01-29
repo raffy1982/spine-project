@@ -35,42 +35,9 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
-import spine.SPINEFunctionConstants;
-
 public class OneShotData extends Data {
 	
 	Feature oneShot = null;		
-
-	/**
-	 * Constructor of a Data object. 
-	 * Note that Data in just a generic container and the actual Data implementations must be provided and
-	 * configured properly within the Properties set. That is done declaring a new "data_function_className_myFunctionCode" property
-	 * equal to the full path name of the class that will be responsible of decoding the byte[] data payload.
-	 * The usage of properties is to allow the dynamic loading of the classes involved.
-	 * 
-	 * @param nodeID the source node generating the data
-	 * @param payload the data represented as a byte[] array. Its length and content are 'function specific' 
-	 */
-	public Data init(int nodeID, byte[] payload) {
-		try {
-			this.baseInit(nodeID, payload);
-			
-			byte sensorCode = payload[1];
-			byte bitmask = payload[2];
-			
-			int currCh1Value = convertTwoBytesToInt(payload, 3);
-			int currCh2Value = convertTwoBytesToInt(payload, 5);
-			int currCh3Value = convertTwoBytesToInt(payload, 7);
-			int currCh4Value = convertTwoBytesToInt(payload, 9);
-			
-			oneShot = new Feature(nodeID, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-		return this;
-	}
 
 	/**
 	 * 
