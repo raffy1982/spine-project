@@ -234,5 +234,54 @@ public class Feature {
 				"; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
 				"; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
 	}
+
+	/**
+	 * @param nodeID the nodeID to set
+	 */
+	public void setNodeID(int nodeID) {
+		this.nodeID = nodeID;
+	}
+
+	/**
+	 * @param functionCode the functionCode to set
+	 */
+	public void setFunctionCode(byte functionCode) {
+		this.functionCode = functionCode;
+	}
+
+	/**
+	 * @param channelBitmask the channelBitmask to set
+	 */
+	public void setChannelBitmask(byte channelBitmask) {
+		this.channelBitmask = channelBitmask;
+	}
+
+	/**
+	 * @param ch1Value the ch1Value to set
+	 */
+	public void setCh1Value(int ch1Value) {
+		this.ch1Value = ch1Value;
+	}
+
+	/**
+	 * @param ch2Value the ch2Value to set
+	 */
+	public void setCh2Value(int ch2Value) {
+		this.ch2Value = ch2Value;
+	}
+
+	/**
+	 * @param ch3Value the ch3Value to set
+	 */
+	public void setCh3Value(int ch3Value) {
+		this.ch3Value = ch3Value;
+	}
+
+	/**
+	 * @param ch4Value the ch4Value to set
+	 */
+	public void setCh4Value(int ch4Value) {
+		this.ch4Value = ch4Value;
+	}
 	
 }
