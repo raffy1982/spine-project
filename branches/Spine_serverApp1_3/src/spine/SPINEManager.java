@@ -714,7 +714,7 @@ public class SPINEManager {
 
 			int nodeID = Integer.parseInt(msg.getSourceURL().substring(URL_PREFIX.length()));
 			
-			Object o = null;
+			SpineObject o = null;
 			
 			short pktType = msg.getMessageId(); 
 			byte[] payload;
@@ -848,10 +848,27 @@ public class SPINEManager {
 					}
 					break;
 					
-			case SPINEPacketsConstants.SVC_MSG: 
-					o = new ServiceMessage(nodeID, msg.getPayload()); 
-					break;
+			case SPINEPacketsConstants.SVC_MSG: {
+				//	o = new ServiceMessage(nodeID, msg.getPayload()); 
+				payload = msg.getPayload();
+				try {
+					// dynamic class loading of the proper SpineCodec implementation
 					
+					spineCodec = (SpineCodec)htInstance.get ("ServiceMessage");
+					 if (spineCodec==null){
+						 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
+							   "ServiceMessage");
+						 spineCodec = (SpineCodec)d.newInstance();
+					    htInstance.put ("ServiceMessage", spineCodec);
+					 }
+					 // Invoking decode and setting SpineObject data
+					o= spineCodec.decode(nodeID,payload);
+					
+				} catch (Exception e) { 
+					System.out.println(e); 
+				}
+					break;
+			}	
 				default: break;
 			}
 			

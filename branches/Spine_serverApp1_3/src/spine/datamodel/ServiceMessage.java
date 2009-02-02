@@ -34,7 +34,9 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
-public class ServiceMessage {
+import spine.datamodel.functions.SpineObject;
+
+public class ServiceMessage implements SpineObject{
 
 
 	// MESSAGE TYPES
@@ -59,6 +61,7 @@ public class ServiceMessage {
 	private int nodeID = -1;
 	private byte messageType = -1;
 	private byte messageDetail = -1;
+	private byte payload[];
 	
 
 	/**
@@ -146,5 +149,19 @@ public class ServiceMessage {
 	public String toString() {
 		return "Service Message From Node " + this.nodeID + " - " + 
 				messageTypeToString() + ": " + messageDetailToString();
+	}
+
+	/**
+	 * @param payload the payload to set
+	 */
+	public void setPayload(byte payload[]) {
+		this.payload = payload;
+	}
+
+	/**
+	 * @return the payload
+	 */
+	public byte[] getPayload() {
+		return payload;
 	}	
 }
