@@ -50,7 +50,7 @@ public class Sensor {
 	 * 
 	 * @see spine.SPINESensorConstants 
 	 */
-	protected Sensor(byte code, byte channelBitmask) {
+	public Sensor(byte code, byte channelBitmask) {
 		this.code = code;
 		this.channelBitmask = channelBitmask; 
 	}

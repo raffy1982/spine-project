@@ -91,7 +91,7 @@ public class SPINEManager {
 	
 	
 	private SpineCodec spineCodec = null;
-	private SpineServiceAdvertisement spineServiceAdvertisement  = null;
+	//private SpineServiceAdvertisement spineServiceAdvertisement  = null;
 	private com.tilab.gal.Message msg;
 	
 	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
@@ -724,6 +724,27 @@ public class SPINEManager {
 
 					payload = msg.getPayload();
 					
+					
+					
+					
+					try {
+						// dynamic class loading of the proper SpineCodec implementation
+						
+						spineCodec = (SpineCodec)htInstance.get ("ServiceAdvertisement");
+						 if (spineCodec==null){
+							 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
+								   "ServiceAdvertisement");
+							 spineCodec = (SpineCodec)d.newInstance();
+						    htInstance.put ("ServiceAdvertisement", spineCodec);
+						 }
+						 // Invoking decode and setting SpineObject data
+						o= spineCodec.decode(nodeID,payload);
+						
+					} catch (Exception e) { 
+						System.out.println(e); 
+					} 
+					
+					/*//
 					try {
 						// dynamic class loading of the proper SpineServiceAdvertisement implementation
 						spineServiceAdvertisement = (SpineServiceAdvertisement)htInstance.get ("ServiceAdvertisement");
@@ -733,16 +754,36 @@ public class SPINEManager {
 							spineServiceAdvertisement = (SpineServiceAdvertisement)e.newInstance();	
 							htInstance.put ("ServiceAdvertisement", spineServiceAdvertisement);
 						} 
-						payload=spineServiceAdvertisement.decode(payload);
+						
+						
+						*******************
+						
+						try {
+						// dynamic class loading of the proper SpineCodec implementation
+						
+						spineCodec = (SpineCodec)htInstance.get ("ServiceAdvertisement");
+						 if (spineCodec==null){
+							 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
+								   "ServiceAdvertisement");
+							 spineCodec = (SpineCodec)d.newInstance();
+						    htInstance.put ("ServiceAdvertisement", spineCodec);
+						 }
+						
+						
+						
+						**********************
+						
+						o=spineServiceAdvertisement.decode(nodeID,payload);
+						
 					} catch (ClassNotFoundException e) { 
 						System.out.println(e); 
 					} catch (InstantiationException e) { 
 						System.out.println(e); 
 					} catch (IllegalAccessException e) { 
 						System.out.println(e);	
-					}
+					}*/
 					
-					msg.setPayload(payload);
+				//	msg.setPayload(payload);
 					
 					if (!discoveryCompleted) {
 						boolean alreadyDiscovered = false;
@@ -753,8 +794,10 @@ public class SPINEManager {
 							}
 						}
 						if (!alreadyDiscovered)
-							activeNodes.addElement(new Node(nodeID, msg.getPayload()));
+							activeNodes.addElement((Node)o/*new Node(nodeID, msg.getPayload())*/);
 					}
+					
+					
 					break;
 				case SPINEPacketsConstants.DATA:
 					
@@ -804,9 +847,11 @@ public class SPINEManager {
 						System.out.println(e);	
 					}
 					break;
-				case SPINEPacketsConstants.SVC_MSG: 
+					
+			case SPINEPacketsConstants.SVC_MSG: 
 					o = new ServiceMessage(nodeID, msg.getPayload()); 
 					break;
+					
 				default: break;
 			}
 			

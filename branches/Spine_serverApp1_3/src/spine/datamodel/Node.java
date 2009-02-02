@@ -41,8 +41,9 @@ import spine.Properties;
 import spine.SPINEFunctionConstants;
 import spine.datamodel.functions.Exception.BadFunctionSpecException;
 import spine.datamodel.functions.Function;
+import spine.datamodel.functions.SpineObject;
 
-public class Node {
+public class Node implements SpineObject{
 	
 	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
 	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
@@ -104,6 +105,10 @@ public class Node {
 	public int getNodeID() {
 		return nodeID;
 	}
+	public void setNodeID(int nodeID) {
+		this.nodeID = nodeID;
+	}
+	
 
 	/**
 	 * Getter method of the node sensors list
@@ -112,6 +117,11 @@ public class Node {
 	public Vector getSensorsList() {
 		return sensorsList;
 	}
+	public void setSensorsList(Vector sensorsList) {
+		this.sensorsList = sensorsList;
+	}
+	
+	
 
 	/**
 	 * Getter method of the node functionality (function libraries) list
@@ -119,6 +129,9 @@ public class Node {
 	 */
 	public Vector getFunctionsList() {
 		return functionsList;
+	}
+	public void setFunctionsList(Vector functionsList) {
+		this.functionsList = functionsList;
 	}
 	
 	/**
