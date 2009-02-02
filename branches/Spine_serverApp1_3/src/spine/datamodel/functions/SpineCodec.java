@@ -45,7 +45,7 @@ public abstract class SpineCodec {
 	 * @param payload the platform independent data packet payload
 	 * @return the actual SPINE Ota message 
 	 */
-	public byte[] encode (Object payload)throws MethodNotSupportedException{
+	public byte[] encode (SpineObject payload)throws MethodNotSupportedException{
 		throw new MethodNotSupportedException("encode");
 	};
 

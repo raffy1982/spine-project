@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-public interface SpineSetupFunction {	
+public interface SpineSetupFunction extends SpineObject{	
 	
 	public String toString();
 }

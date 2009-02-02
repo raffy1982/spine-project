@@ -589,7 +589,7 @@ public class SPINEManager {
 	/*
 	 * Private utility method containing the actual message send code 
 	 */
-	private void send(int nodeID, byte pktType, Object payload) {
+	private void send(int nodeID, byte pktType, SpineObject payload) {
 		try {
 			
 			//	dynamic class loading of the proper SpineCodec implementation

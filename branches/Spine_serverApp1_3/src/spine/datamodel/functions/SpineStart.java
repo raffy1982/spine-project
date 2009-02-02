@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-public class SpineStart {
+public class SpineStart implements SpineObject{
 	
 	private int activeNodesCount = -1;
 	private boolean radioAlwaysOn;
