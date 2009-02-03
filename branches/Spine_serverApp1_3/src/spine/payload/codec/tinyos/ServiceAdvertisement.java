@@ -54,7 +54,7 @@ public class ServiceAdvertisement extends SpineCodec {
 	private Vector sensorsList = new Vector(); // <values:Sensor>
 	private Vector functionsList = new Vector(); // <values:Function>
 	
-	public byte[] encode(Object payload)throws MethodNotSupportedException {
+	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
 		return super.encode(payload);
 	};
 

@@ -56,7 +56,7 @@ public class AlarmSpineFunctionReq extends SpineCodec {
 		};
 	    
 
-		public byte[] encode(Object payload) {
+		public byte[] encode(SpineObject payload) {
 			
 			spine.datamodel.functions.AlarmSpineFunctionReq workPayLoad = (spine.datamodel.functions.AlarmSpineFunctionReq)payload;
 			

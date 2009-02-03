@@ -51,7 +51,7 @@ public class FeatureSpineSetupFunction extends SpineCodec {
 	};
 	
 	
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		
 		spine.datamodel.functions.FeatureSpineSetupFunction workPayLoad = (spine.datamodel.functions.FeatureSpineSetupFunction)payload;
 		

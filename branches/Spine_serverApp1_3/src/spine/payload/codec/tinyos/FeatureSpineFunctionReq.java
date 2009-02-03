@@ -58,7 +58,7 @@ public class FeatureSpineFunctionReq extends SpineCodec {
 		return super.decode(nodeID, payload);
 	};
     
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		 
 		   spine.datamodel.functions.FeatureSpineFunctionReq workPayLoad = (spine.datamodel.functions.FeatureSpineFunctionReq)payload;
 			

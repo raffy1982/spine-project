@@ -50,7 +50,7 @@ public class StepCounterSpineSetupFunction extends SpineCodec {
 	};
     
 
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		
 		byte[] data = new byte[3];
 	

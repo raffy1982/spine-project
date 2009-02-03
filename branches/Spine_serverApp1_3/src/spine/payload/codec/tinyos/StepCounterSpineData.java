@@ -43,7 +43,7 @@ import spine.datamodel.*;
 
 public class StepCounterSpineData extends SpineCodec {
 	
-	public byte[] encode(Object payload) throws MethodNotSupportedException{
+	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
 		return super.encode(payload);
 	};
 	

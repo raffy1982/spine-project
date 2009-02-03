@@ -45,8 +45,8 @@ import spine.datamodel.functions.SpineObject;
 
 public class Node implements SpineObject{
 	
-	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
-	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
+//	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
+//	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
 	
 	private static final String NEW_LINE = Properties.getProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
 	

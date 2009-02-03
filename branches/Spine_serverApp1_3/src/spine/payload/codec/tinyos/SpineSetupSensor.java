@@ -50,7 +50,7 @@ public class SpineSetupSensor extends SpineCodec {
 	};
     
 	
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		
 		spine.datamodel.functions.SpineSetupSensor workPayLoad = (spine.datamodel.functions.SpineSetupSensor)payload;
 		

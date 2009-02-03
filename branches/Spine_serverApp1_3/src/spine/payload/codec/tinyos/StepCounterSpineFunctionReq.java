@@ -55,7 +55,7 @@ public class StepCounterSpineFunctionReq extends SpineCodec {
 	};
     
 
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		
 		spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
 		

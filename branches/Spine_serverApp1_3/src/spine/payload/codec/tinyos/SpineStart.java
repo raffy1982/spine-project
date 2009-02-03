@@ -52,7 +52,7 @@ public class SpineStart extends SpineCodec {
 	};
     
 
-	public byte[] encode(Object payload) {
+	public byte[] encode(SpineObject payload) {
 		
 		spine.datamodel.functions.SpineStart workPayLoad = (spine.datamodel.functions.SpineStart)payload;
 		
