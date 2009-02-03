@@ -58,9 +58,12 @@ implementation {
         components ModeC;
         components MedianC;
         components RawDataC;
+        #ifndef MTS300_SENSOR_BOARD
         components PitchRollC;
+    	#endif
         components VectorMagnitudeC;
-	
+		
+		
 	components LedsC;
 
 	FeatureEngineP.Function = Function;
@@ -88,7 +91,9 @@ implementation {
         FeatureEngineP.Features[MODE] -> ModeC;
         FeatureEngineP.Features[MEDIAN] -> MedianC;
         FeatureEngineP.Features[RAW_DATA] -> RawDataC;
+        #ifndef MTS300_SENSOR_BOARD
         FeatureEngineP.Features[PITCH_ROLL] -> PitchRollC;
-	FeatureEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
+        #endif
+		FeatureEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
 
 }

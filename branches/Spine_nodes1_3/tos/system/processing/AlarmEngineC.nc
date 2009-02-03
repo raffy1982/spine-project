@@ -55,7 +55,9 @@ Boston, MA  02111-1307, USA.
 	    components ModeC;
 	    components MedianC;
 	    components RawDataC;
+	    #ifndef MTS300_SENSOR_BOARD
 	    components PitchRollC;
+	    #endif
 	    components VectorMagnitudeC;
 	  components LedsC;
       
@@ -82,7 +84,9 @@ Boston, MA  02111-1307, USA.
         AlarmEngineP.Features[MODE] -> ModeC;
         AlarmEngineP.Features[MEDIAN] -> MedianC;
         AlarmEngineP.Features[RAW_DATA] -> RawDataC;
+        #ifndef MTS300_SENSOR_BOARD
         AlarmEngineP.Features[PITCH_ROLL] -> PitchRollC;
-	    AlarmEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;   
+	    #endif
+        AlarmEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;   
       
  }
