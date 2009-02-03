@@ -37,22 +37,41 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
+import java.util.Vector;
+
+import spine.SPINEFunctionConstants;
+import spine.datamodel.Node;
+import spine.datamodel.Sensor;
 import spine.datamodel.functions.*;
+import spine.datamodel.functions.Exception.BadFunctionSpecException;
+import spine.datamodel.functions.Exception.MethodNotSupportedException;
 
+public class ServiceAdvertisement extends SpineCodec {
+	
+	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
+	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
 
-public class ServiceAdvertisement implements SpineServiceAdvertisement {
+	private Vector sensorsList = new Vector(); // <values:Sensor>
+	private Vector functionsList = new Vector(); // <values:Function>
+	
+	public byte[] encode(Object payload)throws MethodNotSupportedException {
+		return super.encode(payload);
+	};
 
 	/**
-	 * Decompress Service Advertisement packet payload into a platform independent packet payload
+	 * Decompress Service Advertisement packet payload into Node object
 	 * 
 	 * @param payload the low level byte array containing the payload of the Spine Service Advertisement packet to parse (decompress)
-	 * @return still a byte array representing the platform independent Spine Service Advertisement packet payload.
+	 * @return Node object.
 	 */
-	public byte[] decode(byte[] payload) {
+
+	public SpineObject decode(int nodeID, byte[] payload){	
+		
 		byte sensorsNr = payload[0];
 		byte librariesListSize = payload[1+sensorsNr];		
 		byte[] data = new byte[1 + sensorsNr*2 + 1 + librariesListSize];
-				
+		
+		// set data array
 		data[0] = sensorsNr;
 		
 		for (int i = 0; i<sensorsNr; i++) {
@@ -64,8 +83,42 @@ public class ServiceAdvertisement implements SpineServiceAdvertisement {
 		
 		for (int i = 0; i<librariesListSize; i++) 
 			data[(1+sensorsNr*2)+1+i] = payload[1+sensorsNr+1+i];
+
+		// set sensorsList
+		sensorsNr = data[0];		
+		for (int i = 0; i<sensorsNr; i++) 				
+			sensorsList.addElement(new Sensor(data[1+i*2], data[1+i*2+1]));		
+		
+		// set functionsList
+		int functionsListSize = data[1+sensorsNr*2];
+		int parseOfst = 1+sensorsNr*2+1;
+		while(parseOfst<(functionsListSize+1+sensorsNr*2+1)) {
+			byte functionCode = data[parseOfst++];
+			byte fParamSize = data[parseOfst++];
+			byte[] fParams = new byte[fParamSize];
 			
-		return data;
+			System.arraycopy(data, parseOfst, fParams, 0, fParamSize);
+			parseOfst += fParamSize;
+			
+			try {
+				Class c = Class.forName(FUNCTION_CLASSNAME_PREFIX + 
+										SPINEFunctionConstants.functionCodeToString(functionCode) + 
+										FUNCTION_CLASSNAME_SUFFIX);
+				Function currFunction = (Function)c.newInstance();
+				currFunction.init(fParams);
+				functionsList.addElement(currFunction);
+			} catch (ClassNotFoundException e) { System.out.println(e); } 
+			  catch (InstantiationException e) { System.out.println(e); } 
+			  catch (IllegalAccessException e) { System.out.println(e);	} 
+			  catch (BadFunctionSpecException e) { System.out.println(e); }
+		}
+		
+		Node node = new Node();
+		node.setNodeID(nodeID);
+		node.setFunctionsList(functionsList);
+		node.setSensorsList(sensorsList);
+		
+		return node;
 	}
 
 }

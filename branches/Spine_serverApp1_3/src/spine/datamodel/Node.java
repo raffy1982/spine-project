@@ -59,45 +59,11 @@ public class Node implements SpineObject{
 	
 	/**
 	 * Constructor of a Node object.
-	 * 
-	 * @param nodeID the ID of the node
-	 * @param nodeSpec the specification of the node structured as: 
-	 * [nodeID, sensorsCount, (sensorCode, sensorChannelBitmask){sensorsCount times}, sensorsCount, functionalitiesCount, (functionCode, functionLibraryCode){functionalitiesCount times} ]
 	 */
-	public Node(int nodeID, byte[] nodeSpec) {
-		this.nodeID = nodeID;
+	public Node(){
 		
-		int sensorsNr = nodeSpec[0];		
-		for (int i = 0; i<sensorsNr; i++) 				
-			sensorsList.addElement(new Sensor(nodeSpec[1+i*2], nodeSpec[1+i*2+1]));		
-		
-		int functionsListSize = nodeSpec[1+sensorsNr*2];
-		int parseOfst = 1+sensorsNr*2+1;
-		while(parseOfst<(functionsListSize+1+sensorsNr*2+1)) {
-			byte functionCode = nodeSpec[parseOfst++];
-			byte fParamSize = nodeSpec[parseOfst++];
-			byte[] fParams = new byte[fParamSize];
-			
-			System.arraycopy(nodeSpec, parseOfst, fParams, 0, fParamSize);
-			parseOfst += fParamSize;
-			
-			try {
-				Class c = Class.forName(FUNCTION_CLASSNAME_PREFIX + 
-										SPINEFunctionConstants.functionCodeToString(functionCode) + 
-										FUNCTION_CLASSNAME_SUFFIX);
-				Function currFunction = (Function)c.newInstance();
-				currFunction.init(fParams);
-				functionsList.addElement(currFunction);
-			} catch (ClassNotFoundException e) { System.out.println(e); } 
-			  catch (InstantiationException e) { System.out.println(e); } 
-			  catch (IllegalAccessException e) { System.out.println(e);	} 
-			  catch (BadFunctionSpecException e) { System.out.println(e); }
-		}
-		
-		
-		
-	}
-
+	};
+	
 	/**
 	 * Getter method of the node id
 	 * @return the node id
