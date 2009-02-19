@@ -48,6 +48,11 @@ import spine.Properties;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SPINEHeader;
 import spine.datamodel.ServiceMessage;
+// Alessia 09/02
+import spine.SPINEServiceMessageConstants;
+import spine.payload.codec.tinyos.*;
+import spine.datamodel.functions.Exception.*;
+//import spine.datamodel.serviceMessages.*;
 
 import net.tinyos.message.MessageListener;
 import net.tinyos.message.MoteIF;
@@ -100,7 +105,9 @@ System.out.print("messageReceived -> ");
 
 printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 
+				// Alessia 09/02
 				// ACKs handling
+				/*
 				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
 					com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
 					ServiceMessage svcMsg = new ServiceMessage(sourceNodeID, msg.getPayload());
@@ -110,6 +117,23 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
 						removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);
 					}
 				}
+				*/
+				
+				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
+                    com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
+                    int type=new spine.payload.codec.tinyos.CodecInformation().getServiceMessageType(msg.getPayload());
+                    if (type== SPINEServiceMessageConstants.ACK) {
+                          // if an ACK is received for a certain msg, I can remove that message from the messages-to-send queue
+                          try{
+                        	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(sourceNodeID,msg.getPayload());
+                              byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
+                              removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);}
+                          catch(MethodNotSupportedException ex) {
+                        	  System.out.println(ex);
+                          }                    
+                    }
+				}
+	
 				else 
 					sendMessages(sourceNodeID);
 				

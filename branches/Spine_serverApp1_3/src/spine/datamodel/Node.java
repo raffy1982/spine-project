@@ -38,8 +38,6 @@ package spine.datamodel;
 import java.util.Vector;
 
 import spine.Properties;
-import spine.SPINEFunctionConstants;
-import spine.datamodel.functions.Exception.BadFunctionSpecException;
 import spine.datamodel.functions.Function;
 import spine.datamodel.functions.SpineObject;
 

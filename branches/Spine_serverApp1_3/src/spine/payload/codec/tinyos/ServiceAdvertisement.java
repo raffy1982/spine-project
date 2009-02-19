@@ -51,8 +51,8 @@ public class ServiceAdvertisement extends SpineCodec {
 	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
 	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
 
-	private Vector sensorsList = new Vector(); // <values:Sensor>
-	private Vector functionsList = new Vector(); // <values:Function>
+	//private Vector sensorsList = new Vector(); // <values:Sensor>
+	//private Vector functionsList = new Vector(); // <values:Function>
 	
 	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
 		return super.encode(payload);
@@ -66,6 +66,9 @@ public class ServiceAdvertisement extends SpineCodec {
 	 */
 
 	public SpineObject decode(int nodeID, byte[] payload){	
+		
+		Vector sensorsList = new Vector(); // <values:Sensor>	
+		Vector functionsList = new Vector(); // <values:Function>
 		
 		byte sensorsNr = payload[0];
 		byte librariesListSize = payload[1+sensorsNr];		
@@ -86,8 +89,12 @@ public class ServiceAdvertisement extends SpineCodec {
 
 		// set sensorsList
 		sensorsNr = data[0];		
-		for (int i = 0; i<sensorsNr; i++) 				
-			sensorsList.addElement(new Sensor(data[1+i*2], data[1+i*2+1]));		
+		for (int i = 0; i<sensorsNr; i++){ 				
+			sensorsList.addElement(new Sensor(data[1+i*2], data[1+i*2+1]));	
+			// Debug
+			// System.out.println("*** addElement in sensorsList for node " + nodeID + " ***");
+		}
+		
 		
 		// set functionsList
 		int functionsListSize = data[1+sensorsNr*2];
@@ -107,6 +114,8 @@ public class ServiceAdvertisement extends SpineCodec {
 				Function currFunction = (Function)c.newInstance();
 				currFunction.init(fParams);
 				functionsList.addElement(currFunction);
+				// Debug
+				// System.out.println("*** addElement in functionsList for node " + nodeID + " ***");
 			} catch (ClassNotFoundException e) { System.out.println(e); } 
 			  catch (InstantiationException e) { System.out.println(e); } 
 			  catch (IllegalAccessException e) { System.out.println(e);	} 
@@ -115,7 +124,11 @@ public class ServiceAdvertisement extends SpineCodec {
 		
 		Node node = new Node();
 		node.setNodeID(nodeID);
+		// Debug
+		// System.out.println("*** functionsList size " + functionsList.size() + " ***");
 		node.setFunctionsList(functionsList);
+        // Debug
+		// System.out.println("*** sensorsList size " + sensorsList.size() + " ***");
 		node.setSensorsList(sensorsList);
 		
 		return node;

@@ -54,6 +54,8 @@ import spine.datamodel.ServiceMessage;
 
 
 import spine.datamodel.functions.*;
+import spine.datamodel.serviceMessages.ServiceErrorMessage;
+import spine.datamodel.serviceMessages.ServiceWarningMessage;
 
 
 
@@ -99,6 +101,9 @@ public class SPINEManager {
 								prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
 	private static final String SPINEDATA_FUNCT_CLASSNAME_SUFFIX = "SpineData";
 	private static final String messageClassName = prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY);
+	private static final String  SPINE_SERVICE_MESSAGE_CLASSNAME_SUFFIX="Message";
+	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX = SPINEDATACODEC_PACKAGE_PREFIX;
+	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE=SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX+prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
 	
 	
 	private SPINEManager(String[] args) {
@@ -662,11 +667,14 @@ public class SPINEManager {
 				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
 					break;
-				default: 
-					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(nodeID, 
-															new ServiceMessage(nodeID, ServiceMessage.WARNING, 
-																				ServiceMessage.UNKNOWN_PKT_RECEIVED));
+				default: {
+					ServiceMessage sm=new ServiceWarningMessage();
+					sm.setMessageDetail(SPINEServiceMessageConstants.UNKNOWN_PKT_RECEIVED);
+					sm.setNodeID(nodeID);
+					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(nodeID,sm);
+				
 					break;
+				}
 			}
 		
 	}
@@ -693,12 +701,13 @@ public class SPINEManager {
 			
 			// if no nodes has been discovered, it's the symptom of some radio connection problem;
 			// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
-			if (activeNodes.size()==0) 
+			if (activeNodes.size()==0) {
+				ServiceErrorMessage serviceErrorMessage=new ServiceErrorMessage();
+				serviceErrorMessage.setNodeID(SPINEPacketsConstants.SPINE_BASE_STATION);
+				serviceErrorMessage.setMessageDetail(SPINEServiceMessageConstants.CONNECTION_FAIL);
 				notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, 
-								SPINEPacketsConstants.SVC_MSG, 
-								new ServiceMessage(SPINEPacketsConstants.SPINE_BASE_STATION, 
-												   ServiceMessage.ERROR, ServiceMessage.CONNECTION_FAIL));
-						
+								SPINEPacketsConstants.SVC_MSG,serviceErrorMessage);
+			}		
 			discoveryCompleted = true;			
 			notifyListeners(SPINEPacketsConstants.SPINE_BASE_STATION, DISC_COMPL_EVT_COD, activeNodes);
 		}
@@ -743,48 +752,7 @@ public class SPINEManager {
 					} catch (Exception e) { 
 						System.out.println(e); 
 					} 
-					
-					/*//
-					try {
-						// dynamic class loading of the proper SpineServiceAdvertisement implementation
-						spineServiceAdvertisement = (SpineServiceAdvertisement)htInstance.get ("ServiceAdvertisement");
-						if (spineServiceAdvertisement==null){
-							Class e = Class.forName(SPINEDATACODEC_PACKAGE + 
-							       "ServiceAdvertisement");
-							spineServiceAdvertisement = (SpineServiceAdvertisement)e.newInstance();	
-							htInstance.put ("ServiceAdvertisement", spineServiceAdvertisement);
-						} 
-						
-						
-						*******************
-						
-						try {
-						// dynamic class loading of the proper SpineCodec implementation
-						
-						spineCodec = (SpineCodec)htInstance.get ("ServiceAdvertisement");
-						 if (spineCodec==null){
-							 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
-								   "ServiceAdvertisement");
-							 spineCodec = (SpineCodec)d.newInstance();
-						    htInstance.put ("ServiceAdvertisement", spineCodec);
-						 }
-						
-						
-						
-						**********************
-						
-						o=spineServiceAdvertisement.decode(nodeID,payload);
-						
-					} catch (ClassNotFoundException e) { 
-						System.out.println(e); 
-					} catch (InstantiationException e) { 
-						System.out.println(e); 
-					} catch (IllegalAccessException e) { 
-						System.out.println(e);	
-					}*/
-					
-				//	msg.setPayload(payload);
-					
+										
 					if (!discoveryCompleted) {
 						boolean alreadyDiscovered = false;
 						for(int i = 0; i<activeNodes.size(); i++) {
@@ -849,17 +817,34 @@ public class SPINEManager {
 					break;
 					
 			case SPINEPacketsConstants.SVC_MSG: {
-				//	o = new ServiceMessage(nodeID, msg.getPayload()); 
+				
 				payload = msg.getPayload();
+				byte serviceMessageType;
+				
+				//  Setting functionCode
+				try {
+					// dynamic class loading of the proper CodecInformation
+					CodecInfo codecInformation = (CodecInfo)htInstance.get ("CodecInformation");
+					if (codecInformation==null){
+						Class g = Class.forName(SPINEDATACODEC_PACKAGE + 
+						       "CodecInformation");
+						codecInformation = (CodecInfo)g.newInstance();	
+						htInstance.put ("CodecInformation", codecInformation);
+					} 
+					serviceMessageType=codecInformation.getServiceMessageType(payload);
+				} catch (Exception e) { 
+					System.out.println(e); 
+					return;
+				} 
 				try {
 					// dynamic class loading of the proper SpineCodec implementation
-					
-					spineCodec = (SpineCodec)htInstance.get ("ServiceMessage");
+					String className = SPINEServiceMessageConstants.serviceMessageTypeToString(serviceMessageType) + 
+		               SPINE_SERVICE_MESSAGE_CLASSNAME_SUFFIX;
+					spineCodec = (SpineCodec)htInstance.get (className);
 					 if (spineCodec==null){
-						 Class d = Class.forName(SPINEDATACODEC_PACKAGE +  
-							   "ServiceMessage");
+						 Class d = Class.forName(SPINE_SERVICE_MESSAGE_CODEC_PACKAGE+className);
 						 spineCodec = (SpineCodec)d.newInstance();
-					    htInstance.put ("ServiceMessage", spineCodec);
+					    htInstance.put (className, spineCodec);
 					 }
 					 // Invoking decode and setting SpineObject data
 					o= spineCodec.decode(nodeID,payload);

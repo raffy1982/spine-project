@@ -34,34 +34,17 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import spine.SPINEServiceMessageConstants;
 import spine.datamodel.functions.SpineObject;
 
 public class ServiceMessage implements SpineObject{
 
 
-	// MESSAGE TYPES
-	public static final byte ERROR = 0;
-	public static final byte WARNING = 1;
-	public static final byte ACK = 2;
 	
-	// MESSAGE DATAILS
-	public static final byte CONNECTION_FAIL = 10;
-	public static final byte UNKNOWN_PKT_RECEIVED = 11;
-	
-	// MESSAGE TYPES LABELS
-	public static final String ERROR_LABEL = "Error";
-	public static final String WARNING_LABEL = "Warning";
-	public static final String ACK_LABEL = "Ack";
-	
-	// MESSAGE DATAILS LABELS
-	public static final String CONNECTION_FAIL_LABEL = "Connection Fail";
-	public static final String UNKNOWN_PKT_RECEIVED_LABEL = "Unknown Packet Received";
-	
-	
-	private int nodeID = -1;
-	private byte messageType = -1;
-	private byte messageDetail = -1;
-	private byte payload[];
+	protected int nodeID = -1;
+	protected byte messageType = -1;
+	protected byte messageDetail = -1;
+//	protected byte payload[];
 	
 
 	/**
@@ -72,10 +55,8 @@ public class ServiceMessage implements SpineObject{
 	 * @param nodeID the source nodeID of the ServiceMessage
 	 * @param payload a two-length byte[] array containing ServiceMessage the structured as: [messageTypeCode, messageDetailCode]
 	 */
-	public ServiceMessage(int nodeID, byte[] payload) {
-		this.nodeID = nodeID;
-		this.messageType = payload[0];
-		this.messageDetail = payload[1];
+	public ServiceMessage() {
+		
 	}
 
 	/**
@@ -87,44 +68,16 @@ public class ServiceMessage implements SpineObject{
 	 * @param messageType the message type code of the ServiceMessage
 	 * @param messageDetail the message detail code of the ServiceMessage
 	 */
+	/*
+	
 	public ServiceMessage(int nodeID, byte messageType, byte messageDetail) {
 		this.nodeID = nodeID;
 		this.messageType = messageType;
 		this.messageDetail = messageDetail;
 	}
+	*/
 	
-	/**
-	 * Returns the string label mapped to the message type code of the current ServiceMessage object
-	 * 
-	 * @return the message type string label mapped to the given message type code
-	 */
-	public String messageTypeToString() {
-		switch(this.messageType) {
-			case ERROR: return ERROR_LABEL;
-			case WARNING: return WARNING_LABEL;
-			case ACK: return ACK_LABEL;
-			default: return "?";
-		}
-	}
 	
-	/**
-	 * Returns the string label mapped to the given message detail code
-	 * 
-	 * @return the message detail string label mapped to the given message detail code 
-	 */
-	public String messageDetailToString() {
-		switch(this.messageType) {
-			case ERROR: 
-				switch(this.messageDetail) {
-					case CONNECTION_FAIL: return CONNECTION_FAIL_LABEL;
-					case UNKNOWN_PKT_RECEIVED: return UNKNOWN_PKT_RECEIVED_LABEL;
-				}
-			case WARNING: return "" + this.messageDetail;
-			case ACK: return "seq# " + this.messageDetail;
-			default: return "" + this.messageDetail;
-		}
-	}
-
 	/**
 	 * Getter method for the message type attribute 
 	 * 
@@ -148,20 +101,39 @@ public class ServiceMessage implements SpineObject{
 	 */
 	public String toString() {
 		return "Service Message From Node " + this.nodeID + " - " + 
-				messageTypeToString() + ": " + messageDetailToString();
+				SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ": " + SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail);
+				//SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ": " + SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail)+
+				//"\n"+parse();
 	}
 
 	/**
 	 * @param payload the payload to set
 	 */
-	public void setPayload(byte payload[]) {
-		this.payload = payload;
-	}
+	//public void setPayload(byte payload[]) {
+//		this.payload = payload;
+	//}
 
 	/**
 	 * @return the payload
 	 */
-	public byte[] getPayload() {
-		return payload;
-	}	
+	//public byte[] getPayload() {
+	//	return payload;
+	//}
+	public void setMessageDetail(byte messageDetail) {
+		this.messageDetail = messageDetail;
+	}
+	public void setMessageType(byte messageType) {
+		this.messageType = messageType;
+	}
+	public void setNodeID(int nodeID) {
+		this.nodeID = nodeID;
+	}
+	public int getNodeID() {
+		return nodeID;
+	}
+	protected String parse(){
+		return "";
+	}
+
+	
 }
