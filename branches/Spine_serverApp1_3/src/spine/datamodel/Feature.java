@@ -39,7 +39,7 @@ package spine.datamodel;
 import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
 
-public class Feature {
+public class Feature implements Comparable{
 	
 	private int nodeID;
 	
@@ -282,6 +282,24 @@ public class Feature {
 	 */
 	public void setCh4Value(int ch4Value) {
 		this.ch4Value = ch4Value;
+	}
+
+	public int compareTo(Object o) {
+		Feature f = (Feature)o;
+		
+		if (this.nodeID < f.nodeID) return -1;
+		if (this.nodeID > f.nodeID) return 1;
+		if (this.nodeID == f.nodeID) {
+			if (this.sensorCode < f.sensorCode) return -1;
+			if (this.sensorCode > f.sensorCode) return 1;
+			if (this.sensorCode == f.sensorCode) {
+				if (this.featureCode < f.featureCode) return -1;
+				if (this.featureCode > f.featureCode) return 1;
+				if (this.featureCode == f.featureCode) return 0;
+			}
+		}
+		
+		return 0;
 	}
 	
 }
