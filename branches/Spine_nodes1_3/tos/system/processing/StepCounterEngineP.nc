@@ -32,20 +32,12 @@
  * @version 1.2
  */
 
-#ifndef DEFAULT_WAIT
-#define DEFAULT_WAIT 15
+#ifndef STEP_THRESHOLD
+#define STEP_THRESHOLD 62
 #endif
 
-#ifndef STEP_X_THRESHOLD_WAIST
-#define STEP_X_THRESHOLD_WAIST -1250
-#endif
-
-#ifndef STEP_X_THRESHOLD_THIGH
-#define STEP_X_THRESHOLD_THIGH -600
-#endif
-
-#ifndef STEP_Z_THRESHOLD_THIGH
-#define STEP_Z_THRESHOLD_THIGH 1100
+#ifndef MEAN
+#define MEAN 12
 #endif
 
 module StepCounterEngineP {
@@ -58,6 +50,7 @@ module StepCounterEngineP {
 		interface Boot;
 		interface FunctionManager;
 		interface SensorBoardController;
+		interface SensorsRegistry;
 	}
 }
 
@@ -68,6 +61,7 @@ implementation {
         bool start = FALSE;
 	
 	uint8_t waitCounter = 0;
+	uint8_t DEFAULT_WAIT = 0;
 	
         uint16_t steps = 0;
 
@@ -100,7 +94,8 @@ implementation {
 	}
 	
 	command void Function.startComputing() {				
-		start = TRUE;
+		DEFAULT_WAIT = 400/call SensorsRegistry.getSamplingTime(ACC_SENSOR);
+                start = TRUE;
 	}
 	
 	command void Function.stopComputing() {
@@ -112,28 +107,39 @@ implementation {
                 active = FALSE;
         }
         
+        int32_t pre = 0, curr = 0;
+        bool first = TRUE;
         event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
-                int32_t x, z = 0;
+                
                 uint8_t msg[sizeof(steps)];
                 if(active && start) {
                     if (sensorCode == ACC_SENSOR) {
+
+                        curr = call SensorBoardController.getValue(ACC_SENSOR, CH_3);
                         
                         if (waitCounter == 0) {
-                            x = call SensorBoardController.getValue(ACC_SENSOR, CH_1);
-                            z = call SensorBoardController.getValue(ACC_SENSOR, CH_3);
-                            if (x > 0x8000) x -= 0x10000;
-                            if (z > 0x8000) z -= 0x10000;
-                            //if (x < STEP_X_THRESHOLD_THIGH && z > STEP_Z_THRESHOLD_THIGH) {
-                            if (x < STEP_X_THRESHOLD_WAIST) {
+
+                            if (pre > 0x8000) pre -= 0x10000;
+                            if (curr > 0x8000) curr -= 0x10000;
+
+                            if (((pre - curr) > STEP_THRESHOLD || (pre - curr) < -STEP_THRESHOLD) && (pre < MEAN || curr < MEAN)) {
+
                                 waitCounter = DEFAULT_WAIT;
-                                steps++;
-                                msg[0] = (steps >> 8);
-                                msg[1] = (uint8_t)steps;
-                                call FunctionManager.send(STEP_COUNTER, msg, sizeof(msg));
+
+                                if(!first) {
+                                   steps++;
+                                   msg[0] = (steps >> 8);
+                                   msg[1] = (uint8_t)steps;
+                                   call FunctionManager.send(STEP_COUNTER, msg, sizeof(msg));
+                                }
+                                else 
+                                   first = FALSE;
                             }
                         }
                         else
                             waitCounter--;
+                            
+                        pre = curr;
 
                     }
                 }

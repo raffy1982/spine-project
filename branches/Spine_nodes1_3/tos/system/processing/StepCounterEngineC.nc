@@ -39,7 +39,7 @@ configuration StepCounterEngineC {
 }
 
 implementation {
-	components MainC, FunctionManagerC, SensorBoardControllerC, StepCounterEngineP;
+	components MainC, FunctionManagerC, SensorBoardControllerC, SensorsRegistryC, StepCounterEngineP;
 	
 	components LedsC;
 
@@ -47,6 +47,7 @@ implementation {
 
 	StepCounterEngineP.FunctionManager -> FunctionManagerC;
 	StepCounterEngineP.SensorBoardController -> SensorBoardControllerC;
+	StepCounterEngineP.SensorsRegistry -> SensorsRegistryC;
 
 	StepCounterEngineP.Boot -> MainC.Boot;
 }
