@@ -26,7 +26,7 @@ PFLAGS += -DBOOT_RADIO_ON=TRUE
 #sw TDMA control flag (TRUE if radio must be TDMA accessed; FALSE if it's possible to rely on the CSMA-CA provided by the 802.15.4)
 PFLAGS += -DENABLE_TDMA=FALSE
 #TDMA frame time interval
-PFLAGS += -DTDMA_FRAME_PERIOD=600
+PFLAGS += -DTDMA_FRAME_PERIOD=1024
 #Radio low-power mode control FLAG (if TRUE, the radio will turn off when there aren't any messages to send; if FALSE, the radio will be always on)
 PFLAGS += -DRADIO_LOW_POWER=TRUE
 
