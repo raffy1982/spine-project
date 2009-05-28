@@ -40,7 +40,7 @@ implementation {
     components HilGyroSensorP;
 
     components new Msp430SparkfunGyroXC() as GyroX;
-    components new Msp430SparkfunGyroXC() as GyroY;
+    components new Msp430SparkfunGyroYC() as GyroY;
 
     components MainC;
 
