@@ -32,16 +32,8 @@
  * @version 1.2
  */
 
-#ifndef STEP_THRESHOLD
-#define STEP_THRESHOLD 62
-#endif
-
-#ifndef MEAN
-#define MEAN 12
-#endif
-
 module StepCounterEngineP {
-	
+
 	provides {
 		interface Function;
 	}
@@ -55,10 +47,17 @@ module StepCounterEngineP {
 }
 
 implementation {
-	
+
 	bool registered = FALSE;
 	bool active = FALSE;
         bool start = FALSE;
+        
+        int32_t pre = 0, curr = 0;
+        bool haveHistory = FALSE;
+
+
+        int16_t AVG_ACCEL;
+        int16_t STEP_THRESHOLD;
 	
 	uint8_t waitCounter = 0;
 	uint8_t DEFAULT_WAIT = 0;
@@ -79,7 +78,18 @@ implementation {
 	}
 	
 	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
+                
+                if (functionParamsSize != 4)
+			return FALSE;	// fail on invalid number of parameters
+
+                AVG_ACCEL = functionParams[0];
+                AVG_ACCEL = (AVG_ACCEL)<<8 | functionParams[1];
+
+                STEP_THRESHOLD = functionParams[2];
+                STEP_THRESHOLD = (STEP_THRESHOLD)<<8 | functionParams[3];
+
                 active = TRUE;
+
                 return TRUE;
 	}
 	
@@ -107,8 +117,6 @@ implementation {
                 active = FALSE;
         }
         
-        int32_t pre = 0, curr = 0;
-        bool first = TRUE;
         event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
                 
                 uint8_t msg[sizeof(steps)];
@@ -122,18 +130,16 @@ implementation {
                             if (pre > 0x8000) pre -= 0x10000;
                             if (curr > 0x8000) curr -= 0x10000;
 
-                            if (((pre - curr) > STEP_THRESHOLD || (pre - curr) < -STEP_THRESHOLD) && (pre < MEAN || curr < MEAN)) {
+                            if (((pre - curr) > STEP_THRESHOLD || (pre - curr) < -STEP_THRESHOLD) && (pre < AVG_ACCEL || curr < AVG_ACCEL)) {
 
                                 waitCounter = DEFAULT_WAIT;
 
-                                if(!first) {
+                                if(haveHistory) {
                                    steps++;
                                    msg[0] = (steps >> 8);
                                    msg[1] = (uint8_t)steps;
                                    call FunctionManager.send(STEP_COUNTER, msg, sizeof(msg));
                                 }
-                                else 
-                                   first = FALSE;
                             }
                         }
                         else
@@ -141,6 +147,8 @@ implementation {
                             
                         pre = curr;
 
+                        if(!haveHistory)        // does this check consume less than write the flag everytime without checking??
+                           haveHistory = TRUE;
                     }
                 }
         }
