@@ -44,6 +44,30 @@ package spine.datamodel.functions;
 
 public class StepCounterSpineFunctionReq extends SpineFunctionReq {
 
+	private int avgAcceleration = 0;
+	
+	private int stepThreshold = 0;
+	
+
+	public int getAvgAcceleration() {
+		return avgAcceleration;
+	}
+
+
+	public void setAvgAcceleration(int avgAcceleration) {
+		this.avgAcceleration = avgAcceleration;
+	}
+
+
+	public int getStepThreshold() {
+		return this.stepThreshold;
+	}
+
+
+	public void setStepThreshold(int stepThreshold) {
+		this.stepThreshold = stepThreshold;
+	}
+
 
 	/**
 	 * 
@@ -51,8 +75,8 @@ public class StepCounterSpineFunctionReq extends SpineFunctionReq {
 	 * 
 	 */
 	public String toString() {
-		String s = "Steps Counter Req";
-		return s;
+		return "Steps Counter Req; params: AVG_ACCEL=" + this.avgAcceleration + 
+				", STEP_THRESHOLD=" + this.stepThreshold;
 	}
 	
 }
