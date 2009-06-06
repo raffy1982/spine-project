@@ -115,6 +115,12 @@ implementation {
 	command void Function.reset() {
                 start = FALSE;
                 active = FALSE;
+                pre = 0; 
+                curr = 0;
+                haveHistory = FALSE;
+	        waitCounter = 0;
+	        DEFAULT_WAIT = 0;
+                steps = 0;
         }
         
         event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
@@ -147,8 +153,7 @@ implementation {
                             
                         pre = curr;
 
-                        if(!haveHistory)        // does this check consume less than write the flag everytime without checking??
-                           haveHistory = TRUE;
+                        haveHistory = TRUE;
                     }
                 }
         }
