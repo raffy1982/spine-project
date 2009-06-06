@@ -70,7 +70,9 @@ enum FeatureCodes {
   MODE = 0x0B,
   MEDIAN = 0x0C,
   PITCH_ROLL = 0x0D,
-  VECTOR_MAGNITUDE = 0x0E
+  VECTOR_MAGNITUDE = 0x0E,
+
+  ENTROPY = 0x10
 };
 
 typedef struct active_feature_t {
