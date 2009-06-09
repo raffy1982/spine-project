@@ -44,6 +44,7 @@ public class SPINEFunctionConstants {
 	public static final byte SIGNAL_PROCESSING = 0x03;
 	public static final byte ONE_SHOT = 0x04;
 	public static final byte STEP_COUNTER = 0x05;
+	public static final byte BUFFERED_RAW_DATA = 0x06;
 	
 	//alarm types
 	public static final byte BELOW_THRESHOLD = 0x01;
@@ -67,12 +68,14 @@ public class SPINEFunctionConstants {
 	public static final byte PITCH_ROLL = 0x0D;
 	public static final byte VECTOR_MAGNITUDE = 0x0E;
 	
+	
 	// if new functions are added, declare their labels down here
 	public static final String FEATURE_LABEL = "Feature";
 	public static final String ALARM_LABEL = "Alarm";
 	public static final String SIGNAL_PROCESSING_LABEL = "DSP";
 	public static final String ONE_SHOT_LABEL = "OneShot";
 	public static final String STEP_COUNTER_LABEL = "StepCounter";
+	public static final String BUFFERED_RAW_DATA_LABEL = "BufferedRawData";
 	
 	// if new function libraries are added, declare their labels down here
 	public static final String RAW_DATA_LABEL = "Raw Data";
@@ -90,6 +93,7 @@ public class SPINEFunctionConstants {
 	public static final String PITCH_ROLL_LABEL = "Pitch & Roll";
 	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";	
 	
+	
 	public static final String BELOW_THRESHOLD_LABEL = "< LT";
 	public static final String ABOVE_THRESHOLD_LABEL = "> UT";
 	public static final String IN_BETWEEN_THRESHOLDS_LABEL = ">=LT & <=UT";
@@ -103,6 +107,7 @@ public class SPINEFunctionConstants {
 			case SIGNAL_PROCESSING: return SIGNAL_PROCESSING_LABEL;
 			case ONE_SHOT: return ONE_SHOT_LABEL;
 			case STEP_COUNTER: return STEP_COUNTER_LABEL;
+			case BUFFERED_RAW_DATA: return BUFFERED_RAW_DATA_LABEL;
 			default: return "?";
 		}
 	}
@@ -118,6 +123,8 @@ public class SPINEFunctionConstants {
 			return ONE_SHOT;
 		if(label.equals(STEP_COUNTER_LABEL))
 			return STEP_COUNTER;
+		if(label.equals(BUFFERED_RAW_DATA_LABEL))
+			return BUFFERED_RAW_DATA;
 		else 
 			return -1;
 	}
@@ -142,6 +149,7 @@ public class SPINEFunctionConstants {
 					case MEDIAN: return MEDIAN_LABEL;
 					case PITCH_ROLL: return PITCH_ROLL_LABEL;
 					case VECTOR_MAGNITUDE: return VECTOR_MAGNITUDE_LABEL;
+					
 					default: return "?";	
 				}
 			case ALARM: 
@@ -155,6 +163,7 @@ public class SPINEFunctionConstants {
 			}
 			case ONE_SHOT: return RAW_DATA_LABEL;
 			case STEP_COUNTER: return STEP_COUNTER_LABEL;
+			case BUFFERED_RAW_DATA: return BUFFERED_RAW_DATA_LABEL;
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
 		}
@@ -190,6 +199,7 @@ public class SPINEFunctionConstants {
 				return PITCH_ROLL;
 			if(functionalityLabel.equals(VECTOR_MAGNITUDE_LABEL)) 
 				return VECTOR_MAGNITUDE;
+			
 			else
 				return -1;	
 		}
@@ -207,6 +217,8 @@ public class SPINEFunctionConstants {
 		}
 		if (functionLabel.equals(STEP_COUNTER_LABEL)) 
 			return STEP_COUNTER;
+		if (functionLabel.equals(BUFFERED_RAW_DATA_LABEL)) 
+			return BUFFERED_RAW_DATA;
 		else
 			return -1;
 	}
