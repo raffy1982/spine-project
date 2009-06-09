@@ -78,11 +78,9 @@ implementation {
 				
 				for(i=0; i<diffCounter; i++){
 					prob[i]= prob[i]/dataLen;
+					entropy+= prob[i]*logf(prob[i]);
 				}
 				
-				
-				for(i=0; i<diffCounter; i++)
-					entropy+= prob[i]*logf(prob[i]);
 				
 				
 				((uint16_t *) result)[rChCount++] = (uint16_t)(entropy*-1000);
