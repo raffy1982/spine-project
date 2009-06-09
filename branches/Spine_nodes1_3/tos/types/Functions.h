@@ -43,7 +43,8 @@ enum FunctionCodes {
   ALARM = 0x02,
   SIGNAL_PROCESSING = 0x03,
   ONE_SHOT = 0x04,
-  STEP_COUNTER = 0x05
+  STEP_COUNTER = 0x05,
+  BUFFERED_RAWDATA = 0x06
 
 };
 
@@ -71,7 +72,7 @@ enum FeatureCodes {
   MEDIAN = 0x0C,
   PITCH_ROLL = 0x0D,
   VECTOR_MAGNITUDE = 0x0E,
-
+  
   ENTROPY = 0x10
 };
 
@@ -97,6 +98,14 @@ typedef struct feat_params_t {
   uint8_t windowSize;
   uint8_t processingTime; // actually contains just the shift_size
 } feat_params_t;
+
+typedef struct buffered_rawdata_params_t {
+  uint8_t sensorCode;
+  uint8_t chsBitmask;
+  uint8_t bufferSize;
+  uint8_t shiftSize;
+  uint8_t samplesCount;
+} buffered_rawdata_params_t;
 
 #endif
 
