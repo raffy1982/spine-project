@@ -62,24 +62,6 @@ public class SpineStart extends SpineCodec {
 		data[1] = (byte)workPayLoad.getActiveNodesCount();
 		data[2] = (workPayLoad.getRadioAlwaysOn())? (byte)1: 0;
 		data[3] = (workPayLoad.getEnableTDMA())? (byte)1: 0;
-		
-		printPayload(data);
-		
 		return data;
-	}
-	
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
-	
+	}	
 }

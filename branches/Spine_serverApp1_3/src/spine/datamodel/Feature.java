@@ -59,6 +59,7 @@ public class Feature implements Comparable{
 	 *  
 	 */
 	public Feature() {
+		this.functionCode = SPINEFunctionConstants.FEATURE;
 	}
 	
 	/**
@@ -69,6 +70,7 @@ public class Feature implements Comparable{
 	 * @param channelBitmask the channels bitmask specifying 
 	 */
 	public Feature(byte featureCode, byte channelBitmask) { 
+		this.functionCode = SPINEFunctionConstants.FEATURE;
 		this.featureCode = featureCode;
 		this.channelBitmask = channelBitmask;
 	}
@@ -295,11 +297,21 @@ public class Feature implements Comparable{
 			if (this.sensorCode == f.sensorCode) {
 				if (this.featureCode < f.featureCode) return -1;
 				if (this.featureCode > f.featureCode) return 1;
-				if (this.featureCode == f.featureCode) return 0;
+				if (this.featureCode == f.featureCode) {
+					if (this.channelBitmask < f.channelBitmask) return -1;
+					if (this.channelBitmask > f.channelBitmask) return 1;
+					if (this.channelBitmask == f.channelBitmask) return 0;
+				}
 			}
 		}
 		
 		return 0;
+	}
+	
+	public Object clone() {
+		Feature clone = new Feature(this.nodeID, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
+									this.ch1Value, this.ch2Value, this.ch3Value, this.ch4Value);
+		return clone;
 	}
 	
 }
