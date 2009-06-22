@@ -36,7 +36,6 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
-import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
@@ -54,7 +53,7 @@ public class BufferedRawDataSpineData extends SpineCodec {
 		BufferedRawData data =  new BufferedRawData();
 		
 		data.baseInit(nodeID, payload);
-		data.setFunctionCode(SPINEFunctionConstants.BUFFERED_RAW_DATA);
+		//data.setFunctionCode(SPINEFunctionConstants.BUFFERED_RAW_DATA);
 		
 		short pldIndex = 2;
 		
