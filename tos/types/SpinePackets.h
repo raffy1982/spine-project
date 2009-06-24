@@ -134,14 +134,15 @@ typedef nx_struct spine_header {
 // Incoming message structures //
 /////////////////////////////////
 typedef struct spine_start {
-  uint16_t netSize          :14;     // 14 bits
-  bool radioAlwaysOnFlag    :1;      // 1 bit
-  bool enableTDMAFlag       :1;      // 1 bit
+  uint16_t netSize          :16;     // 16 bits
+  bool radioAlwaysOnFlag    :8;      // 8 bit
+  bool enableTDMAFlag       :8;      // 8 bit
 } spine_start_t;
 #define SPINE_START_SIZE sizeof(spine_start_t) //2 bytes
 typedef struct spine_setup_sensor {
-  uint8_t sensCode        :4;  // 4 bits
+  uint8_t reserved        :2;  // 2 bits
   uint8_t timeScale       :2;  // 2 bits
+  uint8_t sensCode        :4;  // 4 bits
   uint16_t samplingTime   :16; // 16 bits
 } spine_setup_sensor_t;
 #define SPINE_SETUP_SENSOR_SIZE sizeof(spine_setup_sensor_t) //3 bytes
@@ -183,6 +184,9 @@ typedef nx_struct spine_svc_adv {
 } spine_svc_adv_t; 
 #define SPINE_SVC_ADV_SIZE     sizeof(spine_svc_adv_t) //50 bytes
 typedef struct spine_data {
+  nx_uint8_t fnCode;
+  nx_uint8_t dataLen;
+  nx_uint8_t data[128];
 } spine_data_t;
 #define SPINE_DATA_SIZE     sizeof(spine_data_t) //0 bytes
 
@@ -207,6 +211,10 @@ typedef struct spine_msg {
   spine_pkt_t packet;
 } spine_msg_t;
 #define SPINE_MSG_SIZE sizeof(spine_msg_t)
+
+enum {
+  SPINE_SVC_ADV_PKT_MAX_SIZE = 50,          // the SPINE header size is not included
+};
 
 #endif
 

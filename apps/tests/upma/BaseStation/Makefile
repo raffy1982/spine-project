@@ -3,6 +3,8 @@ COMPONENT=BaseStationC
 #CFLAGS += -DCC2420_NO_ADDRESS_RECOGNITION
 PFLAGS += -DCC2420_DEF_CHANNEL=14
 
+PFLAGS += -DSPINE_SLEEP_INTERVAL=512	# set 0 for radio always on
+
 PFLAGS += -I..
 include ../../../Makefile.spine
 include $(MAKERULES)

@@ -41,7 +41,7 @@ Boston, MA 02111-1307, USA.
 #endif
 
 #ifndef ANNCE_DELAY
-#define ANNCE_DELAY 25
+#define ANNCE_DELAY 250
 #endif
 
 module SPINEApp_C
@@ -54,10 +54,11 @@ module SPINEApp_C
     interface SplitControl as AMControl;
     interface LowPowerListening;
 
-    interface SpineStartPkt;
+    /*interface SpineStartPkt;
     interface SpineSetupSensorPkt;
     interface SpineFunctionReqPkt;
-    interface SpineSetupFunctionPkt;
+    interface SpineSetupFunctionPkt;*/
+    interface OutPacket as SpineSvcAdvPkt;
 
     interface SensorsRegistry;
     interface SensorBoardController;
@@ -77,9 +78,14 @@ implementation
 	  call Annce_timer.startOneShot(TOS_NODE_ID*ANNCE_DELAY);
   }
 
-  void handle_Setup_Sensor() {
-     call SensorBoardController.setSamplingTime(call SpineSetupSensorPkt.getSensorCode(),
-                                                (call SpineSetupSensorPkt.getTimeScale() * call SpineSetupSensorPkt.getSamplingTime()) );
+  void handle_Setup_Sensor(void* msg) {
+     spine_setup_sensor_t* sss = (spine_setup_sensor_t*)(msg+sizeof(spine_header_t));
+     uint16_t sTime = (sss->samplingTime >> 8) | (sss->samplingTime << 8);
+     
+     call SensorBoardController.setSamplingTime(sss->sensCode, (sss->timeScale * sTime));
+
+     /*call SensorBoardController.setSamplingTime(call SpineSetupSensorPkt.getSensorCode(),
+                                                (call SpineSetupSensorPkt.getTimeScale() * call SpineSetupSensorPkt.getSamplingTime()) );*/
   }
   
   event void Annce_timer.fired() {
@@ -92,6 +98,8 @@ implementation
      uint8_t currSensorValueType;
      uint8_t functionsCount;
      uint8_t* functionList;
+     uint8_t builtLen = 1;
+     uint8_t* data_;
 
      sensorsList = call SensorsRegistry.getSensorList(&sensorsCount);
      buffer[currBufferSize++] = sensorsCount;
@@ -121,18 +129,24 @@ implementation
      for (i = 0; i<functionsCount; i++)
         buffer[currBufferSize++] = functionList[i];
      
-     call BufferedSend.send[SERVICE_ADV](SPINE_BASE_STATION, &buffer, currBufferSize);
+     data_ = call SpineSvcAdvPkt.build(&buffer, currBufferSize, &builtLen);
+     call BufferedSend.send[SERVICE_ADV](SPINE_BASE_STATION, data_, builtLen);
+
+     //call BufferedSend.send[SERVICE_ADV](SPINE_BASE_STATION, &buffer, currBufferSize);
 
   }
 
 
-  void handle_Setup_Function() {
-
-     uint8_t functionCode = call SpineSetupFunctionPkt.getFunctionCode();
+  void handle_Setup_Function(void* msg) {
+     spine_setup_func_t* ssf = (spine_setup_func_t*)(msg+sizeof(spine_header_t));
+     
+     /*uint8_t functionCode = call SpineSetupFunctionPkt.getFunctionCode();
      uint8_t functionParamsSize;
-     uint8_t* functionParams = call SpineSetupFunctionPkt.getFunctionParams(&functionParamsSize);
+     uint8_t* functionParams = call SpineSetupFunctionPkt.getFunctionParams(&functionParamsSize);*/
     
-     call FunctionManager.setUpFunction(functionCode, functionParams, functionParamsSize);
+     call FunctionManager.setUpFunction(ssf->fnCode, ssf->fnBuf, ssf->fnParamsSize);
+
+     //call FunctionManager.setUpFunction(functionCode, functionParams, functionParamsSize);
   }
 
   void handle_Start() {
@@ -154,17 +168,23 @@ implementation
      // TODO
   }
 
-  void handle_Function_Req() {
+  void handle_Function_Req(void* msg) {
+     spine_func_req_t* ssr = (spine_func_req_t*)(msg+sizeof(spine_header_t));
 
-     uint8_t functionCode = call SpineFunctionReqPkt.getFunctionCode();
+     /*uint8_t functionCode = call SpineFunctionReqPkt.getFunctionCode();
      bool enable = call SpineFunctionReqPkt.isEnableRequest();
      uint8_t functionParamsSize;
-     uint8_t* functionParams = call SpineFunctionReqPkt.getFunctionParams(&functionParamsSize);
+     uint8_t* functionParams = call SpineFunctionReqPkt.getFunctionParams(&functionParamsSize);*/
 
-     if (enable)
+     if (ssr->isEnableReq)
+        call FunctionManager.activateFunction(ssr->fnCode, ssr->fnReqBuf, ssr->fnParamsSize);
+     else
+        call FunctionManager.disableFunction(ssr->fnCode, ssr->fnReqBuf, ssr->fnParamsSize);
+
+     /*if (enable)
         call FunctionManager.activateFunction(functionCode, functionParams, functionParamsSize);
      else
-        call FunctionManager.disableFunction(functionCode, functionParams, functionParamsSize);
+        call FunctionManager.disableFunction(functionCode, functionParams, functionParamsSize);*/
   }
 
 
@@ -172,12 +192,12 @@ implementation
     call Leds.led1Toggle();
     switch(pktType) {
       case SERVICE_DISCOVERY: handle_Svc_Discovery(); break;
-      case SETUP_SENSOR: handle_Setup_Sensor(); break;
-      case SETUP_FUNCTION: handle_Setup_Function(); break;
+      case SETUP_SENSOR: handle_Setup_Sensor(payload); break;
+      case SETUP_FUNCTION: handle_Setup_Function(payload); break;
       case START: handle_Start(); break;
       case RESET: handle_Reset(); break;
       case SYNCR: handle_Syncr(); break;
-      case FUNCTION_REQ: handle_Function_Req(); break;
+      case FUNCTION_REQ: handle_Function_Req(payload); break;
       default: break;
     }
     return msg;
@@ -185,7 +205,6 @@ implementation
 
 
   event void Boot.booted() {
-    //call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
     call LowPowerListening.setLocalSleepInterval(SPINE_SLEEP_INTERVAL);
     call AMControl.start();
   }
