@@ -70,7 +70,7 @@ implementation {
       if( (error = call SubBufferedSend.send(dest, &header, sizeof(header), data_, len_)) != SUCCESS)
         return error;
       data_ += PACKET_LENGTH;
-    }
+    }call Leds.led2Toggle();
     seqNr++;  // seqNr is incremented on a per data message basis (not each packet)
     return SUCCESS;
   }

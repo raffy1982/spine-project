@@ -46,14 +46,16 @@ implementation {
   App.LowPowerListening -> MacControlC;
   App.AMControl -> ActiveMessageC;
 
-  components SpineStartPktC;
+  /*components SpineStartPktC;
   components SpineSetupSensorPktC;
   components SpineFunctionReqPktC;
   components SpineSetupFunctionPktC;
   App.SpineStartPkt -> SpineStartPktC;
   App.SpineSetupSensorPkt -> SpineSetupSensorPktC;
   App.SpineFunctionReqPkt -> SpineFunctionReqPktC;
-  App.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;
+  App.SpineSetupFunctionPkt -> SpineSetupFunctionPktC;*/
+  components SpineServiceAdvertisementPktC;
+  App.SpineSvcAdvPkt -> SpineServiceAdvertisementPktC;
   
   components SensorsRegistryC;
   components SensorBoardControllerC;

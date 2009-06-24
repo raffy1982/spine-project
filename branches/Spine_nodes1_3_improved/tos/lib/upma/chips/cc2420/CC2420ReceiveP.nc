@@ -336,6 +336,9 @@ implementation {
     if (passesAddressCheck(m_p_rx_buf) && length >= CC2420_SIZE) {
       signal Receive.receive( m_p_rx_buf, m_p_rx_buf->data, 
 					   length - CC2420_SIZE);
+    } else {
+      atomic receivingPacket = FALSE;
+      waitForNextPacket();
     }
   }
   
