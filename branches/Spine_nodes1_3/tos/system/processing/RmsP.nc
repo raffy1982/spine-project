@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
             return call MathUtils.isqrt(rms);
        }
        
-       command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+       command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
             uint8_t i;
             uint8_t mask = 0x08;
             uint8_t rChCount = 0;

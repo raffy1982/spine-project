@@ -412,7 +412,7 @@ Boston, MA  02111-1307, USA.
 		return 0xFF;
 	}
 	
-	default command error_t Features.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+	default command error_t Features.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
 		dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
 		return FAIL;
 	}

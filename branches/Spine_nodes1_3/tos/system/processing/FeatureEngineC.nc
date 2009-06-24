@@ -64,8 +64,7 @@ implementation {
     	#endif
         components VectorMagnitudeC;
 
-		
-		
+
 	components LedsC;
 
 	FeatureEngineP.Function = Function;
@@ -95,9 +94,8 @@ implementation {
         FeatureEngineP.Features[RAW_DATA] -> RawDataC;
         #ifndef MTS300_SENSOR_BOARD
         FeatureEngineP.Features[PITCH_ROLL] -> PitchRollC;
-        FeatureEngineP.Features[ENTROPY] -> PitchRollC;
+        FeatureEngineP.Features[ENTROPY] -> EntropyC;
         #endif
 	FeatureEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
-	
 
 }

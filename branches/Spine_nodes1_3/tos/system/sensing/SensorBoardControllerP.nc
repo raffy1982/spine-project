@@ -179,7 +179,7 @@ implementation {
            uint8_t msgSize = 0;
 
            uint16_t readings[MAX_VALUE_TYPES];
-           uint8_t readingsCount;
+           uint8_t readingsCount = 0;
 
            uint8_t* valueTypesList;
            uint8_t valueTypesCount;

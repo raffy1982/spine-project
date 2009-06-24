@@ -90,7 +90,7 @@ implementation
      uint8_t i,j;
      uint8_t sensorsCount;
      uint8_t* sensorsList;
-     uint8_t currSensorValueTypeCount;
+     uint8_t currSensorValueTypeCount = 0;
      uint8_t* currSensorValueTypeList;
      uint8_t currSensorValueType;
      uint8_t functionsCount;

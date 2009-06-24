@@ -277,7 +277,7 @@ Boston, MA  02111-1307, USA.
 
            call TDMATimer.startPeriodic(TDMA_FRAME_PERIOD / networkSize);
        }
-       
+
        command void RadioController.disableTDMA() {
            tdmaEnabled = FALSE;
            myTurn = TRUE;
@@ -287,6 +287,7 @@ Boston, MA  02111-1307, USA.
 
        command error_t RadioController.send(uint16_t destination, enum PacketTypes pktType, void* payload, uint8_t len) {
            error_t status = SUCCESS;
+           error_t r1 = SUCCESS, r2 = SUCCESS;
            if (!radioOn) {
               if (myTurn) {
                  if (canSendNow) {
@@ -308,7 +309,10 @@ Boston, MA  02111-1307, USA.
 
                  if (canSendNow) { // send the message immediately
                     canSendNow = FALSE;
-                    status = ecombine(prepareToSend(destination, pktType, payload, len), sendOneMessage(destination, pktType, &msgTmp, len));
+                    r1 = prepareToSend(destination, pktType, payload, len);
+                    r2 = sendOneMessage(destination, pktType, &msgTmp, len);
+                    status = (r1 == r2) ? r1 : FAIL;
+                    //status = ecombine(prepareToSend(destination, pktType, payload, len), sendOneMessage(destination, pktType, &msgTmp, len));
                  }
                  else
                     status = bufferData(destination, pktType, payload, len);

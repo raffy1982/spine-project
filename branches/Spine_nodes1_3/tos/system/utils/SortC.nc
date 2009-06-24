@@ -9,7 +9,7 @@ GNU Lesser General Public License
  
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation, 
+License as published by the Free Software Foundation,
 version 2.1 of the License. 
  
 This library is distributed in the hope that it will be useful,
@@ -132,7 +132,7 @@ implementation
       }
 
       
-      void merge(uint16_t* array, uint16_t length, uint16_t low, uint16_t mid, uint16_t high) {
+      void merge(int16_t* array, uint16_t length, uint16_t low, uint16_t mid, uint16_t high) {
          uint16_t aux[ length ];
          //uint16_t aux[ high - low + 1 ];
 
@@ -156,7 +156,7 @@ implementation
             array[i] = aux[i];
       }
       
-      command void Sort.mergeSort(uint16_t* array, uint16_t length, uint16_t low, uint16_t high) {
+      command void Sort.mergeSort(int16_t* array, uint16_t length, uint16_t low, uint16_t high) {
          uint16_t mid;
          if(low < high) {
             mid = (low + high)/2;

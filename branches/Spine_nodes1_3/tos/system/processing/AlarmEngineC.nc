@@ -57,12 +57,13 @@ Boston, MA  02111-1307, USA.
 	    components RawDataC;
 	    #ifndef MTS300_SENSOR_BOARD
 	    components PitchRollC;
+	    components EntropyC;
 	    #endif
-	    components VectorMagnitudeC;
+	    
+            components VectorMagnitudeC;
 	  components LedsC;
-      
+
       AlarmEngineP.Function = Function;
-	  //AlarmEngineP.AlarmEngine = AlarmEngine;
       AlarmEngineP.FunctionManager -> FunctionManagerC;
       AlarmEngineP.SensorsRegistry -> SensorsRegistryC;
 
@@ -86,7 +87,8 @@ Boston, MA  02111-1307, USA.
         AlarmEngineP.Features[RAW_DATA] -> RawDataC;
         #ifndef MTS300_SENSOR_BOARD
         AlarmEngineP.Features[PITCH_ROLL] -> PitchRollC;
-	    #endif
-        AlarmEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;   
-      
+        AlarmEngineP.Features[ENTROPY] -> EntropyC;
+	#endif
+        AlarmEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
+
  }

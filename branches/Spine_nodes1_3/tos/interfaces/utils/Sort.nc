@@ -85,7 +85,7 @@ Boston, MA  02111-1307, USA.
     *
     * @return void
     */
-    command void mergeSort(uint16_t* array, uint16_t length, uint16_t low, uint16_t high);
+    command void mergeSort(int16_t* array, uint16_t length, uint16_t low, uint16_t high);
 
  }
 

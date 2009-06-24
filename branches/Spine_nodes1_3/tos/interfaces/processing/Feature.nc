@@ -44,7 +44,7 @@ interface Feature {
 	 *
 	 * @return	the channels written into the 'result', expressed as a channel Bitmask
 	 */
-	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* res);
+	command uint8_t calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* res);
 
 	/**
 	 * Returns the result word lenght (number of bytes of the result)

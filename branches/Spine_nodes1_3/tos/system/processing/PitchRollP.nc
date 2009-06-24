@@ -53,7 +53,7 @@ implementation {
 		}
 	}
 
-	command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, int8_t* result) {
+	command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
 		uint16_t i;
 		int32_t sum_x = 0;
 		int32_t sum_y = 0;
