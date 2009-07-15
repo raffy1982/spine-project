@@ -53,7 +53,7 @@ Boston, MA  02111-1307, USA.
  #endif
  
  #ifndef TDMA_FRAME_PERIOD
- #define TDMA_FRAME_PERIOD 600
+ #define TDMA_FRAME_PERIOD 1024
  #endif
 
  #ifndef RADIO_LOW_POWER
