@@ -47,6 +47,8 @@ public abstract class Properties {
 	public static final String SPINEDATACODEC_PACKAGE_SUFFIX_KEY = "SpineDataCodec_Package_Suffix";
 	
 	public static final String PROPERTIES_FILE_PATH_PROPERTYKEY = "spine_PropertiesImpl_configFileName";
+	
+	public static final String NODE_EMULATOR_KEY = "nodeEmulator";
 
 	
 	/**
