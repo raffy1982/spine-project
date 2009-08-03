@@ -100,7 +100,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 			nodeId = Integer.parseInt(sourceURL.substring(URL_PREFIX.length()));
 
 			// Add "nodeId"/"node info msg" to nodeInfo
-			nodeInfo.put(nodeId, msg);
+			nodeInfo.put(new Integer(nodeId), msg);
 
 			nodeConnected++;
 
@@ -108,7 +108,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				//start = true;
 				// Per ogni nodo in nodeInfo pass-thru to connections
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
-					int key = (Integer) e.nextElement();
+					Integer key = (Integer)e.nextElement();
 					System.out.println(key + ":" + nodeInfo.get(key));
 					for (int i = 0; i < connections.size(); i++)
 						((EMUWSNConnection) connections.elementAt(i)).messageReceived((Message) nodeInfo.get(key));
@@ -209,9 +209,9 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				// nodeCoordinator.sendCommand(destNodeID,"START");
 				
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
-					int key = (Integer) e.nextElement();
+					Integer key = (Integer)e.nextElement();
 					System.out.println(key + ":" + nodeInfo.get(key));
-					nodeCoordinator.sendCommand(key, "START");
+					nodeCoordinator.sendCommand(key.intValue(), "START");
 				}
 				//nodeCoordinator.sendCommand(1, "START");
 				break;
@@ -219,9 +219,9 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.resetWsn");
 				// nodeCoordinator.sendCommand(destNodeID, "RESET");
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
-					int key = (Integer) e.nextElement();
+					Integer key = (Integer)e.nextElement();
 					System.out.println(key + ":" + nodeInfo.get(key));
-					nodeCoordinator.sendCommand(key, "RESET");
+					nodeCoordinator.sendCommand(key.intValue(), "RESET");
 				}
 				// nodeCoordinator.sendCommand(1, "RESET");
 				break;

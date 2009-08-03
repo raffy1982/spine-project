@@ -161,14 +161,14 @@ class SocketThrdServer extends JFrame implements Runnable {
 			//socket = new Socket("localhost", 4445);
 			socket = new Socket("localhost", sSPort);
 			System.out.println("Connection successful to Server Socket - Node " + destNodeID + " on port " + sSPort );			
-			oosClient.put(destNodeID, new ObjectOutputStream(socket.getOutputStream()));
+			oosClient.put(new Integer(destNodeID), new ObjectOutputStream(socket.getOutputStream()));
 			//oosClient = new ObjectOutputStream(socket.getOutputStream());
-			oisClient.put(destNodeID, new ObjectInputStream(socket.getInputStream()));
+			oisClient.put(new Integer(destNodeID), new ObjectInputStream(socket.getInputStream()));
 			//oisClient = new ObjectInputStream(socket.getInputStream());
 			System.out.println("Do oosClient.writeChars");
 			//oosClient.writeObject("Connection successful to Server Socket - Node");
 			//oosClient.flush();
-			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(destNodeID));
+			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
 			oosC.writeObject("Connection successful to Server Socket - Node");
 			oosC.flush();
 
@@ -189,7 +189,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 			//oosClient.writeObject(cmd);
 			//oosClient.flush();
 			System.out.println("Send cmd: " + cmd + " to node: " + destNodeID);
-			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(destNodeID));
+			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
 			oosC.writeObject(cmd);
 			oosC.flush();
 		} catch (IOException e) {
