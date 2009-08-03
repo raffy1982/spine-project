@@ -40,6 +40,7 @@ package spine.payload.codec.tinyos;
 import java.util.Vector;
 
 import spine.SPINEFunctionConstants;
+import spine.datamodel.Address;
 import spine.datamodel.Node;
 import spine.datamodel.Sensor;
 import spine.datamodel.functions.*;
@@ -122,14 +123,9 @@ public class ServiceAdvertisement extends SpineCodec {
 			  catch (BadFunctionSpecException e) { System.out.println(e); }
 		}
 		
-		Node node = new Node();
-		node.setNodeID(nodeID);
-		// Debug
-		// System.out.println("*** functionsList size " + functionsList.size() + " ***");
+		Node node = new Node(new Address(""+nodeID));
 		node.setFunctionsList(functionsList);
-        // Debug
-		// System.out.println("*** sensorsList size " + sensorsList.size() + " ***");
-		node.setSensorsList(sensorsList);
+        node.setSensorsList(sensorsList);
 		
 		return node;
 	}

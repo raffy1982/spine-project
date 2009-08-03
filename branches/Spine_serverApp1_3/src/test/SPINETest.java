@@ -77,7 +77,7 @@ public class SPINETest implements SPINEListener {
 		
 		// ... we need to register a SPINEListener implementation to the SPINE manager instance
 		// (I register myself since I'm a SPINEListener implementation!)
-		manager.registerListener(this);	
+		manager.addListener(this);	
 		
 		// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
 		/* manager.setDiscoveryProcedureTimeout(1000); */
@@ -117,14 +117,14 @@ public class SPINETest implements SPINEListener {
 					sss.setSensor(sensor);
 					sss.setTimeScale(SPINESensorConstants.MILLISEC);
 					sss.setSamplingTime(SAMPLING_TIME);
-					manager.setupSensor(curr.getNodeID(), sss);
+					manager.setup(curr, sss);
 
 					// ... we can setup a specific function (in this case a Feature) on that sensor; then ...
 					FeatureSpineSetupFunction ssf = new FeatureSpineSetupFunction();
 					ssf.setSensor(sensor);
 					ssf.setWindowSize(WINDOW_SIZE);
 					ssf.setShiftSize(SHIFT_SIZE);
-					manager.setupFunction(curr.getNodeID(), ssf);
+					manager.setup(curr, ssf);
 
 					// ... we can activate that function with function specific parameters 
 					// (for Feature they are the desired feature extractors); we can also ... 
@@ -138,7 +138,7 @@ public class SPINETest implements SPINEListener {
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					sfr.addFeature(SPINEFunctionConstants.MIN, 
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					manager.activateFunction(curr.getNodeID(), sfr);
+					manager.activate(curr, sfr);
 
 					// ... split a more complex activation in multiple activations 
 					// (if the specific function implementation in the node side allows that); of course we always can ...
@@ -148,7 +148,7 @@ public class SPINETest implements SPINEListener {
 															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					sfr.addFeature(SPINEFunctionConstants.AMPLITUDE, 
 						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					manager.activateFunction(curr.getNodeID(), sfr);	
+					manager.activate(curr, sfr);	
 					
 					// SetUp Alarm Engine
 					// Window and Shift may be set to value different from the feature engine ones.
@@ -157,7 +157,7 @@ public class SPINETest implements SPINEListener {
 					ssf2.setSensor(sensor);
 					ssf2.setWindowSize(WINDOW_SIZE);
 					ssf2.setShiftSize(SHIFT_SIZE);
-					manager.setupFunction(curr.getNodeID(), ssf2);					
+					manager.setup(curr, ssf2);					
 
 					//Activate alarm on MAX value (one of the features computed above) on CH1
 					//alarm sent when MAX > upperThresold
@@ -174,7 +174,7 @@ public class SPINETest implements SPINEListener {
 					sfr2.setUpperThreshold(upperThreshold);
 					sfr2.setAlarmType(SPINEFunctionConstants.ABOVE_THRESHOLD);
 
-					manager.activateFunction(curr.getNodeID(), sfr2);
+					manager.activate(curr, sfr2);
 
 					//Activate alarm on AMPLITUDE value (one of the features computed above) on CH2
 					//alarm sent when AMPLITUDE < lowerThreshold
@@ -189,7 +189,7 @@ public class SPINETest implements SPINEListener {
 					sfr2.setUpperThreshold(upperThreshold);
 					sfr2.setAlarmType(SPINEFunctionConstants.BELOW_THRESHOLD);
 
-					manager.activateFunction(curr.getNodeID(), sfr2);
+					manager.activate(curr, sfr2);
 					
 				}
 				// repeat this process for other desired sensors; after that we can finally ... 
@@ -198,13 +198,13 @@ public class SPINETest implements SPINEListener {
 					sss.setSensor(sensor);
 					sss.setTimeScale(SPINESensorConstants.MILLISEC);
 					sss.setSamplingTime(OTHER_SAMPLING_TIME);
-					manager.setupSensor(curr.getNodeID(), sss);
+					manager.setup(curr, sss);
 
 					FeatureSpineSetupFunction ssf = new FeatureSpineSetupFunction();
 					ssf.setSensor(sensor);
 					ssf.setWindowSize(OTHER_WINDOW_SIZE);
 					ssf.setShiftSize(OTHER_SHIFT_SIZE);
-					manager.setupFunction(curr.getNodeID(), ssf);
+					manager.setup(curr, ssf);
 
 					FeatureSpineFunctionReq sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(sensor);
@@ -216,7 +216,7 @@ public class SPINETest implements SPINEListener {
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
 					sfr.addFeature(SPINEFunctionConstants.MIN, 
 							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					manager.activateFunction(curr.getNodeID(), sfr);	
+					manager.activate(curr, sfr);	
 					
 					// SetUp Alarm Engine
 					// Same Window and Shift as before
@@ -224,7 +224,7 @@ public class SPINETest implements SPINEListener {
 					ssf3.setSensor(sensor);
 					ssf3.setWindowSize(WINDOW_SIZE);
 					ssf3.setShiftSize(SHIFT_SIZE);
-					manager.setupFunction(curr.getNodeID(), ssf3);	
+					manager.setup(curr, ssf3);	
 					
 					//Activate alarm on MIN value (one of the features computed above)on CH1
 					//alarm sent when lowerThreshold < MIN < upperThreshold
@@ -241,7 +241,7 @@ public class SPINETest implements SPINEListener {
 					sfr3.setUpperThreshold(upperThreshold);
 					sfr3.setAlarmType(SPINEFunctionConstants.IN_BETWEEN_THRESHOLDS);
 
-					manager.activateFunction(curr.getNodeID(), sfr3);
+					manager.activate(curr, sfr3);
 
 				}				
 			}			
@@ -249,7 +249,7 @@ public class SPINETest implements SPINEListener {
 		
 		// ... start the sensor network sensing and computing our aforeactivated services.
 		if (activeNodes.size() > 0)
-			manager.start(true, true); // we can tune a few node parameters at run-time for reducing the power consumption and the packets drop. 
+			manager.startWsn(true, true); // we can tune a few node parameters at run-time for reducing the power consumption and the packets drop. 
 	}
 
 	private Feature[] features;

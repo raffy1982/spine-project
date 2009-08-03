@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This interface contains codes related to the SPINE communication protocol, shared with the SPINE node side, 
+ * This class contains codes related to the SPINE communication protocol, shared with the SPINE node side, 
  * such as the reserved network addresses and the packets types. 
  *  
  *
@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
-public interface SPINEPacketsConstants {
+public class SPINEPacketsConstants {
 
 	public static final short AM_SPINE = 0x99;            // every SPINE packets will have the same AM Type
 
@@ -55,7 +55,43 @@ public interface SPINEPacketsConstants {
 	public static final byte SYNCR = 0x0D;                // it is used as a BEACON (re-sync) message
 	public static final byte FUNCTION_REQ = 0x07;         // contains a flag to specify if enable or disable the function
 	
+	public static final String SERVICE_ADV_LABEL = "Svc Adv";
+	public static final String DATA_LABEL = "Data";
+	public static final String SVC_MSG_LABEL = "Svc Msg";             
+
+	public static final String SERVICE_DISCOVERY_LABEL = "Svc Disc";
+	public static final String SETUP_SENSOR_LABEL = "Stp Sens";
+	public static final String SETUP_FUNCTION_LABEL = "Stp Funct";
+	public static final String START_LABEL = "Start";
+	public static final String RESET_LABEL = "Reset";               
+	public static final String SYNCR_LABEL = "Syncr";               
+	public static final String FUNCTION_REQ_LABEL = "Funct Req";        
+	
 
 	public static final byte CURRENT_SPINE_VERSION = 2;
+
+	
+	/**
+	 *  Returns a human friendly label of the given packet type code
+	 * 
+	 * @param code the packetType code to convert into a human friendly label
+	 * @return human friendly label of the given packetType code
+	 */
+	public static String packetTypeToString(byte code) {
+		switch (code) {
+			case SERVICE_ADV: return SERVICE_ADV_LABEL;
+			case DATA: return DATA_LABEL;
+			case SVC_MSG: return SVC_MSG_LABEL;
+			
+			case SERVICE_DISCOVERY: return SERVICE_DISCOVERY_LABEL;
+			case SETUP_SENSOR: return SETUP_SENSOR_LABEL;
+			case SETUP_FUNCTION: return SETUP_FUNCTION_LABEL;
+			case START: return START_LABEL;
+			case RESET: return RESET_LABEL;
+			case SYNCR: return SYNCR_LABEL;
+			case FUNCTION_REQ: return FUNCTION_REQ_LABEL;
+			default: return "?";
+		}
+	}
 	
 }

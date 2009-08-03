@@ -35,11 +35,8 @@ Boston, MA  02111-1307, USA.
 package spine.communication.tinyos;
 
 public abstract class SFLocalNodeAdapterException extends Exception {
-    /** Version control identifier strings. */
-    public static final String[] RCS_ID = {
-        "$URL: http://macromates.com/svn/Bundles/trunk/Bundles/Java.tmbundle/Templates/Java Class/class-insert.java $",
-        "$Id$",
-    };
+	
+	private static final long serialVersionUID = 1L;
     
 	public SFLocalNodeAdapterException(String s) {
 		super(s);

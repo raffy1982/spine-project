@@ -48,7 +48,14 @@ public class Node implements SpineObject{
 	
 	private static final String NEW_LINE = Properties.getProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
 	
+	/**
+	 * @deprecated
+	 */
 	private int nodeID;
+	
+	private Address physicalID = null;
+	
+	private Address logicalID = null;
 	
 	private Vector sensorsList = new Vector(); // <values:Sensor>
 	
@@ -56,19 +63,37 @@ public class Node implements SpineObject{
 	
 	
 	/**
-	 * Constructor of a Node object.
+	 * Default constructor of a Node object. ** For in-framework use only. **
+	 * Application-level classes should never use this constructor, but rather get a node 
+	 * by looking at the activeNode Vector of the spine.SPINEManager
+	 * @deprecated
 	 */
-	public Node(){
-		
-	};
+	public Node(){};
+	
+	/**
+	 * Constructor of a Node object. ** For in-framework use only. **
+	 * Application-level classes should never use this constructor, but rather get a node 
+	 * by looking at the activeNode Vector of the spine.SPINEManager
+	 */
+	public Node(Address physicalID) {
+		this.physicalID = physicalID;
+		this.nodeID = physicalID.getAsInt();
+	}
 	
 	/**
 	 * Getter method of the node id
 	 * @return the node id
+	 * @deprecated
 	 */
 	public int getNodeID() {
 		return nodeID;
 	}
+	
+	/**
+	 * Setter method of the node id. ** For in-framework use only. **
+	 * @param the node id
+	 * @deprecated
+	 */
 	public void setNodeID(int nodeID) {
 		this.nodeID = nodeID;
 	}
@@ -81,6 +106,12 @@ public class Node implements SpineObject{
 	public Vector getSensorsList() {
 		return sensorsList;
 	}
+	
+	/**
+	 * Setter method of the node sensors list. ** For in-framework use only. **
+	 * 
+	 * @param sensorsList the Vector containing the various Sensor the node is composed of
+	 */
 	public void setSensorsList(Vector sensorsList) {
 		this.sensorsList = sensorsList;
 	}
@@ -89,13 +120,47 @@ public class Node implements SpineObject{
 
 	/**
 	 * Getter method of the node functionality (function libraries) list
+	 * 
 	 * @return the functionality list of the node
 	 */
 	public Vector getFunctionsList() {
 		return functionsList;
 	}
+	
+	/**
+	 * Setter method of the node functionality (function libraries) list. ** For in-framework use only. **
+	 * 
+	 * @param functionsList the Vector containing the various Function this node is able to compute
+	 */
 	public void setFunctionsList(Vector functionsList) {
 		this.functionsList = functionsList;
+	}
+	
+	/**
+	 * Getter method of the physicalID attribute
+	 * 
+	 * @return the physicalID of this Node
+	 */
+	public Address getPhysicalID() {
+		return physicalID;
+	}
+
+	/**
+	 * Setter method of the logicalID attribute
+	 * 
+	 * @return the logicalID of this Node
+	 */
+	public void setLogicalID(Address logicalID) {
+		this.logicalID = logicalID;
+	}
+
+	/**
+	 * Getter method of the logicalID attribute
+	 * 
+	 * @return the logicalID of this Node
+	 */
+	public Address getLogicalID() {
+		return logicalID;
 	}
 	
 	/**
@@ -104,7 +169,9 @@ public class Node implements SpineObject{
 	 * 
 	 */
 	public String toString() {
-		String s = "Node ID: " + this.nodeID + NEW_LINE;
+		String s = "Node ID (deprecated): " + this.nodeID + NEW_LINE;
+		s += "Physical Node ID: " + this.physicalID + NEW_LINE;
+		s += "Logical Node ID: " + this.logicalID + NEW_LINE;
 		
 		s += "OnBoard Sensors:" + NEW_LINE;
 		for (int i = 0; i<this.sensorsList.size(); i++) 
@@ -117,5 +184,6 @@ public class Node implements SpineObject{
 		return s;
 		
 	}
+
 	
 }

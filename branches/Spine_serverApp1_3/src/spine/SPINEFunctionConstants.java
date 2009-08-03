@@ -67,7 +67,8 @@ public class SPINEFunctionConstants {
 	public static final byte MEDIAN = 0x0C;	
 	public static final byte PITCH_ROLL = 0x0D;
 	public static final byte VECTOR_MAGNITUDE = 0x0E;
-	
+	public static final byte KCAL = 0x0F;
+	public static final byte ENTROPY = 0x10;
 	
 	// if new functions are added, declare their labels down here
 	public static final String FEATURE_LABEL = "Feature";
@@ -92,7 +93,8 @@ public class SPINEFunctionConstants {
 	public static final String MEDIAN_LABEL = "Median";
 	public static final String PITCH_ROLL_LABEL = "Pitch & Roll";
 	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";	
-	
+	public static final String KCAL_LABEL = "Kcal";
+	public static final String ENTROPY_LABEL = "Entropy";
 	
 	public static final String BELOW_THRESHOLD_LABEL = "< LT";
 	public static final String ABOVE_THRESHOLD_LABEL = "> UT";
@@ -149,8 +151,9 @@ public class SPINEFunctionConstants {
 					case MEDIAN: return MEDIAN_LABEL;
 					case PITCH_ROLL: return PITCH_ROLL_LABEL;
 					case VECTOR_MAGNITUDE: return VECTOR_MAGNITUDE_LABEL;
-					
-					default: return "?";	
+					case KCAL: return KCAL_LABEL;
+					case ENTROPY: return ENTROPY_LABEL;
+					default: return functionalityCode + " (?)";	
 				}
 			case ALARM: 
 				switch (functionalityCode) {
@@ -199,7 +202,10 @@ public class SPINEFunctionConstants {
 				return PITCH_ROLL;
 			if(functionalityLabel.equals(VECTOR_MAGNITUDE_LABEL)) 
 				return VECTOR_MAGNITUDE;
-			
+			if(functionalityLabel.equals(KCAL_LABEL)) 
+				return KCAL;
+			if(functionalityLabel.equals(ENTROPY_LABEL)) 
+				return ENTROPY;
 			else
 				return -1;	
 		}
