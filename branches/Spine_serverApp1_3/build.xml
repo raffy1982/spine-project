@@ -50,7 +50,7 @@
                                run
          _______________________________________________ -->
   <target name="run" description="launch the java SpineTest" depends="compile">
-    <java classname="test.SPINETest" classpath="${tinyos.jar};classes;lib/localNodeAdapter.jar"/> 
+    <java classname="test.SPINETest" classpath="${tinyos.jar};classes;lib/localNodeAdapter.jar" fork="true"/> 
   </target>
  
 
