@@ -43,6 +43,9 @@ public class Feature implements Comparable{
 	
 	private Node node;
 	
+	/**
+	 * @deprecated  
+	 */
 	private int nodeID;
 	
 	private byte functionCode;
@@ -251,7 +254,8 @@ public class Feature implements Comparable{
 	 * 
 	 */
 	public void setNode(Node node) {
-		this.node = node;		
+		this.node = node;	
+		this.nodeID = node.getPhysicalID().getAsInt();
 	}
 
 	/**
