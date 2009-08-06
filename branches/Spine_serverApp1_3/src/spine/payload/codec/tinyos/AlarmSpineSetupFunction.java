@@ -37,6 +37,7 @@ package spine.payload.codec.tinyos;
 import spine.SPINEFunctionConstants;
 //import spine.SPINESensorConstants;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
@@ -45,8 +46,8 @@ public class AlarmSpineSetupFunction extends SpineCodec {
 
 	private final static int PARAM_LENGTH = 3; 
 
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-		return super.decode(nodeID, payload);
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
 	};
 	
 
@@ -63,23 +64,6 @@ public class AlarmSpineSetupFunction extends SpineCodec {
 		data[3] = (byte)workPayLoad.getWindowSize();
 		data[4] = (byte)workPayLoad.getShiftSize();
 		
-		printPayload(data);
-		
 		return data;	
-	}
-	
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE 
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
-	
+	}	
 }

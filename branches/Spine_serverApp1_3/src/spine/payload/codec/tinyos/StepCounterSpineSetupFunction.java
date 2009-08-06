@@ -36,6 +36,7 @@ package spine.payload.codec.tinyos;
 
 import spine.SPINEFunctionConstants;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
@@ -43,37 +44,26 @@ import spine.datamodel.functions.Exception.*;
 public class StepCounterSpineSetupFunction extends SpineCodec {
 
 	
-	private final static int PARAM_LENGTH = 1; 
+	private final static int PARAM_LENGTH = 4; 
 
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-		return super.decode(nodeID, payload);
-	};
-    
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};  
 
 	public byte[] encode(SpineObject payload) {
 		
-		byte[] data = new byte[3];
-	
-		data[0] = SPINEFunctionConstants.STEP_COUNTER;
+		spine.datamodel.functions.StepCounterSpineSetupFunction workPayLoad = (spine.datamodel.functions.StepCounterSpineSetupFunction)payload;
+			
+		byte[] data = new byte[2 + PARAM_LENGTH];
+		
+		data[0] = SPINEFunctionConstants.STEP_COUNTER; 
 		data[1] = PARAM_LENGTH;
-		data[2] = (byte)1;
 		
-		printPayload(data);
-		
-		return data;	
-	}
-	
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
+		data[2] = (byte)((workPayLoad.getAvgAcceleration() & 0x0000FF00)>>8);
+		data[3] = (byte)(workPayLoad.getAvgAcceleration() & 0x000000FF);
+		data[4] = (byte)((workPayLoad.getStepThreshold() & 0x0000FF00)>>8);
+		data[5] = (byte)(workPayLoad.getStepThreshold() & 0x000000FF);
+
+		return data;
+	}	
 }

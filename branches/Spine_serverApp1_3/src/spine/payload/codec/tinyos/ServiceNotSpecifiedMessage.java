@@ -1,13 +1,19 @@
 package spine.payload.codec.tinyos;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.SpineCodec;
 import spine.datamodel.functions.SpineObject;
 import spine.datamodel.functions.Exception.MethodNotSupportedException;
 
 public class ServiceNotSpecifiedMessage extends SpineCodec {
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException {
+	
+	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("encode");
+	};
+	
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException {
 		spine.datamodel.serviceMessages.ServiceNotSpecifiedMessage snsm=new spine.datamodel.serviceMessages.ServiceNotSpecifiedMessage();
-		snsm.setNodeID(nodeID);
+		snsm.setNode(node);
 		snsm.setMessageDetail(payload[1]);
 		return snsm;
 	}

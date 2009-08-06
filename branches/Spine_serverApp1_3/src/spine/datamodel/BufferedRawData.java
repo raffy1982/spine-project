@@ -57,10 +57,11 @@ public class BufferedRawData extends Data {
 	 * @param sensorCode the sensor code
 	 * @param channelBitmask the sensor channels bitmask
 	 * @param values the channels values matrix (rows are the samples, columns are the channels)
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 * @see spine.SPINESensorConstants
 	 */
-	public BufferedRawData(int nodeID, byte functionCode, byte sensorCode, byte channelBitmask, int[][] values) {
-		
-		this.nodeID = nodeID;
+	public BufferedRawData(byte functionCode, byte sensorCode, byte channelBitmask, int[][] values) {
 
 		this.functionCode = functionCode;
 		
@@ -113,7 +114,7 @@ public class BufferedRawData extends Data {
 	/**
 	 * 
 	 * Setter method of the sensor code
-	 * 
+	 * @see spine.SPINESensorConstants
 	 */
 	public void setSensorCode(byte sensorCode) {
 		this.sensorCode = sensorCode;			
@@ -142,7 +143,7 @@ public class BufferedRawData extends Data {
 	 * 
 	 */
 	public String toString() {
-		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.BUFFERED_RAW_DATA_LABEL + ": " +  
+		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.BUFFERED_RAW_DATA_LABEL + ": " +  
 				" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
 				" (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
 				" - " + SPINESensorConstants.CH1_LABEL + ": "+ Arrays.toString(values[0]) + 
@@ -153,6 +154,8 @@ public class BufferedRawData extends Data {
 
 	/**
 	 * @param functionCode the functionCode to set
+	 * 
+	 * @see spine.SPINEFunctionConstants
 	 */
 	public void setFunctionCode(byte functionCode) {
 		this.functionCode = functionCode;
@@ -160,6 +163,8 @@ public class BufferedRawData extends Data {
 
 	/**
 	 * @param channelBitmask the channelBitmask to set
+	 * 
+	 * @see spine.SPINESensorConstants
 	 */
 	public void setChannelBitmask(byte channelBitmask) {
 		this.channelBitmask = channelBitmask;

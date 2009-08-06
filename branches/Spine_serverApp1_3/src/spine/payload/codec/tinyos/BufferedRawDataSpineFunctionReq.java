@@ -36,6 +36,7 @@ package spine.payload.codec.tinyos;
 import spine.SPINEFunctionConstants;
 
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
@@ -43,10 +44,10 @@ import spine.datamodel.functions.Exception.*;
 public class BufferedRawDataSpineFunctionReq extends SpineCodec {
 
 	
-	private final static int PARAM_LENGTH = 4; 
+	private final static int PARAM_LENGTH = 1; 
 
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-		return super.decode(nodeID,payload);
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException{
+		throw new MethodNotSupportedException("decode");
 	};
 	
 	
@@ -64,9 +65,6 @@ public class BufferedRawDataSpineFunctionReq extends SpineCodec {
 		data[2] = PARAM_LENGTH;
 
 		data[3] = workPayLoad.getSensor();
-		data[4] = (byte)(workPayLoad.getChannelsBitmask() & 0x0000000F);
-		data[5] = (byte)workPayLoad.getBufferSize();
-		data[6] = (byte)workPayLoad.getShiftSize();
 
 		return data;	
 	}		

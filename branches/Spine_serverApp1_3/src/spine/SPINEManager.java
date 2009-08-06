@@ -106,6 +106,7 @@ public class SPINEManager {
 	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX = SPINEDATACODEC_PACKAGE_PREFIX;
 	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE=SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX+prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
 	
+	private Node baseStation = null;
 	
 	private SPINEManager(String[] args) {
 		try {
@@ -122,6 +123,9 @@ public class SPINEManager {
 			connection = nodeAdapter.createAPSConnection();			
 
 			connection.setListener(new WSNConnectionListenerImpl());
+			
+			baseStation = new Node(new Address(""+SPINEPacketsConstants.SPINE_BASE_STATION));
+			baseStation.setLogicalID(new Address(SPINEPacketsConstants.SPINE_BASE_STATION_LABEL));
 
 		} catch (ClassNotFoundException e) {
 			System.out.println(e);
@@ -647,12 +651,43 @@ public class SPINEManager {
 		}			
 	}
 	
-
+	/**
+	 * Returns the already discovered Node corresponding to the given Address
+	 * 
+	 * @param id the physical address of the Node to obtain
+	 * @return the already discovered Node corresponding to the given Address 
+	 * or null if doesn't exist any Node with the given Address.  
+	 */
+	public Node getNodeByPhysicalID(Address id) {
+		for (int i = 0; i<activeNodes.size(); i++) {
+			Node curr = (Node)activeNodes.elementAt(i);
+			if(curr.getPhysicalID().equals(id))
+				return curr;
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the already discovered Node corresponding to the given Address
+	 * 
+	 * @param id the logical address of the Node to obtain
+	 * @return the already discovered Node corresponding to the given Address 
+	 * or null if doesn't exist any Node with the given Address.  
+	 */
+	public Node getNodeByLogicalID(Address id) {
+		for (int i = 0; i<activeNodes.size(); i++) {
+			Node curr = (Node)activeNodes.elementAt(i);
+			if(curr.getLogicalID().equals(id))
+				return curr;
+		}
+		return null;
+	}
+	
 	/*
 	 * Regarding to the 'eventType', this method notify the SPINEListeners properly, by
 	 * casting in the right way the Object 'o' 
 	 */
-	private void notifyListeners(Address source, short eventType, Object o) {
+	private void notifyListeners(short eventType, Object o) {
 		for (int i = 0; i<this.listeners.size(); i++) 
 			switch(eventType) {
 				case SPINEPacketsConstants.SERVICE_ADV:
@@ -660,10 +695,11 @@ public class SPINEManager {
 						((SPINEListener)this.listeners.elementAt(i)).newNodeDiscovered((Node)activeNodes.lastElement()); 
 					break;
 				case SPINEPacketsConstants.DATA: 
-					((SPINEListener)this.listeners.elementAt(i)).dataReceived(source.getAsInt(), (Data)o); 
+					((SPINEListener)this.listeners.elementAt(i)).received((Data)o); 
 					break;	
 				case SPINEPacketsConstants.SVC_MSG: 
-					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(source.getAsInt(), (ServiceMessage)o); 
+					if(((ServiceMessage)o).getNode() != null)
+						((SPINEListener)this.listeners.elementAt(i)).received((ServiceMessage)o); 
 					break;
 				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
@@ -671,8 +707,8 @@ public class SPINEManager {
 				default: {
 					ServiceMessage sm = new ServiceWarningMessage();
 					sm.setMessageDetail(SPINEServiceMessageConstants.UNKNOWN_PKT_RECEIVED);
-					sm.setNodeID(source.getAsInt());
-					((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(source.getAsInt(), sm);				
+					sm.setNode(baseStation);
+					((SPINEListener)this.listeners.elementAt(i)).received(sm);				
 					break;
 				}
 			}
@@ -703,13 +739,12 @@ public class SPINEManager {
 			// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
 			if (activeNodes.size()==0) {
 				ServiceErrorMessage serviceErrorMessage=new ServiceErrorMessage();
-				serviceErrorMessage.setNodeID(SPINEPacketsConstants.SPINE_BASE_STATION);
+				serviceErrorMessage.setNode(baseStation);
 				serviceErrorMessage.setMessageDetail(SPINEServiceMessageConstants.CONNECTION_FAIL);
-				notifyListeners(new Address(""+SPINEPacketsConstants.SPINE_BASE_STATION), 
-								SPINEPacketsConstants.SVC_MSG,serviceErrorMessage);
+				notifyListeners(SPINEPacketsConstants.SVC_MSG,serviceErrorMessage);
 			}		
 			discoveryCompleted = true;			
-			notifyListeners(new Address(""+SPINEPacketsConstants.SPINE_BASE_STATION), DISC_COMPL_EVT_COD, activeNodes);
+			notifyListeners(DISC_COMPL_EVT_COD, activeNodes);
 		}
 	}
 	
@@ -742,7 +777,7 @@ public class SPINEManager {
 						 }
 						 
 						 // Invoking decode and setting SpineObject data
-						 o = spineCodec.decode(nodeID.getAsInt(), payload);
+						 o = spineCodec.decode(new Node(nodeID), payload);
 						 
 					} catch (Exception e) { 
 						e.printStackTrace();
@@ -758,7 +793,7 @@ public class SPINEManager {
 							}
 						}
 						if (!alreadyDiscovered)
-							activeNodes.addElement((Node)o/*new Node(nodeID, msg.getPayload())*/);
+							activeNodes.addElement((Node)o);
 					}					
 					break;
 				}
@@ -792,7 +827,7 @@ public class SPINEManager {
 						 }
 						 
 						 // Invoking decode and setting SpineObject data
-						 o = spineCodec.decode(nodeID.getAsInt(), payload);
+						 o = spineCodec.decode(getNodeByPhysicalID(nodeID), payload);
 						
 					} catch (Exception e) { 
 						e.printStackTrace();
@@ -833,7 +868,7 @@ public class SPINEManager {
 						 }
 						
 						 // Invoking decode and setting SpineObject data
-						 o = spineCodec.decode(nodeID.getAsInt(), payload);
+						 o = spineCodec.decode(getNodeByPhysicalID(nodeID), payload);
 						
 					} catch (Exception e) { 
 						e.printStackTrace();
@@ -845,7 +880,7 @@ public class SPINEManager {
 			}
 			
 			// SPINEListeners are notified of the reception from the node 'nodeID' of some data  
-			notifyListeners(nodeID, pktType, o);
+			notifyListeners(pktType, o);
 			
 			//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
 			// call to the garbage collector to favour the recycling of unused memory

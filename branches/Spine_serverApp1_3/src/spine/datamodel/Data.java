@@ -59,19 +59,19 @@ public abstract class Data implements SpineObject{
 	
 	protected long timestamp = 0;
 
-	protected int nodeID = 0;
+	protected Node node = null;
 	protected byte functionCode = -1;
 	
 	protected Data() {}
 		
 
 	/**
-	 * @param nodeID
+	 * @param node
 	 * @param payload
 	 */
-	public void baseInit(int nodeID, byte[] payload) {
+	public void baseInit(Node node, byte[] payload) {
 		timestamp = System.currentTimeMillis();
-		this.nodeID = nodeID;
+		this.node = node;
 		
 		//  Setting functionCode
 		try {
@@ -97,10 +97,10 @@ public abstract class Data implements SpineObject{
 	}
 	/**
 	 * 
-	 * @param nodeID
+	 * @param node
 	 */
-	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
+	public void setNode(Node node) {
+		this.node = node;
 	}
 	/**
 	 * 
@@ -123,10 +123,10 @@ public abstract class Data implements SpineObject{
 	/**
 	 * Getter method of the ID of the node generating the data
 	 * 
-	 * @return the nodeID of the function generating of the data
+	 * @return the node of the function generating the data
 	 */
-	public int getNodeID() {
-		return this.nodeID;
+	public Node getNode() {
+		return this.node;
 	}
 	
 	/**

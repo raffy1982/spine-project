@@ -57,7 +57,7 @@ public class Address {
 	 */
 	public int getAsInt() {		
 		try {
-			return Integer.parseInt((address.toString()));
+			return Integer.parseInt((this.address.toString()));
 		} catch (NumberFormatException e) {
 			return this.address.hashCode();
 		}

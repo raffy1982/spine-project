@@ -40,44 +40,18 @@ import spine.datamodel.functions.SpineObject;
 public class ServiceMessage implements SpineObject{
 
 
+	protected Node node = null;
 	
 	protected int nodeID = -1;
 	protected byte messageType = -1;
 	protected byte messageDetail = -1;
-//	protected byte payload[];
 	
 
 	/**
-	 * Constructor of a ServiceMessage object.
-	 * This is used by the lower level components of the framework for creating ServiceMessage objects
-	 * from a low level ServiceMessage packet received by remote nodes.
-	 * 
-	 * @param nodeID the source nodeID of the ServiceMessage
-	 * @param payload a two-length byte[] array containing ServiceMessage the structured as: [messageTypeCode, messageDetailCode]
+	 * Default constructor of a ServiceMessage object.
 	 */
-	public ServiceMessage() {
-		
-	}
+	public ServiceMessage() {}
 
-	/**
-	 * Constructor of a ServiceMessage object.
-	 * This is basically used by the SPINEManager for creating ServiceMessage objects directed to the application.
-	 * Refer to the public constants exposed by this class for the available message types and details
-	 * 
-	 * @param nodeID the source nodeID of the ServiceMessage
-	 * @param messageType the message type code of the ServiceMessage
-	 * @param messageDetail the message detail code of the ServiceMessage
-	 */
-	/*
-	
-	public ServiceMessage(int nodeID, byte messageType, byte messageDetail) {
-		this.nodeID = nodeID;
-		this.messageType = messageType;
-		this.messageDetail = messageDetail;
-	}
-	*/
-	
-	
 	/**
 	 * Getter method for the message type attribute 
 	 * 
@@ -96,41 +70,47 @@ public class ServiceMessage implements SpineObject{
 	
 	/**
 	 * 
-	 * Returns a string representation of the ServiceMessage object.
+	 * Returns a string representation of this ServiceMessage.
 	 * 
 	 */
 	public String toString() {
-		return "Service Message From Node " + this.nodeID + " - " + 
-				SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ": " + SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail);
-				//SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ": " + SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail)+
-				//"\n"+parse();
+		return "Svc Msg from {" + this.node.toShortString() + "} - " + 
+					SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ":" + 
+					SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail);
 	}
 
-	/**
-	 * @param payload the payload to set
-	 */
-	//public void setPayload(byte payload[]) {
-//		this.payload = payload;
-	//}
-
-	/**
-	 * @return the payload
-	 */
-	//public byte[] getPayload() {
-	//	return payload;
-	//}
 	public void setMessageDetail(byte messageDetail) {
 		this.messageDetail = messageDetail;
 	}
+	
 	public void setMessageType(byte messageType) {
 		this.messageType = messageType;
 	}
+	
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	
+	public Node getNode() {
+		return this.node;
+	}
+	
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public void setNodeID(int nodeID) {
 		this.nodeID = nodeID;
 	}
+	
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public int getNodeID() {
 		return nodeID;
 	}
+	
 	protected String parse(){
 		return "";
 	}

@@ -1,6 +1,7 @@
 package spine.payload.codec.emule;
 
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.SpineCodec;
 import spine.datamodel.functions.SpineObject;
 import spine.datamodel.functions.Exception.MethodNotSupportedException;
@@ -8,13 +9,16 @@ import spine.datamodel.functions.Exception.MethodNotSupportedException;
 
 public class ServiceInfoMessage extends SpineCodec {
 	
-		public SpineObject decode(int nodeID, byte[] payload)
-				throws MethodNotSupportedException {
-			spine.datamodel.serviceMessages.ServiceInfoMessage sim=new spine.datamodel.serviceMessages.ServiceInfoMessage();
-			sim.setNodeID(nodeID);
-			sim.setMessageDetail(payload[1]);
-			return sim;
-		}
-			
+	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
+		throw new MethodNotSupportedException("encode");
+	};	
+
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		spine.datamodel.serviceMessages.ServiceInfoMessage sim=new spine.datamodel.serviceMessages.ServiceInfoMessage();
+		sim.setNode(node);
+		sim.setMessageDetail(payload[1]);
+		return sim;
 	}
+			
+}
 

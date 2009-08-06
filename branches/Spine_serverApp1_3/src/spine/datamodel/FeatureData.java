@@ -56,7 +56,7 @@ public class FeatureData extends Data {
 	 * 
 	 */
 	public String toString() {
-		String s = "Feature set received from Node "+nodeID+":\n";
+		String s = "Feature set received from Node {" + this.node.toShortString() + "} :\n";
 		
 		for (int i=0; i<features.length; i++) {
 			s += "\t" + features[i] + "\n";

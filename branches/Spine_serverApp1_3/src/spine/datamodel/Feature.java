@@ -41,6 +41,8 @@ import spine.SPINESensorConstants;
 
 public class Feature implements Comparable{
 	
+	private Node node;
+	
 	private int nodeID;
 	
 	private byte functionCode;
@@ -64,10 +66,14 @@ public class Feature implements Comparable{
 	
 	/**
 	 * Constructor of a Feature object. 
-	 * This is used only for convenience by the FeatureSpineFunctionReq class
+	 * This is used only for convenience when (de)activating features 
+	 * through the FeatureSpineFunctionReq class
 	 * 
 	 * @param featureCode the code of the feature
 	 * @param channelBitmask the channels bitmask specifying 
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 * @see spine.SPINESensorConstants
 	 */
 	public Feature(byte featureCode, byte channelBitmask) { 
 		this.functionCode = SPINEFunctionConstants.FEATURE;
@@ -89,6 +95,11 @@ public class Feature implements Comparable{
 	 * @param ch2Value the first feature channel value
 	 * @param ch3Value the first feature channel value
 	 * @param ch4Value the first feature channel value
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 * @see spine.SPINESensorConstants	
+	 * 
+	 *  @deprecated
 	 */
 	public Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
 		
@@ -107,11 +118,57 @@ public class Feature implements Comparable{
 	}
 	
 	/**
+	 * Constructor of a Feature object.
+	 * This is used by the lower level components of the framework for creating Feature objects
+	 * from a low level Feature data packet received by remote nodes. 
+	 * 
+	 * @param nodeID the node id
+	 * @param functionCode the function code 
+	 * @param featureCode the feature code
+	 * @param sensorCode the sensor code
+	 * @param channelBitmask the sensor channels bitmask
+	 * @param ch1Value the first feature channel value
+	 * @param ch2Value the first feature channel value
+	 * @param ch3Value the first feature channel value
+	 * @param ch4Value the first feature channel value
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 * @see spine.SPINESensorConstants
+	 */
+	public Feature(Node node, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
+		
+		this.node = node;
+		
+		this.nodeID = node.getPhysicalID().getAsInt();
+
+		this.functionCode = functionCode;
+		this.featureCode = featureCode;
+		
+		this.sensorCode = sensorCode;
+		this.channelBitmask = channelBitmask;
+		
+		this.ch1Value = ch1Value;
+		this.ch2Value = ch2Value;
+		this.ch3Value = ch3Value;
+		this.ch4Value = ch4Value;
+	}
+	
+	/**
 	 * Getter method of the node id
 	 * @return the node id
+	 * 
+	 * @deprecated
 	 */
 	public int getNodeID() {
 		return nodeID;
+	}
+	
+	/**
+	 * Getter method of the node issuing this Feature 
+	 * @return the node  
+	 */
+	public Node getNode() {
+		return this.node;
 	}
 	
 	/**
@@ -182,9 +239,19 @@ public class Feature implements Comparable{
 	 * 
 	 * Setter method of the node id
 	 * 
+	 * @deprecated
 	 */
 	public void setNodeId(int nodeId) {
 		this.nodeID = nodeId;		
+	}
+	
+	/**
+	 * 
+	 * Setter method of the node 
+	 * 
+	 */
+	public void setNode(Node node) {
+		this.node = node;		
 	}
 
 	/**
@@ -228,7 +295,7 @@ public class Feature implements Comparable{
 	 * 
 	 */
 	public String toString() {
-		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
+		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
 				" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
 				" (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
 				" - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
@@ -289,9 +356,9 @@ public class Feature implements Comparable{
 	public int compareTo(Object o) {
 		Feature f = (Feature)o;
 		
-		if (this.nodeID < f.nodeID) return -1;
-		if (this.nodeID > f.nodeID) return 1;
-		if (this.nodeID == f.nodeID) {
+		if (this.node.getPhysicalID().getAsInt() < f.node.getPhysicalID().getAsInt()) return -1;
+		if (this.node.getPhysicalID().getAsInt() > f.node.getPhysicalID().getAsInt()) return 1;
+		if (this.node.getPhysicalID().getAsInt() == f.node.getPhysicalID().getAsInt()) {
 			if (this.sensorCode < f.sensorCode) return -1;
 			if (this.sensorCode > f.sensorCode) return 1;
 			if (this.sensorCode == f.sensorCode) {
@@ -309,7 +376,7 @@ public class Feature implements Comparable{
 	}
 	
 	public Object clone() {
-		Feature clone = new Feature(this.nodeID, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
+		Feature clone = new Feature(this.node, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
 									this.ch1Value, this.ch2Value, this.ch3Value, this.ch4Value);
 		return clone;
 	}

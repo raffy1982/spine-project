@@ -46,15 +46,15 @@ import spine.datamodel.*;
 public class AlarmSpineData extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 
-	public SpineObject decode(int nodeID, byte[] payload){
+	public SpineObject decode(Node node, byte[] payload){
 		
 		AlarmData data =  new AlarmData();
 		
-		// set data.nodeID, data.functionCode e data.timestamp
-		data.baseInit(nodeID, payload);
+		// set data.node, data.functionCode e data.timestamp
+		data.baseInit(node, payload);
 		data.setDataType(payload[2]);
 		data.setSensorCode(payload[3]);
 		data.setValueType(payload[4]);

@@ -165,7 +165,16 @@ public class Node implements SpineObject{
 	
 	/**
 	 * 
-	 * Returns a string representation of the Node object.
+	 * Returns a short string representation of this Node.
+	 * 
+	 */
+	public String toShortString() {
+		return "phyID:" + this.physicalID + ", logID:" + this.logicalID;
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of this Node.
 	 * 
 	 */
 	public String toString() {

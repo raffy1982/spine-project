@@ -42,6 +42,8 @@ public class SPINEPacketsConstants {
 	public static final int SPINE_BASE_STATION = 0x0000;  // reserved address: remote SPINE nodes can't be assigned with this address
 	public static final int SPINE_BROADCAST = 0xFFFF;     // reserved address: any SPINE node can't be assigned with this address
 	
+	public static final String SPINE_BASE_STATION_LABEL = "base-station";
+	public static final String SPINE_BROADCAST_LABEL = "broadcast";
 	
 	public static final byte SERVICE_ADV = 0x02;
 	public static final byte DATA = 0x04;

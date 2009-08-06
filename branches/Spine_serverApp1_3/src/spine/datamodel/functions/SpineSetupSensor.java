@@ -49,12 +49,20 @@ public class SpineSetupSensor   implements SpineObject{
 	 * Sets the sensor to setup
 	 * 
 	 * @param sensor the sensor to setup
+	 * 
+	 * @see spine.SPINESensorConstants
 	 */
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;
 	}
 	
-
+	/**
+	 * Getter method of the sensor involved in this setup request
+	 * 
+	 * @return the sensor involved in this setup request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor=this.sensor;
@@ -63,8 +71,7 @@ public class SpineSetupSensor   implements SpineObject{
 	
 	
 	/**
-	 * Sets the time scale of the sampling time.
-	 * 
+	 * Sets the time scale of the sampling time.	  
 	 * 
 	 * @param timeScale the time scale
 	 * 
@@ -74,7 +81,13 @@ public class SpineSetupSensor   implements SpineObject{
 		this.timeScale = timeScale;	
 	}
 	
-
+	/**
+	 * Getter method of the time scale
+	 * 
+	 * @return the time scale of this setup-sensor request
+	 * 
+	 * @see spine.SPINESensorConstants for the defined time-scales
+	 */
 	public byte getTimeScale() {
 		byte timeScale;
 		timeScale=this.timeScale;
@@ -86,12 +99,18 @@ public class SpineSetupSensor   implements SpineObject{
 	 * Set the absolute value of the sampling time (the actual sampling interval depends on the time scale)
 	 * 
 	 * @param samplingTime the value of the sampling time
+	 *
+	 * @see spine.SPINESensorConstants for the defined time-scales
 	 */
 	public void setSamplingTime(int samplingTime) {
 		this.samplingTime = samplingTime;
 	}
 	
-	
+	/**
+	 * Getter method of the sampling time in number of 'timeScale' units
+	 * 
+	 * @return samplingTime the value of the sampling time of this setup-sensor request
+	 */
 	public int getSamplingTime() {
 		int samplingTime;
 		samplingTime=this.samplingTime;
@@ -100,9 +119,9 @@ public class SpineSetupSensor   implements SpineObject{
 	
 	
 	/**
+	 * Returns a string representation of this SpineSetupSensor object.
 	 * 
-	 * Returns a string representation of the SpineSetupSensor object.
-	 * 
+	 * @return the String representation of this SpineSetupSensor object
 	 */
 	public String toString() {
 		String s = "Sensor Setup {";

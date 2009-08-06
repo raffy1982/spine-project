@@ -46,6 +46,8 @@ public class Functionality {
 	 * Constructor of a Functionality object
 	 * @param functionType the function type of the functionality
 	 * @param functionalityCode the code of this functionality
+	 * 
+	 * @see spine.SPINEFunctionConstants
 	 */
 	protected Functionality(byte functionType, byte functionalityCode) {
 		this.functionType = functionType;

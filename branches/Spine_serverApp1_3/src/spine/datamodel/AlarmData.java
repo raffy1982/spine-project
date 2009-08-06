@@ -49,14 +49,6 @@ public class AlarmData extends Data {
 	
 
 	/**
-	 * Getter method of the node id
-	 * @return the node id
-	 */
-	public int getNodeID() {
-		return nodeID;
-	}
-	
-	/**
 	 * Getter method of the function code
 	 * @return the function code
 	 */
@@ -110,7 +102,7 @@ public class AlarmData extends Data {
 	 * 
 	 */
 	public String toString() {
-		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.ALARM_LABEL  + 
+		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.ALARM_LABEL  + 
 				" on " + SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE,this.dataType) + " on sensor " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
 				" VALUE " + this.currentValue ;
 	}

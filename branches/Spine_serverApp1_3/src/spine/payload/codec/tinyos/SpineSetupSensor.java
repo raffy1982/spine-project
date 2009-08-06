@@ -37,6 +37,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 
 import spine.datamodel.functions.Exception.*;
@@ -45,10 +46,9 @@ public class SpineSetupSensor extends SpineCodec {
 	
 	private final static int PARAM_LENGTH = 3;
 
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-		return super.decode(nodeID, payload);
-	};
-    
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};  
 	
 	public byte[] encode(SpineObject payload) {
 		
@@ -60,22 +60,6 @@ public class SpineSetupSensor extends SpineCodec {
 		data[1] = (byte)((workPayLoad.getSamplingTime() & 0x0000FFFF)>>8);
 		data[2] = (byte)(workPayLoad.getSamplingTime() & 0x000000FF);
 		
-		printPayload(data);
 		return data;
-	}
-	
-
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
-	
+	}	
 }

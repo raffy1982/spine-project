@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.Exception.*;
 
 public abstract class SpineCodec {
@@ -45,20 +46,18 @@ public abstract class SpineCodec {
 	 * @param payload the platform independent data packet payload
 	 * @return the actual SPINE Ota message 
 	 */
-	public byte[] encode (SpineObject payload)throws MethodNotSupportedException{
-		throw new MethodNotSupportedException("encode");
-	};
+	public abstract byte[] encode (SpineObject payload)throws MethodNotSupportedException;
 
 	/**
 	 * Decompress data packet payload into a platform independent packet payload
 	 * 
+	 * @param node the Node that issued this data packet
 	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
+	 * 
 	 * @return a byte array representing the platform independent data packet payload.
 	 */
-	// Alessia 26 Gennaio ... aggiunti nodeID
-	public SpineObject decode(int nodeID,byte[] payload)throws MethodNotSupportedException{
-		throw new MethodNotSupportedException("decode");
-	};
-	}
+	public abstract SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException;
+	
+}
 	
 

@@ -54,10 +54,10 @@ import spine.datamodel.*;
 public class FeatureSpineData extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 	
-	public SpineObject decode(int nodeID, byte[] payload) {
+	public SpineObject decode(Node node, byte[] payload) {
 		
 		// dataTmp differisce da payload (Emule) perche` allocata 4 byte per ogni canale anche se non presenti nella Bitmask
 		
@@ -107,8 +107,8 @@ public class FeatureSpineData extends SpineCodec {
 				
 		try {
 			
-			// set data.nodeID, data.functionCode e data.timestamp
-			data.baseInit(nodeID, payload);
+			// set data.node, data.functionCode e data.timestamp
+			data.baseInit(node, payload);
 			
 			Vector feats = new Vector();
 
@@ -124,7 +124,7 @@ public class FeatureSpineData extends SpineCodec {
 				currCh3Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 10);
 				currCh4Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 14);
 							
-				feats.addElement(new Feature(nodeID, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+				feats.addElement(new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
 			}
 			
 			data.setFeatures((Feature[]) feats.toArray(new Feature[0]));

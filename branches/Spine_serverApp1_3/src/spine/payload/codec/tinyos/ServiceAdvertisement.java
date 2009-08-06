@@ -40,7 +40,6 @@ package spine.payload.codec.tinyos;
 import java.util.Vector;
 
 import spine.SPINEFunctionConstants;
-import spine.datamodel.Address;
 import spine.datamodel.Node;
 import spine.datamodel.Sensor;
 import spine.datamodel.functions.*;
@@ -56,7 +55,7 @@ public class ServiceAdvertisement extends SpineCodec {
 	//private Vector functionsList = new Vector(); // <values:Function>
 	
 	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 
 	/**
@@ -66,7 +65,7 @@ public class ServiceAdvertisement extends SpineCodec {
 	 * @return Node object.
 	 */
 
-	public SpineObject decode(int nodeID, byte[] payload){	
+	public SpineObject decode(Node node, byte[] payload){	
 		
 		Vector sensorsList = new Vector(); // <values:Sensor>	
 		Vector functionsList = new Vector(); // <values:Function>
@@ -123,7 +122,6 @@ public class ServiceAdvertisement extends SpineCodec {
 			  catch (BadFunctionSpecException e) { System.out.println(e); }
 		}
 		
-		Node node = new Node(new Address(""+nodeID));
 		node.setFunctionsList(functionsList);
         node.setSensorsList(sensorsList);
 		

@@ -41,42 +41,18 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-
 public class StepCounterSpineFunctionReq extends SpineFunctionReq {
-
-	private int avgAcceleration = 0;
-	
-	private int stepThreshold = 0;
-	
-
-	public int getAvgAcceleration() {
-		return avgAcceleration;
-	}
-
-
-	public void setAvgAcceleration(int avgAcceleration) {
-		this.avgAcceleration = avgAcceleration;
-	}
-
-
-	public int getStepThreshold() {
-		return this.stepThreshold;
-	}
-
-
-	public void setStepThreshold(int stepThreshold) {
-		this.stepThreshold = stepThreshold;
-	}
-
 
 	/**
 	 * 
-	 * Returns a string representation of the AlarmSpineFunctionReq object.
+	 * Returns a string representation of the StepCounterSpineSetupFunction object.
 	 * 
 	 */
 	public String toString() {
-		return "Steps Counter Req; params: AVG_ACCEL=" + this.avgAcceleration + 
-				", STEP_THRESHOLD=" + this.stepThreshold;
+		String s = "Steps-Counter Function Req {";		
+		s += (this.isActivationRequest)? "activate" : "deactivate";		
+		s += "}";		
+		return s;
 	}
 	
 }

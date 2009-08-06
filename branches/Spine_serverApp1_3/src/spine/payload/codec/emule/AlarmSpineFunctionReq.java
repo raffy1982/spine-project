@@ -45,16 +45,16 @@ package spine.payload.codec.emule;
 import spine.SPINEFunctionConstants;
 //import spine.SPINESensorConstants;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
 
 public class AlarmSpineFunctionReq extends SpineCodec {
 
-		public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-			return super.decode(nodeID, payload);
-		};
-	    
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};  
 
 		public byte[] encode(SpineObject payload) {
 			

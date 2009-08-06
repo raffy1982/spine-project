@@ -41,6 +41,13 @@ public class BadFunctionSpecException extends Exception {
 
 	private static final long serialVersionUID = 0;
 
+	/**
+	 * Construction of a BadFunctionSpecException object 
+	 * 
+	 * @param functionCode the function issuing the exception
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 */
 	public BadFunctionSpecException(byte functionCode) {
 		super("Function " + SPINEFunctionConstants.functionCodeToString(functionCode) + 
 				": spec cannot be decoded!");

@@ -52,10 +52,10 @@ import spine.datamodel.*;
 public class OneShotSpineData extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 	
-	public SpineObject decode(int nodeID, byte[] payload) {
+	public SpineObject decode(Node node, byte[] payload) {
 		byte[] dataTmp = new byte[579]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
@@ -90,15 +90,15 @@ public class OneShotSpineData extends SpineCodec {
 		
 		try {
 			
-			// set data.nodeID, data.functionCode e data.timestamp
-			data.baseInit(nodeID, payload);
+			// set data.node, data.functionCode e data.timestamp
+			data.baseInit(node, payload);
 		
 			int currCh1Value = Data.convertTwoBytesToInt(dataTmp, 3);
 			int currCh2Value = Data.convertTwoBytesToInt(dataTmp, 5);
 			int currCh3Value = Data.convertTwoBytesToInt(dataTmp, 7);
 			int currCh4Value = Data.convertTwoBytesToInt(dataTmp, 9);
 					
-			data.setOneShot(new Feature(nodeID, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
+			data.setOneShot(new Feature(node, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

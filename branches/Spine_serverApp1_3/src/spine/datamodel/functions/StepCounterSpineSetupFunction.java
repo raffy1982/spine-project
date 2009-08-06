@@ -35,13 +35,40 @@ package spine.datamodel.functions;
 
 public class StepCounterSpineSetupFunction implements SpineSetupFunction {
 
+	private int avgAcceleration = 0;
+	
+	private int stepThreshold = 0;
+	
+
+	public int getAvgAcceleration() {
+		return avgAcceleration;
+	}
+
+
+	public void setAvgAcceleration(int avgAcceleration) {
+		this.avgAcceleration = avgAcceleration;
+	}
+
+
+	public int getStepThreshold() {
+		return this.stepThreshold;
+	}
+
+
+	public void setStepThreshold(int stepThreshold) {
+		this.stepThreshold = stepThreshold;
+	}
+
+
 	/**
 	 * 
-	 * Returns a string representation of the StepCounterSpineSetupFunction object.
+	 * Returns a string representation of the AlarmSpineFunctionReq object.
 	 * 
 	 */
 	public String toString() {
-		String s = "Steps Counter Function Setup";
+		String s = "Steps-Counter Setup Function {";		
+		s += "AVG_ACCEL = " + this.avgAcceleration + ", ";
+		s += "STEP_THRESHOLD = " + this.stepThreshold + "}";		
 		return s;
 	}
 	

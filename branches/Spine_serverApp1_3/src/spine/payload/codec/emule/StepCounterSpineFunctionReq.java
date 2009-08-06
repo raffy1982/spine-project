@@ -44,37 +44,32 @@ package spine.payload.codec.emule;
 
 import spine.SPINEFunctionConstants;
 
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.datamodel.functions.Exception.*;
 
 
 public class StepCounterSpineFunctionReq extends SpineCodec {
 
-	public SpineObject decode(int nodeID, byte[] payload)throws MethodNotSupportedException{
-		return super.decode(nodeID, payload);
-	};
-    
+	private final static int PARAM_LENGTH = 0; 
 
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};  
+	
 	public byte[] encode(SpineObject payload) {
 		
-		try {
-			
-			spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
-			
-			byte[] data = new byte[7];
-			byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;
-			data[0] = SPINEFunctionConstants.STEP_COUNTER; 	
-			data[1] = activationBinaryFlag;
-			data[2] = (byte)4;
-			data[3] = (byte)((workPayLoad.getAvgAcceleration() & 0x0000FF00)>>8);
-			data[4] = (byte)(workPayLoad.getAvgAcceleration() & 0x000000FF);
-			data[5] = (byte)((workPayLoad.getStepThreshold() & 0x0000FF00)>>8);
-			data[6] = (byte)(workPayLoad.getStepThreshold() & 0x000000FF);
+		spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
+		
+		byte[] data = new byte[3 + PARAM_LENGTH];
+	
+		data[0] = SPINEFunctionConstants.STEP_COUNTER;
+		
+		byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;		
+		data[1] = activationBinaryFlag;
+		
+		data[2] = PARAM_LENGTH;
 
-			return data;
-			
-		} catch (ClassCastException e) {
-			return null;
-		}		
-	}	
+		return data;	
+	}
 }

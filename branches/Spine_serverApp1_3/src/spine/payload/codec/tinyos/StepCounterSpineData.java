@@ -44,15 +44,15 @@ import spine.datamodel.*;
 public class StepCounterSpineData extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 	
-	public SpineObject decode(int nodeID, byte[] payload) {
+	public SpineObject decode(Node node, byte[] payload) {
 				
 		StepCounterData data =  new StepCounterData();
 		
 		// set data.nodeID, data.functionCode e data.timestamp
-		data.baseInit(nodeID, payload);
+		data.baseInit(node, payload);
 		data.setStepsCount(byteArrayToInt(payload, 2));
 		
 		return data;

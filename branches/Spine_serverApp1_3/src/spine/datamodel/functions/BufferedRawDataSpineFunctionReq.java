@@ -40,15 +40,14 @@ import spine.SPINESensorConstants;
 public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 
 	private byte sensor = -1;
-	private byte channelsBitmask = 0;
-	private short bufferSize = 0;
-	private short shiftSize = 0;
 
 	
 	/**
 	 * Sets the sensor involved on the current BufferedRawData function request
 	 * 
 	 * @param sensor the sensor code
+	 * 
+	 * @see spine.SPINESensorConstants
 	 */
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;
@@ -62,70 +61,14 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 	}
 	
 	/**
-	 * Sets the sensor involved on the current BufferedRawData function request
-	 * 
-	 * @param channelsBitmask the channels bitmask describing the sensor channels to return
-	 */
-	public void setChannelsBitmask(byte channelsBitmask) {
-		this.channelsBitmask = channelsBitmask;
-	}
-
-
-	public byte getChannelsBitmask() {
-		return channelsBitmask;
-	}
-	
-	
-	/**
-	 * Sets the size of the raw-data buffer
-	 * 
-	 * @param bufferSize the size of the buffer to request, expressed in number of samples
-	 */
-	public void setBufferSize(short bufferSize) {
-		this.bufferSize = bufferSize;
-	}
-	
-
-	public short getBufferSize() {
-		short bufferSize;
-		bufferSize = this.bufferSize;
-		return bufferSize;
-	}
-	
-	
-	/**
-	 * Sets the shift size (overlap amount in number of samples). 
-	 * Set it to 0 if you don't need overlap between raw-data transmissions.
-	 * An overlap amount greater than 0 could be useful at application level to be sure
-	 * there isn't missing samples.
-	 * 
-	 * @param shiftSize the overlap amount (ahead shift) over the previous window
-	 */
-	public void setShiftSize(short shiftSize) {
-		this.shiftSize = shiftSize;
-	}
-	
-
-	public short getShiftSize() {
-		short shiftSize;
-		shiftSize = this.shiftSize;
-		return shiftSize;
-	}
-	
-	
-	/**
 	 * 
 	 * Returns a string representation of the BufferedRawDataSpineFunctionReq object.
 	 * 
 	 */
 	public String toString() {
-		String s = "Buffered Raw-Data Function Req {";
-		
-		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
-		s += "chs bitmask = " + SPINESensorConstants.channelBitmaskToString(channelsBitmask) + ", ";
-		s += "buffer size = " + bufferSize + ", ";
-		s += "shift size = " + shiftSize + "}";
-		
+		String s = "Buffered Raw-Data Function Req {";		
+		s += (this.isActivationRequest)? "activate " : "deactivate ";		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + "}";		
 		return s;
 	}
 	

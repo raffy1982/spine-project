@@ -130,24 +130,24 @@ public class SPINETest implements SPINEListener {
 					// (for Feature they are the desired feature extractors); we can also ... 
 					FeatureSpineFunctionReq sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(sensor);
-					sfr.addFeature(SPINEFunctionConstants.MODE, 
-															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MEDIAN, 
-						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MAX, 
-							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MIN, 
-							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
+					sfr.add(new Feature(SPINEFunctionConstants.MODE, 
+															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MEDIAN, 
+						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MAX, 
+							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MIN, 
+							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
 					manager.activate(curr, sfr);
 
 					// ... split a more complex activation in multiple activations 
 					// (if the specific function implementation in the node side allows that); of course we always can ...
 					sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(sensor);
-					sfr.addFeature(SPINEFunctionConstants.MEAN, 
-															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.AMPLITUDE, 
-						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
+					sfr.add(new Feature(SPINEFunctionConstants.MEAN, 
+															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.AMPLITUDE, 
+						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
 					manager.activate(curr, sfr);	
 					
 					// SetUp Alarm Engine
@@ -208,14 +208,14 @@ public class SPINETest implements SPINEListener {
 
 					FeatureSpineFunctionReq sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(sensor);
-					sfr.addFeature(SPINEFunctionConstants.MODE, 
-															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MEDIAN, 
-						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MAX, 
-							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
-					sfr.addFeature(SPINEFunctionConstants.MIN, 
-							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask());
+					sfr.add(new Feature(SPINEFunctionConstants.MODE, 
+															  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MEDIAN, 
+						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MAX, 
+							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
+					sfr.add(new Feature(SPINEFunctionConstants.MIN, 
+							  								  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
 					manager.activate(curr, sfr);	
 					
 					// SetUp Alarm Engine
@@ -253,7 +253,7 @@ public class SPINETest implements SPINEListener {
 	}
 
 	private Feature[] features;
-	public void dataReceived(int nodeID, Data data) {
+	public void received(Data data) {
 		// the specific application logic behaves w.r.t. the type of data received 
 		
 		System.out.println(data);
@@ -270,16 +270,16 @@ public class SPINETest implements SPINEListener {
 					// it's possible to deactivate functions computation at runtime (even when the radio on the node works in low-power mode)
 					FeatureSpineFunctionReq sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(features[0].getSensorCode());
-					sfr.removeFeature(features[0].getFeatureCode(), SPINESensorConstants.ALL);
-					manager.deactivateFunction(nodeID, sfr);
+					sfr.remove(new Feature(features[0].getFeatureCode(), SPINESensorConstants.ALL));
+					manager.deactivate(data.getNode(), sfr);
 				}	
 				
 				if(counter == 10) {
 					// and, of course, we can activate new functions at runtime
 					FeatureSpineFunctionReq sfr = new FeatureSpineFunctionReq();
 					sfr.setSensor(features[0].getSensorCode());
-					sfr.addFeature(SPINEFunctionConstants.RANGE, SPINESensorConstants.CH1_ONLY);
-					manager.activateFunction(nodeID, sfr);
+					sfr.add(new Feature(SPINEFunctionConstants.RANGE, SPINESensorConstants.CH1_ONLY));
+					manager.activate(data.getNode(), sfr);
 				}
 				
 				if(counter == 20) {
@@ -308,16 +308,20 @@ public class SPINETest implements SPINEListener {
 					sfr2.setDataType(SPINEFunctionConstants.MAX);
 					sfr2.setValueType((SPINESensorConstants.CH1_ONLY));
 					
-					manager.deactivateFunction(nodeID, sfr2);
+					manager.deactivate(data.getNode(), sfr2);
 				}
 				break;
 		}
 		
 	}	
 	
-	public void serviceMessageReceived(int nodeID, ServiceMessage msg) {
+	public void received(ServiceMessage msg) {
 		// for this simple application, I just like to print the service message received
 		System.out.println(msg);
 	}
+	
+	public void serviceMessageReceived(int nodeID, ServiceMessage msg) {}
+	
+	public void dataReceived(int nodeID, Data data) {}
 	
 }

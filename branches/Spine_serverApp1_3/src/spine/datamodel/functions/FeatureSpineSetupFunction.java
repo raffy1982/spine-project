@@ -53,6 +53,8 @@ public class FeatureSpineSetupFunction implements SpineSetupFunction {
 	 * to activate the required features on the involved sensors.
 	 * 
 	 * @param sensor the sensor code
+	 * 
+	 * @see spine.SPINESensorConstants
 	 */
 	public void setSensor(byte sensor) {
 		this.sensor = sensor;

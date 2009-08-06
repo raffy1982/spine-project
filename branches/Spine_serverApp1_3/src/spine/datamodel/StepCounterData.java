@@ -54,7 +54,7 @@ public class StepCounterData extends Data {
 	 * 
 	 */
 	public String toString() {
-		return "From node: " + this.nodeID + " - " + SPINEFunctionConstants.STEP_COUNTER_LABEL + 
+		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.STEP_COUNTER_LABEL + 
 				" update: "	+ this.stepsCount;
 	}
 

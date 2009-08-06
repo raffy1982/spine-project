@@ -45,14 +45,14 @@ import spine.datamodel.*;
 public class BufferedRawDataSpineData extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
-		return super.encode(payload);
+		throw new MethodNotSupportedException("encode");
 	};
 	
-	public SpineObject decode(int nodeID, byte[] payload) {
+	public SpineObject decode(Node node, byte[] payload) {
 				
 		BufferedRawData data =  new BufferedRawData();
 		
-		data.baseInit(nodeID, payload);
+		data.baseInit(node, payload);
 		//data.setFunctionCode(SPINEFunctionConstants.BUFFERED_RAW_DATA);
 		
 		short pldIndex = 2;

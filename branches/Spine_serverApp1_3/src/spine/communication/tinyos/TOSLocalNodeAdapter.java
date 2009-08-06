@@ -47,6 +47,8 @@ import java.util.Vector;
 import spine.Properties;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SPINEHeader;
+import spine.datamodel.Address;
+import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
 // Alessia 09/02
 import spine.SPINEServiceMessageConstants;
@@ -125,7 +127,7 @@ printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
                     if (type== SPINEServiceMessageConstants.ACK) {
                           // if an ACK is received for a certain msg, I can remove that message from the messages-to-send queue
                           try{
-                        	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(sourceNodeID,msg.getPayload());
+                        	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(new  Node(new Address(""+sourceNodeID)), msg.getPayload());
                               byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
                               removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);}
                           catch(MethodNotSupportedException ex) {
