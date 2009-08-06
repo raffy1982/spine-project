@@ -49,7 +49,7 @@ module StepCounterEngineP {
 implementation {
 
 	bool registered = FALSE;
-	bool active = FALSE;
+	bool setup, active = FALSE;
         bool start = FALSE;
         
         int32_t pre = 0, curr = 0;
@@ -74,13 +74,9 @@ implementation {
 	
 	
 	command bool Function.setUpFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-		return TRUE;
-	}
-	
-	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-                
+		
                 if (functionParamsSize != 4)
-			return FALSE;	// fail on invalid number of parameters
+		   return FALSE;	// fail on invalid number of parameters
 
                 AVG_ACCEL = functionParams[0];
                 AVG_ACCEL = (AVG_ACCEL)<<8 | functionParams[1];
@@ -88,8 +84,15 @@ implementation {
                 STEP_THRESHOLD = functionParams[2];
                 STEP_THRESHOLD = (STEP_THRESHOLD)<<8 | functionParams[3];
 
-                active = TRUE;
+                setup = TRUE;
 
+                return TRUE;
+	}
+
+	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
+                
+                active = setup;
+                
                 return TRUE;
 	}
 	
@@ -97,7 +100,7 @@ implementation {
 		active = FALSE;
                 return TRUE;
 	}
-	
+
 	command uint8_t* Function.getSubFunctionList(uint8_t* functionCount) {
 		*functionCount = 0;
 		return NULL;
@@ -114,6 +117,7 @@ implementation {
 	
 	command void Function.reset() {
                 start = FALSE;
+                setup = FALSE;
                 active = FALSE;
                 pre = 0; 
                 curr = 0;
@@ -130,7 +134,7 @@ implementation {
                     if (sensorCode == ACC_SENSOR) {
 
                         curr = call SensorBoardController.getValue(ACC_SENSOR, CH_3);
-                        
+
                         if (waitCounter == 0) {
 
                             if (pre > 0x8000) pre -= 0x10000;

@@ -53,13 +53,16 @@ implementation {
 	buffered_rawdata_params_t paramsList[SENSORS_REGISTRY_SIZE];  // <sensorCode, chsBitmask, bufferSize, shiftSize, samplesCount>
 	uint8_t paramsIndex = 0;
 
+        uint8_t activeSensorsList[SENSORS_REGISTRY_SIZE];
+        uint8_t activeSensorsIndex = 0;
+
 	uint16_t msg[128];
 	uint8_t msgByte[256];
 
 	bool registered = FALSE;
         bool computingStarted = FALSE;
-	
-	event void Boot.booted() {
+
+        event void Boot.booted() {
 		if (!registered) {
 			call FunctionManager.registerFunction(BUFFERED_RAWDATA);
 			registered = TRUE;
@@ -68,17 +71,13 @@ implementation {
 	
 	
 	command bool Function.setUpFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-		return TRUE;
-	}
-
-	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-                uint8_t i;
+		uint8_t i;
 
 		uint8_t sensCode;
 		uint8_t chsBitmask;
 		uint8_t bufferSize;
 		uint8_t shiftSize;
-		
+
 		if (functionParamsSize != 4)
 		   return FALSE;
 
@@ -105,43 +104,37 @@ implementation {
 
                 return TRUE;
 	}
-	
+
+	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
+                if (functionParamsSize != 1)
+		   return FALSE;
+
+                activeSensorsList[activeSensorsIndex++] = functionParams[0];
+
+                return TRUE;
+	}
+
 	command bool Function.disableFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
 		uint8_t j, k;
 
 		uint8_t sensorCode;
-		uint8_t chsBitmask;
-		
-		if (functionParamsSize < 4)
+
+		if (functionParamsSize != 1)
 		   return FALSE;
 
 		sensorCode = functionParams[0];
-		chsBitmask = functionParams[1];
 
-		for(j = 0; j<paramsIndex; j++) {
-			if (paramsList[j].sensorCode == sensorCode) {
-				paramsList[j].chsBitmask &= chsBitmask;
-
-				if (paramsList[j].chsBitmask == 0x0) {
-					for ( k = j; k<paramsIndex; k++) {
-						paramsList[k].sensorCode = paramsList[k+1].sensorCode;
-						paramsList[k].chsBitmask = paramsList[k+1].chsBitmask;
-						paramsList[k].bufferSize = paramsList[k+1].bufferSize;
-						paramsList[k].shiftSize = paramsList[k+1].shiftSize;
-						paramsList[k].samplesCount = paramsList[k+1].samplesCount;
-					}
-					paramsList[paramsIndex].sensorCode = 0;
-					paramsList[paramsIndex].chsBitmask = 0;
-					paramsList[paramsIndex].bufferSize = 0;
-					paramsList[paramsIndex].shiftSize = 0;
-					paramsList[paramsIndex].samplesCount = 0;
-					paramsIndex--;
-				}
-				break;
-			}
+		for(j = 0; j<activeSensorsIndex; j++) {
+		   if (activeSensorsList[j] == sensorCode) {
+  		      for ( k = j; k<activeSensorsIndex-1; k++) {
+		         activeSensorsList[k] = activeSensorsList[k+1];
+		      }
+		      activeSensorsList[activeSensorsIndex--] = 0;
+		      break;
+		   }
 		}
-		
-		if (paramsIndex == 0xFF)  // CHECK
+
+		if (activeSensorsIndex == 0xFF)  // CHECK
 		   computingStarted = FALSE;
 
 		return TRUE;
@@ -161,6 +154,16 @@ implementation {
 	}
 	
 	event void BufferPool.newElem(uint8_t bufferID, uint16_t elem) {}
+	
+	bool isActive(uint8_t sensCode) {
+           uint8_t i;
+           
+           for (i = 0; i<activeSensorsIndex; i++)
+              if (activeSensorsList[i] == sensCode)
+                 return TRUE;
+
+           return FALSE;
+        }
 
 	event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {
                 
@@ -171,7 +174,7 @@ implementation {
              
              if (computingStarted) {
                 for (i = 0; i<paramsIndex; i++) {
-                   if (paramsList[i].sensorCode == sensorCode) {
+                   if (paramsList[i].sensorCode == sensorCode && isActive(sensorCode)) {
                       paramsList[i].samplesCount++;
                       if (paramsList[i].samplesCount == paramsList[i].shiftSize) {
                          tmp = (sensorCode<<4 | paramsList[i].chsBitmask);
@@ -198,6 +201,9 @@ implementation {
 	command void Function.reset() {
            memset(paramsList, 0x00, sizeof paramsList);
            paramsIndex = 0;
+           
+           memset(activeSensorsList, 0x00, sizeof activeSensorsList);
+           activeSensorsIndex = 0;
 
            memset(msg, 0x00, sizeof msg);
            memset(msgByte, 0x00, sizeof msgByte);
