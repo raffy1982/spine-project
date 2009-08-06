@@ -306,6 +306,8 @@ public class Feature implements Comparable{
 
 	/**
 	 * @param nodeID the nodeID to set
+	 * 
+	 * @deprecated
 	 */
 	public void setNodeID(int nodeID) {
 		this.nodeID = nodeID;
