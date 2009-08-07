@@ -622,14 +622,19 @@ public class SPINEManager {
 				htInstance.put (messageClassName, c);
 			} 
 			msg = (com.tilab.gal.Message)c.newInstance();
-			
 			// construction of the message 
 			msg.setDestinationURL(URL_PREFIX + destination.getAsInt());
-			msg.setMessageId(pktType); // the clusterId is treated as the 'packet type' field
-			msg.setApplicationId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
+			msg.setClusterId(pktType); // the clusterId is treated as the 'packet type' field
+			msg.setProfileId(MY_GROUP_ID); // the profileId is treated as the 'group id' field
 			if (payload != null) {
 				try {
-					msg.setPayload(spineCodec.encode(payload));
+					
+					byte[] payloadArray = spineCodec.encode(payload);
+					short[] payloadShort = new short[payloadArray.length];
+        			for (int i = 0; i<payloadShort.length; i++)
+        				payloadShort[i] = payloadArray[i];					
+					msg.setPayload(payloadShort);
+					
 				}catch (MethodNotSupportedException e){
 					System.out.println(e);
 				}	      
@@ -755,17 +760,18 @@ public class SPINEManager {
 		 * This method is called to notify the SPINEManager of a new SPINE message reception. 
 		 */
 		public void messageReceived(com.tilab.gal.Message msg) {
-
 			Address nodeID = new Address(msg.getSourceURL().substring(URL_PREFIX.length()));
 			
 			SpineObject o = null;
 			
-			short pktType = msg.getMessageId(); 
-			byte[] payload;
+			short pktType = msg.getClusterId();
+			short[] payloadShort = msg.getPayload();
+			byte[] payload = new byte[payloadShort.length];
+			for (int i = 0; i<payloadShort.length; i++)
+				payload[i] = (byte)payloadShort[i];
 	
 			switch(pktType) {
 				case SPINEPacketsConstants.SERVICE_ADV: {
-					payload = msg.getPayload();					
 					try {
 						// dynamic class loading of the proper SpineCodec implementation						
 						spineCodec = (SpineCodec)htInstance.get("ServiceAdvertisement");
@@ -798,7 +804,6 @@ public class SPINEManager {
 					break;
 				}
 				case SPINEPacketsConstants.DATA: {					
-					payload = msg.getPayload();					
 					byte functionCode;					
 					//  Setting functionCode
 					try {
@@ -837,7 +842,6 @@ public class SPINEManager {
 				}
 				case SPINEPacketsConstants.SVC_MSG: {
 					
-					payload = msg.getPayload();
 					byte serviceMessageType;
 					
 					//  Setting functionCode

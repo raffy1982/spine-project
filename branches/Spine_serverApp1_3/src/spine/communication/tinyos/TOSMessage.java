@@ -36,87 +36,15 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
-public class TOSMessage implements com.tilab.gal.Message {
-	
-	private short pktType;
-	
-	private String destID;
-	
-	private byte[] payload = new byte[0];
-	
-	private short groupID;
-	
-	private String sourceID;
-	
-	private boolean isBroadcast;
-	
-	//private int maxHopsNumber;
-	
-	//private byte txSettingsBitMask;
-	
-	
-	public short getMessageId() {
-		return pktType;
-	}
-
-	public String getDestinationURL() {
-		return destID;
-	}
-
-	public byte getLinkQuality() {
-		return 127;
-	}
-
-	public byte[] getPayload() {
-		return payload;
-	}
-
-	public short getApplicationId() {
-		return groupID;
-	}
-
-	public int getSecurityStatus() {
-		return com.tilab.gal.Message.SECURITYSTATUS_UNSECURE;
-	}
-
-	public String getSourceURL() {
-		return sourceID;
-	}
-
-	public boolean isBroadcast() {
-		return isBroadcast;
-	}
-	
-
-	public void setBroadcastDestination() {
-		isBroadcast = true;		
-	}
-
-	public void setMessageId(short messageId) {
-		this.pktType = messageId;		
-	}
-
-	public void setDestinationURL(String serviceConnectionURL) {
-		this.destID = serviceConnectionURL;		
-	}
-
-	public void setPayload(byte[] payload) {
-		this.payload = payload; 
-	}
-
-	public void setApplicationId(short applicationId) {
-		this.groupID = applicationId;
-	}
-	
-	public void setMaxHopsNumber(int maxHopsNumber) {
-		//this.maxHopsNumber = maxHopsNumber;		
-	}
-
-	public void setTxSettings(byte txSettings) {
-		//this.txSettingsBitMask = txSettings;
-	}
+public class TOSMessage extends com.tilab.gal.Message {
 	
 	protected void setSourceURL(String sourceID) {
-		this.sourceID = sourceID;
+		this.sourceURL = sourceID;
+	}
+	
+	public void setSeqNo(byte seqNo) {
+		this.transSeqNumber =  seqNo;
+		if (this.transSeqNumber < 0) 
+			this.transSeqNumber += 256;
 	}
 }

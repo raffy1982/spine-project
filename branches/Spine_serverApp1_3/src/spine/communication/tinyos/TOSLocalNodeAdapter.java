@@ -89,7 +89,6 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 	 * messages as soon as they are fully reassembled.  
 	 */
 	public void messageReceived(int srcID, net.tinyos.message.Message tosmsg) {
-System.out.print("messageReceived -> ");		
 		if (tosmsg instanceof SpineTOSMessage) {			
 			try {
 				SPINEHeader h = ((SpineTOSMessage)tosmsg).getHeader();
@@ -104,30 +103,22 @@ System.out.print("messageReceived -> ");
 					System.out.println("[ERRONEOUS, " + h + " ]... discarded!");	
 					return;
 				}
-
-printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
-
-				// Alessia 09/02
-				// ACKs handling
-				/*
-				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
-					com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
-					ServiceMessage svcMsg = new ServiceMessage(sourceNodeID, msg.getPayload());
-					if (svcMsg.getMessageType() == ServiceMessage.ACK) {
-						// if an ACK is received for a certain msg, I can remove that message from the messages-to-send queue
-						byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
-						removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);
-					}
-				}
-				*/
+				
+				System.out.println("Msg Received -> " + tosmsg);
 				
 				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
                     com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
-                    int type=new spine.payload.codec.tinyos.CodecInformation().getServiceMessageType(msg.getPayload());
+                    
+                    short[] payloadShort = msg.getPayload();
+        			byte[] payload = new byte[payloadShort.length];
+        			for (int i = 0; i<payloadShort.length; i++)
+        				payload[i] = (byte)payloadShort[i];
+                    
+                    int type=new spine.payload.codec.tinyos.CodecInformation().getServiceMessageType(payload);
                     if (type== SPINEServiceMessageConstants.ACK) {
                           // if an ACK is received for a certain msg, I can remove that message from the messages-to-send queue
                           try{
-                        	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(new  Node(new Address(""+sourceNodeID)), msg.getPayload());
+                        	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(new  Node(new Address(""+sourceNodeID)), payload);
                               byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
                               removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);}
                           catch(MethodNotSupportedException ex) {
@@ -344,20 +335,6 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 			this.transmitted = false;
 			this.retransmissionCounter = DEFAULT_RECEIVED_PKTS_BEFORE_RETRANSMISSION;
 		}
-	}
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		System.out.print("in.lowLevel: "); 
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
 	}
 
 }

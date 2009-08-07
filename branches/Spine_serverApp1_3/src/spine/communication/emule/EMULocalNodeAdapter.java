@@ -48,6 +48,7 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
+import spine.communication.tinyos.IllegalSpineHeaderSizeException;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -84,16 +85,16 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	public void messageReceived(int srcID, Message msg) {
 
 		String sourceURL = "";
-		System.out.println("Message received from nodeCoordinator (SocketThrdServer) msg= " + msg);
+		System.out.println("Msg Received from nodeCoordinator (SocketThrdServer) -> " + msg);
 
 		//
-		// Se il campo ApplicationId e` diverso da 0 si tratta di un msg che
+		// Se il campo ProfileId e` diverso da 0 si tratta di un msg che
 		// fornisce le informazioni sul nodo ==> memorizzato in una
 		// HashTable gestita da EMULocalNodeAdapter (non pass - thru to
 		// connections)
 		// 
 
-		if (msg.getApplicationId() != 0) {
+		if (msg.getProfileId() != 0) {
 			// nodeId from sourceURL
 			sourceURL = msg.getSourceURL();
 			//nodeId = Integer.parseInt(sourceURL.substring(sourceURL.lastIndexOf(":") + 1));
@@ -198,10 +199,6 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	// SocketThrdServer to Server Socket Node
 	protected synchronized void send(int destNodeID, SpineEMUMessage emumsg) {
 
-		System.out.println("EMULocalNodeAdapter nodeAdapter.send()");
-
-		EMUMessage msg = new EMUMessage();
-
 		try {
 			switch (emumsg.getHeader().getPktType()) {
 			case SPINEPacketsConstants.START:
@@ -265,21 +262,6 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 			e.printStackTrace();
 		}
 
-	}
-
-	private void printPayload(byte[] payload) { // DEBUG CODE
-		System.out.print("in.lowLevel: ");
-		if (payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else {
-			for (int i = 0; i < payload.length; i++) {
-				short b = payload[i];
-				if (b < 0)
-					b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");
 	}
 
 }

@@ -56,9 +56,9 @@ class ClientWorker implements Runnable {
 			//try {
 				try {
 					msg = (EMUMessage) ois.readObject();
-					// In msg type Node Information the ApplicationId contains
+					// In msg type Node Information the ProfileId contains
 					// Server Socket Node port number (otherwise 0)
-					sSPort = msg.getApplicationId();
+					sSPort = msg.getProfileId();
 					sourceURL=msg.getSourceURL();
 					//System.out.println("sourceURL --> " + sourceURL );
 					//destNodeID = Integer.parseInt(sourceURL.substring(sourceURL.lastIndexOf(":") + 1));

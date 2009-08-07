@@ -52,7 +52,9 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 	
 	protected static final int AM_HEADER_SIZE = 8;
 	
-	private byte[] payloadBuf = null;
+	protected SPINEHeader header = null;
+	
+	protected byte[] payloadBuf = null;
 	
 
 	protected SpineTOSMessage() {
@@ -65,8 +67,10 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	
     	this.amTypeSet(AM_TYPE); 
     	
-    	SPINEHeader header = new SPINEHeader(SPINEPacketsConstants.CURRENT_SPINE_VERSION, false, pktType, 
-    										 groupID, sourceID, destID, sequenceNumber, fragmentNr, totalFragments);    	
+    	this.header = new SPINEHeader(SPINEPacketsConstants.CURRENT_SPINE_VERSION, false, pktType, 
+    										 groupID, sourceID, destID, sequenceNumber, fragmentNr, totalFragments);   
+    	
+    	this.payloadBuf = payload;
     	
     	byte[] msgBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE + payload.length];
     	System.arraycopy(header.build(), 0, msgBuf, 0, SPINEHeader.SPINE_HEADER_SIZE);
@@ -142,16 +146,51 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		
 		SPINEHeader header = new SPINEHeader(headerBuf); 
 		
-		msg.setMessageId(header.getPktType());
-		msg.setApplicationId(header.getGroupID());
+		msg.setClusterId(header.getPktType());
+		msg.setProfileId(header.getGroupID());
 		msg.setSourceURL(TINYOS_URL_PREFIX + header.getSourceID()); 
 		msg.setDestinationURL(TINYOS_URL_PREFIX + header.getDestID());
-				
-		msg.setPayload(this.payloadBuf);
+		msg.setSeqNo(header.getSequenceNumber());
+		
+		short[] payloadBufShort = new short[this.payloadBuf.length];
+		for (int i = 0; i<this.payloadBuf.length; i++)
+			payloadBufShort[i] = payloadBuf[i]; 
+		
+		msg.setPayload(payloadBufShort);
 		
 		return msg;
 	}
     
+	public String toString() {
+		String s = null;
+		
+		try {
+			s = getHeader() + " - ";
+		
+			s += "Payload (hex) { "; 
+			if(payloadBuf != null && payloadBuf.length != 0) 
+				for (int i = 0; i<payloadBuf.length; i++) {
+					short b =  payloadBuf[i];
+					if (b<0) b += 256;
+					s += Integer.toHexString(b).toUpperCase() + " ";
+				}
+			else if(this.dataGet() != null && this.dataGet().length != 0) 
+				for (int i = SPINEHeader.SPINE_HEADER_SIZE; i<this.dataGet().length; i++) {
+					short b =  this.dataGet()[i];
+					if (b<0) b += 256;
+					s += Integer.toHexString(b).toUpperCase() + " ";
+				}
+			else 
+				s += "empty payload ";
+			
+			s += "}";
+			
+		} catch (IllegalSpineHeaderSizeException e) {
+			return e.getMessage();
+		}
+		
+		return s;
+	}
 
 }
 
@@ -298,11 +337,17 @@ class SPINEHeader {
 	}
 	
 	public String toString() {
-		String s = "Spine Header { ";
 		
-		s += "ver: 1." + vers + ", ext: " + ext + ", pktType: " + pktT + ", groupID: " + grpID + 
-			 ", sourceID: " + srcID + ", destID: " + dstID + ", seqNr: " + seqNr + 
-			 ", fragNr: " + fragNr + ", totFrags: " + totFrags + " }";
+		String grp = (grpID<0)? Integer.toHexString(grpID+256): Integer.toHexString(grpID);		
+		String dst = (dstID==-1)? "BROADCAST": (dstID==0)? "BASESTATION": ""+dstID;
+		
+		String s = "Spine Header {";
+		
+		s += "ver: 1." + vers + ", ext:" + ext + 
+			 ", pktType:" + SPINEPacketsConstants.packetTypeToString(pktT).toUpperCase() + 
+			 ", groupID:" + grp.toUpperCase() + ", srcID:" + srcID + ", dstID:" + dst + 
+			 ", seqNr:" + seqNr + ", fragNr:" + fragNr + ", totFrags:" + totFrags + "}";
+		
 		return s;
 	}
 	

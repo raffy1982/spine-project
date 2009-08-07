@@ -38,95 +38,20 @@ package spine.communication.emule;
 
 import java.io.Serializable;
 
-import spine.SPINEFunctionConstants;
-import spine.SPINESensorConstants;
-
-public class EMUMessage implements Serializable, com.tilab.gal.Message {
+public class EMUMessage extends com.tilab.gal.Message implements Serializable {
 	
-	private short pktType;
-	
-	private String destID;
-	
-	private byte[] payload = new byte[0];
-	
-	private short groupID;
-	
-	private String sourceID;
-	
-	private boolean isBroadcast;
-	
-	//private int maxHopsNumber;
-	
-	//private byte txSettingsBitMask;
-	
-	
-	public short getMessageId() {
-		return pktType;
-	}
-
-	public String getDestinationURL() {
-		return destID;
-	}
-
-	public byte getLinkQuality() {
-		return 127;
-	}
-
-	public byte[] getPayload() {
-		return payload;
-	}
-
-	public short getApplicationId() {
-		return groupID;
-	}
-
-	public int getSecurityStatus() {
-		return com.tilab.gal.Message.SECURITYSTATUS_UNSECURE;
-	}
-
-	public String getSourceURL() {
-		return sourceID;
-	}
-
-	public boolean isBroadcast() {
-		return isBroadcast;
+	protected void setSourceURL(String sourceID) {
+		this.sourceURL = sourceID;
 	}
 	
-
-	public void setBroadcastDestination() {
-		isBroadcast = true;		
-	}
-
-	public void setMessageId(short messageId) {
-		this.pktType = messageId;		
-	}
-
-	public void setDestinationURL(String serviceConnectionURL) {
-		this.destID = serviceConnectionURL;		
-	}
-
-	public void setPayload(byte[] payload) {
-		this.payload = payload; 
-	}
-
-	public void setApplicationId(short applicationId) {
-		this.groupID = applicationId;
+	public void setSeqNo(byte seqNo) {
+		this.transSeqNumber =  seqNo;
+		if (this.transSeqNumber < 0) 
+			this.transSeqNumber += 256;
 	}
 	
-	public void setMaxHopsNumber(int maxHopsNumber) {
-		//this.maxHopsNumber = maxHopsNumber;		
-	}
-
-	public void setTxSettings(byte txSettings) {
-		//this.txSettingsBitMask = txSettings;
-	}
-	
-	public void setSourceURL(String sourceID) {
-		this.sourceID = sourceID;
-	}
-	
-	public String toString() {
-		byte[] payload = this.getPayload();
+	/*public String toString() {
+		short[] payload = this.getPayload();
 		String valPayload= "";
 		if (payload == null || payload.length == 0){
 		    valPayload="empty payload";}
@@ -139,9 +64,7 @@ public class EMUMessage implements Serializable, com.tilab.gal.Message {
 			}
 		}
 		
-		return "From node: " + this.getSourceURL() + " - " + valPayload;
-		
-		
-	}
+		return "From node: " + this.getSourceURL() + " - " + valPayload;		
+	}*/
 
 }

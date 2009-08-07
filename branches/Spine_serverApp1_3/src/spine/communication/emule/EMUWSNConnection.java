@@ -87,15 +87,22 @@ public class EMUWSNConnection implements WSNConnection {
 		try {
 			// create a SPINE TinyOS dependent message from a high level Message object
 			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
-			byte[] compressedPayload = msg.getPayload();
-			SpineEMUMessage emumsg = new SpineEMUMessage((byte)msg.getMessageId(), (byte)msg.getApplicationId(), 
+
+			byte[] compressedPayload = new byte[0];
+			try {
+				short[] compressedPayloadShort = msg.getPayload();
+				compressedPayload = new byte[compressedPayloadShort.length];
+				for (int i = 0; i<compressedPayloadShort.length; i++)
+					compressedPayload[i] = (byte)compressedPayloadShort[i];
+			} catch (Exception e) {} 
+			
+			SpineEMUMessage emumsg = new SpineEMUMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
 														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
 														 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
 			
-printPayload(compressedPayload); // DEBUG CODE		
-			
 			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, emumsg);
+			System.out.println("Msg Sent -> " + emumsg);			
 			
 		} catch (NumberFormatException e) {
 			System.out.println(e);
@@ -107,20 +114,6 @@ printPayload(compressedPayload); // DEBUG CODE
 
 	public void setListener(WSNConnection.Listener l) {
 		this.listener = l;		
-	}
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		System.out.print("messageSent     -> out.lowLevel: ");
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println();
 	}
 
 }

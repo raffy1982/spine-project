@@ -88,8 +88,13 @@ public class SFWSNConnection implements WSNConnection {
 		try {
 			// create a SPINE TinyOS dependent message from a high level Message object
 			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
-			byte[] compressedPayload = msg.getPayload();
-			SpineTOSMessage tosmsg = new SpineTOSMessage((byte)msg.getMessageId(), (byte)msg.getApplicationId(), 
+			
+			short[] compressedPayloadShort = msg.getPayload();
+			byte[] compressedPayload = new byte[compressedPayloadShort.length];
+			for (int i = 0; i<compressedPayloadShort.length; i++)
+				compressedPayload[i] = (byte)compressedPayloadShort[i];
+			
+			SpineTOSMessage tosmsg = new SpineTOSMessage((byte)msg.getClusterId(), (byte)msg.getGroupId(),
 														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
 														 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
 			
