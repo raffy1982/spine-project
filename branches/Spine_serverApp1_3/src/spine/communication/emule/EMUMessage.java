@@ -40,7 +40,7 @@ import java.io.Serializable;
 
 public class EMUMessage extends com.tilab.gal.Message implements Serializable {
 	
-	protected void setSourceURL(String sourceID) {
+	public void setSourceURL(String sourceID) {
 		this.sourceURL = sourceID;
 	}
 	
