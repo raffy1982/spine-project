@@ -68,11 +68,11 @@ public class FeatureSpineData extends SpineCodec {
 		
 		pldIndex++;
 		
-		// sensorCode = payload[1];
+		// sensorCode = payload[2];
 		byte sensorCode = payload[pldIndex++];
 		dataTmp[dtIndex++] = sensorCode;
 		
-		//featuresCount = payload[2];
+		//featuresCount = payload[3];
 		byte featuresCount = payload[pldIndex++];
 		dataTmp[dtIndex++] = featuresCount;
 		
