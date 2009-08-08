@@ -50,7 +50,7 @@ public class EMUMessage extends com.tilab.gal.Message implements Serializable {
 			this.transSeqNumber += 256;
 	}
 	
-	/*public String toString() {
+	public String toString() {
 		short[] payload = this.getPayload();
 		String valPayload= "";
 		if (payload == null || payload.length == 0){
@@ -65,6 +65,6 @@ public class EMUMessage extends com.tilab.gal.Message implements Serializable {
 		}
 		
 		return "From node: " + this.getSourceURL() + " - " + valPayload;		
-	}*/
+	}
 
 }
