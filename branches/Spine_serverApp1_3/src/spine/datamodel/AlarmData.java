@@ -41,6 +41,8 @@ import spine.SPINESensorConstants;
 
 public class AlarmData extends Data {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private byte dataType;
 	private byte sensorCode;
 	private byte valueType;

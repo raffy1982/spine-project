@@ -47,7 +47,9 @@ import spine.Properties;
 import spine.datamodel.functions.CodecInfo;
 import spine.datamodel.functions.SpineObject;
 
-public abstract class Data implements SpineObject{
+public abstract class Data implements SpineObject {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private static Properties prop = Properties.getProperties();
 	

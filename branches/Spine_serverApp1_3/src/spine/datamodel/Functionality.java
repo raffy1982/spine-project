@@ -35,9 +35,13 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import java.io.Serializable;
+
 import spine.SPINEFunctionConstants;
 
-public class Functionality {
+public class Functionality implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private byte functionType;
 	private byte functionalityCode;

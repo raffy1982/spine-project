@@ -37,7 +37,11 @@ package spine.datamodel.serviceMessages;
 import spine.datamodel.serviceMessages.ServiceWarningMessage;
 
 public class ServiceDetailWarningMessage extends ServiceWarningMessage {
+	
+	private static final long serialVersionUID = 1L;
+	
 	protected String description;
+	
 	public ServiceDetailWarningMessage() {
 		super();
 	}

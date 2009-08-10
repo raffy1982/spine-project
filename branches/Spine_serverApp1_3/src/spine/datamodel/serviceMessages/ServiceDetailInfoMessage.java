@@ -37,6 +37,9 @@ package spine.datamodel.serviceMessages;
 
 
 public class ServiceDetailInfoMessage extends ServiceInfoMessage {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public static final int HIGH_LEVEL = 2, LOW_LEVEL = 1;
 	protected int computationType;
 	protected double statistics;

@@ -44,7 +44,11 @@ import spine.SPINEServiceMessageConstants;
 import spine.datamodel.ServiceMessage;
 
 public class ServiceInfoMessage extends ServiceMessage {
+	
+	private static final long serialVersionUID = 1L;
+	
 	protected long timestamp;
+	
 	public ServiceInfoMessage() {
 		super();
 		setMessageType(SPINEServiceMessageConstants.INFO);

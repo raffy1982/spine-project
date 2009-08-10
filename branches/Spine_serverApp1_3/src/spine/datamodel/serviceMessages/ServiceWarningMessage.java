@@ -39,10 +39,12 @@ import spine.datamodel.ServiceMessage;
 
 public class ServiceWarningMessage extends ServiceMessage{
 	
-		public ServiceWarningMessage() {
-			super();
-			setMessageType(SPINEServiceMessageConstants.WARNING);
-		}
+	private static final long serialVersionUID = 1L;
+	
+	public ServiceWarningMessage() {
+		super();
+		setMessageType(SPINEServiceMessageConstants.WARNING);
+	}
 		
 
 }

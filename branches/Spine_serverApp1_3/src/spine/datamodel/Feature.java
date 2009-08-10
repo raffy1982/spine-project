@@ -36,10 +36,14 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import java.io.Serializable;
+
 import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
 
-public class Feature implements Comparable{
+public class Feature implements Comparable, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private Node node;
 	

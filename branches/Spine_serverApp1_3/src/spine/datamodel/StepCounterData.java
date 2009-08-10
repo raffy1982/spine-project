@@ -38,6 +38,8 @@ import spine.SPINEFunctionConstants;
 
 public class StepCounterData extends Data {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private int stepsCount;
 		
 	/**

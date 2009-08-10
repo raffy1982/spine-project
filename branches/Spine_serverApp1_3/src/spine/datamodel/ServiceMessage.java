@@ -37,8 +37,9 @@ package spine.datamodel;
 import spine.SPINEServiceMessageConstants;
 import spine.datamodel.functions.SpineObject;
 
-public class ServiceMessage implements SpineObject{
+public class ServiceMessage implements SpineObject {
 
+	private static final long serialVersionUID = 1L;
 
 	protected Node node = null;
 	

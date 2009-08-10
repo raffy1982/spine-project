@@ -41,6 +41,8 @@ import spine.SPINESensorConstants;
 
 public class BufferedRawData extends Data {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private byte sensorCode;
 	private byte channelBitmask;
 	private byte dataWordLength;

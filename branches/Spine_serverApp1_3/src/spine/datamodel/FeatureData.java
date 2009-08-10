@@ -37,6 +37,8 @@ package spine.datamodel;
 
 public class FeatureData extends Data {
 
+	private static final long serialVersionUID = 1L;
+	
 	Feature[] features;
 			
 	/**

@@ -38,6 +38,8 @@ package spine.communication.tinyos;
 
 public class TOSMessage extends com.tilab.gal.Message {
 	
+	private static final long serialVersionUID = 1L;
+	
 	protected void setSourceURL(String sourceID) {
 		this.sourceURL = sourceID;
 	}

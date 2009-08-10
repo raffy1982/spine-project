@@ -40,6 +40,8 @@ import spine.SPINESensorConstants;
 
 public class FeatureSpineSetupFunction implements SpineSetupFunction {
 
+	private static final long serialVersionUID = 1L;
+	
 	private byte sensor = -1;
 	private short windowSize = 0;
 	private short shiftSize = 0;

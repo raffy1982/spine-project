@@ -35,6 +35,8 @@ package spine.datamodel.functions;
 
 public class StepCounterSpineSetupFunction implements SpineSetupFunction {
 
+	private static final long serialVersionUID = 1L;
+	
 	private int avgAcceleration = 0;
 	
 	private int stepThreshold = 0;

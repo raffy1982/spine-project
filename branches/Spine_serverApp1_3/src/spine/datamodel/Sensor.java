@@ -35,10 +35,14 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import java.io.Serializable;
+
 import spine.SPINESensorConstants;
 
-public class Sensor {
+public class Sensor implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private byte code;
 	private byte channelBitmask;
 	

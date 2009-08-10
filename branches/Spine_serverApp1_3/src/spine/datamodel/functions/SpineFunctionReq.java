@@ -35,7 +35,9 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-public abstract class SpineFunctionReq implements SpineObject{
+public abstract class SpineFunctionReq implements SpineObject {
+	
+	private static final long serialVersionUID = 1L;
 	
 	protected boolean isActivationRequest;
 

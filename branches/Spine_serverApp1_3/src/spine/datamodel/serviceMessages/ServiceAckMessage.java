@@ -38,6 +38,9 @@ import spine.SPINEServiceMessageConstants;
 import spine.datamodel.ServiceMessage;
 
 public class ServiceAckMessage extends ServiceMessage {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public ServiceAckMessage() {
 		super();
 		setMessageType(SPINEServiceMessageConstants.ACK);

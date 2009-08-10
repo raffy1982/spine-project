@@ -47,6 +47,8 @@ import spine.SPINESensorConstants;
 
 public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	
+	private static final long serialVersionUID = 1L;
+	
 	private byte sensor = -1;
 	private byte dataType = -1;
 	private byte valueType = -1;

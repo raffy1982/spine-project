@@ -51,7 +51,8 @@ import spine.datamodel.Feature;
 
 public class FeatureSpineFunctionReq extends SpineFunctionReq {
 
-
+	private static final long serialVersionUID = 1L;
+	
 	private byte sensor = -1;
 	private Vector features = new Vector();
     

@@ -43,6 +43,8 @@ package spine.datamodel.functions;
 
 public class StepCounterSpineFunctionReq extends SpineFunctionReq {
 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * 
 	 * Returns a string representation of the StepCounterSpineSetupFunction object.

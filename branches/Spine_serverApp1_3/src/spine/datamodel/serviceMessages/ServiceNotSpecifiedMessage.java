@@ -38,6 +38,9 @@ import spine.SPINEServiceMessageConstants;
 import spine.datamodel.ServiceMessage;
 
 public class ServiceNotSpecifiedMessage extends ServiceMessage {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public ServiceNotSpecifiedMessage() {
 		super();
 		setMessageType(SPINEServiceMessageConstants.NOT_SPECIFIED);

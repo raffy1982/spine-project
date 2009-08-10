@@ -1,5 +1,7 @@
 package spine.datamodel.functions;
 
-public interface SpineObject {
+import java.io.Serializable;
+
+public interface SpineObject extends Serializable {
 
 }

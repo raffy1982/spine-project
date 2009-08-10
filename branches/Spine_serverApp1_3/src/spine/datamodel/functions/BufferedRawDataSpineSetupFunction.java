@@ -37,6 +37,8 @@ import spine.SPINESensorConstants;
 
 public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 
+	private static final long serialVersionUID = 1L;
+	
 	private byte sensor = -1;
 	private byte channelsBitmask = 0;
 	private short bufferSize = 0;

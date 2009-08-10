@@ -41,7 +41,9 @@ import spine.Properties;
 import spine.datamodel.functions.Function;
 import spine.datamodel.functions.SpineObject;
 
-public class Node implements SpineObject{
+public class Node implements SpineObject {
+	
+	private static final long serialVersionUID = 1L;
 	
 //	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
 //	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";

@@ -38,7 +38,9 @@ package spine.datamodel.functions;
 
 import spine.SPINESensorConstants;
 
-public class SpineSetupSensor   implements SpineObject{
+public class SpineSetupSensor  implements SpineObject {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private byte sensor = -1;
 	private byte timeScale = -1;

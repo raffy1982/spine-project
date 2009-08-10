@@ -39,6 +39,8 @@ package spine.datamodel.functions;
 
 public class SpineStart implements SpineObject{
 	
+	private static final long serialVersionUID = 1L;
+	
 	private int activeNodesCount = -1;
 	private boolean radioAlwaysOn;
 	private boolean enableTDMA;

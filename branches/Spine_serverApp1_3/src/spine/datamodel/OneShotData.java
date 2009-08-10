@@ -37,6 +37,8 @@ package spine.datamodel;
 
 public class OneShotData extends Data {
 	
+	private static final long serialVersionUID = 1L;
+	
 	Feature oneShot = null;		
 
 	/**
