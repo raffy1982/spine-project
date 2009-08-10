@@ -81,10 +81,6 @@ implementation {
               }
        }
        
-       command void SensorsRegistry.reset() {
-          memset(sensSamplingTimeList, 0x00, sizeof sensSamplingTimeList);
-       }
-
        command uint8_t SensorsRegistry.getBufferID(enum SensorCode sensorCode, enum ValueTypes valueType) {
           return call SensorBoardController.getBufferID(sensorCode, valueType);
        }

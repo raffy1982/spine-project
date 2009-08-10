@@ -129,14 +129,6 @@ Boston, MA  02111-1307, USA.
        command void stopSensing();
        
        /**
-       * Resets the state of the SensorBoardController.
-       *
-       *
-       * @return void
-       */
-       command void reset();
-
-       /**
        * Returns the buffer ID reserved for the given channel and sensor code.
        *
        * @param sensorCode the sensor we are interested in

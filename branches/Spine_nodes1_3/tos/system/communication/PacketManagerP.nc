@@ -115,7 +115,7 @@ Boston, MA  02111-1307, USA.
                     memcpy(ackMsg, ackHeader, SPINE_HEADER_PKT_SIZE);
                     memcpy(ackMsg + SPINE_HEADER_PKT_SIZE, ackBuiltPld, builtAckPldLen);
 
-                    call RadioController.send(call Header.getSourceID(), SVC_MSG, &ackMsg, sizeof(ackMsg));
+                    call RadioController.send(source, SVC_MSG, &ackMsg, sizeof(ackMsg));
                     // END ACKs transmission for received SPINE pkts
 
                     signal PacketManager.messageReceived(call Header.getPktType()); // it's supposed to be the same of the 'pktType' param

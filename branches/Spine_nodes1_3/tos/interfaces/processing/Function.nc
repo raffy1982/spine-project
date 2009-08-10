@@ -86,13 +86,6 @@ Boston, MA  02111-1307, USA.
        * @return void
        */
        command void stopComputing();
-       
-       /**
-       * Resets the state of the Function
-       *
-       * @return void
-       */
-       command void reset();
 
  }
 

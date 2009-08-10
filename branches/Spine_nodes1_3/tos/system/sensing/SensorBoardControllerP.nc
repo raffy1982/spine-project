@@ -227,22 +227,7 @@ implementation {
 
        }
        
-       command void SensorBoardController.reset() {
-          stopSensing();
-
-          memset(sensorOneShotList, 0x00, sizeof sensorOneShotList);
-          sensOneShotCount = 0;
-
-          memset(sensorBufferMap, 0x00, sizeof sensorBufferMap);
-          count4BufList = 0;
-          
-          // we also takes care of clearing the buffer pool
-          call BufferPool.clear();
-
-          // ... and the sensor registry
-          call SensorsRegistry.reset();
-       }
-
+       
        event void SamplingTimers.fired[uint8_t sensorCode]() {
            call SensorImpls.acquireData[sensorCode](ALL);   //check
        }

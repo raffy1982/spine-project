@@ -197,18 +197,5 @@ implementation {
                 }
              }
 	}
-	
-	command void Function.reset() {
-           memset(paramsList, 0x00, sizeof paramsList);
-           paramsIndex = 0;
-           
-           memset(activeSensorsList, 0x00, sizeof activeSensorsList);
-           activeSensorsIndex = 0;
-
-           memset(msg, 0x00, sizeof msg);
-           memset(msgByte, 0x00, sizeof msgByte);
-
-           computingStarted = FALSE;
-        }
 }
 

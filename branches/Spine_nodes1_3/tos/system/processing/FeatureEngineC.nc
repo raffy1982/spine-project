@@ -63,6 +63,7 @@ implementation {
         components EntropyC;
     	#endif
         components VectorMagnitudeC;
+        //components KcalC;
 
 
 	components LedsC;
@@ -97,5 +98,6 @@ implementation {
         FeatureEngineP.Features[ENTROPY] -> EntropyC;
         #endif
 	FeatureEngineP.Features[VECTOR_MAGNITUDE] -> VectorMagnitudeC;
+	//FeatureEngineP.Features[KCAL] -> KcalC;
 
 }

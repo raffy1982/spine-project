@@ -131,20 +131,7 @@ implementation {
           call PacketManager.build(DATA, data, (len+2));
        }
 
-       command void FunctionManager.reset() {
-          uint8_t i;
-          
-          // we request every functions to stop their computing
-          stopComputing();
-
-          // we request every functions to reset their state
-          for (i = 0; i<functCount; i++)
-             call Functions.reset[ functionList[i] ]();
-
-          memset(data, 0x00, sizeof data);
-       }
-
-
+       
        event void PacketManager.messageReceived(enum PacketTypes pktType){}
 
        event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
@@ -182,10 +169,6 @@ implementation {
        
        default command void Functions.stopComputing[uint8_t functionID]() {
            dbg(DBG_USR1, "FunctionManagerP.stopComputing: Executed default operation. Chances are there's an operation miswiring.\n");
-       }
-       
-       default command void Functions.reset[uint8_t functionID]() {
-           dbg(DBG_USR1, "FunctionManagerP.reset: Executed default operation. Chances are there's an operation miswiring.\n");
        }
 
 }

@@ -389,32 +389,16 @@ Boston, MA  02111-1307, USA.
      }
  
 
-     command void Function.reset(){
-       memset(actAlarmList, 0x00, sizeof actAlarmList);
-       actAlarmIndex = 0;
+     // Default commands needed due to the use of parametrized interfaces
 
-       memset(alarmParamsList, 0x00, sizeof alarmParamsList);
-       alarmParamsIndex = 0;
-       
-       memset(evalFeatsList, 0, sizeof evalFeatsList);
-	   evalFeatsIndex = 0;
-	   evalFeatsCount = 0;
-
-       start = FALSE;
-       memset(newSamplesSinceLastFeatureAlarm, 0, sizeof newSamplesSinceLastFeatureAlarm);
-	       
+     default command uint8_t Features.getResultSize[uint8_t featureID]() {
+	dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
+	return 0xFF;
      }
 
-         // Default commands needed due to the use of parametrized interfaces
-	
-    default command uint8_t Features.getResultSize[uint8_t featureID]() {
-		dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");
-		return 0xFF;
-	}
-	
-	default command error_t Features.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
-		dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
-		return FAIL;
-	}
+     default command error_t Features.calculate[uint8_t featureID](int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
+	dbg(DBG_USR1, "FeatureEngineP.calculate: Executed default operation. Chances are there's an operation miswiring.\n");
+        return FAIL;
+     }
 }
 

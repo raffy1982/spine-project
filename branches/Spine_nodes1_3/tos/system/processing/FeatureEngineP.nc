@@ -343,23 +343,7 @@ implementation {
 		}
 	}
 	
-	command void Function.reset() {
-           memset(actFeatsList, 0x00, sizeof actFeatsList);
-           actFeatsIndex = 0;
-
-           memset(featParamsList, 0x00, sizeof featParamsList);
-           featParamsIndex = 0;
-
-           memset(evalFeatsList, 0x00, sizeof evalFeatsList);
-           evalFeatsIndex = 0;
-           evalFeatsCount = 0;
-           
-           computingStarted = FALSE;
-           memset(newSamplesSinceLastFeature, 0, sizeof newSamplesSinceLastFeature);
-        }
-	
-        
-        // Default commands needed due to the use of parametrized interfaces
+	// Default commands needed due to the use of parametrized interfaces
 	
         default command uint8_t Features.getResultSize[uint8_t featureID]() {
 		dbg(DBG_USR1, "FeatureEngineP.getResultSize: Executed default operation. Chances are there's an operation miswiring.\n");

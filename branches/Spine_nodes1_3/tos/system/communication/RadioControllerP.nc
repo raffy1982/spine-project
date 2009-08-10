@@ -324,33 +324,6 @@ Boston, MA  02111-1307, USA.
            return status;
        }
 
-       command void RadioController.reset() {
-         call GuardTimer.stop();
-         call ListenTimer.stop();
-         call TDMATimer.stop();
-
-         //memset(msgTmp, 0x00, sizeof msgTmp);
-
-         //radioOn = FALSE;           since I stop ListenTimer before it expires, the radio remains ON
-         //radioTurningOn = FALSE;
-
-         lowPowerEnabled = RADIO_LOW_POWER;
-         firstStart = TRUE;
-         canSendNow = TRUE;
-         sendMsgTmp = FALSE;
-         
-         tdmaEnabled = ENABLE_TDMA;
-         myTurn = FALSE;
-         myTimeSlot = -1;
-         netSize = -1;
-         currentTimeSlot = -1;
-
-         while(!call Queue.empty())
-            call Queue.dequeue();
-
-         radioTurnOnPolicy();  // shouldn't have effects... but in any case the radio is found OFF, we have to turnON it.
-       }
-       
        event void Sender.sendDone(message_t* msg, error_t error) {
            checkQueueToSend();
        }

@@ -116,14 +116,6 @@ interface FunctionManager {
 	command void send(enum FunctionCodes functionCode, uint8_t* functionData, uint8_t len);
 
         /**
-        * Resets the state of the Function Manager. 
-        * It also calls the 'reset' to all the registered functions.
-        *
-        * @return void
-        */
-	command void reset();
-
-	/**
 	* Lets the function manager (and therefore registered functions) know when another sample has been taken
         * and buffered to allow the triggering of feature calculation
 	*

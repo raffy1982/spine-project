@@ -92,7 +92,7 @@ implementation {
 	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
                 
                 active = setup;
-                
+
                 return TRUE;
 	}
 	
@@ -115,19 +115,7 @@ implementation {
 		start = FALSE;
 	}
 	
-	command void Function.reset() {
-                start = FALSE;
-                setup = FALSE;
-                active = FALSE;
-                pre = 0; 
-                curr = 0;
-                haveHistory = FALSE;
-	        waitCounter = 0;
-	        DEFAULT_WAIT = 0;
-                steps = 0;
-        }
-        
-        event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
+	event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
                 
                 uint8_t msg[sizeof(steps)];
                 if(active && start) {

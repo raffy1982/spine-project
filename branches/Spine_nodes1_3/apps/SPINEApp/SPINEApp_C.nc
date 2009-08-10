@@ -151,14 +151,14 @@ implementation
   }
 
   void handle_Reset() {
-     // an HW reset is simulated resetting the complete global states of the components.
-     call FunctionManager.reset();
-     call SensorBoardController.reset();
-     call RadioController.reset();
-
-     memset(buffer, 0x00, sizeof buffer);
-     
-     init();
+     #if defined(PLATFORM_TELOSB) || defined(PLATFORM_SHIMMER)
+        WDTCTL = 0;
+     #elif defined(PLATFORM_MICAZ)
+        cli();
+	wdt_enable(0);
+	while(TRUE)
+           __asm__ __volatile__("nop" "\n\t" ::);
+     #endif
   }
 
   void handle_Syncr() {

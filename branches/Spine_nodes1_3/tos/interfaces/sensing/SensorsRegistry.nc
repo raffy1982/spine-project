@@ -95,15 +95,6 @@ Boston, MA  02111-1307, USA.
        * @return SUCCESS if a match is found; FAIL otherwise.
        */
        command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
-
-       /**
-       * Resets the state of the SensorRegistry.
-       *
-       *
-       * @return void
-       */
-       command void reset();
-
  }
 
 

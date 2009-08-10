@@ -72,7 +72,7 @@ enum FeatureCodes {
   MEDIAN = 0x0C,
   PITCH_ROLL = 0x0D,
   VECTOR_MAGNITUDE = 0x0E,
-  
+  KCAL = 0x0F,
   ENTROPY = 0x10
 };
 
