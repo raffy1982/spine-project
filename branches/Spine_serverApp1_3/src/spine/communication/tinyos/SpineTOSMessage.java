@@ -339,6 +339,7 @@ class SPINEHeader {
 	public String toString() {
 		
 		String grp = (grpID<0)? Integer.toHexString(grpID+256): Integer.toHexString(grpID);		
+		String seq = (seqNr<0)? Integer.toHexString(seqNr+256): Integer.toHexString(seqNr);
 		String dst = (dstID==-1)? "BROADCAST": (dstID==0)? "BASESTATION": ""+dstID;
 		
 		String s = "Spine Header {";
@@ -346,7 +347,7 @@ class SPINEHeader {
 		s += "ver: 1." + vers + ", ext:" + ext + 
 			 ", pktType:" + SPINEPacketsConstants.packetTypeToString(pktT).toUpperCase() + 
 			 ", groupID:" + grp.toUpperCase() + ", srcID:" + srcID + ", dstID:" + dst + 
-			 ", seqNr:" + seqNr + ", fragNr:" + fragNr + ", totFrags:" + totFrags + "}";
+			 ", seqNr:" + seq + ", fragNr:" + fragNr + ", totFrags:" + totFrags + "}";
 		
 		return s;
 	}
