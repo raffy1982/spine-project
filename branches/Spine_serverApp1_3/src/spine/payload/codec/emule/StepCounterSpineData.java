@@ -51,7 +51,7 @@ public class StepCounterSpineData extends SpineCodec {
 				
 		StepCounterData data =  new StepCounterData();
 		
-		// set data.node, data.functionCode e data.timestamp
+		// set data.nodeID, data.functionCode e data.timestamp
 		data.baseInit(node, payload);
 		data.setStepsCount(byteArrayToInt(payload, 2));
 		

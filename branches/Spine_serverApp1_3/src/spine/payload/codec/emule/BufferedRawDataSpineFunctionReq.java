@@ -46,9 +46,10 @@ public class BufferedRawDataSpineFunctionReq extends SpineCodec {
 	
 	private final static int PARAM_LENGTH = 1; 
 
-	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException{
 		throw new MethodNotSupportedException("decode");
-	};  
+	};
+	
 	
 	public byte[] encode(SpineObject payload) {
 		

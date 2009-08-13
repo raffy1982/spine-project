@@ -21,14 +21,14 @@ class ClientWorker implements Runnable {
 
 	private JTextArea textArea;
 
-	private SocketMessageListener emu;
+	private SocketMessageListener emuLocalNodeAdapter;
 
 	private SocketThrdServer serverSocket;
 
-	ClientWorker(Socket client, JTextArea textArea, SocketMessageListener emu, SocketThrdServer serverSocket) {
+	ClientWorker(Socket client, JTextArea textArea, SocketMessageListener emuLocalNodeAdapter, SocketThrdServer serverSocket) {
 		this.client = client;
 		this.textArea = textArea;
-		this.emu = emu;
+		this.emuLocalNodeAdapter = emuLocalNodeAdapter;
 		this.serverSocket = serverSocket;
 	}
 
@@ -67,7 +67,7 @@ class ClientWorker implements Runnable {
 					if (sSPort != 0) {
 						serverSocket.connectToSocketServerNode(destNodeID,sSPort);
 					}
-					emu.messageReceived(srcID, msg);
+					emuLocalNodeAdapter.messageReceived(srcID, msg);
 					textArea.append(msg.toString() + "\n");
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
@@ -168,9 +168,9 @@ class SocketThrdServer extends JFrame implements Runnable {
 			System.out.println("Do oosClient.writeChars");
 			//oosClient.writeObject("Connection successful to Server Socket - Node");
 			//oosClient.flush();
-			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
-			oosC.writeObject("Connection successful to Server Socket - Node");
-			oosC.flush();
+			//ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
+			//oosC.writeObject("Connection successful to Server Socket - Node");
+			//oosC.flush();
 
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host");
@@ -184,13 +184,16 @@ class SocketThrdServer extends JFrame implements Runnable {
 		
 	}
 
-	public void sendCommand(int destNodeID, String cmd) {
+	//public void sendCommand(int destNodeID, String cmd) {
+	public void sendCommand(int destNodeID, EMUMessage emumsg) {
 		try {
 			//oosClient.writeObject(cmd);
 			//oosClient.flush();
-			System.out.println("Send cmd: " + cmd + " to node: " + destNodeID);
+			//System.out.println("Send cmd: " + cmd + " to node: " + destNodeID);
+			System.out.println("Send cmd: " + emumsg.toString() + " to node: " + destNodeID);
 			ObjectOutputStream oosC =(ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
-			oosC.writeObject(cmd);
+			//oosC.writeObject(cmd);
+			oosC.writeObject(emumsg);
 			oosC.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

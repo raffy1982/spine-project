@@ -36,19 +36,22 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.emule;
 
-import java.io.Serializable;
-
-public class EMUMessage extends com.tilab.gal.Message implements Serializable {
+//public class EMUMessage extends com.tilab.gal.Message implements Serializable {
+public class EMUMessage extends com.tilab.gal.Message {
 	
+	private static final long serialVersionUID = 1L;
+
 	public void setSourceURL(String sourceID) {
 		this.sourceURL = sourceID;
 	}
 	
+	/*
 	public void setSeqNo(byte seqNo) {
 		this.transSeqNumber =  seqNo;
 		if (this.transSeqNumber < 0) 
 			this.transSeqNumber += 256;
 	}
+	*/
 	
 	public String toString() {
 		short[] payload = this.getPayload();
@@ -64,7 +67,9 @@ public class EMUMessage extends com.tilab.gal.Message implements Serializable {
 			}
 		}
 		
-		return "From node: " + this.getSourceURL() + " - " + valPayload;		
+		return "From node: " + this.getSourceURL() + " " + "pktType(clusterId)=" + this.clusterId + " - " + valPayload;		
+
+		
 	}
 
 }

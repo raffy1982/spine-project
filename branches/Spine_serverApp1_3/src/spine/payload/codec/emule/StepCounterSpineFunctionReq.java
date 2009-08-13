@@ -51,6 +51,7 @@ import spine.datamodel.functions.Exception.*;
 
 public class StepCounterSpineFunctionReq extends SpineCodec {
 
+	
 	private final static int PARAM_LENGTH = 0; 
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
@@ -71,5 +72,5 @@ public class StepCounterSpineFunctionReq extends SpineCodec {
 		data[2] = PARAM_LENGTH;
 
 		return data;	
-	}
+	}		
 }

@@ -48,7 +48,6 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
-import spine.communication.tinyos.IllegalSpineHeaderSizeException;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -66,7 +65,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	// TODO
 	// Gestire caso di WSN con piu` nodi
 	//
-	private static final int WSN_NODE = Integer.parseInt(prop.getProperty(Properties.NODE_EMULATOR_KEY));
+	private static final int WSN_NODE = Integer.parseInt(prop.getProperty(Properties.VIRTUAL_WSN_SIZE_KEY));
 	
 
 	//boolean start;
@@ -197,10 +196,12 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 
 	// send from EMULocalNodeAdapter to SocketThrdServer .... from
 	// SocketThrdServer to Server Socket Node
-	protected synchronized void send(int destNodeID, SpineEMUMessage emumsg) {
+	//protected synchronized void send(int destNodeID, SpineEMUMessage emumsg) {
+	protected synchronized void send(int destNodeID, EMUMessage emumsg) {
 
 		try {
-			switch (emumsg.getHeader().getPktType()) {
+			//switch (emumsg.getHeader().getPktType()) {
+			switch ((byte)emumsg.getClusterId()) {
 			case SPINEPacketsConstants.START:
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.start or manager.startWsn");
 				// nodeCoordinator.sendCommand(destNodeID,"START");
@@ -208,7 +209,9 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
 					Integer key = (Integer)e.nextElement();
 					System.out.println(key + ":" + nodeInfo.get(key));
-					nodeCoordinator.sendCommand(key.intValue(), "START");
+					System.out.println("Case START --> emumsg:" + emumsg.toString() + " pktType=" + emumsg.getClusterId());
+					//nodeCoordinator.sendCommand(key.intValue(), "START");
+					nodeCoordinator.sendCommand(key.intValue(), emumsg);
 				}
 				//nodeCoordinator.sendCommand(1, "START");
 				break;
@@ -218,12 +221,15 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
 					Integer key = (Integer)e.nextElement();
 					System.out.println(key + ":" + nodeInfo.get(key));
-					nodeCoordinator.sendCommand(key.intValue(), "RESET");
+					System.out.println("Case RESET --> emumsg:" + emumsg.toString());
+					//nodeCoordinator.sendCommand(key.intValue(), "RESET");
+					nodeCoordinator.sendCommand(key.intValue(), emumsg);
 				}
 				// nodeCoordinator.sendCommand(1, "RESET");
 				break;
 			case SPINEPacketsConstants.SYNCR:
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.syncWsn or manager.synchrWsn");
+				System.out.println("Case SYNCR --> emumsg:" + emumsg.toString());
 				// nodeCoordinator.sendCommand(destNodeID, "SYNCR");
 				//nodeCoordinator.sendCommand(1, "SYNCR");
 				break;
@@ -231,6 +237,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				// Cmd discoveryWsn: gestito da EMULocalNodeAdapter
 				// Per ogni nodo in nodeInfo pass-thru to connections
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.discoveryWsn");
+				System.out.println("Case SERVICE_DISCOVERY --> emumsg:" + emumsg.toString());
 				/*
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
 					int key = (Integer) e.nextElement();
@@ -242,23 +249,30 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 				break;
 			case SPINEPacketsConstants.SETUP_SENSOR:
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupSensor() or manager.setup(..., SpineSetupSensor)");
+				System.out.println("Case SETUP_SENSOR --> emumsg:" + emumsg.toString());
 				// nodeCoordinator.sendCommand(destNodeID, "SETUP_SENSOR");
-				//nodeCoordinator.sendCommand(1, "SETUP_SENSOR");
+				//nodeCoordinator.sendCommand(1, "SETUP_SENSOR");	
+				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
+				
 				break;
 			case SPINEPacketsConstants.SETUP_FUNCTION:
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupFunction() or manager.setup(..., SpineSetupFunction)");
+				System.out.println("Case SETUP_FUNCTION --> emumsg:" + emumsg.toString());
 				// nodeCoordinator.sendCommand(destNodeID, "SETUP_FUNCTION");
 				//nodeCoordinator.sendCommand(1, "SETUP_FUNCTION");
+				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			case SPINEPacketsConstants.FUNCTION_REQ:
 				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> FUNCTION_REQ");
+				System.out.println("Case FUNTION_REQ --> emumsg:" + emumsg.toString());
 				// nodeCoordinator.sendCommand(destNodeID, "FUNCTION_REQ");
 				//nodeCoordinator.sendCommand(1, "FUNCTION_REQ");
+				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			default:
 				System.out.println("ERROR PktType");
 			}
-		} catch (IllegalSpineHeaderSizeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

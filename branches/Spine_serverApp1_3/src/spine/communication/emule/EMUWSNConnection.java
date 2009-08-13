@@ -46,7 +46,7 @@ import spine.SPINEPacketsConstants;
 
 public class EMUWSNConnection implements WSNConnection {
 
-	private byte sequenceNumber = 0; 
+	//private byte sequenceNumber = 0; 
 	
 	private WSNConnection.Listener listener = null;	
 	
@@ -81,8 +81,8 @@ public class EMUWSNConnection implements WSNConnection {
 
 	public void send(com.tilab.gal.Message msg) throws InterruptedIOException, UnsupportedOperationException {
 
-		byte fragmentNr = 1;
-		byte totalFragments = 1;
+		//byte fragmentNr = 1;
+		//byte totalFragments = 1;
 		
 		try {
 			// create a SPINE TinyOS dependent message from a high level Message object
@@ -96,9 +96,27 @@ public class EMUWSNConnection implements WSNConnection {
 					compressedPayload[i] = (byte)compressedPayloadShort[i];
 			} catch (Exception e) {} 
 			
-			SpineEMUMessage emumsg = new SpineEMUMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
-														 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
-														 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
+			//SpineEMUMessage(byte pktType, byte groupID, int sourceID, int destID, byte sequenceNumber, byte fragmentNr, byte totalFragments, byte[] payload)
+			//SpineEMUMessage emumsg = new SpineEMUMessage((byte)msg.getClusterId(), (byte)msg.getProfileId(), 
+			//											 SPINEPacketsConstants.SPINE_BASE_STATION, destNodeID, 
+			//			                                 this.sequenceNumber++, fragmentNr, totalFragments, compressedPayload);
+			
+			EMUMessage emumsg = new EMUMessage ();
+			// pktType
+			emumsg.setClusterId((byte)msg.getClusterId());
+			// destID
+			emumsg.setDestinationURL(Integer.toString(destNodeID));
+			//sourceID
+			emumsg.setSourceURL(Integer.toString(SPINEPacketsConstants.SPINE_BASE_STATION));
+			//groupID
+			//emumsg.setProfileId((byte)msg.getProfileId());
+			// byte[] payload	
+			short[] payloadShort = new short[compressedPayload.length];
+			for (int h = 0; h<payloadShort.length; h++)
+				payloadShort[h] = compressedPayload[h];					
+			//msg.setPayload(payloadShort);
+			emumsg.setPayload(payloadShort);
+			
 			
 			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, emumsg);
