@@ -339,7 +339,7 @@ class SPINEHeader {
 	public String toString() {
 		
 		String grp = (grpID<0)? Integer.toHexString(grpID+256): Integer.toHexString(grpID);		
-		String seq = (seqNr<0)? Integer.toHexString(seqNr+256): Integer.toHexString(seqNr);
+		String seq = (seqNr<0)? ""+(seqNr+256): ""+seqNr;
 		String dst = (dstID==-1)? "BROADCAST": (dstID==0)? "BASESTATION": ""+dstID;
 		
 		String s = "Spine Header {";
