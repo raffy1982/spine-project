@@ -56,7 +56,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	private int upperThreshold = 0;
 	private byte alarmType;
 
-	
+	/**
+	 * Set the data type (e.g. the feature code) involved in the request
+	 * 
+	 * @param dataType the code of the feature that the alarm engine should monitor
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 */
 	public void setDataType(byte dataType) {
 		this.dataType  = dataType;		
 	}
@@ -68,7 +74,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		return dataType;
 	}
 	
-	
+	/**
+	 * Set the sensor involved in the request
+	 * 
+	 * @param sensor the code of the sensor
+	 * 
+	 * @see spine.SPINESensorConstants 
+	 */	
 	public void setSensor(byte sensor) {
 		this.sensor  = sensor;		
 	}
@@ -80,7 +92,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		return sensor;
 	}
 	
-	
+	/**
+	 * Set the value type involved in the request
+	 * 
+	 * @param ValueType the channels that the alarm engine should monitor
+	 * 
+	 * @see spine.SPINESensorConstants 
+	 */		
 	public void setValueType(byte ValueType) {
 		this.valueType  = ValueType;		
 	}	
@@ -91,8 +109,17 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		valueType=this.valueType;
 		return valueType;
 	}	
-	
-	
+
+	/**
+	 * Set the lower threshold for the alarms
+	 * 
+	 * @param setLowerThreshold lower threshold (LT) for alarms
+	 * the value will be sent back from the sensor if either one of the following is true:
+	 * alarmType=BELOW_THRESHOLD_LABEL & value  < LT
+	 * alarmType=IN_BETWEEN_THRESHOLDS_LABEL & LT<=value<=UT
+	 * if alarmType=OUT_OF_THRESHOLDS_LABEL & value<= LT | value>=UT
+	 *  
+	 */	
 	public void setLowerThreshold(int setLowerThreshold) {
 		this.lowerThreshold  = setLowerThreshold;		
 	}
@@ -104,7 +131,16 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		return lowerThreshold;
 	}
 	
-	
+	/**
+	 * Set the upper threshold for the alarms
+	 * 
+	 * @param setUpperThreshold upper threshold (UT) for alarms
+	 * the value will be sent back from the sensor if either one of the following is true:
+	 * alarmType=ABOVE_THRESHOLD_LABEL & value>UT
+	 * alarmType=IN_BETWEEN_THRESHOLDS_LABEL & LT<=value<=UT
+	 * if alarmType=OUT_OF_THRESHOLDS_LABEL & value<= LT | value>=UT
+	 * 
+	 */	
 	public void setUpperThreshold(int setUpperThreshold) {
 		this.upperThreshold  = setUpperThreshold;		
 	}	
@@ -116,6 +152,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		return upperThreshold;
 	}	
 	
+	/**
+	 * Set the alarm type 
+	 * 
+	 * @param alarmType kind of alarm to set the alarm engine
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 */	
 	
 	public void setAlarmType(byte AlarmType) {
 		this.alarmType  = AlarmType;		
