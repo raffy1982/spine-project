@@ -37,14 +37,16 @@ package spine;
 public abstract class Properties {
 	
 	public static final String MOTECOM_KEY = "MOTECOM";
-	public static final String URL_PREFIX_KEY = "url_prefix";
+	public static final String PLATFORM_KEY = "PLATFORM";
+	public static final String SPINE_HOME_KEY = "SPINE_HOME";
+	
 	public static final String GROUP_ID_KEY = "group_id";
 	public static final String LINE_SEPARATOR_KEY = "line_separator";
 	
-	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
 	public static final String LOCALNODEADAPTER_CLASSNAME_KEY = "LocalNodeAdapter_ClassName";
-	
-	public static final String SPINEDATACODEC_PACKAGE_SUFFIX_KEY = "SpineDataCodec_Package_Suffix";
+	public static final String URL_PREFIX_KEY = "url_prefix";
+	public static final String SPINEDATACODEC_PACKAGE_SUFFIX_KEY = "spineDataCodec_Package_Suffix";
+	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
 	
 	public static final String PROPERTIES_FILE_PATH_PROPERTYKEY = "spine_PropertiesImpl_configFileName";
 	
@@ -52,12 +54,35 @@ public abstract class Properties {
 
 	
 	/**
-	 * Returns an implementation of the Properties abstract class
+	 * Returns an implementation of the Properties abstract class 
+	 * which is binded to the default properties file "default.properties"
 	 * 
-	 * @return an implementation of the Properties abstract class
+	 * @return an implementation of the Properties abstract class binded to the "default.properties" file
+	 * 
+	 * @deprecated
 	 */
 	public static Properties getProperties() {
-		return PropertiesImpl.getInstance();
+		return new PropertiesImpl();
+	}
+	
+	/**
+	 * Returns an implementation of the Properties abstract class 
+	 * which is binded to the default properties file "default.properties"
+	 * 
+	 * @return an implementation of the Properties abstract class binded to the "default.properties" file
+	 */
+	public static Properties getDefaultProperties() {
+		return new PropertiesImpl();
+	}
+	
+	/**
+	 * Returns an implementation of the Properties abstract class 
+	 * which is binded to the given 'propertiesFileName'  
+	 * 
+	 * @return an implementation of the Properties abstract class binded to the given 'propertiesFileName'
+	 */
+	public static Properties getProperties(String propertiesFileName) {
+		return new PropertiesImpl(propertiesFileName);
 	}
 	
 	/**

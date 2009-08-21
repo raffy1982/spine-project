@@ -40,10 +40,11 @@ package spine.communication.tinyos;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
+import spine.SPINESupportedPlatforms;
 
 public class SpineTOSMessage extends net.tinyos.message.Message {
 	
-	private static final String TINYOS_URL_PREFIX = Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY);
+	private static final String TINYOS_URL_PREFIX = Properties.getDefaultProperties().getProperty(SPINESupportedPlatforms.TINYOS + "_" + Properties.URL_PREFIX_KEY);
 	
 	private static final int DEFAULT_MESSAGE_SIZE = 0; 	// it represents a variable-size array and 
 														// does not check the corresponding array index

@@ -36,7 +36,6 @@ package test;
 
 import java.util.Vector;
 
-import spine.Properties;
 import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
@@ -65,17 +64,21 @@ public class SPINENodeEmulTest implements SPINEListener {
 	
 	public static void main(String[] args) {
 		
-		System.setProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY, SPINEManager.getProperties().getProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY));
+		// !! NOT NEEDED ANYMORE !!
+		//System.setProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY, SPINEManager.getProperties().getProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY));
 		
 		new SPINENodeEmulTest();
 	}
 	
 	public SPINENodeEmulTest() {
 		// the first step is to get the SPINEManager instance; then ... 
-		String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
+		// !! NOT NEEDED ANYMORE !!
+		//String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
 		
 		System.out.println("*** TestProgram   manager = SPINEManager.getInstance(args) ***");
-		manager = SPINEManager.getInstance(args);		
+		// !! NOT NEEDED ANYMORE !!
+		//manager = SPINEManager.getInstance(args);		
+		manager = SPINEManager.getInstance("app.properties");
 		
 		// ... we need to register a SPINEListener implementation to the SPINE manager instance
 		// (I register myself since I'm a SPINEListener implementation!)

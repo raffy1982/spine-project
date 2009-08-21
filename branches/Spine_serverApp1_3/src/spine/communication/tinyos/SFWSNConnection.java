@@ -44,6 +44,7 @@ import com.tilab.gal.WSNConnection;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
+import spine.SPINESupportedPlatforms;
 
 public class SFWSNConnection implements WSNConnection {
 
@@ -87,7 +88,7 @@ public class SFWSNConnection implements WSNConnection {
 		
 		try {
 			// create a SPINE TinyOS dependent message from a high level Message object
-			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getProperties().getProperty(Properties.URL_PREFIX_KEY).length()));
+			int destNodeID = Integer.parseInt(msg.getDestinationURL().substring(Properties.getDefaultProperties().getProperty(SPINESupportedPlatforms.TINYOS_VIA_SERIALFWD + "_" + Properties.URL_PREFIX_KEY).length()));
 			
 			short[] compressedPayloadShort = msg.getPayload();
 			byte[] compressedPayload = new byte[compressedPayloadShort.length];

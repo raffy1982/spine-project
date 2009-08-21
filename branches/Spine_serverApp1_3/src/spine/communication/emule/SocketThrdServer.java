@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 
 import spine.Properties;
+import spine.SPINESupportedPlatforms;
 
 import java.io.*;
 import java.net.*;
@@ -13,9 +14,9 @@ import java.util.*;
 
 class ClientWorker implements Runnable {
 
-	private static Properties prop = Properties.getProperties();
+	private static Properties prop = Properties.getDefaultProperties();
 	
-	private static final String URL_PREFIX = prop.getProperty(Properties.URL_PREFIX_KEY);
+	private static final String URL_PREFIX = prop.getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
 	
 	private Socket client;
 
@@ -101,7 +102,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	ServerSocket server = null;
 
-	private static Properties prop = Properties.getProperties();
+	private static Properties prop = Properties.getDefaultProperties();
 	
 	private static final int nodeCoordinatorPort = Integer.parseInt(prop.getProperty(Properties.MOTECOM_KEY));
 	

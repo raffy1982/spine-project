@@ -62,19 +62,20 @@ import spine.datamodel.serviceMessages.ServiceWarningMessage;
 
 public class SPINEManager {
 	
-	private static Properties prop = Properties.getProperties();
+	private static Properties prop = Properties.getDefaultProperties();
 	
+	private static final String DEF_PROP_MISSING_MSG = 
+		"ERROR: unable to load 'defaults.properties' file.\nIf you are using SPINE as a source, please define " +
+		"the 'SPINE_HOME' in your 'app.properties' file.";
+	
+	private static final String APP_PROP_MISSING_MSG = 
+		"ERROR: 'app.properties' file is missing or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
 	
 	private final static long DISCOVERY_TIMEOUT = 2000;	
 	
-	private static final String URL_PREFIX = prop.getProperty(Properties.URL_PREFIX_KEY);
-	
 	private static final byte DISC_COMPL_EVT_COD = 100;
 	
-	
-	private static final byte MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
-
-	
+		
 	private Vector listeners = new Vector(); // <values:SPINEListener>
 	
 	private Vector activeNodes = new Vector(); // <values:Node>
@@ -86,6 +87,9 @@ public class SPINEManager {
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;	
 	
+	private static String MOTECOM = "";
+	public static String PLATFORM = "";
+	public static String SPINE_HOME = "";
 	
 	private static SPINEManager instance;
 	
@@ -97,19 +101,33 @@ public class SPINEManager {
 	//private SpineServiceAdvertisement spineServiceAdvertisement  = null;
 	private com.tilab.gal.Message msg;
 	
-	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
-	private static final String SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
-								prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
 	private static final String SPINEDATA_FUNCT_CLASSNAME_SUFFIX = "SpineData";
-	private static final String messageClassName = prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY);
-	private static final String  SPINE_SERVICE_MESSAGE_CLASSNAME_SUFFIX="Message";
-	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX = SPINEDATACODEC_PACKAGE_PREFIX;
-	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE=SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX+prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
+	private static final String SPINE_SERVICE_MESSAGE_CLASSNAME_SUFFIX = "Message";
+	
+	private static byte MY_GROUP_ID = 0;
+	private static String LOCALNODEADAPTER_CLASSNAME = null;
+	private static String URL_PREFIX = null;
+	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
+	private static final String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX = "spine.payload.codec.";
+	private static String SPINEDATACODEC_PACKAGE = null;	
+	private static String MESSAGE_CLASSNAME = null;	
+	private static String SPINE_SERVICE_MESSAGE_CODEC_PACKAGE = null;
 	
 	private Node baseStation = null;
 	
 	private SPINEManager(String[] args) {
 		try {
+			
+			MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
+			LOCALNODEADAPTER_CLASSNAME = prop.getProperty(PLATFORM + "_" + Properties.LOCALNODEADAPTER_CLASSNAME_KEY);
+			URL_PREFIX = prop.getProperty(PLATFORM + "_" + Properties.URL_PREFIX_KEY);
+			SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
+									prop.getProperty(PLATFORM + "_" + Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY) + ".";
+			MESSAGE_CLASSNAME = prop.getProperty(PLATFORM + "_" + Properties.MESSAGE_CLASSNAME_KEY);
+			SPINE_SERVICE_MESSAGE_CODEC_PACKAGE = SPINE_SERVICE_MESSAGE_CODEC_PACKAGE_PREFIX + 
+													prop.getProperty(PLATFORM + "_" + Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY) + ".";
+			
+			System.setProperty(Properties.LOCALNODEADAPTER_CLASSNAME_KEY, LOCALNODEADAPTER_CLASSNAME);
 			nodeAdapter = LocalNodeAdapter.getLocalNodeAdapter();	
 
 			Vector params = new Vector();
@@ -127,6 +145,8 @@ public class SPINEManager {
 			baseStation = new Node(new Address(""+SPINEPacketsConstants.SPINE_BASE_STATION));
 			baseStation.setLogicalID(new Address(SPINEPacketsConstants.SPINE_BASE_STATION_LABEL));
 
+		} catch (NumberFormatException e) {
+			exit(DEF_PROP_MISSING_MSG);
 		} catch (ClassNotFoundException e) {
 			System.out.println(e);
 		} catch (InstantiationException e) {
@@ -146,6 +166,8 @@ public class SPINEManager {
 	 * @return the SPINEManager instance
 	 * 
 	 * @see spine.Properties
+	 * 
+	 * @deprecated
 	 */
 	public static SPINEManager getInstance(String[] args) {
 		if (instance == null) 
@@ -153,6 +175,30 @@ public class SPINEManager {
 		return instance;
 	}
 
+	/**
+	 * Returns the SPINEManager instance connected to the base-station and platform
+	 * obtained transparently from the app.properties file
+	 * 
+	 * @param appPropertiesFile the application properties file 
+	 * where at least the 'MOTECOM' and 'PLATFORM' variables are defined
+	 * 
+	 * @return the SPINEManager instance
+	 * 
+	 * @see spine.SPINESupportedPlatforms
+	 */
+	public static SPINEManager getInstance(String appPropertiesFile) {
+		if (instance == null) {
+			Properties appProp = Properties.getProperties(appPropertiesFile);			
+			MOTECOM = appProp.getProperty(Properties.MOTECOM_KEY);
+			PLATFORM = appProp.getProperty(Properties.PLATFORM_KEY);
+			SPINE_HOME = appProp.getProperty(Properties.SPINE_HOME_KEY);
+			if (MOTECOM == null || PLATFORM == null)
+				exit(APP_PROP_MISSING_MSG);
+			else
+				instance = new SPINEManager(new String[]{MOTECOM});
+		}
+		return instance;
+	}
 		
 	/**
 	 * Registers a SPINEListener to the manager instance
@@ -227,6 +273,8 @@ public class SPINEManager {
 	 * for retrieving system and framework properties and parameters 
 	 * 
 	 * @return the Properties instance
+	 * 
+	 * @deprecated
 	 */
 	public static Properties getProperties() {
 		return prop;
@@ -334,6 +382,11 @@ public class SPINEManager {
 	 * @param setupSensor the object containing the setup parameters
 	 */
 	public void setup(Node node, SpineSetupSensor setupSensor) {
+		if (node == null) 
+			throw new RuntimeException("Can't setup the sensor: node is null");
+		if (setupSensor == null)
+			throw new RuntimeException("Can't setup the sensor: setupSensor is null");
+		
 		send(node.getPhysicalID(), SPINEPacketsConstants.SETUP_SENSOR, setupSensor);
 	}
 
@@ -364,6 +417,11 @@ public class SPINEManager {
 	 * @param setupFunction the object containing the setup parameters
 	 */
 	public void setup(Node node, SpineSetupFunction setupFunction) {
+		if (node == null) 
+			throw new RuntimeException("Can't setup the function: node is null");
+		if (setupFunction == null)
+			throw new RuntimeException("Can't setup the function: setupFunction is null");
+		
 		send(node.getPhysicalID(), SPINEPacketsConstants.SETUP_FUNCTION, setupFunction);
 	}
 	
@@ -397,6 +455,11 @@ public class SPINEManager {
 	 * @param functionReq the specific function activation request
 	 */
 	public void activate(Node node, SpineFunctionReq functionReq) {
+		if (node == null) 
+			throw new RuntimeException("Can't activate the function: node is null");
+		if (functionReq == null)
+			throw new RuntimeException("Can't activate the function: functionReq is null");
+		
 		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag 
 		functionReq.setActivationFlag(true);
 
@@ -433,6 +496,11 @@ public class SPINEManager {
 	 * @param functionReq the specific function deactivation request
 	 */
 	public void deactivate(Node node, SpineFunctionReq functionReq) {
+		if (node == null) 
+			throw new RuntimeException("Can't deactivate the function: node is null");
+		if (functionReq == null)
+			throw new RuntimeException("Can't deactivate the function: functionReq is null");
+		
 		// function activation requests are differentiated by the deactivation requests by setting the appropriate flag
 		functionReq.setActivationFlag(false);
 
@@ -616,10 +684,10 @@ public class SPINEManager {
 			
 			// dynamic class loading of the proper Message implementation
 			// String messageClassName = prop.getProperty(Properties.MESSAGE_CLASSNAME_KEY);
-			Class c = (Class)htInstance.get (messageClassName);
+			Class c = (Class)htInstance.get (MESSAGE_CLASSNAME);
 			if (c == null){
-				c = Class.forName(messageClassName);
-				htInstance.put (messageClassName, c);
+				c = Class.forName(MESSAGE_CLASSNAME);
+				htInstance.put (MESSAGE_CLASSNAME, c);
 			} 
 			msg = (com.tilab.gal.Message)c.newInstance();
 			// construction of the message 
@@ -890,6 +958,12 @@ public class SPINEManager {
 			// call to the garbage collector to favour the recycling of unused memory
 			System.gc();		
 		}
+	}
+	
+	private static void exit(String msg) {
+		System.out.println(msg); 
+		System.out.println("Will exit now!");
+		System.exit(-1);
 	}
 	
 }

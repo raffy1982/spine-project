@@ -44,6 +44,7 @@ Boston, MA  02111-1307, USA.
 package spine.datamodel;
 
 import spine.Properties;
+import spine.SPINEManager;
 import spine.datamodel.functions.CodecInfo;
 import spine.datamodel.functions.SpineObject;
 
@@ -51,11 +52,10 @@ public abstract class Data implements SpineObject {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static Properties prop = Properties.getProperties();
-	
 	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
 	private static final String SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
-								prop.getProperty(Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY);
+				Properties.getDefaultProperties().getProperty(SPINEManager.PLATFORM + "_" + 
+						Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY) + ".";
 	
 	protected static CodecInfo codecInformation=null;
 	

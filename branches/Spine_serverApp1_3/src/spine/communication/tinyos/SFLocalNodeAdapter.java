@@ -56,7 +56,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
         "$Id$",
     };
 	
-	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getProperties().getProperty(Properties.GROUP_ID_KEY), 16);
+	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getDefaultProperties().getProperty(Properties.GROUP_ID_KEY), 16);
     
 	private Vector connections = new Vector(); // <values: WSNConnection>
 	

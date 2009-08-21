@@ -48,6 +48,7 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
+import spine.SPINESupportedPlatforms;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -58,9 +59,9 @@ import java.util.Enumeration;
 
 public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessageListener {
 
-	private static Properties prop = Properties.getProperties();
+	private static Properties prop = Properties.getDefaultProperties();
 	
-	private static final String URL_PREFIX = prop.getProperty(Properties.URL_PREFIX_KEY);
+	private static final String URL_PREFIX = prop.getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
 	//
 	// TODO
 	// Gestire caso di WSN con piu` nodi

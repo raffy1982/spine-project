@@ -38,50 +38,111 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+
+import spine.utils.JarUtils;
 
 /**
  * 
  * @see spine.Properties
  */
 public class PropertiesImpl extends spine.Properties {	
-	private final static String PROPERTIES_FILE_PATH = "defaults.properties";
+	
+	public final static String DEFAULT_PROPERTIES_FILE_PATH = "defaults.properties";
+	
+	private final static String SPINE_JAR = "spine.jar";
+	
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
-	private static PropertiesImpl instance = null;
 	
 	private Properties p;
 	
+	private String propertiesFileName = null;
+	
 	private boolean loaded = false;
 	
-	public static PropertiesImpl getInstance() {
-		if (instance == null)
-			instance = new PropertiesImpl();
-		return instance;		
-	}
 	
-	private PropertiesImpl() {
+	PropertiesImpl() {
+		this.propertiesFileName = DEFAULT_PROPERTIES_FILE_PATH;
 		p = new Properties();				
 	}
 	
+	PropertiesImpl(String propertiesFileName) {
+		this.propertiesFileName = propertiesFileName;
+		p = new Properties();
+	}
+	
+	
 	public void load() {
-		if (!loaded)
-			try {
-				String fileName = System.getProperty(PROPERTIES_FILE_PATH_PROPERTYKEY);
-				fileName = (fileName == null ? PROPERTIES_FILE_PATH : fileName); 
-				p.load(new FileInputStream(fileName));
-				loaded = true;
-			} catch (IOException e) {
-				e.printStackTrace();
+		if (!loaded) {			
+			if (!loadPropFile()) {	
+				
+				List l = new ArrayList();
+				findFile(SPINE_JAR, new File("."), l);
+				String spineJarFile = "";
+				if(l.iterator().hasNext())
+					spineJarFile = l.iterator().next().toString();
+				byte[] res = JarUtils.getResource(spineJarFile, propertiesFileName);
+				
+				if (res != null && res.length != 0) {
+					try {
+						FileOutputStream fos = new FileOutputStream(propertiesFileName);
+						fos.write(res);
+						fos.flush();
+						fos.close();
+					} catch (FileNotFoundException e) {} 
+					  catch (IOException e) {}
+					
+					loadPropFile();
+					
+					File f = new File(propertiesFileName);
+					f.delete();
+				}
+			}			
+		}
+	}
+	
+	private boolean loadPropFile() {
+		try {
+			String fileName = System.getProperty(PROPERTIES_FILE_PATH_PROPERTYKEY);
+			fileName = (fileName == null)? propertiesFileName : fileName;
+			
+			if (propertiesFileName.equalsIgnoreCase(DEFAULT_PROPERTIES_FILE_PATH)) {
+				List l = new ArrayList();
+				findFile(propertiesFileName, new File("."), l);
+				if (l.iterator().hasNext())
+					fileName = l.iterator().next().toString();
+				else if (SPINEManager.SPINE_HOME != null) {
+					if (SPINEManager.SPINE_HOME.endsWith("\\"))
+						fileName = SPINEManager.SPINE_HOME + fileName;
+					else
+						fileName = SPINEManager.SPINE_HOME + "\\" + fileName;
+				}
+				
 			}
+			
+			FileInputStream fis = new FileInputStream(fileName);
+			p.load(fis);
+			fis.close();
+			loaded = true;
+		} catch (FileNotFoundException e) {}
+		  catch (IOException e) {}
+		  
+		return loaded;  
 	}
 	
 	public void store() {
 		try {
-			p.store(new FileOutputStream(PROPERTIES_FILE_PATH), DEFAULT_COMMENT);
+			FileOutputStream fos = new FileOutputStream(propertiesFileName);
+			p.store(fos, DEFAULT_COMMENT);
+			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,5 +161,15 @@ public class PropertiesImpl extends spine.Properties {
 		return p.remove(key);
 	}
 	
+	
+	private static void findFile(String fileToFind, File start, List r) {
+		if (start.isDirectory()) {
+			File[] files = start.listFiles();
+			for (int i = 0; i < files.length; i++) 
+				findFile(fileToFind, files[i], r);
+		} 
+		else if (start.getName().equalsIgnoreCase(fileToFind))
+			r.add(start);
+	}	
 	
 }
