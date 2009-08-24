@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.*;
 
 import spine.Properties;
+import spine.SPINEManager;
 import spine.SPINESupportedPlatforms;
 
 import java.io.*;
@@ -102,9 +103,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	ServerSocket server = null;
 
-	private static Properties prop = Properties.getDefaultProperties();
-	
-	private static final int nodeCoordinatorPort = Integer.parseInt(prop.getProperty(Properties.MOTECOM_KEY));
+	private static final int nodeCoordinatorPort = Integer.parseInt(SPINEManager.MOTECOM);
 	
 	SocketThrdServer() { // Begin Constructor
 		panel = new JPanel();

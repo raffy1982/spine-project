@@ -87,7 +87,7 @@ public class SPINEManager {
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;	
 	
-	private static String MOTECOM = "";
+	public static String MOTECOM = "";
 	public static String PLATFORM = "";
 	public static String SPINE_HOME = "";
 	
