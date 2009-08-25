@@ -168,6 +168,16 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	public static String channelCodeToString(byte code) {		
+		switch (code) {
+			case CH1: return CH1_LABEL;
+			case CH2: return CH2_LABEL;
+			case CH3: return CH3_LABEL;
+			case CH4: return CH4_LABEL;
+			default: return ""+code;
+		}
+	}
+	
 	public static String timeScaleToString(byte code) {
 		switch (code) {
 			case NOW: return NOW_LABEL;

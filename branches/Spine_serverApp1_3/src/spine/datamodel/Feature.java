@@ -40,10 +40,14 @@ import java.io.Serializable;
 
 import spine.SPINEFunctionConstants;
 import spine.SPINESensorConstants;
+import spine.exceptions.NoSuchChannelException;
 
 public class Feature implements Comparable, Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private static final String CH_NOT_PRESENT_MSG = "Channel is not valued";
+	private static final String UNKNOWN_CH_MSG = "Unknown channel";
 	
 	private Node node;
 	
@@ -62,6 +66,8 @@ public class Feature implements Comparable, Serializable {
 	private int ch2Value;
 	private int ch3Value;
 	private int ch4Value;
+	
+	private Integer[] chValues = new Integer[4];
 	
 	/**
 	 * Default Constructor of a Feature object.
@@ -122,6 +128,15 @@ public class Feature implements Comparable, Serializable {
 		this.ch2Value = ch2Value;
 		this.ch3Value = ch3Value;
 		this.ch4Value = ch4Value;
+		
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
+			chValues[0] = new Integer(this.ch1Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
+			chValues[1] = new Integer(this.ch2Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
+			chValues[2] = new Integer(this.ch3Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
+			chValues[3] = new Integer(this.ch4Value); 
 	}
 	
 	/**
@@ -158,6 +173,15 @@ public class Feature implements Comparable, Serializable {
 		this.ch2Value = ch2Value;
 		this.ch3Value = ch3Value;
 		this.ch4Value = ch4Value;
+		
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
+			chValues[0] = new Integer(this.ch1Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
+			chValues[1] = new Integer(this.ch2Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
+			chValues[2] = new Integer(this.ch3Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
+			chValues[3] = new Integer(this.ch4Value);
 	}
 	
 	/**
@@ -208,6 +232,48 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public byte getChannelBitmask() {
 		return channelBitmask;
+	}
+	
+	/**
+	 * Returns an Integer array of the values. 
+	 * CH1 is located in the first element of the array, CH2 in the second one, and so on.
+	 * If CHi is not active for this feature, the (i-1)th element is null.
+	 * 
+	 * @return all the values as an array of Integer
+	 */
+	public Integer[] getValues() {
+		return this.chValues;
+	}
+	
+	/**
+	 * Returns the value of the given channel or 
+	 * throws a spine.NoSuchChannelException if the given channel is not known or not valued for this Feature
+	 * 
+	 * @param chCode the channel code 
+	 * 
+	 * @return the value of the given channel 
+	 * 
+	 * @throws spine.NoSuchChannelException
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
+	public int getValue(byte chCode) {
+		if (chCode != SPINESensorConstants.CH1 && chCode != SPINESensorConstants.CH2 &&
+				chCode != SPINESensorConstants.CH3 && chCode != SPINESensorConstants.CH4)
+			throw new NoSuchChannelException(UNKNOWN_CH_MSG + " (" + chCode + ")");
+		
+		// here we know the chCode exists 
+		if (!SPINESensorConstants.chPresent(chCode, this.channelBitmask))
+				throw new NoSuchChannelException(CH_NOT_PRESENT_MSG + " (" + SPINESensorConstants.channelCodeToString(chCode) + ")");
+		
+		// here we know the chCode exists and  it's active in this feature
+		switch (chCode) {
+			case SPINESensorConstants.CH1: return ch1Value;
+			case SPINESensorConstants.CH2: return ch2Value;
+			case SPINESensorConstants.CH3: return ch3Value;
+			case SPINESensorConstants.CH4: return ch4Value;
+			default: return 0;
+		}
 	}
 
 	/**
