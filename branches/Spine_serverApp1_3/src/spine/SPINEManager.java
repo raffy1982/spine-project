@@ -89,7 +89,7 @@ public class SPINEManager {
 	
 	public static String MOTECOM = "";
 	public static String PLATFORM = "";
-	public static String SPINE_HOME = "";
+	public static String SPINE_HOME = ".";
 	
 	private static SPINEManager instance;
 	
@@ -191,7 +191,9 @@ public class SPINEManager {
 			Properties appProp = Properties.getProperties(appPropertiesFile);			
 			MOTECOM = appProp.getProperty(Properties.MOTECOM_KEY);
 			PLATFORM = appProp.getProperty(Properties.PLATFORM_KEY);
-			SPINE_HOME = appProp.getProperty(Properties.SPINE_HOME_KEY);
+			String tmpProp = appProp.getProperty(Properties.SPINE_HOME_KEY);
+			if (tmpProp != null)
+				SPINE_HOME = tmpProp;
 			if (MOTECOM == null || PLATFORM == null)
 				exit(APP_PROP_MISSING_MSG);
 			else
