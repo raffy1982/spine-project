@@ -105,7 +105,7 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	 * Note that on each request object calling addFeature is mutually exclusive with
 	 * removeFeature calls.  
 	 * 
-	 * @param feature the feature to add in this request
+	 * @param f the feature to add in this request
 	 * 
 	 * @see spine.SPINESensorConstants
 	 * @see spine.SPINEFunctionConstants
@@ -138,7 +138,7 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	 * Note that on each request object calling removeFeature is mutually exclusive with
 	 * addFeature calls.  
 	 * 
-	 * @param feature the feature to remove in this request
+	 * @param f the feature to remove in this request
 	 * 
 	 * @see spine.SPINESensorConstants
 	 * @see spine.SPINEFunctionConstants

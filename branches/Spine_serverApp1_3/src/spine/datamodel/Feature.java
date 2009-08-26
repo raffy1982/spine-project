@@ -144,7 +144,7 @@ public class Feature implements Comparable, Serializable {
 	 * This is used by the lower level components of the framework for creating Feature objects
 	 * from a low level Feature data packet received by remote nodes. 
 	 * 
-	 * @param nodeID the node id
+	 * @param node the node 
 	 * @param functionCode the function code 
 	 * @param featureCode the feature code
 	 * @param sensorCode the sensor code

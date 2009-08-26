@@ -155,7 +155,7 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	/**
 	 * Set the alarm type 
 	 * 
-	 * @param alarmType kind of alarm to set the alarm engine
+	 * @param AlarmType kind of alarm to set the alarm engine
 	 * 
 	 * @see spine.SPINEFunctionConstants
 	 */	

@@ -93,7 +93,7 @@ public class Node implements SpineObject {
 	
 	/**
 	 * Setter method of the node id. ** For in-framework use only. **
-	 * @param the node id
+	 * @param nodeID the node id
 	 * @deprecated
 	 */
 	public void setNodeID(int nodeID) {
@@ -150,7 +150,7 @@ public class Node implements SpineObject {
 	/**
 	 * Setter method of the logicalID attribute
 	 * 
-	 * @return the logicalID of this Node
+	 * @param logicalID the logical ID of this Node
 	 */
 	public void setLogicalID(Address logicalID) {
 		this.logicalID = logicalID;

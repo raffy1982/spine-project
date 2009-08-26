@@ -54,7 +54,6 @@ public class BufferedRawData extends Data {
 	 * This is used by the lower level components of the framework for creating BufferedRawData objects
 	 * from a low level BufferedRawData data packet received by remote nodes. 
 	 * 
-	 * @param nodeID the node id
 	 * @param functionCode the function code 
 	 * @param sensorCode the sensor code
 	 * @param channelBitmask the sensor channels bitmask
