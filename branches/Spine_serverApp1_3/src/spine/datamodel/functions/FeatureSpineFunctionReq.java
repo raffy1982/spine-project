@@ -163,7 +163,8 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 		
 		for (int i = 0; i < features.size(); i++) {
 			s += "feature = " + SPINEFunctionConstants.functionalityCodeToString(SPINEFunctionConstants.FEATURE, ((Feature)features.elementAt(i)).getFeatureCode()) + ", ";
-			s += "channels = " + SPINESensorConstants.channelBitmaskToString(((Feature)features.elementAt(i)).getChannelBitmask());
+			s += (this.isActivationRequest)? "channels = " + SPINESensorConstants.channelBitmaskToString(((Feature)features.elementAt(i)).getChannelBitmask()):
+											 "channels = " + SPINESensorConstants.channelBitmaskToString((byte)(((Feature)features.elementAt(i)).getChannelBitmask() ^ 0x0F));
 			if (i < features.size() - 1)
 				s += ", ";
 		}
