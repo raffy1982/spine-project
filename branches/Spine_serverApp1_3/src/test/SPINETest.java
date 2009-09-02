@@ -75,7 +75,7 @@ public class SPINETest implements SPINEListener {
 		// !! NOT NEEDED ANYMORE !!
 		//String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
 		//manager = SPINEManager.getInstance(args);		
-		manager = SPINEManager.getInstance("app.properties");
+		manager = SPINEManager.getInstance("src/test/app.properties");
 		
 		// ... we need to register a SPINEListener implementation to the SPINE manager instance
 		// (I register myself since I'm a SPINEListener implementation!)

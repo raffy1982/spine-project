@@ -38,7 +38,6 @@ public abstract class Properties {
 	
 	public static final String MOTECOM_KEY = "MOTECOM";
 	public static final String PLATFORM_KEY = "PLATFORM";
-	public static final String SPINE_HOME_KEY = "SPINE_HOME";
 	
 	public static final String GROUP_ID_KEY = "group_id";
 	public static final String LINE_SEPARATOR_KEY = "line_separator";
@@ -47,8 +46,6 @@ public abstract class Properties {
 	public static final String URL_PREFIX_KEY = "url_prefix";
 	public static final String SPINEDATACODEC_PACKAGE_SUFFIX_KEY = "spineDataCodec_Package_Suffix";
 	public static final String MESSAGE_CLASSNAME_KEY = "message_className";
-	
-	public static final String PROPERTIES_FILE_PATH_PROPERTYKEY = "spine_PropertiesImpl_configFileName";
 	
 	public static final String VIRTUAL_WSN_SIZE_KEY = "virtualWSNSize";
 

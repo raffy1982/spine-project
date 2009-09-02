@@ -65,11 +65,10 @@ public class SPINEManager {
 	private static Properties prop = Properties.getDefaultProperties();
 	
 	private static final String DEF_PROP_MISSING_MSG = 
-		"ERROR: unable to load 'defaults.properties' file.\nIf you are using SPINE as a source, please define " +
-		"the 'SPINE_HOME' in your 'app.properties' file.";
+		"ERROR: unable to load 'defaults.properties' file.";
 	
 	private static final String APP_PROP_MISSING_MSG = 
-		"ERROR: 'app.properties' file is missing or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
+		"ERROR: 'app.properties' file is missing, not properly specified or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
 	
 	private final static long DISCOVERY_TIMEOUT = 2000;	
 	
@@ -89,7 +88,6 @@ public class SPINEManager {
 	
 	public static String MOTECOM = "";
 	public static String PLATFORM = "";
-	public static String SPINE_HOME = ".";
 	
 	private static SPINEManager instance;
 	
@@ -188,12 +186,14 @@ public class SPINEManager {
 	 */
 	public static SPINEManager getInstance(String appPropertiesFile) {
 		if (instance == null) {
-			Properties appProp = Properties.getProperties(appPropertiesFile);			
-			MOTECOM = appProp.getProperty(Properties.MOTECOM_KEY);
-			PLATFORM = appProp.getProperty(Properties.PLATFORM_KEY);
-			String tmpProp = appProp.getProperty(Properties.SPINE_HOME_KEY);
-			if (tmpProp != null)
-				SPINE_HOME = tmpProp;
+			Properties appProp = Properties.getProperties(appPropertiesFile);	
+			
+			String mCom = System.getProperty(Properties.MOTECOM_KEY);
+			MOTECOM = (mCom!=null)? mCom : appProp.getProperty(Properties.MOTECOM_KEY);
+			
+			String pltf = System.getProperty(Properties.PLATFORM_KEY);
+			PLATFORM = (pltf!=null)? pltf : appProp.getProperty(Properties.PLATFORM_KEY);
+			
 			if (MOTECOM == null || PLATFORM == null)
 				exit(APP_PROP_MISSING_MSG);
 			else

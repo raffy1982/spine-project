@@ -38,16 +38,11 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.io.InputStream;
 import java.util.Properties;
-
-import spine.utils.JarUtils;
 
 /**
  * 
@@ -56,8 +51,6 @@ import spine.utils.JarUtils;
 public class PropertiesImpl extends spine.Properties {	
 	
 	public final static String DEFAULT_PROPERTIES_FILE = "defaults.properties";
-	
-	private final static String SPINE_JAR = "spine.jar";
 	
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
@@ -88,59 +81,12 @@ public class PropertiesImpl extends spine.Properties {
 	
 	private void loadPropFile() {
 		try {
-			String fileName = System.getProperty(PROPERTIES_FILE_PATH_PROPERTYKEY);
-			fileName = (fileName == null)? propertiesFileName : fileName;
-			
-			File propFile = new File(propertiesFileName);
-			File defPropFile = new File(DEFAULT_PROPERTIES_FILE);
-			File spineHomeDir = new File(SPINEManager.SPINE_HOME);
-			
-			File f = propFile;
-			
-			if (propFile.equals(defPropFile)) {				
-				if (spineHomeDir.exists() && spineHomeDir.isDirectory()) {
-					f = findFile(propFile.getName(), spineHomeDir);  
-				}
-			}			
-			
-			if (f == null)
-				loadPropFromJar();
-			else {
-				FileInputStream fis = new FileInputStream(f);
-				p.load(fis);
-				fis.close();
-				loaded = true;
-			}
-		} catch (FileNotFoundException e) {}
-		  catch (IOException e) {}
-	}
-	
-	private void loadPropFromJar() {
-		File spineJarFile = findFile(SPINE_JAR, new File("."));
-		byte[] res = null;
-		if (spineJarFile != null) 
-			res = JarUtils.getResource(spineJarFile, DEFAULT_PROPERTIES_FILE);
-		
-		if (res != null && res.length != 0) {
-			try {
-				FileOutputStream fos = new FileOutputStream(DEFAULT_PROPERTIES_FILE);
-				fos.write(res);
-				fos.flush();
-				fos.close();
-			} catch (FileNotFoundException e) {} 
-			  catch (IOException e) {}
-			
-			try {
-			  	FileInputStream fis = new FileInputStream(DEFAULT_PROPERTIES_FILE);
-				p.load(fis);
-				fis.close();
-				loaded = true;
-				
-				File tmp = new File(DEFAULT_PROPERTIES_FILE);
-				tmp.delete();
-			} catch (FileNotFoundException e) {}
-			  catch (IOException e) {}
-		}
+			InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(PropertiesImpl.class.getPackage().getName()+"/"+propertiesFileName); 
+			if (is == null)
+				is = new FileInputStream(propertiesFileName);
+			p.load(is);
+			loaded = true;
+		} catch (IOException e) {}
 	}
 	
 	public void store() {
@@ -164,32 +110,5 @@ public class PropertiesImpl extends spine.Properties {
 	
 	public Object remove(String key) {
 		return p.remove(key);
-	}
-	
-	private static File findFile(String fileToFind, File start){
-		LinkedList tovisit = new LinkedList();
-		tovisit.add(start);
-		return recursiveFindFile(fileToFind, tovisit);
-	}
-	
-	private static File recursiveFindFile(String fileToFind, LinkedList toVisit){
-		if(toVisit.size() <= 0)
-			return null;
-		
-		LinkedList new_toVisit = new LinkedList();
-		Iterator it = toVisit.iterator();
-		while(it.hasNext()){
-			File f=(File)it.next();
-			if(f.getName().equals(fileToFind))
-				return f;
-			File[] children = f.listFiles();
-			if(children != null){
-				for(int i=0; i<children.length; i++)
-					new_toVisit.addLast(children[i]);
-			}
-		}
-		
-		return recursiveFindFile(fileToFind, new_toVisit);			
-	}
-	
+	}	
 }
