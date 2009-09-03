@@ -36,7 +36,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 public abstract class Function {
 

@@ -43,8 +43,7 @@ import spine.SPINEFunctionConstants;
 import spine.datamodel.Node;
 import spine.datamodel.Sensor;
 import spine.datamodel.functions.*;
-import spine.datamodel.functions.Exception.BadFunctionSpecException;
-import spine.datamodel.functions.Exception.MethodNotSupportedException;
+import spine.exceptions.*;
 
 public class ServiceAdvertisement extends SpineCodec {
 	

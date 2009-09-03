@@ -4,7 +4,7 @@ package spine.payload.codec.emule;
 import spine.datamodel.Node;
 import spine.datamodel.functions.SpineCodec;
 import spine.datamodel.functions.SpineObject;
-import spine.datamodel.functions.Exception.MethodNotSupportedException;
+import spine.exceptions.MethodNotSupportedException;
 
 
 public class ServiceInfoMessage extends SpineCodec {

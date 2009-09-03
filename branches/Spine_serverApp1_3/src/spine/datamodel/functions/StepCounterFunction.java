@@ -36,7 +36,7 @@ package spine.datamodel.functions;
 
 import spine.SPINEFunctionConstants;
 
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 public class StepCounterFunction extends Function {
 

@@ -35,11 +35,10 @@ Boston, MA  02111-1307, USA.
 package spine.payload.codec.emule;
 
 import spine.SPINEFunctionConstants;
-//import spine.SPINESensorConstants;
 
 import spine.datamodel.Node;
 import spine.datamodel.functions.*;
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 
 public class AlarmSpineSetupFunction extends SpineCodec {

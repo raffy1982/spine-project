@@ -50,7 +50,7 @@ import spine.datamodel.Feature;
 import spine.datamodel.Node;
 
 import spine.datamodel.functions.*;
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 
 public class FeatureSpineFunctionReq extends SpineCodec {

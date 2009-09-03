@@ -53,7 +53,7 @@ import spine.datamodel.ServiceMessage;
 // Alessia 09/02
 import spine.SPINEServiceMessageConstants;
 import spine.payload.codec.tinyos.*;
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 //import spine.datamodel.serviceMessages.*;
 
 import net.tinyos.message.MessageListener;

@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 package spine.payload.codec.tinyos;
 
 import spine.datamodel.functions.*;
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 import spine.datamodel.*;
 

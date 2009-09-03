@@ -38,7 +38,7 @@ package spine.payload.codec.tinyos;
 
 import spine.SPINESensorConstants;
 import spine.datamodel.functions.*;
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 import spine.datamodel.*;
 

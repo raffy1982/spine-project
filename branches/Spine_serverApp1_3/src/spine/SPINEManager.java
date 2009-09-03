@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
-import spine.datamodel.functions.Exception.*;
+import spine.exceptions.*;
 
 import java.io.InterruptedIOException;
 import java.util.Vector;
