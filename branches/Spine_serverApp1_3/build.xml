@@ -108,6 +108,9 @@ Download it from the URL specified in the README file and place it in the direct
 			<fileset dir="classes">
 				<exclude name="test/*.class" />
 			</fileset>
+			<fileset dir="src">
+				<include name="spine/*.properties" />
+			</fileset>
 			<zipfileset src="lib/localNodeAdapter.jar" includes="**/*.class" />
 		</jar>
 	</target>
