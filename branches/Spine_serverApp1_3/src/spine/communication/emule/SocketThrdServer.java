@@ -75,6 +75,8 @@ class ClientWorker implements Runnable {
 					e.printStackTrace();
 				}catch (IOException e) {
 					System.out.println("Read failed");
+					//serverSocket.disconnectToSocketServerNode();
+					break;
 					// System.exit(-1);
 				}
 				//emu.messageReceived(srcID, msg);
@@ -183,9 +185,31 @@ class SocketThrdServer extends JFrame implements Runnable {
 		
 		
 	}
+	
+	// 17 SETTEMBRE
+	
+//	 Delete socket connection to Server Socket Node
+	/*
+	public void disconnectToSocketServerNode() {
+		try {
+			socket.close();
+		} catch (UnknownHostException e) {
+			System.out.println("Unknown host");
+			// System.exit(1);
+		} catch (IOException e) {
+			System.out.println("No I/O");
+			// System.exit(1);
+		}	
+	}
+	*/
+	
+	
+	
+	
+	//
 
 	//public void sendCommand(int destNodeID, String cmd) {
-	public void sendCommand(int destNodeID, EMUMessage emumsg) {
+	public void sendCommand (int destNodeID, EMUMessage emumsg) throws IOException{
 		try {
 			//oosClient.writeObject(cmd);
 			//oosClient.flush();
@@ -196,7 +220,8 @@ class SocketThrdServer extends JFrame implements Runnable {
 			oosC.writeObject(emumsg);
 			oosC.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw e;
 		}
 		
 	}
