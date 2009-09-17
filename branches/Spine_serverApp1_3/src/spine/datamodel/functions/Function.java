@@ -36,10 +36,12 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
+import java.io.Serializable;
+
 import spine.exceptions.*;
 
-public abstract class Function {
-
+public abstract class Function implements Serializable {
+	private static final long serialVersionUID = 1L;
 	public byte functionCode;
 	
 	public abstract void init(byte[] spec) throws BadFunctionSpecException ;
