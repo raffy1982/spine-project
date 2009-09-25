@@ -171,7 +171,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	public void start() {
 
 		System.out.println("EMULocalNodeAdapter nodeAdapter.start()");
-		nodeCoordinator.setTitle("WSN Enulator: Collector node");
+		nodeCoordinator.setTitle("WSN Emulator: Collector node");
 		WindowListener l = new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
