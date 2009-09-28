@@ -326,7 +326,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 			}
 		} catch (IOException e1) {
 			//e1.printStackTrace();
-			nodeInfo.remove(nodeId);
+			nodeInfo.remove(new Integer(nodeId));
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
