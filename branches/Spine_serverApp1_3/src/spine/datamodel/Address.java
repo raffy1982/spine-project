@@ -63,8 +63,12 @@ public class Address implements Serializable {
 		try {
 			return Integer.parseInt((this.address.toString()));
 		} catch (NumberFormatException e) {
-			return this.address.hashCode();
+			return this.hashCode();
 		}
+	}
+	
+	public int hashCode() {
+		return this.address.hashCode();
 	}
 	
 	/**
