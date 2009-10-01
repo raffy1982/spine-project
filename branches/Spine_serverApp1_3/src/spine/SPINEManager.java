@@ -323,7 +323,8 @@ public class SPINEManager {
 	 * Commands the SPINEManager to discovery the surrounding WSN nodes
 	 * A default timeout of 0.5s, is used
 	 */
-	public void discoveryWsn() {		
+	public void discoveryWsn() {
+		discoveryCompleted = false;
 		send(new Address(""+SPINEPacketsConstants.SPINE_BROADCAST), SPINEPacketsConstants.SERVICE_DISCOVERY, null);
 		
 		if(this.discoveryTimeout > 0)
@@ -343,6 +344,7 @@ public class SPINEManager {
 	 * @param discoveryTimeout the timeout for the discovery procedure
 	 */
 	public void discoveryWsn(long discoveryTimeout) {
+		discoveryCompleted = false;
 		this.discoveryTimeout = discoveryTimeout;
 		send(new Address(""+SPINEPacketsConstants.SPINE_BROADCAST), SPINEPacketsConstants.SERVICE_DISCOVERY, null);
 		
