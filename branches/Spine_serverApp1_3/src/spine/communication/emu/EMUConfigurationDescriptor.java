@@ -24,52 +24,27 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *
- * Implementation for TinyOS platforms of the GAL Message interface.
- * 
- * Note that this class is only used internally at the framework. 
+ * Implementation of the GAL ConfigurationDescriptor
+ *  
  *
  * @author Raffaele Gravina
  *
  * @version 1.2
  */
 
-package spine.communication.emule;
+package spine.communication.emu;
 
-//public class EMUMessage extends com.tilab.gal.Message implements Serializable {
-public class EMUMessage extends com.tilab.gal.Message {
-	
-	private static final long serialVersionUID = 1L;
+import com.tilab.gal.ConfigurationDescriptor;
 
-	public void setSourceURL(String sourceID) {
-		this.sourceURL = sourceID;
+public class EMUConfigurationDescriptor implements ConfigurationDescriptor {
+
+	public void commit() {
 	}
-	
-	/*
-	public void setSeqNo(byte seqNo) {
-		this.transSeqNumber =  seqNo;
-		if (this.transSeqNumber < 0) 
-			this.transSeqNumber += 256;
-	}
-	*/
-	
-	public String toString() {
-		short[] payload = this.getPayload();
-		String valPayload= "";
-		if (payload == null || payload.length == 0){
-		    valPayload="empty payload";}
-		else {
-			for (int i = 0; i < payload.length; i++) {
-				short b = payload[i];
-				if (b < 0)
-					b += 256;
-				valPayload=valPayload + Integer.toHexString(b) + " ";
-			}
-		}
-		
-		return "From node: " + this.getSourceURL() + " " + "pktType(clusterId)=" + this.clusterId + " - " + valPayload;		
 
-		
+	public void get(Parameter parm) {
+	}
+
+	public void preSet(Parameter parm) {
 	}
 
 }

@@ -24,46 +24,42 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of BufferedRawDataSpineSetupFunction responsible of handling setup of the function type 'Buffered Raw-Data'
-*
-* @author Raffaele Gravina
+* This class contains the static method to parse (decompress) a 
+* TinyOS SPINE 'Alarm' Data packet payload into a platform independent one.
+* This class is invoked only by the SpineData class, thru the dynamic class loading.
+* 
+* @author Roberta Giannantonio
+* @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
-import spine.SPINEFunctionConstants;
-
-import spine.datamodel.Node;
 import spine.datamodel.functions.*;
+
 import spine.exceptions.*;
 
+import spine.datamodel.*;
 
-public class BufferedRawDataSpineSetupFunction extends SpineCodec {
 
+public class AlarmSpineData extends SpineCodec {
 	
-	private final static int PARAM_LENGTH = 4; 
-
-	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException {
-		throw new MethodNotSupportedException("decode");
+	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("encode");
 	};
-    
 
-	public byte[] encode(SpineObject payload) {
+	public SpineObject decode(Node node, byte[] payload){
 		
-		spine.datamodel.functions.BufferedRawDataSpineSetupFunction workPayLoad = (spine.datamodel.functions.BufferedRawDataSpineSetupFunction)payload;
+		AlarmData data =  new AlarmData();
 		
-		byte[] data = new byte[2 + PARAM_LENGTH];
-	
-		data[0] = SPINEFunctionConstants.BUFFERED_RAW_DATA;
-		data[1] = PARAM_LENGTH;
-
-		data[2] = workPayLoad.getSensor();
-		data[3] = (byte)(workPayLoad.getChannelsBitmask() & 0x0000000F);
-		data[4] = (byte)workPayLoad.getBufferSize();
-		data[5] = (byte)workPayLoad.getShiftSize();
-		
-		return data;	
+		// set data.node, data.functionCode e data.timestamp
+		data.baseInit(node, payload);
+		data.setDataType(payload[2]);
+		data.setSensorCode(payload[3]);
+		data.setValueType(payload[4]);
+		data.setAlarmType(payload[5]);
+		data.setCurrentValue(Data.convertFourBytesToInt(payload, 6));
+		return data;
 	}
 }

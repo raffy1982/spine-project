@@ -1,4 +1,4 @@
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
 
 import spine.datamodel.Node;

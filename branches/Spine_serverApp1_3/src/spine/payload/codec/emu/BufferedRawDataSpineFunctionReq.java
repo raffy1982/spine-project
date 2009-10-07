@@ -24,46 +24,48 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This class contains the static method to parse (decompress) a 
-* TinyOS SPINE 'StepCounter' Data packet payload into a platform independent one.
-* This class is invoked only by the SpineData class, thru the dynamic class loading.
-* 
+* Implementation of SpineFunctionReq responsible of handling setup of the function type 'Buffered Raw-Data'
+*
 * @author Raffaele Gravina
-* @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
+import spine.SPINEFunctionConstants;
+
+
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.exceptions.*;
 
-import spine.datamodel.*;
 
-public class StepCounterSpineData extends SpineCodec {
+public class BufferedRawDataSpineFunctionReq extends SpineCodec {
+
 	
-	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
-		throw new MethodNotSupportedException("encode");
+	private final static int PARAM_LENGTH = 1; 
+
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException{
+		throw new MethodNotSupportedException("decode");
 	};
 	
-	public SpineObject decode(Node node, byte[] payload) {
-				
-		StepCounterData data =  new StepCounterData();
-		
-		// set data.nodeID, data.functionCode e data.timestamp
-		data.baseInit(node, payload);
-		data.setStepsCount(byteArrayToInt(payload, 2));
-		
-		return data;
-	}
 	
-	private static int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 2; i++) {
-            int shift = (2 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
+	public byte[] encode(SpineObject payload) {
+		
+		spine.datamodel.functions.BufferedRawDataSpineFunctionReq workPayLoad = (spine.datamodel.functions.BufferedRawDataSpineFunctionReq)payload;
+		
+		byte[] data = new byte[3 + PARAM_LENGTH];
+	
+		data[0] = SPINEFunctionConstants.BUFFERED_RAW_DATA;
+		
+		byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;		
+		data[1] = activationBinaryFlag;
+		
+		data[2] = PARAM_LENGTH;
+
+		data[3] = workPayLoad.getSensor();
+
+		return data;	
+	}		
 }

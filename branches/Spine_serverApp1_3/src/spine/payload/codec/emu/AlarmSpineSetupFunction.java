@@ -24,15 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
-* Objects of this class are used for expressing at high level function requests 
-* (both activation and deactivation) of type 'StepCounter'.
-* An application that needs to do a StepCounter request, must create a new StepCounterSpineFunctionReq
-* object for alarm activation, or deactivation.
-* 
-* This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
-* to convert the high level request into an actual SPINE Ota message.     
-*
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
 *
 * @author Raffaele Gravina
 * @author Alessia Salmeri
@@ -40,7 +32,7 @@ Boston, MA  02111-1307, USA.
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
 import spine.SPINEFunctionConstants;
 
@@ -49,28 +41,44 @@ import spine.datamodel.functions.*;
 import spine.exceptions.*;
 
 
-public class StepCounterSpineFunctionReq extends SpineCodec {
+public class AlarmSpineSetupFunction extends SpineCodec {
 
-	
-	private final static int PARAM_LENGTH = 0; 
+	private final static int PARAM_LENGTH = 3; 
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
 	};  
-	
+
 	public byte[] encode(SpineObject payload) {
 		
-		spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
+		spine.datamodel.functions.AlarmSpineSetupFunction workPayLoad = (spine.datamodel.functions.AlarmSpineSetupFunction)payload;
 		
-		byte[] data = new byte[3 + PARAM_LENGTH];
+		byte[] data = new byte[5];
 	
-		data[0] = SPINEFunctionConstants.STEP_COUNTER;
+		data[0] = SPINEFunctionConstants.ALARM;
+		data[1] = PARAM_LENGTH;
 		
-		byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;		
-		data[1] = activationBinaryFlag;
+		data[2] = (byte)(workPayLoad.getSensor()<<4);
+		data[3] = (byte)workPayLoad.getWindowSize();
+		data[4] = (byte)workPayLoad.getShiftSize();
 		
-		data[2] = PARAM_LENGTH;
-
+		printPayload(data);
+		
 		return data;	
-	}		
+	}
+	
+	
+	private void printPayload(byte[] payload) {  // DEBUG CODE 
+		if(payload == null || payload.length == 0)
+			System.out.print("empty payload");
+		else{
+			for (int i = 0; i<payload.length; i++) {
+				short b =  payload[i];
+				if (b<0) b += 256;
+				System.out.print(Integer.toHexString(b) + " ");
+			}
+		}
+		System.out.println("");		
+	}
+	
 }

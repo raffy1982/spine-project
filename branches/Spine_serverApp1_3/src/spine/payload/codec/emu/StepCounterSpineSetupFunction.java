@@ -24,42 +24,46 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This class contains the static method to parse (decompress) a 
-* TinyOS SPINE 'Alarm' Data packet payload into a platform independent one.
-* This class is invoked only by the SpineData class, thru the dynamic class loading.
-* 
-* @author Roberta Giannantonio
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+*
+* @author Raffaele Gravina
 * @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
+import spine.SPINEFunctionConstants;
+
+import spine.datamodel.Node;
 import spine.datamodel.functions.*;
-
 import spine.exceptions.*;
 
-import spine.datamodel.*;
 
+public class StepCounterSpineSetupFunction extends SpineCodec {
 
-public class AlarmSpineData extends SpineCodec {
 	
-	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
-		throw new MethodNotSupportedException("encode");
-	};
+	private final static int PARAM_LENGTH = 4; 
 
-	public SpineObject decode(Node node, byte[] payload){
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};  
+
+	public byte[] encode(SpineObject payload) {
 		
-		AlarmData data =  new AlarmData();
+		spine.datamodel.functions.StepCounterSpineSetupFunction workPayLoad = (spine.datamodel.functions.StepCounterSpineSetupFunction)payload;
+			
+		byte[] data = new byte[2 + PARAM_LENGTH];
 		
-		// set data.node, data.functionCode e data.timestamp
-		data.baseInit(node, payload);
-		data.setDataType(payload[2]);
-		data.setSensorCode(payload[3]);
-		data.setValueType(payload[4]);
-		data.setAlarmType(payload[5]);
-		data.setCurrentValue(Data.convertFourBytesToInt(payload, 6));
+		data[0] = SPINEFunctionConstants.STEP_COUNTER; 
+		data[1] = PARAM_LENGTH;
+		
+		data[2] = (byte)((workPayLoad.getAvgAcceleration() & 0x0000FF00)>>8);
+		data[3] = (byte)(workPayLoad.getAvgAcceleration() & 0x000000FF);
+		data[4] = (byte)((workPayLoad.getStepThreshold() & 0x0000FF00)>>8);
+		data[5] = (byte)(workPayLoad.getStepThreshold() & 0x000000FF);
+
 		return data;
-	}
+	}	
 }

@@ -1,4 +1,4 @@
-package spine.communication.emule;
+package spine.communication.emu;
 
 import java.awt.Color;
 import java.awt.BorderLayout;

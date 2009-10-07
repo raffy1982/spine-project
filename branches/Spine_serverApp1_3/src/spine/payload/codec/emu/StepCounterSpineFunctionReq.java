@@ -1,7 +1,7 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic on node configuration for feature extraction and a 
-OtA protocol for the management for WSN
+allows dynamic configuration of feature extraction capabilities 
+of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -24,27 +24,35 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This class represents the SPINE Setup Sensor request.
- *  
- *
- * @author Raffaele Gravina
- * @author Alessia Salmeri
- *
- * @version 1.3
- * 
- * @see spine.SPINESensorConstants
- */
+*
+* Objects of this class are used for expressing at high level function requests 
+* (both activation and deactivation) of type 'StepCounter'.
+* An application that needs to do a StepCounter request, must create a new StepCounterSpineFunctionReq
+* object for alarm activation, or deactivation.
+* 
+* This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
+* to convert the high level request into an actual SPINE Ota message.     
+*
+*
+* @author Raffaele Gravina
+* @author Alessia Salmeri
+*
+* @version 1.3
+*/
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
+
+import spine.SPINEFunctionConstants;
 
 import spine.datamodel.Node;
 import spine.datamodel.functions.*;
-
 import spine.exceptions.*;
 
-public class SpineSetupSensor extends SpineCodec {
+
+public class StepCounterSpineFunctionReq extends SpineCodec {
+
 	
-	private final static int PARAM_LENGTH = 3;
+	private final static int PARAM_LENGTH = 0; 
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
@@ -52,30 +60,17 @@ public class SpineSetupSensor extends SpineCodec {
 	
 	public byte[] encode(SpineObject payload) {
 		
-		spine.datamodel.functions.SpineSetupSensor workPayLoad = (spine.datamodel.functions.SpineSetupSensor)payload;
+		spine.datamodel.functions.StepCounterSpineFunctionReq workPayLoad = (spine.datamodel.functions.StepCounterSpineFunctionReq)payload;
 		
-		byte[] data = new byte[PARAM_LENGTH];
-				
-		data[0] = (byte)((workPayLoad.getSensor()<<4) | (workPayLoad.getTimeScale()<<2 & 0x0C)); // 0x0C = 0000 1100
-		data[1] = (byte)((workPayLoad.getSamplingTime() & 0x0000FFFF)>>8);
-		data[2] = (byte)(workPayLoad.getSamplingTime() & 0x000000FF);
-		
-		printPayload(data);
-		return data;
-	}
+		byte[] data = new byte[3 + PARAM_LENGTH];
 	
+		data[0] = SPINEFunctionConstants.STEP_COUNTER;
+		
+		byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;		
+		data[1] = activationBinaryFlag;
+		
+		data[2] = PARAM_LENGTH;
 
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
-	
+		return data;	
+	}		
 }

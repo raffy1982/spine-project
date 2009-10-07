@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Feature'
 *
 * @author Raffaele Gravina
 * @author Alessia Salmeri
@@ -32,43 +32,44 @@ Boston, MA  02111-1307, USA.
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
 import spine.SPINEFunctionConstants;
+
 
 import spine.datamodel.Node;
 import spine.datamodel.functions.*;
 import spine.exceptions.*;
 
 
-public class AlarmSpineSetupFunction extends SpineCodec {
+public class FeatureSpineSetupFunction extends SpineCodec {
 
+	
 	private final static int PARAM_LENGTH = 3; 
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
 	};  
-
+	
 	public byte[] encode(SpineObject payload) {
 		
-		spine.datamodel.functions.AlarmSpineSetupFunction workPayLoad = (spine.datamodel.functions.AlarmSpineSetupFunction)payload;
+		spine.datamodel.functions.FeatureSpineSetupFunction workPayLoad = (spine.datamodel.functions.FeatureSpineSetupFunction)payload;
 		
 		byte[] data = new byte[5];
 	
-		data[0] = SPINEFunctionConstants.ALARM;
+		data[0] = SPINEFunctionConstants.FEATURE;
 		data[1] = PARAM_LENGTH;
-		
+
 		data[2] = (byte)(workPayLoad.getSensor()<<4);
 		data[3] = (byte)workPayLoad.getWindowSize();
 		data[4] = (byte)workPayLoad.getShiftSize();
-		
+
 		printPayload(data);
-		
 		return data;	
 	}
 	
 	
-	private void printPayload(byte[] payload) {  // DEBUG CODE 
+	private void printPayload(byte[] payload) {  // DEBUG CODE
 		if(payload == null || payload.length == 0)
 			System.out.print("empty payload");
 		else{
@@ -80,5 +81,5 @@ public class AlarmSpineSetupFunction extends SpineCodec {
 		}
 		System.out.println("");		
 	}
-	
+		
 }

@@ -24,74 +24,74 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-*
+* 
 * Objects of this class are used for expressing at high level function requests 
-* (both activation and deactivation) of type 'Alarm'.
-* An application that needs to do an Alarm request, must create a new AlarmSpineFunctionReq
-* object for alarm activation, or deactivation.
+* (both activation and deactivation) of type 'Feature'.
+* An application that needs to do a Feature request, must create a new FeatureSpineFunctionReq
+* object, set on it the sensor involved and use the addFeature one or more times 
+* (currently, up to 7 add are supported per each request) 
+* for features activation, or the removeFeature (currently, up to 7 remove are supported per each request) 
+* for features deactivation.
 * 
 * This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
 * to convert the high level request into an actual SPINE Ota message.     
 *
-*
-* @author Roberta Giannantonio
+* @author Raffaele Gravina
 * @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
+
 
 import spine.SPINEFunctionConstants;
-//import spine.SPINESensorConstants;
-
+import spine.datamodel.Feature;
 import spine.datamodel.Node;
+
 import spine.datamodel.functions.*;
 import spine.exceptions.*;
 
 
-public class AlarmSpineFunctionReq extends SpineCodec {
+public class FeatureSpineFunctionReq extends SpineCodec {
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
 	};  
-
-		public byte[] encode(SpineObject payload) {
+    
+	public byte[] encode(SpineObject payload) {
+		 
+		   spine.datamodel.functions.FeatureSpineFunctionReq workPayLoad = (spine.datamodel.functions.FeatureSpineFunctionReq)payload;
 			
-			spine.datamodel.functions.AlarmSpineFunctionReq workPayLoad = (spine.datamodel.functions.AlarmSpineFunctionReq)payload;
+			int featuresCount = workPayLoad.getFeatures().size();
 			
-			byte[] data = new byte[1 + 1 + 1 + 1 + 1 + 1 + 4 + 4 + 1];
-	
+			byte[] data = new byte[1 + 1 + 1 + 1 + 1 + featuresCount*2];
+			
 			byte activationBinaryFlag = (workPayLoad.getActivationFlag())? (byte)1 : 0;
 			
-			data[0] = SPINEFunctionConstants.ALARM; 
+			data[0] = SPINEFunctionConstants.FEATURE; 
 			
 			data[1] = activationBinaryFlag;
-			data[2] = (byte)(12);
-				
-			data[3] = workPayLoad.getDataType();
-			data[4] = workPayLoad.getSensor();
-			data[5] = workPayLoad.getValueType();
 			
-			//lower Threshold 			
-			data[6] = (byte) (workPayLoad.getLowerThreshold() >> 24);
-			data[7] = (byte) (workPayLoad.getLowerThreshold() >> 16);
-			data[8] = (byte) (workPayLoad.getLowerThreshold() >> 8);
-			data[9] = (byte) (workPayLoad.getLowerThreshold());
+			data[2] = (byte)(1 + 1 + featuresCount*2);
+						
+			data[3] = workPayLoad.getSensor();
 			
-			//upper Threshold 			
-			data[10] = (byte) (workPayLoad.getUpperThreshold() >> 24);
-			data[11] = (byte) (workPayLoad.getUpperThreshold() >> 16);
-			data[12] = (byte) (workPayLoad.getUpperThreshold()>> 8);
-			data[13] = (byte) (workPayLoad.getUpperThreshold());
-			
-			data[14] = workPayLoad.getAlarmType();
+			data[4] = (byte)featuresCount;
 					
+			for (int i = 0; i < featuresCount; i++) {
+				
+				data[(5+i*2)] = ((Feature)workPayLoad.getFeatures().elementAt(i)).getFeatureCode();
+				data[(5+i*2)+1] = ((Feature)workPayLoad.getFeatures().elementAt(i)).getChannelBitmask();
+
+			}
+			
 			printPayload(data);
+			
 			return data;		
 		}
-		
-		
+	
+	 
 		private void printPayload(byte[] payload) {  // DEBUG CODE
 			if(payload == null || payload.length == 0)
 				System.out.print("empty payload");
@@ -104,5 +104,5 @@ public class AlarmSpineFunctionReq extends SpineCodec {
 			}
 			System.out.println("");		
 		}
-		
 }
+

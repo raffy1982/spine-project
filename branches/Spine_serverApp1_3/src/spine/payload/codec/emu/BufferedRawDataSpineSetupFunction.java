@@ -24,15 +24,14 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+* Implementation of BufferedRawDataSpineSetupFunction responsible of handling setup of the function type 'Buffered Raw-Data'
 *
 * @author Raffaele Gravina
-* @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-package spine.payload.codec.emule;
+package spine.payload.codec.emu;
 
 import spine.SPINEFunctionConstants;
 
@@ -41,29 +40,30 @@ import spine.datamodel.functions.*;
 import spine.exceptions.*;
 
 
-public class StepCounterSpineSetupFunction extends SpineCodec {
+public class BufferedRawDataSpineSetupFunction extends SpineCodec {
 
 	
 	private final static int PARAM_LENGTH = 4; 
 
-	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
-	};  
+	};
+    
 
 	public byte[] encode(SpineObject payload) {
 		
-		spine.datamodel.functions.StepCounterSpineSetupFunction workPayLoad = (spine.datamodel.functions.StepCounterSpineSetupFunction)payload;
-			
+		spine.datamodel.functions.BufferedRawDataSpineSetupFunction workPayLoad = (spine.datamodel.functions.BufferedRawDataSpineSetupFunction)payload;
+		
 		byte[] data = new byte[2 + PARAM_LENGTH];
-		
-		data[0] = SPINEFunctionConstants.STEP_COUNTER; 
+	
+		data[0] = SPINEFunctionConstants.BUFFERED_RAW_DATA;
 		data[1] = PARAM_LENGTH;
-		
-		data[2] = (byte)((workPayLoad.getAvgAcceleration() & 0x0000FF00)>>8);
-		data[3] = (byte)(workPayLoad.getAvgAcceleration() & 0x000000FF);
-		data[4] = (byte)((workPayLoad.getStepThreshold() & 0x0000FF00)>>8);
-		data[5] = (byte)(workPayLoad.getStepThreshold() & 0x000000FF);
 
-		return data;
-	}	
+		data[2] = workPayLoad.getSensor();
+		data[3] = (byte)(workPayLoad.getChannelsBitmask() & 0x0000000F);
+		data[4] = (byte)workPayLoad.getBufferSize();
+		data[5] = (byte)workPayLoad.getShiftSize();
+		
+		return data;	
+	}
 }

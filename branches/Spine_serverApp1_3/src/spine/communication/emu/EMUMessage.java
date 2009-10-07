@@ -24,44 +24,52 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This class represents a SPINE Start command.
- * It contains the logic for encoding a start command from an high level Start object.
+ *
+ * Implementation for TinyOS platforms of the GAL Message interface.
  * 
- * Note that this class is only used internally at the framework.   
- *  
+ * Note that this class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
- * @author Alessia Salmeri
  *
- * @version 1.3
+ * @version 1.2
  */
 
-package spine.payload.codec.emule;
+package spine.communication.emu;
 
-import spine.datamodel.Node;
-import spine.datamodel.functions.*;
-
-import spine.exceptions.*;
-
-
-public class SpineStart extends SpineCodec {
+//public class EMUMessage extends com.tilab.gal.Message implements Serializable {
+public class EMUMessage extends com.tilab.gal.Message {
 	
-	private final static int PARAM_LENGTH = 4;
-	
-	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
-		throw new MethodNotSupportedException("decode");
-	};    
+	private static final long serialVersionUID = 1L;
 
-	public byte[] encode(SpineObject payload) {
+	public void setSourceURL(String sourceID) {
+		this.sourceURL = sourceID;
+	}
+	
+	/*
+	public void setSeqNo(byte seqNo) {
+		this.transSeqNumber =  seqNo;
+		if (this.transSeqNumber < 0) 
+			this.transSeqNumber += 256;
+	}
+	*/
+	
+	public String toString() {
+		short[] payload = this.getPayload();
+		String valPayload= "";
+		if (payload == null || payload.length == 0){
+		    valPayload="empty payload";}
+		else {
+			for (int i = 0; i < payload.length; i++) {
+				short b = payload[i];
+				if (b < 0)
+					b += 256;
+				valPayload=valPayload + Integer.toHexString(b) + " ";
+			}
+		}
 		
-		spine.datamodel.functions.SpineStart workPayLoad = (spine.datamodel.functions.SpineStart)payload;
+		return "From node: " + this.getSourceURL() + " " + "pktType(clusterId)=" + this.clusterId + " - " + valPayload;		
+
 		
-		byte[] data = new byte[PARAM_LENGTH];
-				
-		data[0] = (byte)(workPayLoad.getActiveNodesCount()>>8);
-		data[1] = (byte)workPayLoad.getActiveNodesCount();
-		data[2] = (workPayLoad.getRadioAlwaysOn())? (byte)1: 0;
-		data[3] = (workPayLoad.getEnableTDMA())? (byte)1: 0;
-		return data;
-	}	
+	}
+
 }

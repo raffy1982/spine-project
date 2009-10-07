@@ -35,7 +35,7 @@ Boston, MA  02111-1307, USA.
  * @version 1.2
  */
 
-package spine.communication.emule;
+package spine.communication.emu;
 
 import java.io.InterruptedIOException;
 

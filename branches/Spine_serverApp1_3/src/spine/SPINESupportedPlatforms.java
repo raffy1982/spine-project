@@ -39,6 +39,6 @@ public interface SPINESupportedPlatforms {
 	
 	public final static String TINYOS_VIA_SERIALFWD = "sf";
 	
-	public final static String EMULATOR = "emule";
+	public final static String EMULATOR = "emu";
 	
 }

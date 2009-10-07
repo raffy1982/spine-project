@@ -24,27 +24,44 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Implementation of the GAL ConfigurationDescriptor
+ * This class represents a SPINE Start command.
+ * It contains the logic for encoding a start command from an high level Start object.
+ * 
+ * Note that this class is only used internally at the framework.   
  *  
  *
  * @author Raffaele Gravina
+ * @author Alessia Salmeri
  *
- * @version 1.2
+ * @version 1.3
  */
 
-package spine.communication.emule;
+package spine.payload.codec.emu;
 
-import com.tilab.gal.ConfigurationDescriptor;
+import spine.datamodel.Node;
+import spine.datamodel.functions.*;
 
-public class EMUConfigurationDescriptor implements ConfigurationDescriptor {
+import spine.exceptions.*;
 
-	public void commit() {
-	}
 
-	public void get(Parameter parm) {
-	}
+public class SpineStart extends SpineCodec {
+	
+	private final static int PARAM_LENGTH = 4;
+	
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};    
 
-	public void preSet(Parameter parm) {
-	}
-
+	public byte[] encode(SpineObject payload) {
+		
+		spine.datamodel.functions.SpineStart workPayLoad = (spine.datamodel.functions.SpineStart)payload;
+		
+		byte[] data = new byte[PARAM_LENGTH];
+				
+		data[0] = (byte)(workPayLoad.getActiveNodesCount()>>8);
+		data[1] = (byte)workPayLoad.getActiveNodesCount();
+		data[2] = (workPayLoad.getRadioAlwaysOn())? (byte)1: 0;
+		data[3] = (workPayLoad.getEnableTDMA())? (byte)1: 0;
+		return data;
+	}	
 }
