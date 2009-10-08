@@ -119,6 +119,14 @@ public class SpineSetupSensor  implements SpineObject {
 		return samplingTime;
 	}
 	
+	/**
+	 * The hash code is represented by the sensor code
+	 * 
+	 * @return the sensor code as a hash-code
+	 */
+	public int hashCode() {
+		return this.sensor;
+	}
 	
 	/**
 	 * Returns a string representation of this SpineSetupSensor object.
