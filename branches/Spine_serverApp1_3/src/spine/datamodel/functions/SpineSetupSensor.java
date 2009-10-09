@@ -129,6 +129,20 @@ public class SpineSetupSensor  implements SpineObject {
 	}
 	
 	/**
+	 * Compares this SpineSetupSensor to the specified object. 
+	 * The result is true if and only if the argument is not null and is a SpineSetupSensor object 
+	 * with the same sensorCode of this SpineSetupSensor one.
+	 *
+	 * @param the object to compare this SpineSetupSensor against.
+	 *	  
+	 * @return true if the two SpineSetupSensor object are equal; false otherwise.
+	 */
+	public boolean equals(Object aSpineSetupSensor) {
+		if (aSpineSetupSensor == null) return false;
+		return this.sensor == ((SpineSetupSensor)aSpineSetupSensor).sensor;
+	}
+	
+	/**
 	 * Returns a string representation of this SpineSetupSensor object.
 	 * 
 	 * @return the String representation of this SpineSetupSensor object
