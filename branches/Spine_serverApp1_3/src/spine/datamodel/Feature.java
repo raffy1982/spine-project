@@ -67,7 +67,7 @@ public class Feature implements Comparable, Serializable {
 	private int ch3Value;
 	private int ch4Value;
 	
-	private Integer[] chValues = new Integer[4];
+	private Integer[] chValues = new Integer[SPINESensorConstants.MAX_VALUE_TYPES];
 	
 	/**
 	 * Default Constructor of a Feature object.
@@ -92,6 +92,9 @@ public class Feature implements Comparable, Serializable {
 		this.functionCode = SPINEFunctionConstants.FEATURE;
 		this.featureCode = featureCode;
 		this.channelBitmask = channelBitmask;
+		for(int i = 0; i<chValues.length; i++)
+			if(SPINESensorConstants.chPresent(i, channelBitmask)) 
+				chValues[i] = new Integer(0);
 	}
 	
 	/**
@@ -356,10 +359,22 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void addChannelToBitmask(byte channel) {
 		switch(channel) {
-			case SPINESensorConstants.CH1: this.channelBitmask |= SPINESensorConstants.CH1_ONLY; break; 
-			case SPINESensorConstants.CH2: this.channelBitmask |= SPINESensorConstants.CH2_ONLY; break;
-			case SPINESensorConstants.CH3: this.channelBitmask |= SPINESensorConstants.CH3_ONLY; break;
-			case SPINESensorConstants.CH4: this.channelBitmask |= SPINESensorConstants.CH4_ONLY; break;
+			case SPINESensorConstants.CH1: 
+				this.channelBitmask |= SPINESensorConstants.CH1_ONLY; 
+				this.chValues[0] = new Integer(this.ch1Value);
+				break; 
+			case SPINESensorConstants.CH2: 
+				this.channelBitmask |= SPINESensorConstants.CH2_ONLY;
+				this.chValues[1] = new Integer(this.ch2Value);
+				break;
+			case SPINESensorConstants.CH3: 
+				this.channelBitmask |= SPINESensorConstants.CH3_ONLY;
+				this.chValues[2] = new Integer(this.ch3Value);
+				break;
+			case SPINESensorConstants.CH4: 
+				this.channelBitmask |= SPINESensorConstants.CH4_ONLY;
+				this.chValues[3] = new Integer(this.ch4Value);
+				break;
 		}		
 	}
 	
@@ -406,6 +421,7 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setCh1Value(int ch1Value) {
 		this.ch1Value = ch1Value;
+		chValues[0] = new Integer(this.ch1Value); 
 	}
 
 	/**
@@ -413,6 +429,7 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setCh2Value(int ch2Value) {
 		this.ch2Value = ch2Value;
+		chValues[1] = new Integer(this.ch2Value);
 	}
 
 	/**
@@ -420,6 +437,7 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setCh3Value(int ch3Value) {
 		this.ch3Value = ch3Value;
+		chValues[2] = new Integer(this.ch3Value);
 	}
 
 	/**
@@ -427,6 +445,7 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setCh4Value(int ch4Value) {
 		this.ch4Value = ch4Value;
+		chValues[3] = new Integer(this.ch4Value);
 	}
 
 	public int compareTo(Object o) {

@@ -85,8 +85,8 @@ public class Address implements Serializable {
 	 * @param anAddress the Address to compare this Address against 
 	 * @return true whether this address is equals to the given one; false otherwise.
 	 */
-	public boolean equals(Address anAddress) {
-		return this.address.equals(anAddress.address);
+	public boolean equals(Object anAddress) {
+		return this.address.equals(((Address)anAddress).address);
 	}
 	
 }
