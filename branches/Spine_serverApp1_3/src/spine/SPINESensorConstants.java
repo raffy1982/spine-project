@@ -205,4 +205,14 @@ public class SPINESensorConstants {
 		return (( (channelBitmask>>(MAX_VALUE_TYPES - (chID+1))) & 0x01 ) == 1);
 	}
 	
+	public static int countChannelsInBitmask(byte channelBitmask) {
+		int temp = channelBitmask; 
+		int result = 0; 
+		while (temp > 0) { 
+			result += temp & 0x01; 
+			temp = temp >> 1; 
+		} 
+		return result; 
+	}	
+	
 }

@@ -22,42 +22,38 @@ License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
+
 /**
  *
- * Abstract class that any data packet payload codec must extends
+ *  This exception is thrown when the attempt to decode 
+ *  a low level SPINE message into an higher level SpineObject fails.
+ *  
+ *  Known uses: spine.payload.codec.tinyos.BufferedRawDataSpineData
  *
- * @author Alessia Salmeri
+ * @author Raffaele Gravina
  *
  * @version 1.3
  */
 
+package spine.exceptions;
 
-package spine.datamodel.functions;
+public class PacketDecodingException extends RuntimeException {
 
-import spine.datamodel.Node;
-import spine.exceptions.*;
-
-public abstract class SpineCodec {
+	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Converting an high level data packet payload into 
-	 * an actual SPINE Ota message, in terms of a byte[] array
-	 * 
-	 * @param payload the platform independent data packet payload
-	 * @return the actual SPINE Ota message 
-	 */
-	public abstract byte[] encode (SpineObject payload)throws MethodNotSupportedException;
+	public PacketDecodingException() {
+	}
 
-	/**
-	 * Decompress data packet payload into a platform independent packet payload
-	 * 
-	 * @param node the Node that issued this data packet
-	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
-	 * 
-	 * @return a byte array representing the platform independent data packet payload.
-	 */
-	public abstract SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException, PacketDecodingException;
-	
+	public PacketDecodingException(String message) {
+		super(message);
+	}
+
+	public PacketDecodingException(Throwable cause) {
+		super(cause);
+	}
+
+	public PacketDecodingException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }
-	
-

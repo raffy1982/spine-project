@@ -22,42 +22,37 @@ License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
+
 /**
  *
- * Abstract class that any data packet payload codec must extends
+ *  This exception is thrown when the an unexpected SPINE message has been received.
+ *  
+ *  Known uses: spine.SPINEManager
  *
- * @author Alessia Salmeri
+ * @author Raffaele Gravina
  *
  * @version 1.3
  */
 
+package spine.exceptions;
 
-package spine.datamodel.functions;
+public class UnexpectedMessageException extends RuntimeException {
 
-import spine.datamodel.Node;
-import spine.exceptions.*;
-
-public abstract class SpineCodec {
+	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Converting an high level data packet payload into 
-	 * an actual SPINE Ota message, in terms of a byte[] array
-	 * 
-	 * @param payload the platform independent data packet payload
-	 * @return the actual SPINE Ota message 
-	 */
-	public abstract byte[] encode (SpineObject payload)throws MethodNotSupportedException;
+	public UnexpectedMessageException() {
+	}
 
-	/**
-	 * Decompress data packet payload into a platform independent packet payload
-	 * 
-	 * @param node the Node that issued this data packet
-	 * @param payload the low level byte array containing the payload of the Data packet to parse (decompress)
-	 * 
-	 * @return a byte array representing the platform independent data packet payload.
-	 */
-	public abstract SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException, PacketDecodingException;
-	
+	public UnexpectedMessageException(String message) {
+		super(message);
+	}
+
+	public UnexpectedMessageException(Throwable cause) {
+		super(cause);
+	}
+
+	public UnexpectedMessageException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }
-	
-

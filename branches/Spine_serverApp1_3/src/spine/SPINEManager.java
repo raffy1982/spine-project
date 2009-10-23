@@ -37,26 +37,29 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
-import spine.exceptions.*;
-
 import java.io.InterruptedIOException;
-import java.util.Vector;
 import java.util.Hashtable;
-
-import com.tilab.gal.LocalNodeAdapter;
-import com.tilab.gal.WSNConnection;
-
-import spine.SPINEPacketsConstants;
+import java.util.Vector;
 
 import spine.datamodel.Address;
 import spine.datamodel.Data;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;
-
-
-import spine.datamodel.functions.*;
+import spine.datamodel.functions.CodecInfo;
+import spine.datamodel.functions.SpineCodec;
+import spine.datamodel.functions.SpineFunctionReq;
+import spine.datamodel.functions.SpineObject;
+import spine.datamodel.functions.SpineSetupFunction;
+import spine.datamodel.functions.SpineSetupSensor;
+import spine.datamodel.functions.SpineStart;
 import spine.datamodel.serviceMessages.ServiceErrorMessage;
 import spine.datamodel.serviceMessages.ServiceWarningMessage;
+import spine.exceptions.MethodNotSupportedException;
+import spine.exceptions.PacketDecodingException;
+import spine.exceptions.UnexpectedMessageException;
+
+import com.tilab.gal.LocalNodeAdapter;
+import com.tilab.gal.WSNConnection;
 
 
 
@@ -875,7 +878,11 @@ public class SPINEManager {
 					}					
 					break;
 				}
-				case SPINEPacketsConstants.DATA: {					
+				case SPINEPacketsConstants.DATA: {
+					if(getNodeByPhysicalID(nodeID) == null)
+						 throw new UnexpectedMessageException("Unexpected DATA message received " +
+						 		"[from node:" + nodeID + "]");					 
+					 
 					byte functionCode;					
 					//  Setting functionCode
 					try {
@@ -906,7 +913,19 @@ public class SPINEManager {
 						 // Invoking decode and setting SpineObject data
 						 o = spineCodec.decode(getNodeByPhysicalID(nodeID), payload);
 						
-					} catch (Exception e) { 
+					} catch (PacketDecodingException e) {
+						e.printStackTrace();
+						return;
+					} catch (MethodNotSupportedException e) {
+						e.printStackTrace();
+						return;
+					} catch (InstantiationException e) {
+						e.printStackTrace();
+						return;
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+						return;
+					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 						return;
 					}

@@ -37,18 +37,21 @@ Boston, MA  02111-1307, USA.
 package spine.payload.codec.tinyos;
 
 import spine.SPINESensorConstants;
-import spine.datamodel.functions.*;
-import spine.exceptions.*;
-
-import spine.datamodel.*;
+import spine.datamodel.BufferedRawData;
+import spine.datamodel.Data;
+import spine.datamodel.Node;
+import spine.datamodel.functions.SpineCodec;
+import spine.datamodel.functions.SpineObject;
+import spine.exceptions.MethodNotSupportedException;
+import spine.exceptions.PacketDecodingException;
 
 public class BufferedRawDataSpineData extends SpineCodec {
 	
-	public byte[] encode(SpineObject payload) throws MethodNotSupportedException{
+	public byte[] encode(SpineObject payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("encode");
 	};
 	
-	public SpineObject decode(Node node, byte[] payload) {
+	public SpineObject decode(Node node, byte[] payload) throws PacketDecodingException {
 				
 		BufferedRawData data =  new BufferedRawData();
 		
@@ -70,6 +73,14 @@ public class BufferedRawDataSpineData extends SpineCodec {
 		int bufferSize = payload[pldIndex++];
 		
 		int[][] values = new int[SPINESensorConstants.MAX_VALUE_TYPES][];
+		
+		// if the actual sensor readings data ((payload.length - pldIndex) bytes) 
+		// in the payload is less than what is declared (by channelBitmask, bufferSize, and dataWordLength) 
+		// then this message is somehow malformed or corrupted.
+		if(((payload.length - pldIndex) < 
+				(SPINESensorConstants.countChannelsInBitmask(channelBitmask) * bufferSize * dataWordLength)) ) 
+			throw new PacketDecodingException("Malformed or corrupted BufferedRawData message received " +
+											  "[from node: " + node.getPhysicalID()+"]");
 		
 		byte[] dataTmp = new byte[4];		
 		for (int i = 0; i<SPINESensorConstants.MAX_VALUE_TYPES; i++) {							
