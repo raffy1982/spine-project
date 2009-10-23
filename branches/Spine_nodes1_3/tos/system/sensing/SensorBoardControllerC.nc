@@ -66,25 +66,24 @@ implementation {
      
      // if new sensors are added to one of the supported sensor boards, declare and wire PIL driver components and timers into the sensor board ifdef
      
-     //SPINE sensor board support (acceleromenter, voltage, gyro, internal temp ...)
-     
-     #ifdef SPINE_SENSOR_BOARD
+   //SPINE sensor board support (acceleromenter, voltage, gyro, internal temp ...)
+   #ifdef SPINE_SENSORBOARD
        /* For the ACC Sensor */
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
-     
+
        /* For the VOLTAGE Sensor */
      components VoltageSensorC;
      components new TimerMilliC() as VoltageSensorTimer;
-     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;   
+     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;
      SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
-     
+
         /* For the GYRO Sensor */
      components GyroSensorC;
      components new TimerMilliC() as GyroSensorTimer;
-     SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;  
+     SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
      SensorBoardControllerP.SamplingTimers[GYRO_SENSOR] -> GyroSensorTimer;
      
       /* For the INTERNAL_TEMP Sensor */
@@ -92,31 +91,28 @@ implementation {
      components new TimerMilliC() as InternalTemperatureSensorTimer;
      SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
      SensorBoardControllerP.SamplingTimers[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorTimer;
-     #endif
+   #endif
 
-     //SHIMMER sensor board support (acceleromenter...)
-     	 
-	 #ifdef SHIMMER_SENSOR_BOARD
+   //SHIMMER sensor board support (acceleromenter...)
+   #ifdef SHIMMER_SENSORBOARD
 	 /* For the ACC Sensor */
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
-     #endif
+   #endif
 
-     //MTS300 sensor board support (acceleromenter...)
-     	 
-	 #ifdef MTS300_SENSOR_BOARD
+   //MTS300 sensor board support (acceleromenter...)
+   #ifdef MTS300_SENSORBOARD
 	 /* For the ACC Sensor */
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
-     #endif
+   #endif
      
-     //'Wisepla' BIOSENSOR sensor board (developed in Tampere University of Technology, Tampere, Finland) support (acceleromenter, ecg, eip ...
-	 
-	 #ifdef WISEPLA_BIOSENSOR     
+   //'Wisepla' BIOSENSOR sensor board (developed in Tampere University of Technology, Tampere, Finland) support (acceleromenter, ecg, eip ...
+   #ifdef WISEPLA_BIOSENSOR_SENSORBOARD
      /* For the EIP Sensor */
      components EipSensorC;
      components new TimerMilliC() as EipSensorTimer;
@@ -134,7 +130,7 @@ implementation {
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
-     #endif
+   #endif
 	 
      // if new sensor board are added, declare and wire PIL driver components and timers down here
 

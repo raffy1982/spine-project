@@ -3,22 +3,39 @@ PFLAGS += -DSPINE_EXTRA
 
 TOS_OVERLAY_DIR = $(LOCAL_TOSROOT)/tos
 
+ifeq ($(filter install,$(MAKECMDGOALS)),install)
+            $(error ERROR: please specify an ID after 'install' starting from 1 (e.g. 'make $(MAKECMDGOALS),1'))
+endif
+ifeq ($(filter reinstall,$(MAKECMDGOALS)),reinstall)
+            $(error ERROR: please specify an ID  after 'reinstall' starting from 1 (e.g. 'make $(MAKECMDGOALS),1'))
+endif
 
 ifndef SENSORBOARD
-       $(error Error: SENSORBOARD not defined!)
+       PLTFORM=$(word 1, $(MAKECMDGOALS))
+       ifeq ($(PLTFORM),telosb)
+            SENSORBOARD=spine
+       else ifeq ($(PLTFORM),tmote)
+            SENSORBOARD=spine
+       else ifeq ($(PLTFORM),shimmer)
+            SENSORBOARD=shimmer
+       else ifeq ($(PLTFORM),micaz)
+            SENSORBOARD=mts300
+       else ifndef SENSORBOARD
+            $(error ERROR: Could not default SENSORBOARD with given target platform ($(PLTFORM)). Please define it manually: 'SENSORBOARD=mySB make $(PLTFORM)')!)
+       endif
+       $(warning WARNING: SENSORBOARD defaulting to '$(SENSORBOARD)')
 endif
 
 ifeq ($(SENSORBOARD),spine)
-     PFLAGS += -DSPINE_SENSOR_BOARD
-endif
-ifeq ($(SENSORBOARD),shimmer)
-     PFLAGS += -DSHIMMER_SENSOR_BOARD
-endif
-ifeq ($(SENSORBOARD),mts300)
-     PFLAGS += -DMTS300_SENSOR_BOARD
-endif
-ifeq ($(SENSORBOARD),biosensor)
-     PFLAGS += -DWISEPLA_BIOSENSOR
+     PFLAGS += -DSPINE_SENSORBOARD
+else ifeq ($(SENSORBOARD),shimmer)
+     PFLAGS += -DSHIMMER_SENSORBOARD
+else ifeq ($(SENSORBOARD),mts300)
+     PFLAGS += -DMTS300_SENSORBOARD
+else ifeq ($(SENSORBOARD),biosensor)
+     PFLAGS += -DWISEPLA_BIOSENSOR_SENSORBOARD
+else 
+     PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif
 
 
