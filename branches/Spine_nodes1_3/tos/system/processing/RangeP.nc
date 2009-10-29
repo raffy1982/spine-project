@@ -39,6 +39,7 @@ Boston, MA  02111-1307, USA.
        uses {
           interface Boot;
           interface FeatureEngine;
+	  interface MathUtils;
        }
 }
 
@@ -54,23 +55,6 @@ implementation {
           }
        }
 
-       int32_t calculate(int16_t* data, uint16_t elemCount) {
-            uint16_t i;
-            int16_t min = data[0];
-            int16_t max = min;
-
-            // we don't use the MathUtils command 'max' and 'min'; 
-            // instead, we can compute both using one single for loop ( O(n) vs O(2n) )
-            for(i = 1; i < elemCount; i++) {
-                 if( data[i] < min)
-                      min = data[i];
-                 if( data[i] > max)
-                      max = data[i];
-            }
-
-            return (max - min);
-       }
-       
        command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
             uint8_t i;
             uint8_t mask = 0x08;
@@ -78,7 +62,7 @@ implementation {
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
                if ( (channelMask & (mask>>i)) == (mask>>i))
-                  ((uint16_t *) result)[rChCount++] = calculate(data[i], dataLen);
+                  ((uint16_t *) result)[rChCount++] = call MathUtils.range(data[i], dataLen);
 
             return channelMask;
        }

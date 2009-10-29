@@ -35,11 +35,22 @@ Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #define NEXT(n, i)  (((n) + (i)/(n)) >> 1)
 
+
 module MathUtilsC {
    provides interface MathUtils;
+	
 }
+
 implementation
 {
+      
+      command uint32_t MathUtils.abs(int32_t number) {
+       	    if(number<0)
+	       return -number;
+	    return number;
+      }
+
+
       command uint16_t MathUtils.max(int16_t* data, uint16_t elemCount) {
             uint16_t i;
             int16_t max = data[0];
@@ -71,6 +82,44 @@ implementation
 
             return  (mu / dataLen);
       }
+      
+	command int32_t MathUtils.range(int16_t* data, uint16_t elemCount) {
+            uint16_t i;
+            int16_t min = data[0];
+            int16_t max = min;
+
+            // we don't use the MathUtils command 'max' and 'min'; 
+            // instead, we can compute both using one single for loop ( O(n) vs O(2n) )
+            for(i = 1; i < elemCount; i++) {
+                 if( data[i] < min)
+                      min = data[i];
+                 if( data[i] > max)
+                      max = data[i];
+            }
+
+            return (max - min);
+       }
+       
+      command uint32_t MathUtils.stdev(int16_t* data, uint16_t elemCount){
+	      uint32_t stdev = 0;
+	      stdev = call MathUtils.variance(data,elemCount);
+	      return call MathUtils.isqrt(stdev);
+      }
+       
+      
+      command uint32_t MathUtils.rms(int16_t* data, uint16_t elemCount) {
+            uint32_t rms = 0;
+            uint16_t i;
+
+            for(i = 0; i<elemCount; i++)
+                  rms += ( (int32_t)data[i] * (int32_t)data[i] );
+
+            rms /= elemCount;
+
+            return call MathUtils.isqrt(rms);
+       }
+       
+
 //       
 //       command uint32_t MathUtils.varianceOld(int16_t* data, uint16_t elemCount) {
 //           uint32_t var = 0;
@@ -175,8 +224,6 @@ implementation
 
            return n1;
        }
-       
-
 
        /*
        * Returns the truncated integer square root of the given parameter.

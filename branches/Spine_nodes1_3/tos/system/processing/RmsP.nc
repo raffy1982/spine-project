@@ -36,8 +36,7 @@ Boston, MA  02111-1307, USA.
        
        uses {
           interface Boot;
-          interface FeatureEngine;
-          
+          interface FeatureEngine;           
           interface MathUtils;
        }
 
@@ -56,18 +55,6 @@ Boston, MA  02111-1307, USA.
           }
        }
 
-       int32_t calculate(int16_t* data, uint16_t elemCount) {
-            int32_t rms = 0;
-            uint16_t i;
-
-            for(i = 0; i<elemCount; i++)
-                  rms += ( (int32_t)data[i] * (int32_t)data[i] );
-
-            rms /= elemCount;
-
-            return call MathUtils.isqrt(rms);
-       }
-       
        command uint8_t Feature.calculate(int16_t** data, uint8_t channelMask, uint16_t dataLen, uint8_t* result) {
             uint8_t i;
             uint8_t mask = 0x08;
@@ -75,7 +62,7 @@ Boston, MA  02111-1307, USA.
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
                if ( (channelMask & (mask>>i)) == (mask>>i))
-                  ((uint16_t *) result)[rChCount++] = calculate(data[i], dataLen);
+                  ((uint16_t *) result)[rChCount++] = call MathUtils.rms(data[i], dataLen);
 
             return channelMask;
        }

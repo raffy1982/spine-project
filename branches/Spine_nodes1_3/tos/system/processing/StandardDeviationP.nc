@@ -63,8 +63,7 @@ implementation {
 
             for (i = 0; i<MAX_VALUE_TYPES; i++)
                if ( (channelMask & (mask>>i)) == (mask>>i))
-                  ((uint16_t *) result)[rChCount++] = call MathUtils.isqrt(call MathUtils.variance(data[i], dataLen));
-
+                 ((uint16_t *) result)[rChCount++] = call MathUtils.stdev(data[i], dataLen);
             return channelMask;
        }
        

@@ -34,6 +34,16 @@ Boston, MA  02111-1307, USA.
  interface MathUtils {
 
         /*
+        * Returns the absolute value of the given number.
+        *
+        * @param number the value to be processed
+        *
+        * @return the absolute value of the given number
+        */
+	command uint32_t abs(int32_t number);
+
+
+        /*
         * Returns the MAX value of the given 'data' array of size 'elemCount'.
         *
         *
@@ -65,6 +75,17 @@ Boston, MA  02111-1307, USA.
         * @return the MEAN value of the 'data' array
         */
         command uint16_t mean(int16_t* data, uint16_t elemCount);
+        
+        /*
+        * Returns the RMS value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
+        *
+        * @return the RMS value of the 'data' array
+        */
+        command uint32_t rms(int16_t* data, uint16_t elemCount);
 
         /*
         * Returns the VARIANCE value of the given 'data' array of size 'elemCount'.
@@ -76,6 +97,29 @@ Boston, MA  02111-1307, USA.
         * @return the VARIANCE value of the 'data' array
         */
         command uint32_t variance(int16_t* data, uint16_t elemCount);
+	
+	/*
+        * Returns the RANGE value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
+        *
+        * @return the RANGE value of the 'data' array
+        */
+        command int32_t range(int16_t* data, uint16_t elemCount);
+	
+	/*
+        * Returns the STANDARD DEVIATION value of the given 'data' array of size 'elemCount'.
+        *
+        *
+        * @param data the pointer to the array
+        * @param elemCount the size of the array
+        *
+        * @return the STANDARD DEVIATION value of the 'data' array
+        */
+        command uint32_t stdev(int16_t* data, uint16_t elemCount);
+
 
         /*
         * Returns the truncated integer square root of the given parameter.

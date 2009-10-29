@@ -37,10 +37,11 @@ Boston, MA  02111-1307, USA.
  implementation {
 
     components RangeP;
-    components MainC, FeatureEngineC;
+    components MainC, FeatureEngineC, MathUtilsC;
 
     Feature = RangeP;
 
     RangeP.Boot -> MainC.Boot;
     RangeP.FeatureEngine -> FeatureEngineC;
+    RangeP.MathUtils -> MathUtilsC;
  }
