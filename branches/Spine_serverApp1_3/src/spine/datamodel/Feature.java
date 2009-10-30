@@ -56,6 +56,8 @@ public class Feature implements Comparable, Serializable {
 	 */
 	private int nodeID;
 	
+	private String featureLabel;
+	
 	private byte functionCode;
 	private byte featureCode;
 	
@@ -312,6 +314,15 @@ public class Feature implements Comparable, Serializable {
 	}
 	
 	/**
+	 * Getter method of the value of the feature label
+	 * @return the value of the feature label
+	 */
+	public String getFeatureLabel() {
+		return featureLabel;
+	}
+	
+	
+	/**
 	 * 
 	 * Setter method of the node id
 	 * 
@@ -347,6 +358,16 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setSensorCode(byte sensorCode) {
 		this.sensorCode = sensorCode;			
+	}
+	
+	
+	/**
+	 * 
+	 * Setter method of the feature label
+	 * 
+	 */
+	public void setFeatureLabel(String featureLabel) {
+		this.featureLabel = featureLabel;			
 	}
 
 	/**
