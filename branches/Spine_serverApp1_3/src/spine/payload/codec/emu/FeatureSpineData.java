@@ -57,11 +57,19 @@ public class FeatureSpineData extends SpineCodec {
 		throw new MethodNotSupportedException("encode");
 	};
 	
+	int MAX_MSG_LENGHT=2500;
+	byte MAX_LABEL_LENGTH=127;
+	
 	public SpineObject decode(Node node, byte[] payload) {
 		
-		// dataTmp differisce da payload (Emule) perche` allocata 4 byte per ogni canale anche se non presenti nella Bitmask
+		// dataTmp differisce da payload (Emule) perche` allocata 4 byte per ogni canale anche se non presenti nella Bitmask e 127 byte per ogni featureLabel
 		
-		byte[] dataTmp = new byte[579]; 
+		//byte[] dataTmp = new byte[579];
+		// 02 Novembre
+		//int MAX_MSG_LENGHT=2500;
+		//byte MAX_LABEL_LENGTH=127;
+		
+		byte[] dataTmp = new byte[MAX_MSG_LENGHT]; 
 		short dtIndex = 0;
 		short pldIndex = 0;
 		
@@ -78,6 +86,8 @@ public class FeatureSpineData extends SpineCodec {
 		dataTmp[dtIndex++] = featuresCount;
 		
 		byte currFeatCode, currSensBitmask;
+		// 02 Novembre
+		byte currFeatLabLenght, currFeatLabLengthBlank;
 		for (int i = 0; i<featuresCount; i++) {
 			currFeatCode = payload[pldIndex++];
 			dataTmp[dtIndex++] = currFeatCode;
@@ -85,6 +95,7 @@ public class FeatureSpineData extends SpineCodec {
 			currSensBitmask = payload[pldIndex++];
 			dataTmp[dtIndex++] = currSensBitmask;
 			
+			// allocata 4 byte per ogni canale anche se non presenti nella Bitmask
 			for (int j = 0; j<SPINESensorConstants.MAX_VALUE_TYPES; j++) {							
 				if (SPINESensorConstants.chPresent(j, currSensBitmask)) {						
 						dataTmp[dtIndex++] = payload[pldIndex++];
@@ -100,6 +111,19 @@ public class FeatureSpineData extends SpineCodec {
 					dataTmp[dtIndex++] = 0;
 				}
 			}
+			
+			// 02 Novembre
+			// featureLabel
+			currFeatLabLenght=payload[pldIndex++];
+			for (int k = 0 ; k< currFeatLabLenght; k++){
+				dataTmp[dtIndex++] = payload[pldIndex++];
+			}
+			// alloca 127 byte per ogni featureLabel
+			currFeatLabLengthBlank=(byte)(MAX_LABEL_LENGTH - currFeatLabLenght);
+			for (int z = 0 ; z<currFeatLabLengthBlank; z++){
+				dataTmp[dtIndex++] = 0;
+			}
+			
 		}
 				
 		FeatureData data =  new FeatureData();
@@ -112,10 +136,16 @@ public class FeatureSpineData extends SpineCodec {
 			
 			Vector feats = new Vector();
 
+			// 02 Novembre
+			Feature featureWork;
 			byte currBitmask;	
 			int currCh1Value, currCh2Value, currCh3Value, currCh4Value;
+			// 02 Novembre
+			String currFeatureLabel;
+			int blockLength=18+MAX_LABEL_LENGTH;
 			
 			for (int i = 0; i<featuresCount; i++) {
+				/*
 				currFeatCode = dataTmp[3+i*18];
 				currBitmask = dataTmp[(3+i*18) + 1];
 			
@@ -123,8 +153,24 @@ public class FeatureSpineData extends SpineCodec {
 				currCh2Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 6);
 				currCh3Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 10);
 				currCh4Value = Data.convertFourBytesToInt(dataTmp, (3+i*18) + 14);
-							
-				feats.addElement(new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+				*/
+				currFeatCode = dataTmp[3+i*blockLength];
+				currBitmask = dataTmp[(3+i*blockLength) + 1];
+			
+				currCh1Value = Data.convertFourBytesToInt(dataTmp, (3+i*blockLength) + 2);
+				currCh2Value = Data.convertFourBytesToInt(dataTmp, (3+i*blockLength) + 6);
+				currCh3Value = Data.convertFourBytesToInt(dataTmp, (3+i*blockLength) + 10);
+				currCh4Value = Data.convertFourBytesToInt(dataTmp, (3+i*blockLength) + 14);
+				
+				// 02 Novembre
+				currFeatureLabel = convertBytesToString(dataTmp, (3+i*blockLength) +18);
+				featureWork = new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
+				featureWork.setFeatureLabel(currFeatureLabel);
+				System.out.println("Set in featureWork: " + featureWork.toString() + " (" + featureWork.getFeatureLabel() + ")");
+				
+				//feats.addElement(new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
+				feats.addElement(featureWork);			
+
 			}
 			
 			data.setFeatures((Feature[]) feats.toArray(new Feature[0]));
@@ -137,4 +183,21 @@ public class FeatureSpineData extends SpineCodec {
 				
 		return data;
 	}
+	
+	
+	private String convertBytesToString(byte[] bytes, int index) {    
+		
+		String label="";
+		
+		for (int k=0; k<MAX_LABEL_LENGTH; k++){
+			if (bytes[index + k]!=0){
+			label=label + (char)bytes[index + k];
+			}
+		}
+		
+		return label;
+	}
+	
+	
+	
 }
