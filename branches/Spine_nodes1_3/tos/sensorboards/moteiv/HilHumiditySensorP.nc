@@ -24,38 +24,40 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Module component of the on-chip voltage sensor driver 
- * for the telosb platform
+ * Module component of the 'Sensirion AG SHT11' environmental
+ * humidity sensor driver for the motive tmote sky platform.
  *
- * To convert the raw value of the ADC to the corresponding voltage, perform the calculation:
+ * 
+ * Humidity is a 12-bit value that is not temperature compensated:
  *
- * V = (raw_value/4096) * Vref,
- * where Vref = 1.5V
+ * humidity = -4 + 0.0405*SOrh + (-2.8 * 10^-6)*(SOrh^2),
+ * where 'SOrh' is the raw output of the relative humidity sensor.
  *
- * The internal voltage sensor monitors Vcc/2,
- * so multiply the resulting voltage value by 2 to get mote's supply voltage (Vcc).
+ * Using this calculation and the temperature measurement,
+ * you can correct the humidity measurement with temperature compensation:
  *
+ * humidity_true = (Tc - 25) * (0.01 + 0.00008*SOrh) + humidity,
+ * where 'Tc' is the temperature measured in degrees Celcius (see HilTemperatureSensorP),
+ * and 'humidity' is the uncompensated value.
  *
- * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ * @author Carlo Caione <carlo.caione@unibo.it>
  *
- * @version 1.2
+ * @version 1.3
  */
 
-module HilVoltageSensorP {
-  
+module HilHumiditySensorP {
   uses {
-    interface Read<uint16_t> as Volt;
+     interface Read<uint16_t> as Hum;
 
-    interface Boot;
-    interface SensorsRegistry;
+     interface Boot;
+     interface SensorsRegistry;
   }
 
   provides interface Sensor;
 }
-
 implementation {
   
-    uint16_t volt = 0;
+    uint16_t hum = 0;
     
     uint8_t valueTypesList[1];
 
@@ -67,7 +69,7 @@ implementation {
     event void Boot.booted() {
        if (!registered) {
           // the driver self-registers to the sensor registry
-          call SensorsRegistry.registerSensor(VOLTAGE_SENSOR);
+          call SensorsRegistry.registerSensor(HUMIDITY_SENSOR);
           
           valueTypesList[0] = CH_1;
           acquireTypesList[0] = CH_1_ONLY;
@@ -81,30 +83,30 @@ implementation {
     }
 
     command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
-        call Volt.read(); // here the acquireType is not usefull
+        call Hum.read(); // here the acquireType is not usefull
         return SUCCESS;
     }
 
     command uint16_t Sensor.getValue(enum ValueTypes valueType) {
-        return volt; // here the valueType is not usefull
+        return hum; // here the valueType is not usefull
     }
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        buffer[0] = volt;
+        buffer[0] = hum;
     }
 
-    event void Volt.readDone(error_t result, uint16_t data) {
-       volt = (result != SUCCESS)? 0 : data;
+    event void Hum.readDone(error_t result, uint16_t data) {
+       hum = (result != SUCCESS)? 0 : data;
        signal Sensor.acquisitionDone(result, CH_1_ONLY);
     }
 
     command enum SensorCode Sensor.getSensorCode() {
-        return VOLTAGE_SENSOR;
+        return HUMIDITY_SENSOR;
     }
 
     command uint16_t Sensor.getSensorID() {
-        return 0xab34; // the ID has been randomly choosen
+        return 0xbeee; // the ID has been randomly choosen
     }
 
     command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {

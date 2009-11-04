@@ -25,7 +25,12 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Module component of the 'Li-Ion Battery' (new SPINE sensor-board)
- * sensor driver for the telosb platform
+ * sensor driver for the telosb platform.
+ *
+ * To convert the raw value of the ADC to the corresponding voltage, perform the calculation:
+ *
+ * V = (raw_value/4096) * 6.6
+ *
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *

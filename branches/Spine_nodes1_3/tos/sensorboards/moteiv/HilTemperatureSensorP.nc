@@ -24,38 +24,33 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * Module component of the on-chip voltage sensor driver 
- * for the telosb platform
- *
- * To convert the raw value of the ADC to the corresponding voltage, perform the calculation:
- *
- * V = (raw_value/4096) * Vref,
- * where Vref = 1.5V
- *
- * The internal voltage sensor monitors Vcc/2,
- * so multiply the resulting voltage value by 2 to get mote's supply voltage (Vcc).
+ * Module component of the 'Sensirion AG SHT11' environmental
+ * temperature sensor driver for the motive tmote sky platform.
  *
  *
- * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
+ * If returns a 14-bit value that can be converted to degrees Celsius: 
+ * 
+ * temperature = -39.60 + (0.01 * raw_sample)
  *
- * @version 1.2
+ *
+ * @author Carlo Caione <carlo.caione@unibo.it>
+ *
+ * @version 1.3
  */
 
-module HilVoltageSensorP {
-  
+module HilTemperatureSensorP {
   uses {
-    interface Read<uint16_t> as Volt;
+     interface Read<uint16_t> as Temp;
 
-    interface Boot;
-    interface SensorsRegistry;
+     interface Boot;
+     interface SensorsRegistry;
   }
 
   provides interface Sensor;
 }
-
 implementation {
   
-    uint16_t volt = 0;
+    uint16_t temp = 0;
     
     uint8_t valueTypesList[1];
 
@@ -67,7 +62,7 @@ implementation {
     event void Boot.booted() {
        if (!registered) {
           // the driver self-registers to the sensor registry
-          call SensorsRegistry.registerSensor(VOLTAGE_SENSOR);
+          call SensorsRegistry.registerSensor(TEMPERATURE_SENSOR);
           
           valueTypesList[0] = CH_1;
           acquireTypesList[0] = CH_1_ONLY;
@@ -77,34 +72,34 @@ implementation {
     }
 
     command uint8_t Sensor.getSignificantBits() {
-        return 12;
+        return 14;
     }
 
     command error_t Sensor.acquireData(enum AcquireTypes acquireType) {
-        call Volt.read(); // here the acquireType is not usefull
+        call Temp.read(); // here the acquireType is not usefull
         return SUCCESS;
     }
 
     command uint16_t Sensor.getValue(enum ValueTypes valueType) {
-        return volt; // here the valueType is not usefull
+        return temp; // here the valueType is not usefull
     }
 
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
-        buffer[0] = volt;
+        buffer[0] = temp;
     }
 
-    event void Volt.readDone(error_t result, uint16_t data) {
-       volt = (result != SUCCESS)? 0 : data;
+    event void Temp.readDone(error_t result, uint16_t data) {
+       temp = (result != SUCCESS)? 0 : data;
        signal Sensor.acquisitionDone(result, CH_1_ONLY);
     }
 
     command enum SensorCode Sensor.getSensorCode() {
-        return VOLTAGE_SENSOR;
+        return TEMPERATURE_SENSOR;
     }
 
     command uint16_t Sensor.getSensorID() {
-        return 0xab34; // the ID has been randomly choosen
+        return 0xbeef; // the ID has been randomly choosen
     }
 
     command uint8_t* Sensor.getValueTypesList(uint8_t* valuesTypeNr) {

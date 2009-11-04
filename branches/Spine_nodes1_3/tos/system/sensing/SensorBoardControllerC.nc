@@ -75,9 +75,9 @@ implementation {
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
 
        /* For the VOLTAGE Sensor */
-     components VoltageSensorC;
+     components HilLiIonVoltageSensorC;
      components new TimerMilliC() as VoltageSensorTimer;
-     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;
+     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> HilLiIonVoltageSensorC;
      SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
 
         /* For the GYRO Sensor */
@@ -131,7 +131,40 @@ implementation {
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
    #endif
-	 
+   
+    //'Moteiv' Tmote Sky sensors kit
+   #ifdef MOTEIV_KIT_SENSORBOARD
+     /* For the Humidity Sensor */
+     components HumiditySensorC;
+     components new TimerMilliC() as HumiditySensorTimer;
+     SensorBoardControllerP.SensorImpls[HUMIDITY_SENSOR] -> HumiditySensorC;
+     SensorBoardControllerP.SamplingTimers[HUMIDITY_SENSOR] -> HumiditySensorTimer;
+
+     /* For the Temperature Sensor */
+     components TemperatureSensorC;
+     components new TimerMilliC() as TemperatureSensorTimer;
+     SensorBoardControllerP.SensorImpls[TEMPERATURE_SENSOR] -> TemperatureSensorC;
+     SensorBoardControllerP.SamplingTimers[TEMPERATURE_SENSOR] -> TemperatureSensorTimer;
+     
+     /* For the Light Sensor */
+     components LightSensorC;
+     components new TimerMilliC() as LightSensorTimer;
+     SensorBoardControllerP.SensorImpls[LIGHT_SENSOR] -> LightSensorC;
+     SensorBoardControllerP.SamplingTimers[LIGHT_SENSOR] -> LightSensorTimer;
+     
+     /* For the VOLTAGE Sensor */
+     components VoltageSensorC;
+     components new TimerMilliC() as VoltageSensorTimer;
+     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> VoltageSensorC;
+     SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
+
+     /* For the INTERNAL_TEMP Sensor */
+     components InternalTemperatureSensorC;
+     components new TimerMilliC() as InternalTemperatureSensorTimer;
+     SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
+     SensorBoardControllerP.SamplingTimers[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorTimer;
+   #endif
+
      // if new sensor board are added, declare and wire PIL driver components and timers down here
 
 }

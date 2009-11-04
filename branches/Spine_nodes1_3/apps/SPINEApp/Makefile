@@ -6,6 +6,7 @@ LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [ ! -d $$SUPPORT_MAKE_PATH/supp
 TOSMAKE_PATH=$(LOCAL_TOSROOT)/support/make
 GOALS += spine
 
+PFLAGS += -DTOSH_DATA_LENGTH=114
 
 #radio channel for TX-RX
 PFLAGS += -DCC2420_DEF_CHANNEL=12
@@ -20,7 +21,7 @@ PFLAGS += -DGROUP_ID=0xAB
 
 
 #sending messages queue size (the queue is preallocated, so this parameter affects the global memory usage)
-PFLAGS += -DRADIO_QUEUE_MAX_SIZE=20
+PFLAGS += -DRADIO_QUEUE_MAX_SIZE=5
 #Radio control flag (TRUE if the spine node must turn-on the the radio at boot time; FALSE otherwise)
 PFLAGS += -DBOOT_RADIO_ON=TRUE
 #sw TDMA control flag (TRUE if radio must be TDMA accessed; FALSE if it's possible to rely on the CSMA-CA provided by the 802.15.4)
@@ -33,7 +34,10 @@ PFLAGS += -DRADIO_LOW_POWER=TRUE
 
 #buffer pool size; set this value equal to the total number of channels of all sensors on the node (the pool is preallocated, so this parameter affects the global memory usage)
 #each buffer of the pool will be used to store data from a single channel
-PFLAGS += -DBUFFER_POOL_SIZE=6
+#
+# IMPORTANT: for the predefined sensorboard, this BUFFER_POOL_SIZE is chosen automatically (see /support/make/spine.extra), 
+#            and you don't normally need to redefine it here.
+# PFLAGS += -DBUFFER_POOL_SIZE=n
 
 #buffer size for each buffer of the pool; the buffers are circular, so the buffer size, with the sampling time over a sensor,
 #influence the max data time interval storable in that buffer (the buffers are preallocated, so this parameter affects the global memory usage)

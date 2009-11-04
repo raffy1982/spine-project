@@ -15,7 +15,7 @@ ifndef SENSORBOARD
        ifeq ($(PLTFORM),telosb)
             SENSORBOARD=spine
        else ifeq ($(PLTFORM),tmote)
-            SENSORBOARD=spine
+            SENSORBOARD=moteiv
        else ifeq ($(PLTFORM),shimmer)
             SENSORBOARD=shimmer
        else ifeq ($(PLTFORM),micaz)
@@ -28,13 +28,21 @@ endif
 
 ifeq ($(SENSORBOARD),spine)
      PFLAGS += -DSPINE_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=7
 else ifeq ($(SENSORBOARD),shimmer)
      PFLAGS += -DSHIMMER_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=3
 else ifeq ($(SENSORBOARD),mts300)
      PFLAGS += -DMTS300_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=2
 else ifeq ($(SENSORBOARD),biosensor)
      PFLAGS += -DWISEPLA_BIOSENSOR_SENSORBOARD
-else 
+     PFLAGS += -DBUFFER_POOL_SIZE=5
+else ifeq ($(SENSORBOARD),moteiv)
+     PFLAGS += -DMOTEIV_KIT_SENSORBOARD
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/telosb
+     PFLAGS += -DBUFFER_POOL_SIZE=6
+else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif
 

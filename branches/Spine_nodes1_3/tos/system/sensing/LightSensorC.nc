@@ -24,21 +24,20 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- *  Configuration component for the PIL (Platform Independent Layer) voltage sensor
+ *  Configuration component for the PIL (Platform Independent Layer) light sensor
  *
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *
- * @version 1.2
+ * @version 1.3
  */
- configuration VoltageSensorC {
+ configuration LightSensorC {
     provides interface Sensor;
 }
 
 implementation {
     
-    components HilVoltageSensorC;
-    
-    Sensor = HilVoltageSensorC;
+    components HilLightSensorC;
 
+    Sensor = HilLightSensorC;
 }

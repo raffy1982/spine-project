@@ -10,7 +10,7 @@ GNU Lesser General Public License
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
-version 2.1 of the License. 
+version 2.1 of the License.
  
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -25,7 +25,16 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Module component of the internal temperature sensor driver
- * for the telosb platform
+ * for the telosb platform.
+ *
+ * To convert from ADC counts to temperature, convert to voltage by
+ * dividing by 4096 and multiplying by Vref (1.5V). Then subtract
+ * 0.986 from voltage and divide by 0.00355 to get degrees C.
+ *
+ * NOTE that the sensor is not calibrated,
+ * although the following formula works well for most applications:
+ * T = (Vtemp - 0.986)/0.00355
+ *
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  *

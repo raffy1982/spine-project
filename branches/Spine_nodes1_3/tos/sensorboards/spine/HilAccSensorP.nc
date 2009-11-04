@@ -25,7 +25,10 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Module component of the 'STMicroelectronics LIS3LV02DQ Accelerometer'
- * tri-axial sensor driver for the telosb platform
+ * tri-axial sensor driver for the telosb platform.
+ *
+ * NOTE that the raw value 1024 = +1g,
+ * and negative acceleration are given using two's complement format 
  *
  * @author Raffaele Gravina <rgravina@wsnlabberkeley.com>
  * @author Antonio Guerrieri <aguerrieri@wsnlabberkeley.com>
