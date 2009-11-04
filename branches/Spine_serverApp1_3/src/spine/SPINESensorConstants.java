@@ -44,6 +44,9 @@ public class SPINESensorConstants {
 	public static final byte INTERNAL_TEMPERATURE_SENSOR = 0x04;
 	public static final byte EIP_SENSOR = 0x05;
 	public static final byte ECG_SENSOR = 0x06;
+	public static final byte TEMPERATURE_SENSOR = 0x07;
+	public static final byte HUMIDITY_SENSOR = 0x08;
+	public static final byte LIGHT_SENSOR = 0x09;
 	
 	public static final String ACC_SENSOR_LABEL = "accelerometer";
 	public static final String VOLTAGE_SENSOR_LABEL = "voltage";
@@ -51,6 +54,9 @@ public class SPINESensorConstants {
 	public static final String INTERNAL_TEMPERATURE_SENSOR_LABEL = "cpu temperature";
 	public static final String EIP_SENSOR_LABEL = "Electrical Impedance Pneumography (EIP) breathing";
 	public static final String ECG_SENSOR_LABEL = "Electrocardiography (ECG)";
+	public static final String TEMPERATURE_SENSOR_LABEL = "Env Temperature";
+	public static final String HUMIDITY_SENSOR_LABEL = "Humidity";
+	public static final String LIGHT_SENSOR_LABEL = "Light";
 	
 	
 	public static final byte ALL = 0x0F;				// 1111
@@ -105,6 +111,9 @@ public class SPINESensorConstants {
 			case INTERNAL_TEMPERATURE_SENSOR: return INTERNAL_TEMPERATURE_SENSOR_LABEL;
 			case EIP_SENSOR: return EIP_SENSOR_LABEL;
 			case ECG_SENSOR: return ECG_SENSOR_LABEL;
+			case TEMPERATURE_SENSOR: return TEMPERATURE_SENSOR_LABEL;
+			case HUMIDITY_SENSOR: return HUMIDITY_SENSOR_LABEL;
+			case LIGHT_SENSOR: return LIGHT_SENSOR_LABEL;
 			default: return "?";
 		}
 	}
@@ -122,6 +131,12 @@ public class SPINESensorConstants {
 			return EIP_SENSOR;
 		if(label.equals(ECG_SENSOR_LABEL))
 			return ECG_SENSOR;
+		if(label.equals(TEMPERATURE_SENSOR_LABEL))
+			return TEMPERATURE_SENSOR;
+		if(label.equals(HUMIDITY_SENSOR_LABEL))
+			return HUMIDITY_SENSOR;
+		if(label.equals(LIGHT_SENSOR_LABEL))
+			return LIGHT_SENSOR;
 		else 
 			return -1;	
 	}
