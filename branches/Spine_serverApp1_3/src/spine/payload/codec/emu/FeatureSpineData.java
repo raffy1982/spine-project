@@ -57,8 +57,8 @@ public class FeatureSpineData extends SpineCodec {
 		throw new MethodNotSupportedException("encode");
 	};
 	
-	int MAX_MSG_LENGHT=2500;
-	byte MAX_LABEL_LENGTH=127;
+	private int MAX_MSG_LENGHT=2500;
+	private byte MAX_LABEL_LENGTH=127;
 	
 	public SpineObject decode(Node node, byte[] payload) {
 		
@@ -164,10 +164,15 @@ public class FeatureSpineData extends SpineCodec {
 				
 				// 02 Novembre
 				currFeatureLabel = convertBytesToString(dataTmp, (3+i*blockLength) +18);
+				// 5 Novembre USA NUOVO COSTRUTTORE FEATURE E NUOVA VERSIONE toString
+				/*
 				featureWork = new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value);
 				featureWork.setFeatureLabel(currFeatureLabel);
 				System.out.println("Set in featureWork: " + featureWork.toString() + " (" + featureWork.getFeatureLabel() + ")");
-				
+				*/
+				featureWork = new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value, currFeatureLabel);
+				System.out.println("Set in featureWork: " + featureWork.toString());
+
 				//feats.addElement(new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));			
 				feats.addElement(featureWork);			
 
