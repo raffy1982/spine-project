@@ -9,7 +9,7 @@ GNU Lesser General Public License
  
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation, 
+License as published by the Free Software Foundation,
 version 2.1 of the License. 
  
 This library is distributed in the hope that it will be useful,
@@ -44,7 +44,8 @@ enum FunctionCodes {
   SIGNAL_PROCESSING = 0x03,
   ONE_SHOT = 0x04,
   STEP_COUNTER = 0x05,
-  BUFFERED_RAWDATA = 0x06
+  BUFFERED_RAWDATA = 0x06,
+  HMM = 0x07
 
 };
 

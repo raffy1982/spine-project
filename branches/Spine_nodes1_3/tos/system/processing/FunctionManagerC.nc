@@ -45,6 +45,7 @@ Boston, MA  02111-1307, USA.
      components FeatureEngineC;
      components StepCounterEngineC;
      components BufferedRawDataEngineC;
+     //components HMMEngineC;
 
 
      FunctionManager = FunctionManagerP;
@@ -57,7 +58,9 @@ Boston, MA  02111-1307, USA.
 
      FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
 
-     FunctionManagerP.Functions[STEP_COUNTER] ->StepCounterEngineC;
-     
-     FunctionManagerP.Functions[BUFFERED_RAWDATA] ->BufferedRawDataEngineC;
+     FunctionManagerP.Functions[STEP_COUNTER] -> StepCounterEngineC;
+
+     FunctionManagerP.Functions[BUFFERED_RAWDATA] -> BufferedRawDataEngineC;
+
+     //FunctionManagerP.Functions[HMM] -> HMMEngineC;
  }
