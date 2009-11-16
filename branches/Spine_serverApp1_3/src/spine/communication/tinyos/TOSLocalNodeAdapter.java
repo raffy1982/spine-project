@@ -46,7 +46,6 @@ import java.util.Vector;
 
 import spine.Properties;
 import spine.SPINEPacketsConstants;
-import spine.communication.tinyos.SPINEHeader;
 import spine.datamodel.Address;
 import spine.datamodel.Node;
 import spine.datamodel.ServiceMessage;

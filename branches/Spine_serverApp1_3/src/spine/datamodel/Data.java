@@ -54,7 +54,7 @@ public abstract class Data implements SpineObject {
 	
 	private static final String SPINEDATACODEC_PACKAGE_PREFIX = "spine.payload.codec.";
 	private static final String SPINEDATACODEC_PACKAGE = SPINEDATACODEC_PACKAGE_PREFIX + 
-				Properties.getDefaultProperties().getProperty(SPINEManager.PLATFORM + "_" + 
+				Properties.getDefaultProperties().getProperty(SPINEManager.getPlatform() + "_" + 
 						Properties.SPINEDATACODEC_PACKAGE_SUFFIX_KEY) + ".";
 	
 	protected static CodecInfo codecInformation=null;

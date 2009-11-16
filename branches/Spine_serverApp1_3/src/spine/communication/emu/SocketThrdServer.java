@@ -105,7 +105,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	ServerSocket server = null;
 
-	private static final int nodeCoordinatorPort = Integer.parseInt(SPINEManager.MOTECOM);
+	private static final int nodeCoordinatorPort = Integer.parseInt(SPINEManager.getMoteCom());
 	
 	SocketThrdServer() { // Begin Constructor
 		panel = new JPanel();

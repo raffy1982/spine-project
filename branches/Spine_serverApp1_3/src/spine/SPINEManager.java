@@ -89,8 +89,8 @@ public class SPINEManager {
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;	
 	
-	public static String MOTECOM = "";
-	public static String PLATFORM = "";
+	private static String MOTECOM = null;
+	private static String PLATFORM = null;
 	
 	private static SPINEManager instance;
 	
@@ -118,6 +118,9 @@ public class SPINEManager {
 	
 	private SPINEManager(String[] args) {
 		try {
+			
+			if (PLATFORM == null && (PLATFORM = System.getProperty(Properties.PLATFORM_KEY)) == null)
+				exit(APP_PROP_MISSING_MSG);
 			
 			MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
 			LOCALNODEADAPTER_CLASSNAME = prop.getProperty(PLATFORM + "_" + Properties.LOCALNODEADAPTER_CLASSNAME_KEY);
@@ -763,6 +766,26 @@ public class SPINEManager {
 		return null;
 	}
 	
+	/**
+	 * Returns the MOTECOM property value specified in the given app.properties file
+	 * 
+	 * @return the MOTECOM property value specified in the given app.properties file 
+	 * or the empty string if the MOTECOM property hasn't been specified  
+	 */
+	public static String getMoteCom() {
+		return MOTECOM;
+	}
+	
+	/**
+	 * Returns the PLATFORM property value specified in the given app.properties file
+	 * 
+	 * @return the PLATFORM property value specified in the given app.properties file 
+	 * or the empty string if the PLATFORM property hasn't been specified  
+	 */
+	public static String getPlatform() {
+		return PLATFORM;
+	}
+	
 	/*
 	 * Regarding to the 'eventType', this method notify the SPINEListeners properly, by
 	 * casting in the right way the Object 'o' 
@@ -776,10 +799,13 @@ public class SPINEManager {
 					break;
 				case SPINEPacketsConstants.DATA: 
 					((SPINEListener)this.listeners.elementAt(i)).received((Data)o); 
+					((SPINEListener)this.listeners.elementAt(i)).dataReceived(((Data)o).getNode().getPhysicalID().getAsInt(), (Data)o);
 					break;	
 				case SPINEPacketsConstants.SVC_MSG: 
-					if(((ServiceMessage)o).getNode() != null)
-						((SPINEListener)this.listeners.elementAt(i)).received((ServiceMessage)o); 
+					if(((ServiceMessage)o).getNode() != null) {
+						((SPINEListener)this.listeners.elementAt(i)).received((ServiceMessage)o);
+						((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(((ServiceMessage)o).getNode().getPhysicalID().getAsInt(), (ServiceMessage)o);
+					}
 					break;
 				case DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
