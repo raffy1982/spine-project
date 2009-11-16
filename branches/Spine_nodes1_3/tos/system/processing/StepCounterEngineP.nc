@@ -32,8 +32,24 @@
  * @version 1.2
  */
 
-module StepCounterEngineP {
+#ifndef STEP_X_THRESHOLD_WAIST
+#define STEP_X_THRESHOLD_WAIST -1150
+#endif
 
+#ifndef STEP_Z_THRESHOLD_WAIST
+#define STEP_Z_THRESHOLD_WAIST -190
+#endif
+
+#ifndef STEP_X_THRESHOLD_THIGH
+#define STEP_X_THRESHOLD_THIGH -600
+#endif
+
+#ifndef STEP_Z_THRESHOLD_THIGH
+#define STEP_Z_THRESHOLD_THIGH 1100
+#endif
+
+module StepCounterEngineP {
+	
 	provides {
 		interface Function;
 	}
@@ -47,21 +63,14 @@ module StepCounterEngineP {
 }
 
 implementation {
-
+	
 	bool registered = FALSE;
 	bool setup, active = FALSE;
         bool start = FALSE;
-        
-        int32_t pre = 0, curr = 0;
-        bool haveHistory = FALSE;
-
-
-        int16_t AVG_ACCEL;
-        int16_t STEP_THRESHOLD;
 	
 	uint8_t waitCounter = 0;
 	uint8_t DEFAULT_WAIT = 0;
-	
+
         uint16_t steps = 0;
 
 
@@ -74,25 +83,12 @@ implementation {
 	
 	
 	command bool Function.setUpFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-		
-                if (functionParamsSize != 4)
-		   return FALSE;	// fail on invalid number of parameters
-
-                AVG_ACCEL = functionParams[0];
-                AVG_ACCEL = (AVG_ACCEL)<<8 | functionParams[1];
-
-                STEP_THRESHOLD = functionParams[2];
-                STEP_THRESHOLD = (STEP_THRESHOLD)<<8 | functionParams[3];
-
-                setup = TRUE;
-
+		setup = TRUE;
                 return TRUE;
 	}
-
+	
 	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-                
-                active = setup;
-
+                active = TRUE;
                 return TRUE;
 	}
 	
@@ -100,7 +96,7 @@ implementation {
 		active = FALSE;
                 return TRUE;
 	}
-
+	
 	command uint8_t* Function.getSubFunctionList(uint8_t* functionCount) {
 		*functionCount = 0;
 		return NULL;
@@ -116,36 +112,29 @@ implementation {
 	}
 	
 	event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode) {
-                
+                int32_t x, z = 0;
                 uint8_t msg[sizeof(steps)];
                 if(active && start) {
                     if (sensorCode == ACC_SENSOR) {
-
-                        curr = call SensorBoardController.getValue(ACC_SENSOR, CH_3);
-
+                        
                         if (waitCounter == 0) {
-
-                            if (pre > 0x8000) pre -= 0x10000;
-                            if (curr > 0x8000) curr -= 0x10000;
-
-                            if (((pre - curr) > STEP_THRESHOLD || (pre - curr) < -STEP_THRESHOLD) && (pre < AVG_ACCEL || curr < AVG_ACCEL)) {
-
+                            x = call SensorBoardController.getValue(ACC_SENSOR, CH_1);
+                            z = call SensorBoardController.getValue(ACC_SENSOR, CH_3);
+                            if (x > 0x8000) x -= 0x10000;
+                            if (z > 0x8000) z -= 0x10000;
+                            //if (x < STEP_X_THRESHOLD_THIGH && z > STEP_Z_THRESHOLD_THIGH) {
+                            if (x < STEP_X_THRESHOLD_WAIST) {
+                            //if (z < STEP_Z_THRESHOLD_WAIST) {
                                 waitCounter = DEFAULT_WAIT;
-
-                                if(haveHistory) {
-                                   steps++;
-                                   msg[0] = (steps >> 8);
-                                   msg[1] = (uint8_t)steps;
-                                   call FunctionManager.send(STEP_COUNTER, msg, sizeof(msg));
-                                }
+                                steps++;
+                                msg[0] = (steps >> 8);
+                                msg[1] = (uint8_t)steps;
+                                call FunctionManager.send(STEP_COUNTER, msg, sizeof(msg));
                             }
                         }
                         else
                             waitCounter--;
-                            
-                        pre = curr;
 
-                        haveHistory = TRUE;
                     }
                 }
         }
