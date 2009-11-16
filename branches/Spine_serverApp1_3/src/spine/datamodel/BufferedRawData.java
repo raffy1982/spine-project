@@ -106,7 +106,7 @@ public class BufferedRawData extends Data {
 
 	/**
 	 * Getter method of the channels values matrix
-	 * @return the channels values matrix
+	 * @return the channels values matrix: a row for each channel (null if the channel is inactive) and a column for each buffered sampling instant
 	 */
 	public int[][] getValues() {
 		return values;
