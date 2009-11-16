@@ -99,6 +99,38 @@ public class Feature implements Comparable, Serializable {
 				chValues[i] = new Integer(0);
 	}
 	
+	private void init(int nodeID, Node node, byte functionCode, byte featureCode, byte sensorCode, 
+					  byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value, String featureLabel) {
+		
+		this.functionCode = SPINEFunctionConstants.FEATURE;
+		
+		this.nodeID = nodeID;
+		
+		this.node = node;
+
+		this.functionCode = functionCode;
+		this.featureCode = featureCode;
+		
+		this.sensorCode = sensorCode;
+		this.channelBitmask = channelBitmask;
+		
+		this.ch1Value = ch1Value;
+		this.ch2Value = ch2Value;
+		this.ch3Value = ch3Value;
+		this.ch4Value = ch4Value;
+		
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
+			chValues[0] = new Integer(this.ch1Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
+			chValues[1] = new Integer(this.ch2Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
+			chValues[2] = new Integer(this.ch3Value); 
+		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
+			chValues[3] = new Integer(this.ch4Value); 
+		
+		this.featureLabel = featureLabel;
+	}
+	
 	/**
 	 * Constructor of a Feature object.
 	 * This is used by the lower level components of the framework for creating Feature objects
@@ -120,28 +152,7 @@ public class Feature implements Comparable, Serializable {
 	 *  @deprecated
 	 */
 	public Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
-		
-		this.nodeID = nodeID;
-
-		this.functionCode = functionCode;
-		this.featureCode = featureCode;
-		
-		this.sensorCode = sensorCode;
-		this.channelBitmask = channelBitmask;
-		
-		this.ch1Value = ch1Value;
-		this.ch2Value = ch2Value;
-		this.ch3Value = ch3Value;
-		this.ch4Value = ch4Value;
-		
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
-			chValues[0] = new Integer(this.ch1Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
-			chValues[1] = new Integer(this.ch2Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
-			chValues[2] = new Integer(this.ch3Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
-			chValues[3] = new Integer(this.ch4Value); 
+		init(nodeID, null, functionCode, featureCode, sensorCode, channelBitmask, ch1Value, ch2Value, ch3Value, ch4Value, null);		
 	}
 	
 	/**
@@ -162,36 +173,10 @@ public class Feature implements Comparable, Serializable {
 	 * @see spine.SPINEFunctionConstants
 	 * @see spine.SPINESensorConstants
 	 */
-	public Feature(Node node, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
-		
-		this.node = node;
-		
-		this.nodeID = node.getPhysicalID().getAsInt();
-
-		this.functionCode = functionCode;
-		this.featureCode = featureCode;
-		
-		this.sensorCode = sensorCode;
-		this.channelBitmask = channelBitmask;
-		
-		this.ch1Value = ch1Value;
-		this.ch2Value = ch2Value;
-		this.ch3Value = ch3Value;
-		this.ch4Value = ch4Value;
-		
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
-			chValues[0] = new Integer(this.ch1Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
-			chValues[1] = new Integer(this.ch2Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
-			chValues[2] = new Integer(this.ch3Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
-			chValues[3] = new Integer(this.ch4Value);
+	public Feature(Node node, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {		
+		init(node.getPhysicalID().getAsInt(), node, functionCode, featureCode, sensorCode, channelBitmask, ch1Value, ch2Value, ch3Value, ch4Value, null);
 	}
 	
-	
-	// 5 Novembre Alessia --- INIZIO
-	// Nuovo costruttore Feature con l'attributo featureLabel
 	
 	/**
 	 * Constructor of a Feature object.
@@ -212,35 +197,8 @@ public class Feature implements Comparable, Serializable {
 	 * @see spine.SPINESensorConstants
 	 */
 	public Feature(Node node, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value, String featureLabel) {
-		
-		this.node = node;
-		
-		this.nodeID = node.getPhysicalID().getAsInt();
-
-		this.functionCode = functionCode;
-		this.featureCode = featureCode;
-		
-		this.sensorCode = sensorCode;
-		this.channelBitmask = channelBitmask;
-		
-		this.ch1Value = ch1Value;
-		this.ch2Value = ch2Value;
-		this.ch3Value = ch3Value;
-		this.ch4Value = ch4Value;
-		
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH1, this.channelBitmask))
-			chValues[0] = new Integer(this.ch1Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH2, this.channelBitmask))
-			chValues[1] = new Integer(this.ch2Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH3, this.channelBitmask))
-			chValues[2] = new Integer(this.ch3Value); 
-		if (SPINESensorConstants.chPresent(SPINESensorConstants.CH4, this.channelBitmask))
-			chValues[3] = new Integer(this.ch4Value);
-		
-		this.featureLabel = featureLabel;
+		init(node.getPhysicalID().getAsInt(), node, functionCode, featureCode, sensorCode, channelBitmask, ch1Value, ch2Value, ch3Value, ch4Value, featureLabel);
 	}
-	
-	// --- FINE
 	
 	/**
 	 * Getter method of the node id
@@ -411,8 +369,7 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public void setSensorCode(byte sensorCode) {
 		this.sensorCode = sensorCode;			
-	}
-	
+	}	
 	
 	/**
 	 * 
@@ -457,38 +414,21 @@ public class Feature implements Comparable, Serializable {
 	 * Returns a string representation of the Feature object.
 	 * 
 	 */
-	// 5 Novembre Alessia --- INIZIO
-	/*
-	public String toString() {
-		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
-				" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
-				" (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
-				" - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
-				"; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
-				"; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
-				"; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
-	}
-	*/
-	
-	// Se valorizzato stampa il valore di featureLabel
 	public String toString() {
 		
-		String info;
+		String info = "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
+					  " on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
+					  " (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
+					  " - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
+					  "; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
+					  "; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
+					  "; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
 		
-		info ="From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
-		" on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
-		" (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
-		" - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
-		"; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
-		"; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
-		"; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
+		if (this.featureLabel != null)
+			info += " (" + this.featureLabel + ") ";
 		
-		if (this.featureLabel!=null){
-			info = info + " (" + this.featureLabel + ") ";
-		}
 		return info;
 	}
-   // --- FINE
 	
 	/**
 	 * @param nodeID the nodeID to set
@@ -545,6 +485,18 @@ public class Feature implements Comparable, Serializable {
 		chValues[3] = new Integer(this.ch4Value);
 	}
 
+	/**
+	 * Compares this Feature to another Object. 
+	 * If the Object is a Feature, this function compares hierarchically (and in the following order) 
+	 * the physical id, the sensorCode, the featureCode and the channelBitmask. 
+	 * Otherwise, it throws a ClassCastException (as Strings are comparable only to other Strings).
+	 * 
+	 * @param o the Object to be compared.
+	 * 
+	 * @return the value 0 if the argument is a Feature is "equal" to this Feature; 
+	 * 			-1 if this Feature "precede" the argument o;
+	 * 			+1 otherwise.  
+	 */
 	public int compareTo(Object o) {
 		Feature f = (Feature)o;
 		
@@ -567,23 +519,15 @@ public class Feature implements Comparable, Serializable {
 		return 0;
 	}
 	
-//	 5 Novembre Alessia --- INIZIO
-	
-	
-	/*
-	public Object clone() {
-		Feature clone = new Feature(this.node, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
-									this.ch1Value, this.ch2Value, this.ch3Value, this.ch4Value);
-		return clone;
-	}
-	*/
-	
-	// Il metodo clone richiama il nuovo costruttore di Feature (ovvero quello in cui c'e` featureLabel)
+	/**
+	 * Creates and returns a copy of this Feature.
+	 * 
+	 * @return an exact clone of this Feature instance.
+	 */
 	public Object clone() {
 		Feature clone = new Feature(this.node, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
 									this.ch1Value, this.ch2Value, this.ch3Value, this.ch4Value, this.featureLabel);
 		return clone;
 	}
 	
-// -- FINE
 }
