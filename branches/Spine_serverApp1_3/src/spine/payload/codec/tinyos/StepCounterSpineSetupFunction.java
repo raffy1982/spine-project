@@ -44,7 +44,7 @@ import spine.exceptions.*;
 public class StepCounterSpineSetupFunction extends SpineCodec {
 
 	
-	private final static int PARAM_LENGTH = 4; 
+	private final static int PARAM_LENGTH = 1; 
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
@@ -52,17 +52,12 @@ public class StepCounterSpineSetupFunction extends SpineCodec {
 
 	public byte[] encode(SpineObject payload) {
 		
-		spine.datamodel.functions.StepCounterSpineSetupFunction workPayLoad = (spine.datamodel.functions.StepCounterSpineSetupFunction)payload;
-			
 		byte[] data = new byte[2 + PARAM_LENGTH];
 		
 		data[0] = SPINEFunctionConstants.STEP_COUNTER; 
 		data[1] = PARAM_LENGTH;
 		
-		data[2] = (byte)((workPayLoad.getAvgAcceleration() & 0x0000FF00)>>8);
-		data[3] = (byte)(workPayLoad.getAvgAcceleration() & 0x000000FF);
-		data[4] = (byte)((workPayLoad.getStepThreshold() & 0x0000FF00)>>8);
-		data[5] = (byte)(workPayLoad.getStepThreshold() & 0x000000FF);
+		data[2] = 0;
 
 		return data;
 	}	
