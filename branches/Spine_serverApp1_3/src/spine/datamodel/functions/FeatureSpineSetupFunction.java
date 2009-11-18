@@ -92,7 +92,8 @@ public class FeatureSpineSetupFunction implements SpineSetupFunction {
 	 * Sets the shift size on the window over which computes the features 
 	 * that will eventually activated thru a Feature Spine Function Req
 	 * 
-	 * @param shiftSize the overlap amount (ahead shift) over the previous window
+	 * @param shiftSize the number of samples (ahead shift) to wait before a new feature computation - 
+	 * 		  the overlap would be (windowSize-shiftSize) samples
 	 */
 	public void setShiftSize(short shiftSize) {
 		this.shiftSize = shiftSize;

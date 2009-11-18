@@ -97,9 +97,9 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 	
 	/**
 	 * Sets the shift size (overlap amount in number of samples). 
-	 * Set it to 0 if you don't need overlap between raw-data transmissions.
-	 * An overlap amount greater than 0 could be useful at application level to be sure
-	 * there isn't missing samples.
+	 * Set it to 'bufferSize' if you don't need overlap between raw-data transmissions.
+	 * An overlap amount less than 'bufferSize' could be useful at application level to be sure
+	 * there aren't missing samples.
 	 * 
 	 * @param shiftSize the overlap amount (ahead shift) over the previous window
 	 */
