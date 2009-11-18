@@ -65,6 +65,9 @@ import com.tilab.gal.WSNConnection;
 
 public class SPINEManager {
 	
+	// private object to which SPINEMager delegates the event dispatching functionality
+	private EventDispatcher eventDispatcher = new EventDispatcher(); 
+	
 	private static Properties prop = Properties.getDefaultProperties();
 	
 	private static final String DEF_PROP_MISSING_MSG = 
@@ -75,10 +78,10 @@ public class SPINEManager {
 	
 	private final static long DISCOVERY_TIMEOUT = 2000;	
 	
-	private static final byte DISC_COMPL_EVT_COD = 100;
+	/** package scoped as it is used by EventDispatcher **/
+	static final byte DISC_COMPL_EVT_COD = 100;
 	
 		
-	private Vector listeners = new Vector(); // <values:SPINEListener>
 	
 	private Vector activeNodes = new Vector(); // <values:Node>
 	private boolean discoveryCompleted = false;
@@ -116,6 +119,16 @@ public class SPINEManager {
 	
 	private Node baseStation = null;
 	
+	/** package-scoped method to get a reference to baseStation **/
+	final Node getBaseStation() {
+		return baseStation;
+	}
+	
+	/** package-scoped method to know if discovery is completed **/
+	final boolean isDiscoveryCompleted() {
+		return discoveryCompleted;
+	}
+	
 	private SPINEManager(String[] args) {
 		try {
 			
@@ -148,6 +161,7 @@ public class SPINEManager {
 			
 			baseStation = new Node(new Address(""+SPINEPacketsConstants.SPINE_BASE_STATION));
 			baseStation.setLogicalID(new Address(SPINEPacketsConstants.SPINE_BASE_STATION_LABEL));
+			
 
 		} catch (NumberFormatException e) {
 			exit(DEF_PROP_MISSING_MSG);
@@ -160,6 +174,7 @@ public class SPINEManager {
 		} 
 	}
 
+	
 	/**
 	 * Returns the SPINEManager instance connected to the given base-station
 	 * Those parameters should be retrieved using the Properties instance 
@@ -208,51 +223,25 @@ public class SPINEManager {
 		return instance;
 	}
 		
-	/**
-	 * Registers a SPINEListener to the manager instance
-	 * 
-	 * @param listener the listener to register
-	 */
-	/**
-	 *@deprecated Please now use addListener(SPINEListener)
-	 *@see #addListener(SPINEListener)
-	 */
-	public void registerListener(SPINEListener listener) {
-		this.listeners.addElement(listener);
-	}
 
 	
 	/**
-	 * Registers a SPINEListener to the manager instance
+	 * Adds a SPINEListener to the manager instance
 	 * 
 	 * @param listener the listener to register
 	 */
 	public void addListener(SPINEListener listener) {
-		this.listeners.addElement(listener);
+		eventDispatcher.addListener(listener);
 	}
 	
 	
 	/**
-	 * Deregisters a SPINEListener to the manager instance
-	 * 
-	 * @param listener the listener to deregister
-	 */
-	/**
-	 *@deprecated Please now use removeListener(SPINEListener)
-	 *@see #removeListener(SPINEListener)
-	 */
-	public void deregisterListener(SPINEListener listener) {
-		this.listeners.removeElement(listener);
-	}
-	
-	
-	/**
-	 * Deregisters a SPINEListener to the manager instance
+	 * Remove a SPINEListener from the manager instance
 	 * 
 	 * @param listener the listener to deregister
 	 */
 	public void removeListener(SPINEListener listener) {
-		this.listeners.removeElement(listener);
+		eventDispatcher.removeListener(listener);
 	}
 	
 
@@ -786,41 +775,7 @@ public class SPINEManager {
 		return PLATFORM;
 	}
 	
-	/*
-	 * Regarding to the 'eventType', this method notify the SPINEListeners properly, by
-	 * casting in the right way the Object 'o' 
-	 */
-	private void notifyListeners(short eventType, Object o) {
-		for (int i = 0; i<this.listeners.size(); i++) 
-			switch(eventType) {
-				case SPINEPacketsConstants.SERVICE_ADV:
-					if (!this.discoveryCompleted)
-						((SPINEListener)this.listeners.elementAt(i)).newNodeDiscovered((Node)activeNodes.lastElement()); 
-					break;
-				case SPINEPacketsConstants.DATA: 
-					((SPINEListener)this.listeners.elementAt(i)).received((Data)o); 
-					((SPINEListener)this.listeners.elementAt(i)).dataReceived(((Data)o).getNode().getPhysicalID().getAsInt(), (Data)o);
-					break;	
-				case SPINEPacketsConstants.SVC_MSG: 
-					if(((ServiceMessage)o).getNode() != null) {
-						((SPINEListener)this.listeners.elementAt(i)).received((ServiceMessage)o);
-						((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(((ServiceMessage)o).getNode().getPhysicalID().getAsInt(), (ServiceMessage)o);
-					}
-					break;
-				case DISC_COMPL_EVT_COD:
-					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
-					break;
-				default: {
-					ServiceMessage sm = new ServiceWarningMessage();
-					sm.setMessageDetail(SPINEServiceMessageConstants.UNKNOWN_PKT_RECEIVED);
-					sm.setNode(baseStation);
-					((SPINEListener)this.listeners.elementAt(i)).received(sm);				
-					break;
-				}
-			}
-		
-	}
-	
+
 	
 	/*
 	 * implementation of the discovery timer procedure can be simply seen as a 
@@ -847,10 +802,10 @@ public class SPINEManager {
 				ServiceErrorMessage serviceErrorMessage=new ServiceErrorMessage();
 				serviceErrorMessage.setNode(baseStation);
 				serviceErrorMessage.setMessageDetail(SPINEServiceMessageConstants.CONNECTION_FAIL);
-				notifyListeners(SPINEPacketsConstants.SVC_MSG,serviceErrorMessage);
+				eventDispatcher.notifyListeners(SPINEPacketsConstants.SVC_MSG,serviceErrorMessage, SPINEManager.this);
 			}		
 			discoveryCompleted = true;			
-			notifyListeners(DISC_COMPL_EVT_COD, activeNodes);
+			eventDispatcher.notifyListeners(DISC_COMPL_EVT_COD, activeNodes, SPINEManager.this);
 		}
 	}
 	
@@ -1001,7 +956,7 @@ public class SPINEManager {
 			}
 			
 			// SPINEListeners are notified of the reception from the node 'nodeID' of some data  
-			notifyListeners(pktType, o);
+			eventDispatcher.notifyListeners(pktType, o, SPINEManager.this);
 			
 			//System.out.println("Memory available: " + Runtime.getRuntime().freeMemory() + " KB");
 			// call to the garbage collector to favour the recycling of unused memory
