@@ -95,7 +95,7 @@ public class SPINENodeEmulTest implements SPINEListener {
 			
 			// ... let's start playing! 
 			System.out.println("*** TestProgram   manager.discoveryWsn() ***");
-			manager.discoveryWsn();
+			manager.discoveryWsn(10000);
 			
 		} catch (InstantiationException e) {
 			// if we are here, then the SPINEManager initialization did not work properly
@@ -172,6 +172,7 @@ public class SPINENodeEmulTest implements SPINEListener {
 					sfr.add(new Feature(SPINEFunctionConstants.AMPLITUDE, 
 						  									  ((Sensor) curr.getSensorsList().elementAt(i)).getChannelBitmask()));
 					manager.activate(curr, sfr);	
+					
 					
 					
 					// SetUp Alarm Engine
@@ -292,6 +293,11 @@ public class SPINENodeEmulTest implements SPINEListener {
 			case SPINEFunctionConstants.FEATURE: {
 				
 				features = ((FeatureData)data).getFeatures();
+				
+				// 02 Novembre
+				for (int h=0; h<features.length; h++){
+					System.out.println("*** " +   features[h].toString() + features[h].getFeatureLabel());
+				}
 				
 				counter++;
 				
