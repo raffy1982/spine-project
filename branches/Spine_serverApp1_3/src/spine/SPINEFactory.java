@@ -33,46 +33,24 @@ package spine;
 public class SPINEFactory {
 
 
-		   private static SPINEFactory instance = new SPINEFactory();
-
-		   private SPINEManager managerInstance;
+		   private static SPINEManager managerInstance;
 		   
 
-
-		   /** private constructor to prevent the SPINEFactory class from being instantiated. **/
-		   private SPINEFactory(){
-		   }
-
-		   /** returns an instance of the SPINEFactory **/
-		   public static SPINEFactory getInstance(){
-		  	 return instance;  
-		   }
-		    
-		   /** returns the SPINEManager.
-		    * Notice that before getting the SPINEManager, it must have been already initialized via the init method call.
-		    * @see #init()
-		    * @throws InstantiationException if the SPINEManager has not yet been initialized. **/
-		   public SPINEManager getSPINEManager() throws InstantiationException {
-			   if (managerInstance != null)
-				   return managerInstance;
-			   else
-				   throw new InstantiationException("SPINEManager not yet initialized, call the SPINEFactory.init method");
-		   }
 		    
 
 		   /** Initializes the SPINE Manager.
 		    * The SPINEManager instance is connected to the base-station and platform
-		    * obtained transparently from the app.properties file
-		    * 
+		    * obtained transparently from the app.properties file.
+		    * This method should be called just once in the application life-time, creating more than 
+		    * one SPINEManager at the moment has an undefined behaviour.
 		    * @param appPropertiesFile the application properties file 
 		    * where at least the 'MOTECOM' and 'PLATFORM' variables are defined
-		    * 
+		    * @return the created SPINEManager ready to be used
 		    * @see spine.SPINESupportedPlatforms
-		    * @param appPropertiesFile
 		    * @throws InstantiationException if the SPINEManager has already been initialized or MOTECOM and PLATFORM 
 		    * variables have not been defined. 
 		    **/
-		   public void init(String appPropertiesFile) throws InstantiationException{
+		   public static SPINEManager createSPINEManager(String appPropertiesFile) throws InstantiationException{
 			   if (managerInstance != null) 
 				   throw new InstantiationException("SPINEManager already initialized"); 
 			   else {
@@ -88,6 +66,7 @@ public class SPINEFactory {
 							   throw new InstantiationException("MOTECOM and PLATFORM variables have not been defined"); 
 						managerInstance = new SPINEManager(MOTECOM, PLATFORM, new String[]{MOTECOM});
 					}
+			   return managerInstance;
 	
 		   }
 

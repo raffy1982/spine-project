@@ -72,20 +72,14 @@ public class SPINENodeEmulTest implements SPINEListener {
 	}
 	
 	public SPINENodeEmulTest() {
-		// First get an instance of the SPINEFactory
-		System.out.println("*** TestProgram   sf = SPINEFactory.getInstance() ***");
-		SPINEFactory sf = SPINEFactory.getInstance();
 
 		try {	
-			// Then initialize SPINE by passing the fileName with the configuration properties
-			System.out.println("*** TestProgram   sf.init(\"app.properties\"); ***");
-			sf.init("src/test/app.properties");
-			
-			// Then get the SPINEManager instance
-			System.out.println("*** TestProgram   manager = sf.getSPINEManager(); ***");
-			manager = sf.getSPINEManager();
-			
-			// ... we need to register a SPINEListener implementation to the SPINE manager instance
+			// Initialize SPINE by passing the fileName with the configuration properties
+			System.out.println("*** TestProgram   SPINEFactory.createSPINEManager(\"app.properties\"); ***");
+			// Initialize SPINE by passing the fileName with the configuration properties
+			manager = SPINEFactory.createSPINEManager("src/test/app.properties");
+					
+			// ... then we need to register a SPINEListener implementation to the SPINE manager instance
 			// (I register myself since I'm a SPINEListener implementation!)
 			System.out.println("*** TestProgram   manager.registerListener(this) ***");
 			manager.addListener(this);	

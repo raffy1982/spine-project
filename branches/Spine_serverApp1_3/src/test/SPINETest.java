@@ -72,17 +72,12 @@ public class SPINETest implements SPINEListener {
 	}
 	
 	public SPINETest() {
-		// First get an instance of the SPINEFactory
-		SPINEFactory sf = SPINEFactory.getInstance();
 
 		try {	
-			// Then initialize SPINE by passing the fileName with the configuration properties
-			sf.init("src/test/app.properties");
+			// Initialize SPINE by passing the fileName with the configuration properties
+			manager = SPINEFactory.createSPINEManager("src/test/app.properties");
 			
-			// Then get the SPINEManager instance
-			manager = sf.getSPINEManager();
-			
-			// ... we need to register a SPINEListener implementation to the SPINE manager instance
+			// ... then we need to register a SPINEListener implementation to the SPINE manager instance
 			// (I register myself since I'm a SPINEListener implementation!)
 			manager.addListener(this);	
 			
