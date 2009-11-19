@@ -36,6 +36,7 @@ package test;
 
 import java.util.Vector;
 
+import spine.SPINEFactory;
 import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
@@ -71,26 +72,37 @@ public class SPINENodeEmulTest implements SPINEListener {
 	}
 	
 	public SPINENodeEmulTest() {
-		// the first step is to get the SPINEManager instance; then ... 
-		// !! NOT NEEDED ANYMORE !!
-		//String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
+		// First get an instance of the SPINEFactory
+		System.out.println("*** TestProgram   sf = SPINEFactory.getInstance() ***");
+		SPINEFactory sf = SPINEFactory.getInstance();
+
+		try {	
+			// Then initialize SPINE by passing the fileName with the configuration properties
+			System.out.println("*** TestProgram   sf.init(\"app.properties\"); ***");
+			sf.init("src/test/app.properties");
+			
+			// Then get the SPINEManager instance
+			System.out.println("*** TestProgram   manager = sf.getSPINEManager(); ***");
+			manager = sf.getSPINEManager();
+			
+			// ... we need to register a SPINEListener implementation to the SPINE manager instance
+			// (I register myself since I'm a SPINEListener implementation!)
+			System.out.println("*** TestProgram   manager.registerListener(this) ***");
+			manager.addListener(this);	
+			
+			// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
+			/* manager.setDiscoveryProcedureTimeout(1000); */
+			
+			// ... let's start playing! 
+			System.out.println("*** TestProgram   manager.discoveryWsn() ***");
+			manager.discoveryWsn();
+			
+		} catch (InstantiationException e) {
+			// if we are here, then the SPINEManager initialization did not work properly
+			e.printStackTrace();
+		}
 		
-		System.out.println("*** TestProgram   manager = SPINEManager.getInstance(args) ***");
-		// !! NOT NEEDED ANYMORE !!
-		//manager = SPINEManager.getInstance(args);		
-		manager = SPINEManager.getInstance("app.properties");
-		
-		// ... we need to register a SPINEListener implementation to the SPINE manager instance
-		// (I register myself since I'm a SPINEListener implementation!)
-		System.out.println("*** TestProgram   manager.registerListener(this) ***");
-		manager.addListener(this);	
-		
-		// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
-		/* manager.setDiscoveryProcedureTimeout(1000); */
-		
-		// ... let's start playing! 
-		System.out.println("*** TestProgram   manager.discoveryWsn() ***");
-		manager.discoveryWsn(10000);
+
 	}
 
 	

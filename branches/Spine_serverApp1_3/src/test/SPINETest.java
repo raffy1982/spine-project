@@ -36,6 +36,7 @@ package test;
 
 import java.util.Vector;
 
+import spine.SPINEFactory;
 import spine.SPINEFunctionConstants;
 import spine.SPINEListener;
 import spine.SPINEManager;
@@ -71,21 +72,32 @@ public class SPINETest implements SPINEListener {
 	}
 	
 	public SPINETest() {
-		// the first step is to get the SPINEManager instance; then ... 
-		// !! NOT NEEDED ANYMORE !!
-		//String[] args = { SPINEManager.getProperties().getProperty(Properties.MOTECOM_KEY) };
-		//manager = SPINEManager.getInstance(args);		
-		manager = SPINEManager.getInstance("src/test/app.properties");
+		// First get an instance of the SPINEFactory
+		SPINEFactory sf = SPINEFactory.getInstance();
+
+		try {	
+			// Then initialize SPINE by passing the fileName with the configuration properties
+			sf.init("src/test/app.properties");
+			
+			// Then get the SPINEManager instance
+			manager = sf.getSPINEManager();
+			
+			// ... we need to register a SPINEListener implementation to the SPINE manager instance
+			// (I register myself since I'm a SPINEListener implementation!)
+			manager.addListener(this);	
+			
+			// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
+			/* manager.setDiscoveryProcedureTimeout(1000); */
+			
+			// ... let's start playing! 
+			manager.discoveryWsn();
+			
+		} catch (InstantiationException e) {
+			// if we are here, then the SPINEManager initialization did not work properly
+			e.printStackTrace();
+		}
 		
-		// ... we need to register a SPINEListener implementation to the SPINE manager instance
-		// (I register myself since I'm a SPINEListener implementation!)
-		manager.addListener(this);	
-		
-		// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
-		/* manager.setDiscoveryProcedureTimeout(1000); */
-		
-		// ... let's start playing! 
-		manager.discoveryWsn();
+
 	}
 
 	

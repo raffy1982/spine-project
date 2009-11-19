@@ -92,7 +92,7 @@ public class SPINEManager {
 	private WSNConnection connection;
 	private LocalNodeAdapter nodeAdapter;	
 	
-	private static String MOTECOM = null;
+	private	static String MOTECOM = null;
 	private static String PLATFORM = null;
 	
 	private static SPINEManager instance;
@@ -129,11 +129,12 @@ public class SPINEManager {
 		return discoveryCompleted;
 	}
 	
-	private SPINEManager(String[] args) {
+	/** package-scoped method called by SPINEFactory.
+	 * The caller must guarantee that moteCom and platform are not null. **/
+	SPINEManager(String moteCom, String platform, String[] args) {
 		try {
-			
-			if (PLATFORM == null && (PLATFORM = System.getProperty(Properties.PLATFORM_KEY)) == null)
-				exit(APP_PROP_MISSING_MSG);
+			MOTECOM = moteCom;
+			PLATFORM = platform;
 			
 			MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
 			LOCALNODEADAPTER_CLASSNAME = prop.getProperty(PLATFORM + "_" + Properties.LOCALNODEADAPTER_CLASSNAME_KEY);
@@ -175,54 +176,9 @@ public class SPINEManager {
 	}
 
 	
-	/**
-	 * Returns the SPINEManager instance connected to the given base-station
-	 * Those parameters should be retrieved using the Properties instance 
-	 * obtained thru the static SPINEManager.getProperties method
-	 * 
-	 * @param args an array of Strings used to configure the selected LocalNodeAdapter
-	 * 
-	 * @return the SPINEManager instance
-	 * 
-	 * @see spine.Properties
-	 * 
-	 * @deprecated
-	 */
-	public static SPINEManager getInstance(String[] args) {
-		if (instance == null) 
-			instance = new SPINEManager(args);
-		return instance;
-	}
+	
 
-	/**
-	 * Returns the SPINEManager instance connected to the base-station and platform
-	 * obtained transparently from the app.properties file
-	 * 
-	 * @param appPropertiesFile the application properties file 
-	 * where at least the 'MOTECOM' and 'PLATFORM' variables are defined
-	 * 
-	 * @return the SPINEManager instance
-	 * 
-	 * @see spine.SPINESupportedPlatforms
-	 */
-	public static SPINEManager getInstance(String appPropertiesFile) {
-		if (instance == null) {
-			Properties appProp = Properties.getProperties(appPropertiesFile);	
-			
-			String mCom = System.getProperty(Properties.MOTECOM_KEY);
-			MOTECOM = (mCom!=null)? mCom : appProp.getProperty(Properties.MOTECOM_KEY);
-			
-			String pltf = System.getProperty(Properties.PLATFORM_KEY);
-			PLATFORM = (pltf!=null)? pltf : appProp.getProperty(Properties.PLATFORM_KEY);
-			
-			if (MOTECOM == null || PLATFORM == null)
-				exit(APP_PROP_MISSING_MSG);
-			else
-				instance = new SPINEManager(new String[]{MOTECOM});
-		}
-		return instance;
-	}
-		
+
 
 	
 	/**
