@@ -92,7 +92,10 @@ implementation {
 	    call CLK_port.set();
 	}
 
-	writeBuff = 0xc7;  // 11000111 = 0xc7 ENABLE ACCELEROMETER REGISTER VALUE
+	//writeBuff = 0xc7;  // 11000111 = 0xc7 ENABLE ACCELEROMETER REGISTER VALUE   max 40Hz
+	//writeBuff = 0xd7;  // 11010111 = 0xd7 ENABLE ACCELEROMETER REGISTER VALUE     max 160Hz
+	writeBuff = 0xe7;  // 11100111 = 0xd7 ENABLE ACCELEROMETER REGISTER VALUE     max 640Hz
+	//writeBuff = 0xf7;  // 11110111 = 0xd7 ENABLE ACCELEROMETER REGISTER VALUE     max 2560Hz
         for (i=8; i>=1; i--) {
   	    call CLK_port.clr();
   	    //WRITE
