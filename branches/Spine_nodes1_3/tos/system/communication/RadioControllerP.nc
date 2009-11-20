@@ -40,8 +40,9 @@ Boston, MA  02111-1307, USA.
  *
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git;a=summary)
  *
- * @version 1.2
+ * @version 1.3
  */
 
  #ifndef BOOT_RADIO_ON
@@ -78,6 +79,12 @@ Boston, MA  02111-1307, USA.
             interface Timer<TMilli> as GuardTimer;
             interface Timer<TMilli> as ListenTimer;
             interface Timer<TMilli> as TDMATimer;
+            
+            #ifdef SECURE
+               interface CC2420SecurityMode;
+               interface CC2420Keys;
+               interface Packet as SecPacket;
+            #endif
        }
 
        provides interface RadioController;
@@ -87,7 +94,7 @@ Boston, MA  02111-1307, USA.
  implementation {
 
        uint32_t GUARD_TIMER = 5; // no shorter than 5ms (otherwise the radio isn't able to TX sequential pkts)
-       uint32_t LISTEN_TIMER = 25;
+       uint32_t LISTEN_TIMER = 100;
 
        message_t msgTmp;
 
@@ -104,7 +111,15 @@ Boston, MA  02111-1307, USA.
        uint8_t netSize = -1;
        uint8_t currentTimeSlot = -1;
        
-
+       #ifdef SECURE
+          #include "secure_key.h"
+          #ifdef DEFAULT_KEY_USED
+             #warning using default key from support/make/secure_key.h
+          #endif
+          uint8_t spine_secure_key[KEY_SIZE] = KEY;
+       #endif
+       
+       
        event void Boot.booted() {
            if (BOOT_RADIO_ON)
                call Radio.start();
@@ -112,18 +127,38 @@ Boston, MA  02111-1307, USA.
 
 
        error_t sendOneMessage(uint16_t destination, uint8_t type, message_t* msg, uint8_t msgLen) {
+           //uint8_t* t;
            if (msgLen <= TOSH_DATA_LENGTH) {
 		      
-	          #ifndef TINYOS_2_0_2
-              memcpy(call Sender.getPayload(&msgTmp, msgLen), call Sender.getPayload(msg, msgLen), msgLen);	   
-		      #else
-           	  memcpy(call Sender.getPayload(&msgTmp), call Sender.getPayload(msg), msgLen);
+	      #ifdef SECURE
+                 // shift the message payload to allow for insertion of security header,
+                 // as we used the Non-Secure packet interface to construct the payload.
+                 uint8_t tMsg[TOSH_DATA_LENGTH];
+                 memcpy(tMsg, call Packet.getPayload(msg, msgLen), msgLen);
+                 memcpy(call SecPacket.getPayload(msg, msgLen), tMsg, msgLen);
+                 call SecPacket.setPayloadLength(msg, msgLen);
+                 call CC2420SecurityMode.setCcm(msg, 0, 0, MIC_LENGTH);   // encrypt the whole message, with a MIC_LENGTH bit auth code
               #endif
               
-              return call Sender.send(destination, &msgTmp, msgLen);
-           }
-           else {
-                 // TODO implement the fragmenter ... actually is already implemented within the Packet Manager
+              /*t = call Packet.getPayload(msg, msgLen);
+              printf("%02X ", t[msgLen-14]);
+              printf("%02X, ", t[msgLen-13]);
+              printf("%02X ", t[msgLen-12]);
+              printf("%02X, ", t[msgLen-11]);
+              printf("%02X ", t[msgLen-10]);
+              printf("%02X, ", t[msgLen-9]);
+              printf("%02X ", t[msgLen-8]);
+              printf("%02X, ", t[msgLen-7]);
+              printf("%02X ", t[msgLen-6]);
+              printf("%02X, ", t[msgLen-5]);
+              printf("%02X ", t[msgLen-4]);
+              printf("%02X, ", t[msgLen-3]);
+              printf("%02X ", t[msgLen-2]);
+              printf("%02X ", t[msgLen-1]);
+              printf("\n");
+              printfflush();*/
+
+              return call Sender.send(destination, msg, msgLen);
            }
            return FAIL;
        }
@@ -203,7 +238,10 @@ Boston, MA  02111-1307, USA.
 
            if (firstStart) {
               firstStart = FALSE;
-
+              #ifdef SECURE
+                if(res == SUCCESS)
+                    call CC2420Keys.setKey(0, spine_secure_key);
+              #endif
               signal RadioController.radioOn();
            }
 
@@ -214,6 +252,12 @@ Boston, MA  02111-1307, USA.
            else if (myTurn && tdmaEnabled)
               checkQueueToSend();
        }
+
+       #ifdef SECURE
+       event void CC2420Keys.setKeyDone(uint8_t keyNo, uint8_t* skey) {
+         // do nothing
+       }
+       #endif
 
        event void Radio.stopDone(error_t res) {
            radioOn = !(res == SUCCESS);
@@ -233,7 +277,7 @@ Boston, MA  02111-1307, USA.
 		     #else
              memcpy(call Sender.getPayload(&buffer), payload, len);
              #endif
-             
+
              return call Queue.enqueue(buffer);
           }
           else {

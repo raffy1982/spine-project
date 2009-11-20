@@ -1,6 +1,6 @@
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that
-allows dynamic configuration of feature extraction capabilities 
+allows dynamic configuration of feature extraction capabilities
 of WSN nodes via an OtA protocol
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
@@ -40,8 +40,9 @@ Boston, MA  02111-1307, USA.
  *
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git)
  *
- * @version 1.2
+ * @version 1.3
  */
 
  #ifndef RADIO_QUEUE_MAX_SIZE
@@ -54,11 +55,17 @@ Boston, MA  02111-1307, USA.
 
  implementation {
       components RadioControllerP, MainC, ActiveMessageC, LedsC,
-                 new AMSenderC(AM_SPINE) as SenderC,
+
+                 #ifdef SECURE
+                     new SecAMSenderC(AM_SPINE) as SenderC, CC2420KeysC,
+                 #else
+                     new AMSenderC(AM_SPINE) as SenderC,
+                 #endif
 
                  new AMReceiverC(AM_SPINE) as ReceiverC,
                  
                  new QueueC(message_t, RADIO_QUEUE_MAX_SIZE) as Queue,
+
                  new TimerMilliC() as GuardTimer, new TimerMilliC() as ListenTimer, new TimerMilliC() as TDMATimer;
 
       
@@ -69,6 +76,12 @@ Boston, MA  02111-1307, USA.
 
       RadioControllerP.Boot -> MainC;
       RadioControllerP.Radio -> ActiveMessageC;
+
+      #ifdef SECURE
+          RadioControllerP.CC2420SecurityMode -> SenderC;
+          RadioControllerP.CC2420Keys -> CC2420KeysC;
+	  RadioControllerP.SecPacket -> SenderC;
+      #endif
 
       RadioControllerP.Packet -> ActiveMessageC;
       RadioControllerP.AMPacket -> ActiveMessageC;

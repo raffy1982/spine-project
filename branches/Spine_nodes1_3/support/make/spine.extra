@@ -46,6 +46,17 @@ else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif
 
+# default to security disabled
+#SECURE=Y
+ifeq ($(SECURE),Y)
+     $(info INFO: Compiling with secure send/receive)
+     PFLAGS += -DSECURE
+     CFLAGS += -DCC2420_HW_SECURITY
+     # to include the default secure_key.h
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/../support/make
+else
+     $(info INFO: Compiling in insecure mode, define 'SECURE=Y' to enable)
+endif
 
 #current spine version used (2 stands for 1.2)
 PFLAGS += -DSPINE_VERSION=2

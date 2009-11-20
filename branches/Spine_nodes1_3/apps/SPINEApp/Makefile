@@ -6,13 +6,16 @@ LOCAL_TOSROOT=$(shell SUPPORT_MAKE_PATH=.; while [ ! -d $$SUPPORT_MAKE_PATH/supp
 TOSMAKE_PATH=$(LOCAL_TOSROOT)/support/make
 GOALS += spine
 
+# default to security disabled, define 'SECURE=Y' to enable
+#SECURE=Y
+
 PFLAGS += -DTOSH_DATA_LENGTH=114
 
 #radio channel for TX-RX
 PFLAGS += -DCC2420_DEF_CHANNEL=12
 
 #uncomment if TinyOS 2.0.2 or older is used
-//PFLAGS += -DTINYOS_2_0_2
+#PFLAGS += -DTINYOS_2_0_2
 #and if TinyOS 2.0.2 or older is used, comment the following line
 PFLAGS += -I$(TOSDIR)/lib/printf/
 
@@ -54,8 +57,8 @@ PFLAGS += -DFUNCTION_LIST_SIZE=4
 PFLAGS += -DFUNCTION_LIBRARIES_LIST_SIZE=64
 
 
-//PFLAGS += -DFEATURE_LIST_SIZE=32
-//PFLAGS += -DACT_FEATS_LIST_SIZE=64
+#PFLAGS += -DFEATURE_LIST_SIZE=32
+#PFLAGS += -DACT_FEATS_LIST_SIZE=64
 
 
 include $(MAKERULES)

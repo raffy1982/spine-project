@@ -28,8 +28,9 @@ Boston, MA  02111-1307, USA.
  *
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git) 
  *
- * @version 1.2
+ * @version 1.3
  */
 
  configuration PacketManagerC {

@@ -28,10 +28,15 @@ Boston, MA  02111-1307, USA.
  *
  *
  * @author Raffaele Gravina
+ * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git)
  *
- * @version 1.2
+ * @version 1.3
  */
- 
+
+ #ifdef SECURE
+    #include "secure_key.h"
+ #endif
+
  module PacketManagerP {
 
        uses {
@@ -60,14 +65,22 @@ Boston, MA  02111-1307, USA.
           uint8_t builtLen = 1;
           uint8_t* header;
           uint8_t* payload = call OutPackets.build[pktType](pld, len, &builtLen);
-          uint8_t msgTmp[SPINE_PKT_MAX_SIZE];
-          uint8_t lenTmp = SPINE_PKT_PAYLOAD_MAX_SIZE;
-          uint8_t i;
+          uint8_t maxPktSize = TOSH_DATA_LENGTH;
 
+          #ifdef SECURE                                                  // security introduces overhead; can't fill up the payload completely
+               uint8_t maxPyldLen = maxPktSize - SPINE_HEADER_PKT_SIZE - (MIC_LENGTH + 8);
+          #else
+               uint8_t maxPyldLen = maxPktSize - SPINE_HEADER_PKT_SIZE;
+          #endif
+
+          uint8_t msgTmp[maxPktSize];
+          uint8_t lenTmp = maxPyldLen;
+          uint8_t i;
+          
           // if necessary, we are going to split the message in multiple fragments
 
-          totFragments = ( (builtLen%SPINE_PKT_PAYLOAD_MAX_SIZE) == 0)? (builtLen/SPINE_PKT_PAYLOAD_MAX_SIZE) :
-                                                                         ((builtLen/SPINE_PKT_PAYLOAD_MAX_SIZE) + 1);
+          totFragments = ( (builtLen%maxPyldLen) == 0)? (builtLen/maxPyldLen) : ((builtLen/maxPyldLen) + 1);
+
           for (i = 0; i<totFragments; i++) {
              fragmentNr = i+1;
              header = call Header.build(SPINE_VERSION, extension, pktType, GROUP_ID, TOS_NODE_ID, DEFAULT_DEST,
@@ -76,13 +89,13 @@ Boston, MA  02111-1307, USA.
              memcpy(msgTmp, header, SPINE_HEADER_PKT_SIZE);
 
              if(fragmentNr == totFragments)       // only the last payload fragment could be smaller than the max size
-                lenTmp = builtLen - ((totFragments - 1) * SPINE_PKT_PAYLOAD_MAX_SIZE);
+                lenTmp = builtLen - ((totFragments - 1) * maxPyldLen);
 
-             memcpy(msgTmp + SPINE_HEADER_PKT_SIZE, payload + (i*SPINE_PKT_PAYLOAD_MAX_SIZE), lenTmp);
+             memcpy(msgTmp + SPINE_HEADER_PKT_SIZE, payload + (i*maxPyldLen), lenTmp);
 
-             call RadioController.send(DEFAULT_DEST, pktType, &msgTmp, SPINE_HEADER_PKT_SIZE + lenTmp);
+             call RadioController.send(DEFAULT_DEST, pktType, msgTmp, SPINE_HEADER_PKT_SIZE + lenTmp);
           }
-          
+
           sequenceNr++;     // seqNr is incremented on a per message basis (not each fragment)
 
      }
@@ -115,7 +128,7 @@ Boston, MA  02111-1307, USA.
                     memcpy(ackMsg, ackHeader, SPINE_HEADER_PKT_SIZE);
                     memcpy(ackMsg + SPINE_HEADER_PKT_SIZE, ackBuiltPld, builtAckPldLen);
 
-                    call RadioController.send(source, SVC_MSG, &ackMsg, sizeof(ackMsg));
+                    call RadioController.send(source, SVC_MSG, ackMsg, sizeof(ackMsg));
                     // END ACKs transmission for received SPINE pkts
 
                     signal PacketManager.messageReceived(call Header.getPktType()); // it's supposed to be the same of the 'pktType' param
