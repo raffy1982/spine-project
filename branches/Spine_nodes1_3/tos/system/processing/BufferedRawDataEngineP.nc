@@ -44,6 +44,7 @@ module BufferedRawDataEngineP {
 		interface Boot;
 		interface FunctionManager;
 		interface SensorsRegistry;
+		interface SensorBoardController;
 		interface BufferPool;
 	}
 }
@@ -168,6 +169,7 @@ implementation {
 	event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {
                 
              uint16_t tmp;
+             uint8_t retMask = 0;
              uint8_t mask = 0x08;
              uint8_t i, j;
              uint8_t chsCount = 0;
@@ -177,16 +179,21 @@ implementation {
                    if (paramsList[i].sensorCode == sensorCode && isActive(sensorCode)) {
                       paramsList[i].samplesCount++;
                       if (paramsList[i].samplesCount == paramsList[i].shiftSize) {
-                         tmp = (sensorCode<<4 | paramsList[i].chsBitmask);
-                         msg[0] = sizeof(uint16_t)<<8 | tmp;
+                         //tmp = (sensorCode<<4 | paramsList[i].chsBitmask);
+                         //msg[0] = sizeof(uint16_t)<<8 | tmp;
                          msg[1] = paramsList[i].bufferSize<<8;
                          
                          for (j = 0; j<MAX_VALUE_TYPES; j++) {
-                            if ( (paramsList[i].chsBitmask & (mask>>j)) == (mask>>j)) {
+                            if ( ((paramsList[i].chsBitmask & (mask>>j)) == (mask>>j)) && call SensorBoardController.canSense(sensorCode, j)) {
                                call BufferPool.getData(call SensorsRegistry.getBufferID(sensorCode, j), paramsList[i].bufferSize, msg+(2+paramsList[i].bufferSize*chsCount));
+                               retMask |= (mask>>j);
                                chsCount++;
                             }
                          }
+                         
+                         tmp = (sensorCode<<4 | retMask);
+                         msg[0] = sizeof(uint16_t)<<8 | tmp;
+
                          paramsList[i].samplesCount = 0;
                          
                          memcpy(msgByte, msg, (2+paramsList[i].bufferSize*chsCount)*sizeof(uint16_t) );
@@ -197,5 +204,7 @@ implementation {
                 }
              }
 	}
+	
+	event void SensorBoardController.acquisitionStored(enum SensorCode sensorCode, error_t result, int8_t resultCode){}
 }
 

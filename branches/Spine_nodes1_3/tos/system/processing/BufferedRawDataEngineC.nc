@@ -39,12 +39,13 @@ configuration BufferedRawDataEngineC {
 }
 
 implementation {
-	components MainC, FunctionManagerC, SensorsRegistryC, BufferPoolP, BufferedRawDataEngineP;
+	components MainC, FunctionManagerC, SensorsRegistryC, SensorBoardControllerC, BufferPoolP, BufferedRawDataEngineP;
 
 	BufferedRawDataEngineP.Function = Function;
 
 	BufferedRawDataEngineP.FunctionManager -> FunctionManagerC;
 	BufferedRawDataEngineP.SensorsRegistry -> SensorsRegistryC;
+	BufferedRawDataEngineP.SensorBoardController -> SensorBoardControllerC;
 	
 	BufferedRawDataEngineP.BufferPool -> BufferPoolP;
 

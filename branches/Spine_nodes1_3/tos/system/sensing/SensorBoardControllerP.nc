@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
  * @author Raffaele Gravina
  *
  * @version 1.2
- */ 
+ */
 
 #ifndef SENSORS_REGISTRY_SIZE
 #define SENSORS_REGISTRY_SIZE 16    // we can have up to 16 sensors because they are addressed with 4bits into the SPINE comm. protocol
@@ -169,6 +169,20 @@ implementation {
    		}
 		
    		return FAIL;
+       }
+       
+       command bool SensorBoardController.canSense(enum SensorCode sensorCode, enum ValueTypes channel) {
+             uint8_t* valueTypesList;
+             uint8_t valueTypesCount;
+             uint8_t i;
+             
+             valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
+
+             for(i=0; i<valueTypesCount; i++)
+                if(valueTypesList[i] == channel)
+                   return TRUE;
+
+             return FALSE;
        }
 
 

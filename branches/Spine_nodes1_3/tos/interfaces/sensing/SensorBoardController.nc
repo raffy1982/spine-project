@@ -68,7 +68,7 @@ Boston, MA  02111-1307, USA.
        * Returns all the last acquired 'channels' values of the given sensor
        * Note that this command must be called within the 'acquisitionDone' event handler
        * to be sure to get the latest valid data
-       * 
+       *
        * @param sensorCode  the sensor from which get the values
        * @param buffer      the buffer array in which to store the values.
                               Note the caller must pre-allocate a buffer big enough to contain all the values
@@ -141,12 +141,23 @@ Boston, MA  02111-1307, USA.
        /**
        * Returns the channel and the sensor code mapped on the given buffer id.
        *
-       * @param sensorCode the sensor we are interested in.
-       * @param sT the value of the sampling time (in ms).
+       * @param bufferID the buffer ID for which we want to get the corresponding sensor and channel
+       * @param sensorCode the output argument where the sensor code will be stored
+       * @param channel the output argument where the channel code will be stored
        *
        * @return SUCCESS if a match is found; FAIL otherwise.
        */
        command error_t getSensorAndChannelForBufferID(uint8_t bufferID, enum SensorCode *sensorCode, uint8_t *channel);
+       
+       /**
+       * Verifies if the given sensor can actually sense the given channel
+       *
+       * @param sensorCode the sensor we are interested in.
+       * @param channel the channel code
+       *
+       * @return TRUE if the given sensor can actually sense the given channel; FALSE otherwise
+       */
+       command bool canSense(enum SensorCode sensorCode, enum ValueTypes channel);
 
        /**
        * This events is thrown as soon as the given sensor completes its data acquisition process and its value(s)
