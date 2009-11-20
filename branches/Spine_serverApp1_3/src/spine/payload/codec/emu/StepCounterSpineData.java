@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
 /**
 * This class contains the static method to parse (decompress) a 
-* TinyOS SPINE 'StepCounter' Data packet payload into a platform independent one.
+* NodeEmulator SPINE 'StepCounter' Data packet payload into a platform independent one.
 * This class is invoked only by the SpineData class, thru the dynamic class loading.
 * 
 * @author Raffaele Gravina
@@ -51,7 +51,7 @@ public class StepCounterSpineData extends SpineCodec {
 				
 		StepCounterData data =  new StepCounterData();
 		
-		// set data.nodeID, data.functionCode e data.timestamp
+		// set data.nodeID, data.functionCode and data.timestamp
 		data.baseInit(node, payload);
 		data.setStepsCount(byteArrayToInt(payload, 2));
 		

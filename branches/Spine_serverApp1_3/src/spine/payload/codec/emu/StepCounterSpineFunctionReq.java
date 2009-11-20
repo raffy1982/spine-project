@@ -31,7 +31,7 @@ Boston, MA  02111-1307, USA.
 * object for alarm activation, or deactivation.
 * 
 * This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
-* to convert the high level request into an actual SPINE Ota message.     
+* to convert the high level request into an actual SPINE message.     
 *
 *
 * @author Raffaele Gravina
