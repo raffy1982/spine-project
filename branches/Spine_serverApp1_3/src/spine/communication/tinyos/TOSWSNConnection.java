@@ -39,11 +39,11 @@ package spine.communication.tinyos;
 
 import java.io.InterruptedIOException;
 
-import com.tilab.gal.WSNConnection;
-
 import spine.Properties;
 import spine.SPINEPacketsConstants;
 import spine.SPINESupportedPlatforms;
+
+import com.tilab.gal.WSNConnection;
 
 public class TOSWSNConnection implements WSNConnection {
 
@@ -103,7 +103,11 @@ public class TOSWSNConnection implements WSNConnection {
 			
 			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, tosmsg);
+			
 			System.out.println("Msg Sent -> " + tosmsg);
+			
+			if ((byte)msg.getClusterId() == SPINEPacketsConstants.RESET)
+				this.sequenceNumber = 0;
 			
 		} catch (NumberFormatException e) {
 			System.out.println(e);

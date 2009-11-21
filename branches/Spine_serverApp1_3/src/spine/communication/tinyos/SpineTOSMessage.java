@@ -168,23 +168,26 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		try {
 			s = getHeader() + " - ";
 		
-			s += "Payload (hex) { "; 
+			s += "Payload (hex) { ";
+			int len = 0;
 			if(payloadBuf != null && payloadBuf.length > 0) 
 				for (int i = 0; i<payloadBuf.length; i++) {
 					short b =  payloadBuf[i];
 					if (b<0) b += 256;
 					s += Integer.toHexString(b).toUpperCase() + " ";
+					len++;
 				}
 			else if(this.dataGet() != null && this.dataGet().length > SPINEHeader.SPINE_HEADER_SIZE) 
 				for (int i = SPINEHeader.SPINE_HEADER_SIZE; i<this.dataGet().length; i++) {
 					short b =  this.dataGet()[i];
 					if (b<0) b += 256;
 					s += Integer.toHexString(b).toUpperCase() + " ";
+					len++;
 				}
 			else 
 				s += "empty payload ";
 			
-			s += "}";
+			s += "} [len=" + len + "]";
 			
 		} catch (IllegalSpineHeaderSizeException e) {
 			return e.getMessage();

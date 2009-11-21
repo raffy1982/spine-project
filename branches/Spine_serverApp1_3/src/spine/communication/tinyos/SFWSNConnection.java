@@ -106,6 +106,9 @@ public class SFWSNConnection implements WSNConnection {
 			adapter.send(destNodeID, tosmsg);
 			System.out.println("Msg Sent -> " + tosmsg);
 			
+			if ((byte)msg.getClusterId() == SPINEPacketsConstants.RESET)
+				this.sequenceNumber = 0;
+			
 		} catch (NumberFormatException e) {
 			System.out.println(e);
 		} catch (IndexOutOfBoundsException e) {
