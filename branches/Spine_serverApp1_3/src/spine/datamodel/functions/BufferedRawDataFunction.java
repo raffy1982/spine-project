@@ -40,6 +40,8 @@ import spine.exceptions.*;
 
 public class BufferedRawDataFunction extends Function {
 
+	private static final long serialVersionUID = 1L;
+	
 	public void init(byte[] spec) throws BadFunctionSpecException {
 		this.functionCode = SPINEFunctionConstants.BUFFERED_RAW_DATA;
 	}

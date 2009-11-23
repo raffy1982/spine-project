@@ -40,6 +40,8 @@ import spine.SPINEFunctionConstants;
 
 public class AlarmFunction extends Function {
 
+	private static final long serialVersionUID = 1L;
+	
 	public void init(byte[] spec) throws BadFunctionSpecException {
 		this.functionCode = SPINEFunctionConstants.ALARM;
 	}

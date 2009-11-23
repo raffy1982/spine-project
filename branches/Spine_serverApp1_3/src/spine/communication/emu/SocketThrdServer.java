@@ -145,8 +145,8 @@ class SocketThrdServer extends JFrame implements Runnable {
 	}
 
 
-	Hashtable<Integer, ObjectInputStream> oisClient = new Hashtable<Integer, ObjectInputStream>();
-	Hashtable<Integer, ObjectOutputStream> oosClient = new Hashtable<Integer, ObjectOutputStream>();
+	Hashtable oisClient = new Hashtable();
+	Hashtable oosClient = new Hashtable();
 
 	Socket socket = null;
 

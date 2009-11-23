@@ -21,7 +21,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
-*****************************************************************/
+ *****************************************************************/
 package spine;
 
 /**
@@ -32,44 +32,45 @@ package spine;
  */
 public class SPINEFactory {
 
+	private static final String APP_PROP_MISSING_MSG = "ERROR: 'app.properties' file is missing, not properly specified or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
 
-		   private static SPINEManager managerInstance;
-		   
+	private static SPINEManager managerInstance;
 
-		    
+	/**
+	 * Initializes the SPINE Manager. The SPINEManager instance is connected to
+	 * the base-station and platform obtained transparently from the
+	 * app.properties file. This method should be called just once in the
+	 * application life-time, creating more than one SPINEManager at the moment
+	 * has an undefined behaviour.
+	 * 
+	 * @param appPropertiesFile
+	 *            the application properties file where at least the 'MOTECOM'
+	 *            and 'PLATFORM' variables are defined
+	 * @return the created SPINEManager ready to be used
+	 * @see spine.SPINESupportedPlatforms
+	 * @throws InstantiationException
+	 *             if the SPINEManager has already been initialized or MOTECOM
+	 *             and PLATFORM variables have not been defined.
+	 **/
+	public static SPINEManager createSPINEManager(String appPropertiesFile) throws InstantiationException {
+		if (managerInstance != null)
+			throw new InstantiationException("SPINEManager already initialized");
+		else {
+			Properties appProp = Properties.getProperties(appPropertiesFile);
 
-		   /** Initializes the SPINE Manager.
-		    * The SPINEManager instance is connected to the base-station and platform
-		    * obtained transparently from the app.properties file.
-		    * This method should be called just once in the application life-time, creating more than 
-		    * one SPINEManager at the moment has an undefined behaviour.
-		    * @param appPropertiesFile the application properties file 
-		    * where at least the 'MOTECOM' and 'PLATFORM' variables are defined
-		    * @return the created SPINEManager ready to be used
-		    * @see spine.SPINESupportedPlatforms
-		    * @throws InstantiationException if the SPINEManager has already been initialized or MOTECOM and PLATFORM 
-		    * variables have not been defined. 
-		    **/
-		   public static SPINEManager createSPINEManager(String appPropertiesFile) throws InstantiationException{
-			   if (managerInstance != null) 
-				   throw new InstantiationException("SPINEManager already initialized"); 
-			   else {
-						Properties appProp = Properties.getProperties(appPropertiesFile);	
-						
-						String MOTECOM = System.getProperty(Properties.MOTECOM_KEY);
-						MOTECOM = (MOTECOM!=null)? MOTECOM : appProp.getProperty(Properties.MOTECOM_KEY);
-						
-						String PLATFORM = System.getProperty(Properties.PLATFORM_KEY);
-						PLATFORM = (PLATFORM!=null)? PLATFORM : appProp.getProperty(Properties.PLATFORM_KEY);
-						
-						if (MOTECOM == null || PLATFORM == null)
-							   throw new InstantiationException("MOTECOM and PLATFORM variables have not been defined"); 
-						managerInstance = new SPINEManager(MOTECOM, PLATFORM, new String[]{MOTECOM});
-					}
-			   return managerInstance;
-	
-		   }
+			String MOTECOM = System.getProperty(Properties.MOTECOM_KEY);
+			MOTECOM = (MOTECOM != null) ? MOTECOM : appProp.getProperty(Properties.MOTECOM_KEY);
 
+			String PLATFORM = System.getProperty(Properties.PLATFORM_KEY);
+			PLATFORM = (PLATFORM != null) ? PLATFORM : appProp.getProperty(Properties.PLATFORM_KEY);
 
+			if (MOTECOM == null || PLATFORM == null)
+				throw new InstantiationException(APP_PROP_MISSING_MSG);
+			
+			managerInstance = new SPINEManager(MOTECOM, PLATFORM,new String[] { MOTECOM });
+		}
+		return managerInstance;
+
+	}
 
 }

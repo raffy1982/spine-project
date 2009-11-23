@@ -124,7 +124,7 @@ public class FeatureSpineData extends SpineCodec {
 			// set data.node, data.functionCode and data.timestamp
 			data.baseInit(node, payload);
 
-			Vector<Feature> feats = new Vector<Feature>();
+			Vector feats = new Vector();
 
 			Feature featureWork;
 			byte currBitmask;

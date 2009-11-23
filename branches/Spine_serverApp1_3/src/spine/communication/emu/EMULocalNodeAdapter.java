@@ -64,7 +64,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	private static final String URL_PREFIX = prop.getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
 
 	// Node Information Hash Table
-	Hashtable<Integer, Message> nodeInfo = new Hashtable<Integer, Message>();
+	Hashtable nodeInfo = new Hashtable();
 
 	int nodeId;
 
@@ -99,7 +99,7 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 		}
 	}
 
-	private Vector<WSNConnection> connections = new Vector<WSNConnection>();
+	private Vector connections = new Vector();
 
 	protected String motecom = null;
 

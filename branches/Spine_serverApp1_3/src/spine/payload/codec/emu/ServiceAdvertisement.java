@@ -66,8 +66,8 @@ public class ServiceAdvertisement extends SpineCodec {
 
 	public SpineObject decode(Node node, byte[] payload) {
 
-		Vector<Sensor> sensorsList = new Vector<Sensor>();
-		Vector<Function> functionsList = new Vector<Function>(); 
+		Vector sensorsList = new Vector();
+		Vector functionsList = new Vector(); 
 
 		byte sensorsNr = payload[0];
 

@@ -87,13 +87,10 @@ class EventDispatcher {
 					break;
 				case SPINEPacketsConstants.DATA: 
 					((SPINEListener)this.listeners.elementAt(i)).received((Data)o); 
-					((SPINEListener)this.listeners.elementAt(i)).dataReceived(((Data)o).getNode().getPhysicalID().getAsInt(), (Data)o);
 					break;	
 				case SPINEPacketsConstants.SVC_MSG: 
-					if(((ServiceMessage)o).getNode() != null) {
+					if(((ServiceMessage)o).getNode() != null) 
 						((SPINEListener)this.listeners.elementAt(i)).received((ServiceMessage)o);
-						((SPINEListener)this.listeners.elementAt(i)).serviceMessageReceived(((ServiceMessage)o).getNode().getPhysicalID().getAsInt(), (ServiceMessage)o);
-					}
 					break;
 				case SPINEManager.DISC_COMPL_EVT_COD:
 					((SPINEListener)this.listeners.elementAt(i)).discoveryCompleted((Vector)o);
