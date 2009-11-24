@@ -77,11 +77,9 @@ class ClientWorker implements Runnable {
 		EMUMessage msg = new EMUMessage();
 
 		ObjectInputStream ois = null;
-		// NOT DELETE and NOT COMMENT oos (otherwise NodeEmulator not connect to WSN)
-		ObjectOutputStream oos = null;
 		try {
 			ois = new ObjectInputStream(client.getInputStream());
-			oos = new ObjectOutputStream(client.getOutputStream());
+			new ObjectOutputStream(client.getOutputStream());
 		} catch (IOException e) {
 			System.out.println("In or out failed");
 		}
