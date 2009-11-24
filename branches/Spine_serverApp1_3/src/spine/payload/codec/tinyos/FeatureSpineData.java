@@ -41,7 +41,9 @@ package spine.payload.codec.tinyos;
 
 import java.util.Vector;
 
+import spine.Logger;
 import spine.SPINEFunctionConstants;
+import spine.SPINEManager;
 import spine.SPINESensorConstants;
 
 import spine.datamodel.Data;
@@ -150,8 +152,9 @@ public class FeatureSpineData extends SpineCodec {
 			
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
+			data = null;
 		}	
 				
 		return data;

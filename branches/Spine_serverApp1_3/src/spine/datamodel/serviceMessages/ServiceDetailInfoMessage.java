@@ -46,7 +46,7 @@ public class ServiceDetailInfoMessage extends ServiceInfoMessage {
 	protected int featureCode;
 	protected byte channelMask;
 	protected int numElemeForChannel;
-	protected String description="not avaible description for this type ";
+	protected String description="description not available for this type";
 	
 	public ServiceDetailInfoMessage() {
 		super();
@@ -102,15 +102,6 @@ public class ServiceDetailInfoMessage extends ServiceInfoMessage {
 	
 	public String toString() {
 		return super.toString()+ description +"type :"+computationType+"  statValue="+statistics;
-	}
-	
-	
-
-	
-	
-	
-	
-	
-	
+	}	
 
 }

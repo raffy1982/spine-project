@@ -46,7 +46,9 @@ import java.awt.event.WindowListener;
 import java.util.Vector;
 import java.io.*;
 
+import spine.Logger;
 import spine.Properties;
+import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.SPINESupportedPlatforms;
 
@@ -214,7 +216,8 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 		} catch (IOException e1) {
 			nodeInfo.remove(new Integer(nodeId));
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
 	}
 }

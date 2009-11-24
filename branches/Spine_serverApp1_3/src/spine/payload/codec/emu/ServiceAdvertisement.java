@@ -39,7 +39,9 @@ package spine.payload.codec.emu;
 
 import java.util.Vector;
 
+import spine.Logger;
 import spine.SPINEFunctionConstants;
+import spine.SPINEManager;
 import spine.datamodel.Node;
 import spine.datamodel.Sensor;
 import spine.datamodel.functions.*;
@@ -91,13 +93,17 @@ public class ServiceAdvertisement extends SpineCodec {
 				currFunction.init(fParams);
 				functionsList.addElement(currFunction);
 			} catch (ClassNotFoundException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (InstantiationException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (IllegalAccessException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (BadFunctionSpecException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			}
 		}
 		node.setFunctionsList(functionsList);

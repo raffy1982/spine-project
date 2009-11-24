@@ -44,21 +44,20 @@ package spine.communication.tinyos;
 import java.io.IOException;
 import java.util.Vector;
 
-import spine.Properties;
-import spine.SPINEPacketsConstants;
-import spine.datamodel.Address;
-import spine.datamodel.Node;
-import spine.datamodel.ServiceMessage;
-// Alessia 09/02
-import spine.SPINEServiceMessageConstants;
-import spine.payload.codec.tinyos.*;
-import spine.exceptions.*;
-//import spine.datamodel.serviceMessages.*;
-
 import net.tinyos.message.MessageListener;
 import net.tinyos.message.MoteIF;
 import net.tinyos.packet.BuildSource;
 import net.tinyos.util.PrintStreamMessenger;
+import spine.Logger;
+import spine.Properties;
+import spine.SPINEManager;
+import spine.SPINEPacketsConstants;
+import spine.SPINEServiceMessageConstants;
+import spine.datamodel.Address;
+import spine.datamodel.Node;
+import spine.datamodel.ServiceMessage;
+import spine.exceptions.MethodNotSupportedException;
+import spine.payload.codec.tinyos.ServiceAckMessage;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -97,13 +96,26 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 				if(sourceNodeID == SPINEPacketsConstants.SPINE_BASE_STATION || 
 					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
-					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION || 
+					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION ||					
 					h.getGroupID() != MY_GROUP_ID) {
-					System.out.println("[ERRONEOUS, " + h + " ]... discarded!");	
-					return;
+					
+						if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) {
+							StringBuffer str = new StringBuffer();
+							str.append("[ERRONEOUS, ");
+							str.append(h);
+							str.append(" ]... discarded!");
+							SPINEManager.getLogger().log(Logger.WARNING, str.toString());
+						}	
+					
+						return;
 				}
 				
-				System.out.println("Msg Received -> " + tosmsg);
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("REC. -> ");
+					str.append(tosmsg);				
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				}				
 				
 				if (h.getPktType() == SPINEPacketsConstants.SVC_MSG) {
                     com.tilab.gal.Message msg = ((SpineTOSMessage)tosmsg).parse();
@@ -120,8 +132,9 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
                         	  ServiceMessage svcMsg = (ServiceMessage) new ServiceAckMessage().decode(new  Node(new Address(""+sourceNodeID)), payload);
                               byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
                               removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);}
-                          catch(MethodNotSupportedException ex) {
-                        	  System.out.println(ex);
+                          catch(MethodNotSupportedException e) {
+                        	  if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+          						SPINEManager.getLogger().log(Logger.SEVERE, e.toString());          						
                           }                    
                     }
 				}
@@ -168,11 +181,13 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					((TOSWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				
 			} catch (IllegalSpineHeaderSizeException e) {
-				System.out.println("[SPINE1.2-MALFORMED-HEADER]... discarded!");
+				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
+					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			
 		}
 		else
-			System.out.println("[NON-SPINE]... discarded!");
+			if (SPINEManager.getLogger().isLoggable(Logger.WARNING))
+				SPINEManager.getLogger().log(Logger.WARNING, "[NON-SPINE]... discarded!");
 	}
 	
 	private int inPartials(int sourceID, byte sequenceNumber) {
@@ -258,15 +273,13 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					else if(curr.retransmissionCounter <= 0)
 						this.messagesQueue.removeElementAt(i);
 						
-System.out.println("- Ota deferred send.");					
 					//this.messagesQueue.removeElementAt(i);
 					Thread.sleep(2);
 				} catch (IOException e) {
-					System.out.println(e);
+					if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
+						SPINEManager.getLogger().log(Logger.WARNING, e.getMessage());
 				}
-				catch (InterruptedException e) {
-					System.out.println(e);
-				}
+				catch (InterruptedException e) {}
 			}
 		}		
 	}
@@ -275,14 +288,15 @@ System.out.println("- Ota deferred send.");
 		if(this.sendImmediately) {
 			try {
 				this.moteIF.send(destNodeID, tosmsg);
-System.out.println(" - Ota immediate send.\n");																										 // check if the flag radioAlwaysOn flag is false
 				if(tosmsg.getHeader().getPktType() == SPINEPacketsConstants.START && tosmsg.getRawPayload()[2] == 0)
 					this.sendImmediately = false;
 				
 			} catch (IOException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
+					SPINEManager.getLogger().log(Logger.WARNING, e.getMessage());
 			} catch (IllegalSpineHeaderSizeException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
+					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			
 		}
 		else 

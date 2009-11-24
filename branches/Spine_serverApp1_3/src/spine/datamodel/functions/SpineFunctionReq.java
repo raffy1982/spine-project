@@ -44,6 +44,9 @@ public abstract class SpineFunctionReq implements SpineObject {
 	/**
 	 * Sets the control flag of the request indicating if it's an activation or a deactivation.
 	 * 
+	 * NOTE: This method is for internal use only, and not supposed to be used by SPINE Applications.
+	 * It's under consideration the possibility of excluding this method in future releases of SPINE.
+	 * 
 	 * @param isActivationRequest 'true' if the current request is of activation; 
 	 * 'false' if it's a deactivation request 
 	 */

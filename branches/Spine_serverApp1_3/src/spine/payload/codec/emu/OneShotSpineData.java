@@ -39,7 +39,9 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.emu;
 
+import spine.Logger;
 import spine.SPINEFunctionConstants;
+import spine.SPINEManager;
 import spine.SPINESensorConstants;
 
 import spine.datamodel.Feature;
@@ -86,7 +88,7 @@ public class OneShotSpineData extends SpineCodec {
 			}
 		}
 		
-		OneShotData data =  new OneShotData();
+		OneShotData data = new OneShotData();
 		
 		try {
 			
@@ -101,8 +103,9 @@ public class OneShotSpineData extends SpineCodec {
 			data.setOneShot(new Feature(node, SPINEFunctionConstants.ONE_SHOT, SPINEFunctionConstants.RAW_DATA, sensorCode, bitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
+			data = null;
 		}
 		
 		return data;

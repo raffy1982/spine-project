@@ -39,7 +39,7 @@ public class MethodNotSupportedException extends Exception {
 	private static final long serialVersionUID = 1;
 
 	public MethodNotSupportedException(String method) {
-		super("MethodNotSupported:" + method);
+		super(method);
 	}
 	
 }

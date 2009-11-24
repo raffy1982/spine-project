@@ -21,7 +21,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
-*****************************************************************/
+ *****************************************************************/
 
 /**
  * This class represents a SPINE Start command.
@@ -37,67 +37,57 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel.functions;
 
-public class SpineStart implements SpineObject{
-	
+public class SpineStart implements SpineObject {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private int activeNodesCount = -1;
 	private boolean radioAlwaysOn;
 	private boolean enableTDMA;
-	
-	
+
 	/**
-	 * Sets the the size of the discovered WSN.
-	 * Note that this info is actually used by the node only if it's requested 
-	 * to operate in TDMA mode.  
+	 * Sets the the size of the discovered WSN. Note that this info is actually
+	 * used by the node only if it's requested to operate in TDMA mode.
 	 * 
-	 * @param activeNodesCount the size of the discovered WSN
+	 * @param activeNodesCount
+	 *            the size of the discovered WSN
 	 */
 	public void setActiveNodesCount(int activeNodesCount) {
 		this.activeNodesCount = activeNodesCount;
 	}
 
-
 	public int getActiveNodesCount() {
-		int activeNodesCount;
-		activeNodesCount=this.activeNodesCount;
-		return activeNodesCount;
+		return this.activeNodesCount;
 	}
 
-	
 	/**
-	 *  Sets the control flag for enabling the radio low-power mode.
-	 *  
-	 * @param radioAlwaysOn 'true' for keeping the radio always turned on;
-	 * 'false' to let the node optimizing the radio consumption by turning the radio off
-	 * when it's not needed.
+	 * Sets the control flag for enabling the radio low-power mode.
+	 * 
+	 * @param radioAlwaysOn
+	 *            'true' for keeping the radio always turned on; 'false' to let
+	 *            the node optimizing the radio consumption by turning the radio
+	 *            off when it's not needed.
 	 */
-	 public void setRadioAlwaysOn(boolean radioAlwaysOn) {
+	public void setRadioAlwaysOn(boolean radioAlwaysOn) {
 		this.radioAlwaysOn = radioAlwaysOn;
 	}
 
-	
-	 public boolean getRadioAlwaysOn() {
-		    boolean radioAlwaysOn;
-		    radioAlwaysOn=this.radioAlwaysOn;
-		    return radioAlwaysOn;
-		}
-	 
-	 
+	public boolean getRadioAlwaysOn() {
+		return this.radioAlwaysOn;
+	}
+
 	/**
 	 * Sets the control flag for enabling the on-node TDMA radio access scheme
 	 * 
-	 * @param enableTDMA 'true' if the radio access scheme must be TDMA; 
-	 * 'false' to rely on the default one.
+	 * @param enableTDMA
+	 *            'true' if the radio access scheme must be TDMA; 'false' to
+	 *            rely on the default one.
 	 */
-     public void setEnableTDMA(boolean enableTDMA) {
+	public void setEnableTDMA(boolean enableTDMA) {
 		this.enableTDMA = enableTDMA;
 	}
-     
-   
-     public boolean getEnableTDMA() {
-    	boolean enableTDMA;
-    	enableTDMA=this.enableTDMA;
-    	return enableTDMA;
- 	}
+
+	public boolean getEnableTDMA() {
+		return this.enableTDMA;
+	}
 }

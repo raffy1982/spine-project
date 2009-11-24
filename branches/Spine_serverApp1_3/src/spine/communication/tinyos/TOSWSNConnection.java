@@ -39,7 +39,9 @@ package spine.communication.tinyos;
 
 import java.io.InterruptedIOException;
 
+import spine.Logger;
 import spine.Properties;
+import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.SPINESupportedPlatforms;
 
@@ -104,15 +106,22 @@ public class TOSWSNConnection implements WSNConnection {
 			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, tosmsg);
 			
-			System.out.println("Msg Sent -> " + tosmsg);
+			if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+				StringBuffer str = new StringBuffer();
+				str.append("SENT -> ");
+				str.append(tosmsg);
+				SPINEManager.getLogger().log(Logger.INFO, str.toString());
+			}	
 			
 			if ((byte)msg.getClusterId() == SPINEPacketsConstants.RESET)
 				this.sequenceNumber = 0;
 			
 		} catch (NumberFormatException e) {
-			System.out.println(e);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}catch (IndexOutOfBoundsException e) {
-			System.out.println(e);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		} 
 		
 	}

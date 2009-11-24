@@ -39,7 +39,9 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 
+import spine.Logger;
 import spine.Properties;
+import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.communication.tinyos.SPINEHeader;
 
@@ -50,12 +52,7 @@ import com.tilab.gal.LocalNodeAdapter;
 import com.tilab.gal.WSNConnection;
 
 public final class SFLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
-    /** Version control identifier strings. */
-    public static final String[] RCS_ID = {
-        "$URL: http://macromates.com/svn/Bundles/trunk/Bundles/Java.tmbundle/Templates/Java Class/class-insert.java $",
-        "$Id$",
-    };
-	
+    	
 	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getDefaultProperties().getProperty(Properties.GROUP_ID_KEY), 16);
     
 	private Vector connections = new Vector(); // <values: WSNConnection>
@@ -93,7 +90,16 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				sfReader = new SFReadWriteThread(host, Integer.parseInt(port), this);
 			}
 			catch (UnknownHostException uhe) {
-				System.out.println("SFLocalNodeAdapter could not connect to SF at "+host+":"+port+" due to "+uhe);
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+					StringBuffer str = new StringBuffer();
+					str.append("SFLocalNodeAdapter could not connect to SF at ");
+					str.append(host);
+					str.append(":");
+					str.append(port);
+					str.append(" due to ");
+					str.append(uhe.getMessage());
+					SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+				}
 				System.exit(1);
 			}
 		}
@@ -120,11 +126,11 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				try {
 					sfReader.sendMessage(curr.destNodeID, curr.tosmsg);
 				} catch (SFWriteException swe) {
-					swe.printStackTrace();
+					if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+						SPINEManager.getLogger().log(Logger.SEVERE, swe.getMessage());
 				}
-System.out.println("- Ota deferred send.");
 				this.messagesQueue.removeElementAt(i);
-				try { Thread.sleep(2); } catch (InterruptedException e) { System.out.println(e); }
+				try { Thread.sleep(2); } catch (InterruptedException e) {}
 			}
 		}		
 	}
@@ -134,15 +140,17 @@ System.out.println("- Ota deferred send.");
 			try {
 				sfReader.sendMessage(destNodeID, tosmsg);
 			} catch (SFWriteException swe) {
-				swe.printStackTrace();
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+					SPINEManager.getLogger().log(Logger.SEVERE, swe.getMessage());
 			}
 			try {
-System.out.println(" - Ota immediate send.\n");																										 // check if the flag radioAlwaysOn flag is false
+			 // check if the flag radioAlwaysOn flag is false
 				if(tosmsg.getHeader().getPktType() == SPINEPacketsConstants.START && tosmsg.getRawPayload()[2] == 0)
 					this.sendImmediately = false;
 
 			}  catch (IllegalSpineHeaderSizeException e) {
-				System.out.println(e);
+				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
+					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			
 		}
 		else 
@@ -153,7 +161,6 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 	// BELOW FROM TOS MOTEIF VERSION
 	
 	public void messageReceived(int srcID, net.tinyos.message.Message tosmsg) {
-		System.out.print("messageReceived -> ");		
 		if (tosmsg instanceof SpineTOSMessage) {			
 			try {
 				SPINEHeader h = ((SpineTOSMessage)tosmsg).getHeader();
@@ -167,7 +174,12 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 				   h.getGroupID() != MY_GROUP_ID) 
 					return;
 				
-				printPayload(((SpineTOSMessage)tosmsg).getRawPayload());
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("REC. -> ");
+					str.append(tosmsg);				
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				}	
 				
 				sendMessages(sourceNodeID);
 				
@@ -260,6 +272,7 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 		
 	}
 	
+	
 	private class Msg {
 		int destNodeID;
 		SpineTOSMessage tosmsg;
@@ -268,21 +281,6 @@ System.out.println(" - Ota immediate send.\n");																										 // che
 			this.destNodeID = destNodeID;
 			this.tosmsg = tosmsg;
 		}
-	}
-	
-	private void printPayload(byte[] payload) {  // DEBUG CODE
-		System.out.print("in.lowLevel: "); 
-		if(payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else{
-			for (int i = 0; i<payload.length; i++) {
-				short b =  payload[i];
-				if (b<0) b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");		
-	}
-	
+	}	
 	
 }

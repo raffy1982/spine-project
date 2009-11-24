@@ -43,6 +43,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.datamodel;
 
+import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.datamodel.functions.CodecInfo;
@@ -92,8 +93,8 @@ public abstract class Data implements SpineObject {
 			} 
 			functionCode=codecInformation.getFunctionCode(payload);
 		} catch (Exception e) { 
-			System.out.println(e); 
-			return;
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		} 	
 	}
 	

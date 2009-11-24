@@ -42,9 +42,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import spine.datamodel.Address;
-import spine.datamodel.Data;
 import spine.datamodel.Node;
-import spine.datamodel.ServiceMessage;
 import spine.datamodel.functions.CodecInfo;
 import spine.datamodel.functions.SpineCodec;
 import spine.datamodel.functions.SpineFunctionReq;
@@ -53,7 +51,6 @@ import spine.datamodel.functions.SpineSetupFunction;
 import spine.datamodel.functions.SpineSetupSensor;
 import spine.datamodel.functions.SpineStart;
 import spine.datamodel.serviceMessages.ServiceErrorMessage;
-import spine.datamodel.serviceMessages.ServiceWarningMessage;
 import spine.exceptions.MethodNotSupportedException;
 import spine.exceptions.PacketDecodingException;
 import spine.exceptions.UnexpectedMessageException;
@@ -64,7 +61,7 @@ import com.tilab.gal.WSNConnection;
 
 
 public class SPINEManager {
-	
+
 	// private object to which SPINEMager delegates the event dispatching functionality
 	private EventDispatcher eventDispatcher = new EventDispatcher(); 
 	
@@ -72,9 +69,6 @@ public class SPINEManager {
 	
 	private static final String DEF_PROP_MISSING_MSG = 
 		"ERROR: unable to load 'defaults.properties' file.";
-	
-	private static final String APP_PROP_MISSING_MSG = 
-		"ERROR: 'app.properties' file is missing, not properly specified or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
 	
 	private final static long DISCOVERY_TIMEOUT = 2000;	
 	
@@ -95,7 +89,7 @@ public class SPINEManager {
 	private	static String MOTECOM = null;
 	private static String PLATFORM = null;
 	
-	private static SPINEManager instance;
+	//private static SPINEManager instance;
 	
 	// Hash Table class instance
 	private Hashtable htInstance = new Hashtable();
@@ -119,6 +113,8 @@ public class SPINEManager {
 	
 	private Node baseStation = null;
 	
+	private static Logger l = Logger.getMyLogger(SPINEManager.class.getName());
+
 	/** package-scoped method to get a reference to baseStation **/
 	final Node getBaseStation() {
 		return baseStation;
@@ -167,11 +163,14 @@ public class SPINEManager {
 		} catch (NumberFormatException e) {
 			exit(DEF_PROP_MISSING_MSG);
 		} catch (ClassNotFoundException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (InstantiationException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (IllegalAccessException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} 
 	}
 
@@ -659,7 +658,8 @@ public class SPINEManager {
 					msg.setPayload(payloadShort);
 					
 				}catch (MethodNotSupportedException e){
-					System.out.println(e);
+					if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+						SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 				}	      
 			}
 			
@@ -667,15 +667,20 @@ public class SPINEManager {
 			connection.send(msg);
 			
 		} catch (InstantiationException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (IllegalAccessException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (ClassNotFoundException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (InterruptedIOException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		} catch (UnsupportedOperationException e) {
-			System.out.println(e);
+			if (l.isLoggable(Logger.SEVERE)) 
+				l.log(Logger.SEVERE, e.getMessage());
 		}			
 	}
 	
@@ -731,7 +736,9 @@ public class SPINEManager {
 		return PLATFORM;
 	}
 	
-
+        public static Logger getLogger() {
+		return l;
+	}
 	
 	/*
 	 * implementation of the discovery timer procedure can be simply seen as a 
@@ -750,7 +757,7 @@ public class SPINEManager {
 			try {
 				discoveryCompleted = false;
 				sleep(delay);
-			} catch (InterruptedException e) {e.printStackTrace();}
+			} catch (InterruptedException e) {}
 			
 			// if no nodes has been discovered, it's the symptom of some radio connection problem;
 			// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
@@ -798,7 +805,8 @@ public class SPINEManager {
 						 o = spineCodec.decode(new Node(nodeID), payload);
 						 
 					} catch (Exception e) { 
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} 
 										
@@ -832,7 +840,8 @@ public class SPINEManager {
 						} 
 						functionCode = codecInformation.getFunctionCode(payload);
 					} catch (Exception e) { 
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} 										
 					
@@ -851,19 +860,24 @@ public class SPINEManager {
 						 o = spineCodec.decode(getNodeByPhysicalID(nodeID), payload);
 						
 					} catch (PacketDecodingException e) {
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} catch (MethodNotSupportedException e) {
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} catch (InstantiationException e) {
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} catch (IllegalAccessException e) {
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					}
 					break;
@@ -883,7 +897,8 @@ public class SPINEManager {
 						} 
 						serviceMessageType = codecInformation.getServiceMessageType(payload);
 					} catch (Exception e) { 
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					} 
 					
@@ -903,7 +918,8 @@ public class SPINEManager {
 						 o = spineCodec.decode(getNodeByPhysicalID(nodeID), payload);
 						
 					} catch (Exception e) { 
-						e.printStackTrace();
+						if (l.isLoggable(Logger.SEVERE)) 
+							l.log(Logger.SEVERE, e.getMessage());
 						return;
 					}
 					break;
@@ -921,8 +937,13 @@ public class SPINEManager {
 	}
 	
 	private static void exit(String msg) {
-		System.out.println(msg); 
-		System.out.println("Will exit now!");
+		if (l.isLoggable(Logger.SEVERE)) {
+			StringBuffer str = new StringBuffer();
+			str.append(msg);
+			str.append("\r\n");
+			str.append("Will exit now!");
+			l.log(Logger.SEVERE, str.toString());
+		}
 		System.exit(-1);
 	}
 	

@@ -28,6 +28,9 @@ package spine.communication.tinyos;
 import java.io.*;
 import java.net.*;
 
+import spine.Logger;
+import spine.SPINEManager;
+
 import net.tinyos.message.*;
 
 
@@ -41,11 +44,6 @@ import net.tinyos.message.*;
  * @version 1.2
  */
 public final class SFReadWriteThread extends Thread {
-    /** Version control identifier strings. */
-    public static final String[] RCS_ID = {
-        "$URL: http://macromates.com/svn/Bundles/trunk/Bundles/Java.tmbundle/Templates/Java Class/class-insert.java $",
-        "$Id$",
-    };
     
     public static final byte TOS_SERIAL_ACTIVE_MESSAGE_ID = 0;
 
@@ -77,12 +75,21 @@ public final class SFReadWriteThread extends Thread {
 			os = sfSocket.getOutputStream();
 		}
 		catch (ConnectException ce) {
-			System.out.println(""+ce);
-			System.out.println("Check to make sure that your serial forwarder is running and listening on "+host+":"+port);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) { 
+				StringBuffer str = new StringBuffer();
+				str.append(ce.getMessage());
+				str.append("\r\nCheck to make sure that your serial forwarder is running and listening on ");
+				str.append(host);
+				str.append(":");
+				str.append(port);
+				str.append("\r\nWill exit now!");
+				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+			}
 			System.exit(1);
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			System.exit(1);
 		}
 	}
@@ -101,25 +108,51 @@ public final class SFReadWriteThread extends Thread {
 			// listen for response
 			int sfcookie = is.read();
 			if (sfcookie != 85) {
-				System.out.println("Received bad SFP cookie ("+sfcookie+") from "+host+":"+port);
-				System.out.println("Exiting.");
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) { 
+					StringBuffer str = new StringBuffer();
+					str.append("Received bad SFP cookie (");
+					str.append(sfcookie);
+					str.append(") from ");
+					str.append(host);
+					str.append(":");
+					str.append(port);
+					str.append("\r\nWill exit now!");
+					SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+				}
 				sfSocket.close();
 				System.exit(1);
 			}
 			int sfversion = is.read();
 			if (sfversion != 32) {
-				System.out.println("Unrecognized SFP version ("+sfversion+") from "+host+":"+port);
-				System.out.println("Exiting.");
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) { 
+					StringBuffer str = new StringBuffer();
+					str.append("Unrecognized SFP version (");
+					str.append(sfversion);
+					str.append(") from ");
+					str.append(host);
+					str.append(":");
+					str.append(port);
+					str.append("\r\nWill exit now!");
+					SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+				}
 				sfSocket.close();
 				System.exit(1);
 			}
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			System.exit(1);
 		}
 		
-		System.out.println("Connected and handshaked Serial forwarder at "+host+":"+port);
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) { 
+			StringBuffer str = new StringBuffer();
+			str.append("Connected and handshaked Serial forwarder at ");
+			str.append(host);
+			str.append(":");
+			str.append(port);
+			SPINEManager.getLogger().log(Logger.INFO, str.toString());
+		}
 		
 		handshakedone = true;
 		
@@ -136,7 +169,8 @@ public final class SFReadWriteThread extends Thread {
 				tosmsg = SpineTOSMessage.Construct(rawmessage);
 								
 			} catch (SFLocalNodeAdapterException e) {
-				e.printStackTrace();
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 				break;
 			}
 			
@@ -145,7 +179,8 @@ public final class SFReadWriteThread extends Thread {
 				srcID = tosmsg.getHeader().getSourceID();
 			}
 			catch (IllegalSpineHeaderSizeException ishse) {
-				ishse.printStackTrace();
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+					SPINEManager.getLogger().log(Logger.SEVERE, ishse.getMessage());
 				continue;
 			}
 
@@ -187,8 +222,6 @@ public final class SFReadWriteThread extends Thread {
 			throw new SFReadException(ioe);
 		}
 		
-		//System.out.println("SFReadWriteThread read "+read.length+" bytes ["+byteArrayToHexString(read)+"]");
-		
 		return read;
 	}
 	
@@ -221,7 +254,7 @@ public final class SFReadWriteThread extends Thread {
 	
 	protected synchronized void sendMessage(int moteID, Message message) throws SFWriteException {
 		while (!handshakedone) {
-			try { Thread.sleep(100); } catch (InterruptedException ie) { System.out.println("Handshake wait sleep interrupted in SFReadWriteThread.sendMessage()");}
+			try { Thread.sleep(100); } catch (InterruptedException ie) {}
 		}
 		
 		// decode Message into raw bytes
@@ -233,11 +266,10 @@ public final class SFReadWriteThread extends Thread {
 			os.flush();
 		}
 		catch (IOException ioe) {
-			ioe.printStackTrace();
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			throw new SFWriteException();
 		}
-		
-		//System.out.println("SFReadWriteThread sent "+rawBytes.length+" bytes ["+byteArrayToHexString(rawBytes)+"]");
 	}
 	
 	public static String byteArrayToHexString(byte[] data) {

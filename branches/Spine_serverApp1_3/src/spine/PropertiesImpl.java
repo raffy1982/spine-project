@@ -95,7 +95,8 @@ public class PropertiesImpl extends spine.Properties {
 			p.store(fos, DEFAULT_COMMENT);
 			fos.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
 	}
 	

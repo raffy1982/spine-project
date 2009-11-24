@@ -18,13 +18,13 @@ public class SPINEServiceMessageConstants {
 	public static final String ERROR_LABEL = "Error";
 	public static final String WARNING_LABEL = "Warning";
 	public static final String ACK_LABEL = "Ack";
-	public static final String INFO_LABEL="Info";
+	public static final String INFO_LABEL = "Info";
 	
 	// MESSAGE DATAILS LABELS
 	public static final String CONNECTION_FAIL_LABEL = "Connection Fail";
 	public static final String UNKNOWN_PKT_RECEIVED_LABEL = "Unknown Packet Received";
-	public static final String FEATURE_STAT_LABEL=" Performance low-level Feature Calc ";
-	public static final String FEATURE_ENGINE_STAT_LABEL="Performance high-level feature calc";
+	public static final String FEATURE_STAT_LABEL = "Performance low-level Feature Calc";
+	public static final String FEATURE_ENGINE_STAT_LABEL = "Performance high-level feature calc";
 	
 	/**
 	 * Returns the string label mapped to the given message detail code
@@ -65,24 +65,12 @@ public class SPINEServiceMessageConstants {
 	}
 	
 	public static String serviceMessageTypeToString(byte serviceMessageType) {
-		String s="";
 		switch (serviceMessageType) {
-		case ERROR:
-			s="ServiceError";
-			break;
-		case WARNING:
-			s="ServiceWarning";
-			break;
-		case ACK:
-			s="ServiceAck";
-			break;
-		case INFO:
-			s="ServiceInfo";
-			break;
-		default:
-			s="ServiceNotSpecified";
-			break;
+			case ERROR: return "ServiceError";
+			case WARNING: return "ServiceWarning";
+			case ACK: return "ServiceAck";
+			case INFO: return "ServiceInfo";
+			default: return "ServiceNotSpecified";
 		}
-		return s;
 	}	
 }

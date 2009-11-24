@@ -41,7 +41,9 @@ import java.io.InterruptedIOException;
 
 import com.tilab.gal.WSNConnection;
 
+import spine.Logger;
 import spine.Properties;
+import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.SPINESupportedPlatforms;
 
@@ -103,12 +105,19 @@ public class EMUWSNConnection implements WSNConnection {
 
 			// sends the platform dependent message using the local node adapter
 			adapter.send(destNodeID, emumsg);
-			System.out.println("Msg Sent -> " + emumsg);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+				StringBuffer str = new StringBuffer();
+				str.append("SENT -> ");
+				str.append(emumsg);
+				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+			}
 
 		} catch (NumberFormatException e) {
-			System.out.println(e);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		} catch (IndexOutOfBoundsException e) {
-			System.out.println(e);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
 	}
 

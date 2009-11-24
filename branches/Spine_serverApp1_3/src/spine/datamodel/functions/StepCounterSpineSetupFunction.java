@@ -35,7 +35,9 @@ package spine.datamodel.functions;
 
 public class StepCounterSpineSetupFunction implements SpineSetupFunction {
 
-	private static final long serialVersionUID = 1L;/**
+	private static final long serialVersionUID = 1L;
+	
+	/**
 	 * 
 	 * Returns a string representation of the AlarmSpineFunctionReq object.
 	 * 

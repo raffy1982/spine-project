@@ -38,6 +38,8 @@ package spine.communication.emu;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import javax.swing.*;
+
+import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINESupportedPlatforms;
@@ -81,7 +83,12 @@ class ClientWorker implements Runnable {
 			ois = new ObjectInputStream(client.getInputStream());
 			new ObjectOutputStream(client.getOutputStream());
 		} catch (IOException e) {
-			System.out.println("In or out failed");
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+				StringBuffer str = new StringBuffer();
+				str.append(e.getMessage());
+				str.append(": In or out failed");
+				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+			}
 		}
 		while (true) {
 			try {
@@ -98,9 +105,15 @@ class ClientWorker implements Runnable {
 				emuLocalNodeAdapter.messageReceived(srcID, msg);
 				textArea.append(msg.toString() + "\n");
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 			} catch (IOException e) {
-				System.out.println("Read failed");
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+					StringBuffer str = new StringBuffer();
+					str.append(e.getMessage());
+					str.append(": Read failed");
+					SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+				}
 				break;
 			}
 		}
@@ -152,7 +165,13 @@ class SocketThrdServer extends JFrame implements Runnable {
 		try {
 			server = new ServerSocket(nodeCoordinatorPort);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port " + nodeCoordinatorPort);
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+				StringBuffer str = new StringBuffer();
+				str.append(e.getMessage());
+				str.append(": Could not listen on port ");
+				str.append(nodeCoordinatorPort);
+				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+			}
 		}
 		while (true) {
 			ClientWorker w;
@@ -162,7 +181,12 @@ class SocketThrdServer extends JFrame implements Runnable {
 				t.start();
 
 			} catch (IOException e) {
-				System.out.println("Accept failed");
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+					StringBuffer str = new StringBuffer();
+					str.append(e.getMessage());
+					str.append(": Accept failed");
+					SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+				}
 			}
 		}
 	}
@@ -176,10 +200,12 @@ class SocketThrdServer extends JFrame implements Runnable {
 			oisClient.put(new Integer(destNodeID), new ObjectInputStream(socket.getInputStream()));
 
 		} catch (UnknownHostException e) {
-			System.out.println("Unknown host");
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 
 		} catch (IOException e) {
-			System.out.println("No I/O");
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
 	}
 
@@ -200,7 +226,12 @@ class SocketThrdServer extends JFrame implements Runnable {
 		try {
 			server.close();
 		} catch (IOException e) {
-			System.out.println("Could not close socket");
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
+				StringBuffer str = new StringBuffer();
+				str.append(e.getMessage());
+				str.append(": Could not close socket");
+				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
+			}
 		}
 	}
 
