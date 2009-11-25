@@ -86,21 +86,7 @@ public class AlarmSpineFunctionReq extends SpineCodec {
 
 		data[14] = workPayLoad.getAlarmType();
 
-		printPayload(data);
 		return data;
 	}
 
-	private void printPayload(byte[] payload) { // DEBUG CODE
-		if (payload == null || payload.length == 0)
-			System.out.print("empty payload");
-		else {
-			for (int i = 0; i < payload.length; i++) {
-				short b = payload[i];
-				if (b < 0)
-					b += 256;
-				System.out.print(Integer.toHexString(b) + " ");
-			}
-		}
-		System.out.println("");
-	}
 }

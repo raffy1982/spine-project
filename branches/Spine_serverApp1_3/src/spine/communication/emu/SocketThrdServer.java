@@ -151,7 +151,12 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	// EMULocalNodeAdapter is a SocketMessage listener
 	public void registerListener(SocketMessageListener arg) {
-		System.out.println("EMULLocalNodeAdapter registerListener (SocketMessageListener): " + arg);
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+			StringBuffer str = new StringBuffer();
+			str.append("registered SocketMessageListener: ");
+			str.append(arg);
+			SPINEManager.getLogger().log(Logger.INFO, str.toString());
+		}
 		emulAdap = arg;
 	}
 
@@ -195,7 +200,14 @@ class SocketThrdServer extends JFrame implements Runnable {
 	public void connectToSocketServerNode(int destNodeID, short sSPort) {
 		try {
 			socket = new Socket("localhost", sSPort);
-			System.out.println("Connection successful to Server Socket - Node " + destNodeID + " on port " + sSPort);
+			if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+				StringBuffer str = new StringBuffer();
+				str.append("Connection successful to Server Socket - Node ");
+				str.append(destNodeID);
+				str.append(" on port ");
+				str.append(sSPort);
+				SPINEManager.getLogger().log(Logger.INFO, str.toString());
+			}
 			oosClient.put(new Integer(destNodeID), new ObjectOutputStream(socket.getOutputStream()));
 			oisClient.put(new Integer(destNodeID), new ObjectInputStream(socket.getInputStream()));
 
@@ -211,7 +223,14 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	public void sendCommand(int destNodeID, EMUMessage emumsg) throws IOException {
 		try {
-			System.out.println("Send cmd: " + emumsg.toString() + " to node: " + destNodeID);
+			if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+				StringBuffer str = new StringBuffer();
+				str.append("Send cmd: ");
+				str.append(emumsg.toString());
+				str.append(" to node: ");
+				str.append(destNodeID);
+				SPINEManager.getLogger().log(Logger.INFO, str.toString());
+			}
 			ObjectOutputStream oosC = (ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
 			oosC.writeObject(emumsg);
 			oosC.flush();

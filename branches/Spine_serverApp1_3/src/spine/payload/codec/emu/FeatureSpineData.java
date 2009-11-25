@@ -147,8 +147,7 @@ public class FeatureSpineData extends SpineCodec {
 				currFeatureLabel = convertBytesToString(dataTmp, (3 + i * blockLength) + 18);
 
 				featureWork = new Feature(node, SPINEFunctionConstants.FEATURE, currFeatCode, sensorCode, currBitmask, currCh1Value, currCh2Value, currCh3Value, currCh4Value, currFeatureLabel);
-				System.out.println("Set in featureWork: " + featureWork.toString());
-
+				
 				feats.addElement(featureWork);
 
 			}

@@ -79,7 +79,12 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	public void messageReceived(int srcID, Message msg) {
 
 		String sourceURL = "";
-		System.out.println("Msg Received from nodeCoordinator (SocketThrdServer) -> " + msg);
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+			StringBuffer str = new StringBuffer();
+			str.append("Msg Received from nodeCoordinator (SocketThrdServer) -> ");
+			str.append(msg);
+			SPINEManager.getLogger().log(Logger.INFO, str.toString());
+		}
 
 		// Case "Service Advertisement Message" (ProfileId != 0) => set nodeInfo
 		// HashTable and pass - thru to connections
@@ -128,7 +133,8 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 	SocketThrdServer nodeCoordinator = new SocketThrdServer();
 
 	public void start() {
-		System.out.println("EMULocalNodeAdapter nodeAdapter.start()");
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) 
+			SPINEManager.getLogger().log(Logger.INFO, "EMULocalNodeAdapter nodeAdapter.start()");
 		nodeCoordinator.setTitle("WSN Emulator: Collector node");
 		WindowListener l = new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -142,7 +148,8 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 		nodeCoordinator.setVisible(true);
 		Thread t = new Thread(nodeCoordinator);
 		t.start();
-		System.out.println("EMULLocalNodeAdapter in wainting ...");
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) 
+			SPINEManager.getLogger().log(Logger.INFO, "EMULLocalNodeAdapter in wainting ...");
 	}
 
 	public void stop() {
@@ -156,62 +163,102 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 		try {
 			switch ((byte) emumsg.getClusterId()) {
 			case SPINEPacketsConstants.START:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.start or manager.startWsn");
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) 
+					SPINEManager.getLogger().log(Logger.INFO, "EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.start or manager.startWsn");
 				// nodeCoordinator.sendCommand(destNodeID,"START");
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
 					Integer key = (Integer) e.nextElement();
-					System.out.println(key + ":" + nodeInfo.get(key));
-					System.out.println("Case START --> emumsg:" + emumsg.toString() + " pktType=" + emumsg.getClusterId());
+					
+					if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+						StringBuffer str = new StringBuffer();
+						str.append(key);
+						str.append(":");
+						str.append(nodeInfo.get(key));
+						str.append("\nCase START --> emumsg:");
+						str.append(emumsg.toString());
+						str.append(" pktType=");
+						str.append(emumsg.getClusterId());
+						SPINEManager.getLogger().log(Logger.INFO, str.toString());
+					}
+					
 					nodeId = key.intValue();
 					nodeCoordinator.sendCommand(key.intValue(), emumsg);
 				}
 				break;
 			case SPINEPacketsConstants.RESET:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.resetWsn");
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO))
+					SPINEManager.getLogger().log(Logger.INFO, "EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.resetWsn");				
 				// nodeCoordinator.sendCommand(destNodeID, "RESET");
 				nodeId = Integer.parseInt(emumsg.getDestinationURL());
 				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			case SPINEPacketsConstants.SYNCR:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.syncWsn or manager.synchrWsn");
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.syncWsn or manager.synchrWsn\nCase SYNCR --> emumsg:");
+					str.append(emumsg.toString());
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				
+				}
 				// nodeCoordinator.sendCommand(destNodeID, "SYNCR");
-				System.out.println("Case SYNCR --> emumsg:" + emumsg.toString());
 				break;
 			case SPINEPacketsConstants.SERVICE_DISCOVERY:
 				// Cmd discoveryWsn:execute from EMULocalNodeAdapter
 				// for each nodo in nodeInfo pass-thru to connections
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.discoveryWsn");
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) 
+					SPINEManager.getLogger().log(Logger.INFO, "EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.discoveryWsn");
 				for (Enumeration e = nodeInfo.keys(); e.hasMoreElements();) {
 					Integer key = (Integer) e.nextElement();
-					System.out.println(key + ":" + nodeInfo.get(key));
-					System.out.println("Case SERVICE_DISCOVERY --> emumsg:" + emumsg.toString());
+					
+					if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+						StringBuffer str = new StringBuffer();
+						str.append(key);
+						str.append(":");
+						str.append(nodeInfo.get(key));
+						str.append("\nCase SERVICE_DISCOVERY --> emumsg:");
+						str.append(emumsg.toString());
+						SPINEManager.getLogger().log(Logger.INFO, str.toString());
+					}
 					nodeId = key.intValue();
 					nodeCoordinator.sendCommand(key.intValue(), emumsg);
 				}
 				break;
 			case SPINEPacketsConstants.SETUP_SENSOR:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupSensor() or manager.setup(..., SpineSetupSensor)");
-				System.out.println("Case SETUP_SENSOR --> emumsg:" + emumsg.toString());
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupSensor() or manager.setup(..., SpineSetupSensor)\nCase SETUP_SENSOR --> emumsg:");
+					str.append(emumsg.toString());
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				}
 				// nodeCoordinator.sendCommand(destNodeID, "SETUP_SENSOR");
 				nodeId = Integer.parseInt(emumsg.getDestinationURL());
 				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			case SPINEPacketsConstants.SETUP_FUNCTION:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupFunction() or manager.setup(..., SpineSetupFunction)");
-				System.out.println("Case SETUP_FUNCTION --> emumsg:" + emumsg.toString());
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("EMULocalNodeAdapter nodeAdapter.send() --> Cmd manager.setupFunction() or manager.setup(..., SpineSetupFunction)\nCase SETUP_FUNCTION --> emumsg:");
+					str.append(emumsg.toString());
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				}
 				// nodeCoordinator.sendCommand(destNodeID, "SETUP_FUNCTION");
 				nodeId = Integer.parseInt(emumsg.getDestinationURL());
 				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			case SPINEPacketsConstants.FUNCTION_REQ:
-				System.out.println("EMULocalNodeAdapter nodeAdapter.send() --> FUNCTION_REQ");
-				System.out.println("Case FUNTION_REQ --> emumsg:" + emumsg.toString());
+				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+					StringBuffer str = new StringBuffer();
+					str.append("EMULocalNodeAdapter nodeAdapter.send() --> FUNCTION_REQ\nCase FUNTION_REQ --> emumsg:");
+					str.append(emumsg.toString());
+					SPINEManager.getLogger().log(Logger.INFO, str.toString());
+				}
 				// nodeCoordinator.sendCommand(destNodeID, "FUNCTION_REQ");
 				nodeId = Integer.parseInt(emumsg.getDestinationURL());
 				nodeCoordinator.sendCommand(Integer.parseInt(emumsg.getDestinationURL()), emumsg);
 				break;
 			default:
-				System.out.println("ERROR PktType");
+				if (SPINEManager.getLogger().isLoggable(Logger.WARNING))
+					SPINEManager.getLogger().log(Logger.WARNING, "ERROR PktType");
 			}
 		} catch (IOException e1) {
 			nodeInfo.remove(new Integer(nodeId));
