@@ -86,7 +86,9 @@ public class PropertiesImpl extends spine.Properties {
 				is = new FileInputStream(propertiesFileName);
 			p.load(is);
 			loaded = true;
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void store() {
