@@ -1,0 +1,101 @@
+<!-- ANT BUILD FILE FOR THE HumanEnergyExpenditure (KCal) PROJECT -->
+
+
+<!-- set properties for this project -->
+<project name="KCal" default="run" basedir=".">
+	<description>KCal build file</description>
+
+	<target name="init">
+		<condition property="tinyos.jar.present">
+			<available file="../../Spine_serverApp/ext-lib/tinyos.jar" />
+		</condition>
+		<condition property="SPINE.jar.present">
+			<available file="../../Spine_serverApp/jar/SPINE.jar" />
+		</condition>
+		<condition property="LocalNodeAdapter.jar.present">
+			<available file="../../Spine_serverApp/lib/localNodeAdapter.jar" />
+		</condition>
+	</target>
+        
+        <target name="check_tosjar" unless="tinyos.jar.present" depends="init">
+      		<echo level="error">Missing file lib/tinyos.jar
+Download it from the URL specified in the README file and place it in the lib directory.</echo>
+		<fail message="Missing file lib/tinyos.jar" />
+        </target>
+
+        <target name="check_spinejar" unless="SPINE.jar.present" depends="init">
+      		<echo level="error">Missing file lib/SPINE.jar
+Download it from the URL specified in the README file and place it in the lib directory.</echo>
+		<fail message="Missing file lib/SPINE.jar" />
+        </target>
+        
+        <target name="check_localnodeadapterjar" unless="LocalNodeAdapter.jar.present" depends="init">
+      		<echo level="error">Missing file lib/localNodeAdapter.jar
+Download it from the URL specified in the README file and place it in the lib directory.</echo>
+		<fail message="Missing file lib/localNodeAdapter.jar" />
+        </target>
+
+	<!--  _______________________________________________
+                             compile
+	_________________________________________________ -->
+	<target name="compile" description="compile the java source files" depends="check_tosjar,check_spinejar,check_localnodeadapterjar">
+		<!-- Compile the java code from src into classes -->
+		<mkdir dir="classes" />
+		<javac srcdir="src" optimize="on" debug="on" debuglevel="lines,vars,source" destdir="classes" deprecation="on" 
+                                    classpath="../../Spine_serverApp/ext-lib/tinyos.jar;../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
+	</target>
+
+	<!--  _______________________________________________
+                             clean
+	_________________________________________________ -->
+	<target name="clean">
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="classes" defaultexcludes="no"/>
+			<fileset dir="jar" />   
+		</delete>
+	</target>
+
+	<!--  _______________________________________________
+                               jar
+	_________________________________________________ -->
+	<target name="jar" description="generate the jar file" depends="compile">
+	<!-- FIXME add the manifest file -->
+		<mkdir dir="jar" />
+		<jar jarfile="jar/KCal.jar">
+			<fileset dir="classes"/>
+			<fileset dir="." includes="resources/**"/>
+			<zipfileset src="../../Spine_serverApp/lib/localNodeAdapter.jar" includes="**/*.class" />
+			<zipfileset src="../../Spine_serverApp/jar/SPINE.jar">
+                          <include name="**/*.class" />
+                          <include name="resources/**" />
+                        </zipfileset>
+			<zipfileset src="../../Spine_serverApp/ext-lib/tinyos.jar" includes="**/*.class" />
+		</jar>
+	</target>
+
+
+
+
+
+
+
+	<!--  _______________________________________________
+                               run
+	_________________________________________________ -->
+	<target name="run" description="launch the KCal application" depends="compile">
+		<java classname="kcal.live.SPINEPhysActEE" fork="true" classpath="classes;../../Spine_serverApp/ext-lib/tinyos.jar;../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
+	</target>
+
+
+	<!--  _______________________________________________
+                               dist
+	_________________________________________________ -->
+	<target name="dist" description="generate the distribution file" depends="clean">
+		<jar jarfile="../KCal.zip">
+			<fileset dir="." includes="*" />
+			<fileset dir="." includes="src/**" />
+			<fileset dir="." includes="resources/**" />
+		</jar>
+	</target>
+
+</project>
