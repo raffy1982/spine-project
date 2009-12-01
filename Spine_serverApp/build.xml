@@ -8,7 +8,7 @@
 	<property name="ext.lib.dir" value="ext-lib" />
 	<property name="path.tinyos.jar" value="${ext.lib.dir}/${tinyos.jar}" />
 
-	<target name="tinyOsJarNotAvailable" description="shows missing file message and stops build" unless="tinyos.jar.present">
+	<target name="checkTinyOsJarInExtLib_step2" description="shows missing file message and stops build" unless="tinyos.jar.present">
 		<property name="missing.tinyos.file.error.msg" value="File ${tinyos.jar} is not available in the directory ${ext.lib.dir}." />
 		<echo level="error">Build process can't continue.
 ${missing.tinyos.file.error.msg}
@@ -16,11 +16,11 @@ Download it from the URL specified in the README file and place it in the direct
 		<fail message="${missing.tinyos.file.error.msg}" />
 	</target>
 
-	<target name="checkTinyOsJarInExtLib">
+	<target name="checkTinyOsJarInExtLib_step1">
 		<condition property="tinyos.jar.present">
 			<available file="${path.tinyos.jar}" />
 		</condition>
-		<antcall target="tinyOsJarNotAvailable" />
+		<antcall target="checkTinyOsJarInExtLib_step2" />
 	</target>
 
 	<!--  _______________________________________________
@@ -28,7 +28,7 @@ Download it from the URL specified in the README file and place it in the direct
 	_________________________________________________ -->
 	<target name="compile" description="compile the java source files">
 		<!-- Compile the java code from src into classes -->
-		<antcall target="checkTinyOsJarInExtLib" />
+		<antcall target="checkTinyOsJarInExtLib_step1" />
 
 		<mkdir dir="classes" />
 		<javac srcdir="src" optimize="${javac.optimize}" debug="${javac.debug}" debuglevel="lines,vars,source" destdir="classes" deprecation="on">
@@ -81,23 +81,28 @@ Download it from the URL specified in the README file and place it in the direct
 		<antcall target="noInterfaceJar"/>
 		<antcall target="fullJar"/>
 	</target>
-
+	
 	<target name="basicJar" if="inclusion.level.0">
 		<jar jarfile="jar/SPINE.jar">
 			<fileset dir="classes">
-				<exclude name="test/*.class" />
+				<!-- FIXME SPINE.jar includes an empty test directory, a way to delete this dir should be found -->
+				<exclude name="test/" />
 			</fileset>
+			<fileset file="resources/defaults.properties"/>
 		</jar>
 	</target>
 
 	<target name="noInterfaceJar" if="inclusion.level.1">
 		<jar jarfile="jar/spineFramework1_3.jar">
 			<fileset dir="classes">
-				<exclude name="spine/communication/emule/**"/>
+				<exclude name="spine/communication/emu/**"/>
 				<exclude name="spine/communication/tinyos/**"/>
-				<exclude name="spine/payload/codec/emule/**"/>
+				<exclude name="spine/payload/codec/emu/**"/>
 				<exclude name="spine/payload/codec/tinyos/**"/>
 				<exclude name="test/*.class" />
+			</fileset>
+			<fileset dir=".">
+				<include name="resources/defaults.properties"/>
 			</fileset>
 			<zipfileset src="lib/localNodeAdapter.jar" includes="**/*.class" />
 		</jar>
@@ -108,8 +113,8 @@ Download it from the URL specified in the README file and place it in the direct
 			<fileset dir="classes">
 				<exclude name="test/*.class" />
 			</fileset>
-			<fileset dir="src">
-				<include name="spine/*.properties" />
+			<fileset dir=".">
+				<include name="resources/defaults.properties"/>
 			</fileset>
 			<zipfileset src="lib/localNodeAdapter.jar" includes="**/*.class" />
 		</jar>
@@ -158,16 +163,20 @@ Download it from the URL specified in the README file and place it in the direct
 	_________________________________________________ -->
 	<target name="dist" description="generate the distribution file" depends="jar,doc">
 		<jar jarfile="../SPINE${version}.zip">
-			<fileset dir="../" includes="Spine_nodes${version}/apps/SPINEApp/**" />
-			<fileset dir="../" includes="Spine_nodes${version}/tos/**" />
-			<fileset dir="../" includes="Spine_nodes${version}/support/**" />
-			<fileset dir="../" includes="Spine_nodes${version}/*" />
-			<fileset dir="../" includes="Spine_serverApp${version}/src/**" />
-			<fileset dir="../" includes="Spine_serverApp${version}/jar/**" />
-			<fileset dir="../" includes="Spine_serverApp${version}/doc/**" />
-			<fileset dir="../" includes="Spine_serverApp${version}/lib/**" />
-			<fileset dir="../" includes="Spine_serverApp${version}/test/**" />
-			<fileset dir="../" includes="Spine_serverApp${version}/*" excludes="Spine_serverApp${version}/classes, Spine_serverApp${version}/ext-lib" />
+			<fileset dir="../" includes="COPYING" />
+			<fileset dir="../" includes="License" />
+			<fileset dir="../" includes="SPINE_manual.htm" />
+			<fileset dir="../" includes="Spine_nodes/apps/SPINEApp/**" />
+			<fileset dir="../" includes="Spine_nodes/tos/**" />
+			<fileset dir="../" includes="Spine_nodes/support/**" />
+			<fileset dir="../" includes="Spine_nodes/*" />
+			<fileset dir="../" includes="Spine_serverApp/src/**" />
+			<fileset dir="../" includes="Spine_serverApp/jar/**" />
+			<fileset dir="../" includes="Spine_serverApp/doc/**" />
+			<fileset dir="../" includes="Spine_serverApp/lib/**" />
+			<fileset dir="../" includes="Spine_serverApp/test/**" />
+			<fileset dir="../" includes="Spine_serverApp/resources/**" />
+			<fileset dir="../" includes="Spine_serverApp/*" excludes="Spine_serverApp/classes, Spine_serverApp${version}/ext-lib" />
 		</jar>
 	</target>
 

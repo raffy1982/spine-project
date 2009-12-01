@@ -50,7 +50,7 @@ import java.util.Properties;
  */
 public class PropertiesImpl extends spine.Properties {	
 	
-	public final static String DEFAULT_PROPERTIES_FILE = "defaults.properties";
+	public final static String DEFAULT_PROPERTIES_FILE = "resources/defaults.properties";
 	
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
@@ -81,7 +81,7 @@ public class PropertiesImpl extends spine.Properties {
 	
 	private void loadPropFile() {
 		try {
-			InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(PropertiesImpl.class.getPackage().getName()+"/"+propertiesFileName); 
+			InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName); 
 			if (is == null)
 				is = new FileInputStream(propertiesFileName);
 			p.load(is);
