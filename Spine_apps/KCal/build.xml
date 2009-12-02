@@ -18,15 +18,15 @@
 	</target>
         
         <target name="check_tosjar" unless="tinyos.jar.present" depends="init">
-      		<echo level="error">Missing file lib/tinyos.jar
+      		<echo level="error">Missing file ext-lib/tinyos.jar
 Download it from the URL specified in the README file and place it in the lib directory.</echo>
-		<fail message="Missing file lib/tinyos.jar" />
+		<fail message="Missing file ext-lib/tinyos.jar" />
         </target>
 
         <target name="check_spinejar" unless="SPINE.jar.present" depends="init">
-      		<echo level="error">Missing file lib/SPINE.jar
+      		<echo level="error">Missing file jar/SPINE.jar
 Download it from the URL specified in the README file and place it in the lib directory.</echo>
-		<fail message="Missing file lib/SPINE.jar" />
+		<fail message="Missing file jar/SPINE.jar" />
         </target>
         
         <target name="check_localnodeadapterjar" unless="LocalNodeAdapter.jar.present" depends="init">

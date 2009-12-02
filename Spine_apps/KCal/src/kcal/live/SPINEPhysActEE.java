@@ -201,10 +201,5 @@ public class SPINEPhysActEE implements SPINEListener {
 	}
 	
 	
-	public void received(ServiceMessage msg) {}
-	
-	
-	public void dataReceived(int nodeID, Data data) {}	
-	public void serviceMessageReceived(int nodeID, ServiceMessage msg) {}
-	
+	public void received(ServiceMessage msg) {System.out.println(msg);}
 }
