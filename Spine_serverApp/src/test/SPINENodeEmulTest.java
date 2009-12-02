@@ -349,9 +349,4 @@ public class SPINENodeEmulTest implements SPINEListener {
 		// for this simple application, I just like to print the service message received
 		System.out.println(msg);
 	}
-
-	public void dataReceived(int nodeID, Data data) {}
-
-	public void serviceMessageReceived(int nodeID, ServiceMessage msg) {}
-	
 }

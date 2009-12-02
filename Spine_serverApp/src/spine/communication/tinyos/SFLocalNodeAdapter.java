@@ -35,17 +35,14 @@ Boston, MA  02111-1307, USA.
  */
 package spine.communication.tinyos;
 
+import jade.util.Logger;
+
 import java.net.UnknownHostException;
 import java.util.Vector;
 
-
-import spine.Logger;
-import spine.Properties;
+import net.tinyos.message.MessageListener;
 import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
-import spine.communication.tinyos.SPINEHeader;
-
-import net.tinyos.message.MessageListener;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -53,8 +50,6 @@ import com.tilab.gal.WSNConnection;
 
 public final class SFLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
     	
-	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getDefaultProperties().getProperty(Properties.GROUP_ID_KEY), 16);
-    
 	private Vector connections = new Vector(); // <values: WSNConnection>
 	
 	private String host = null;
@@ -171,7 +166,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				   sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 				   h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
 				   h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION || 
-				   h.getGroupID() != MY_GROUP_ID) 
+				   h.getGroupID() != SPINEManager.getMyGroupID()) 
 					return;
 				
 				if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
@@ -221,7 +216,10 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				for (int i = 0; i<connections.size(); i++)
 					((SFWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				
-			} catch (IllegalSpineHeaderSizeException e) {}			
+			} catch (IllegalSpineHeaderSizeException e) {
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
+			}			
 		}
 	}
 	

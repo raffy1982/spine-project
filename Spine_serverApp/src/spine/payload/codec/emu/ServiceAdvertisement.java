@@ -37,9 +37,10 @@
 
 package spine.payload.codec.emu;
 
+import jade.util.Logger;
+
 import java.util.Vector;
 
-import spine.Logger;
 import spine.SPINEFunctionConstants;
 import spine.SPINEManager;
 import spine.datamodel.Node;

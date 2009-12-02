@@ -71,6 +71,8 @@ public class SPINEPacketsConstants {
 	
 
 	public static final byte CURRENT_SPINE_VERSION = 2;
+	
+	public final static byte SPINE_HEADER_SIZE = 9;
 
 	
 	/**

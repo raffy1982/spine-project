@@ -51,11 +51,6 @@ public class Feature implements Comparable, Serializable {
 	
 	private Node node;
 	
-	/**
-	 * @deprecated  
-	 */
-	private int nodeID;
-	
 	private String featureLabel;
 	
 	private byte functionCode;
@@ -104,8 +99,6 @@ public class Feature implements Comparable, Serializable {
 		
 		this.functionCode = SPINEFunctionConstants.FEATURE;
 		
-		this.nodeID = nodeID;
-		
 		this.node = node;
 
 		this.functionCode = functionCode;
@@ -129,30 +122,6 @@ public class Feature implements Comparable, Serializable {
 			chValues[3] = new Integer(this.ch4Value); 
 		
 		this.featureLabel = featureLabel;
-	}
-	
-	/**
-	 * Constructor of a Feature object.
-	 * This is used by the lower level components of the framework for creating Feature objects
-	 * from a low level Feature data packet received by remote nodes. 
-	 * 
-	 * @param nodeID the node id
-	 * @param functionCode the function code 
-	 * @param featureCode the feature code
-	 * @param sensorCode the sensor code
-	 * @param channelBitmask the sensor channels bitmask
-	 * @param ch1Value the first feature channel value
-	 * @param ch2Value the first feature channel value
-	 * @param ch3Value the first feature channel value
-	 * @param ch4Value the first feature channel value
-	 * 
-	 * @see spine.SPINEFunctionConstants
-	 * @see spine.SPINESensorConstants	
-	 * 
-	 *  @deprecated
-	 */
-	public Feature(int nodeID, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value) {
-		init(nodeID, null, functionCode, featureCode, sensorCode, channelBitmask, ch1Value, ch2Value, ch3Value, ch4Value, null);		
 	}
 	
 	/**
@@ -198,16 +167,6 @@ public class Feature implements Comparable, Serializable {
 	 */
 	public Feature(Node node, byte functionCode, byte featureCode, byte sensorCode, byte channelBitmask, int ch1Value, int ch2Value, int ch3Value, int ch4Value, String featureLabel) {
 		init(node.getPhysicalID().getAsInt(), node, functionCode, featureCode, sensorCode, channelBitmask, ch1Value, ch2Value, ch3Value, ch4Value, featureLabel);
-	}
-	
-	/**
-	 * Getter method of the node id
-	 * @return the node id
-	 * 
-	 * @deprecated
-	 */
-	public int getNodeID() {
-		return nodeID;
 	}
 	
 	/**
@@ -335,22 +294,11 @@ public class Feature implements Comparable, Serializable {
 	
 	/**
 	 * 
-	 * Setter method of the node id
-	 * 
-	 * @deprecated
-	 */
-	public void setNodeId(int nodeId) {
-		this.nodeID = nodeId;		
-	}
-	
-	/**
-	 * 
 	 * Setter method of the node 
 	 * 
 	 */
 	public void setNode(Node node) {
 		this.node = node;	
-		this.nodeID = node.getPhysicalID().getAsInt();
 	}
 
 	/**
@@ -430,15 +378,6 @@ public class Feature implements Comparable, Serializable {
 		return info;
 	}
 	
-	/**
-	 * @param nodeID the nodeID to set
-	 * 
-	 * @deprecated
-	 */
-	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
-	}
-
 	/**
 	 * @param functionCode the functionCode to set
 	 */

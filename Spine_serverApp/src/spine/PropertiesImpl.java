@@ -38,6 +38,8 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
+import jade.util.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,8 +51,6 @@ import java.util.Properties;
  * @see spine.Properties
  */
 public class PropertiesImpl extends spine.Properties {	
-	
-	public final static String DEFAULT_PROPERTIES_FILE = "resources/defaults.properties";
 	
 	private final static String DEFAULT_COMMENT = "Created by the PropertiesImpl J2SE";
 	
@@ -74,21 +74,17 @@ public class PropertiesImpl extends spine.Properties {
 	}
 	
 	
-	public void load() {
+	public void load() throws IOException {
 		if (!loaded) 			
 			loadPropFile();		
 	}
 	
-	private void loadPropFile() {
-		try {
-			InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName); 
-			if (is == null)
-				is = new FileInputStream(propertiesFileName);
-			p.load(is);
-			loaded = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void loadPropFile() throws IOException {
+		InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName); 
+		if (is == null)
+			is = new FileInputStream(propertiesFileName);
+		p.load(is);
+		loaded = true;
 	}
 	
 	public void store() {
@@ -103,7 +99,13 @@ public class PropertiesImpl extends spine.Properties {
 	}
 	
 	public String getProperty(String key) {
-		load();
+		try {
+			load();
+		} catch (IOException e) {
+			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
+			return null;
+		}
 		return p.getProperty(key);
 	}
 	

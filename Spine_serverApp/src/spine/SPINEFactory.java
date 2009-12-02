@@ -63,11 +63,11 @@ public class SPINEFactory {
 
 			String PLATFORM = System.getProperty(Properties.PLATFORM_KEY);
 			PLATFORM = (PLATFORM != null) ? PLATFORM : appProp.getProperty(Properties.PLATFORM_KEY);
-
+			
 			if (MOTECOM == null || PLATFORM == null)
 				throw new InstantiationException(APP_PROP_MISSING_MSG);
 			
-			managerInstance = new SPINEManager(MOTECOM, PLATFORM,new String[] { MOTECOM });
+			managerInstance = new SPINEManager(MOTECOM, PLATFORM);
 		}
 		return managerInstance;
 

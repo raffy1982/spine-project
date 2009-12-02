@@ -34,10 +34,15 @@ Boston, MA  02111-1307, USA.
 
 package spine;
 
+import java.io.IOException;
+
 public abstract class Properties {
+	
+	public final static String DEFAULT_PROPERTIES_FILE = "resources/defaults.properties";
 	
 	public static final String MOTECOM_KEY = "MOTECOM";
 	public static final String PLATFORM_KEY = "PLATFORM";
+	public static final String SPINE_HOME_KEY = "SPINE_HOME";
 	
 	public static final String GROUP_ID_KEY = "group_id";
 	public static final String LINE_SEPARATOR_KEY = "line_separator";
@@ -49,18 +54,6 @@ public abstract class Properties {
 	
 	public static final String VIRTUAL_WSN_SIZE_KEY = "virtualWSNSize";
 
-	
-	/**
-	 * Returns an implementation of the Properties abstract class 
-	 * which is binded to the default properties file "default.properties"
-	 * 
-	 * @return an implementation of the Properties abstract class binded to the "default.properties" file
-	 * 
-	 * @deprecated
-	 */
-	public static Properties getProperties() {
-		return new PropertiesImpl();
-	}
 	
 	/**
 	 * Returns an implementation of the Properties abstract class 
@@ -86,7 +79,7 @@ public abstract class Properties {
 	 * Loads the properties set from a properties source (i.e, from a predefined .properties file or a Manifest)
 	 *  
 	 */
-	public abstract void load();
+	public abstract void load() throws IOException;
 	
 	/**
 	 * Stores (permanently if possible) a loaded properties set

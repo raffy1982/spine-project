@@ -88,23 +88,6 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	 * Note that on each request object calling addFeature is mutually exclusive with
 	 * removeFeature calls.  
 	 * 
-	 * @param feature the code of the feature
-	 * @param channelBitmask the channels over which activate the given feature
-	 * 
-	 * @see spine.SPINESensorConstants
-	 * @see spine.SPINEFunctionConstants
-	 * 
-	 * @deprecated
-	 */
-	public void addFeature(byte feature, byte channelBitmask) {
-		this.features.addElement(new Feature(feature, channelBitmask));		
-	}
-	
-	/**
-	 * Add a new feature to the activation request.
-	 * Note that on each request object calling addFeature is mutually exclusive with
-	 * removeFeature calls.  
-	 * 
 	 * @param f the feature to add in this request
 	 * 
 	 * @see spine.SPINESensorConstants
@@ -112,24 +95,6 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	 */
 	public void add(Feature f) {
 		this.features.addElement(f);		
-	}
-	
-	/**
-	 * Add a new feature to the deactivation request.
-	 * 
-	 * Note that on each request object calling removeFeature is mutually exclusive with
-	 * addFeature calls.  
-	 * 
-	 * @param feature the code of the feature
-	 * @param channelBitmask the channels over which deactivate the given feature
-	 * 
-	 * @see spine.SPINESensorConstants
-	 * @see spine.SPINEFunctionConstants
-	 * 
-	 * @deprecated
-	 */
-	public void removeFeature(byte feature, byte channelBitmask) {
-		this.features.addElement(new Feature(feature, (byte)(channelBitmask ^ 0x0F)));		
 	}
 	
 	/**

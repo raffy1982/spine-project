@@ -35,11 +35,12 @@
 
 package spine.communication.emu;
 
+import jade.util.Logger;
+
 import java.awt.Color;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINESupportedPlatforms;
@@ -50,10 +51,6 @@ import java.util.*;
 
 // There is a ClientWorker for each Virtual Node
 class ClientWorker implements Runnable {
-
-	private static Properties prop = Properties.getDefaultProperties();
-
-	private static final String URL_PREFIX = prop.getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
 
 	private Socket client;
 
@@ -97,7 +94,8 @@ class ClientWorker implements Runnable {
 				// Server Socket Node port number (otherwise 0)
 				sSPort = msg.getProfileId();
 				sourceURL = msg.getSourceURL();
-				destNodeID = Integer.parseInt(sourceURL.substring(URL_PREFIX.length()));
+				String urlPrefix = Properties.getDefaultProperties().getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
+				destNodeID = Integer.parseInt(sourceURL.substring(urlPrefix.length()));
 
 				if (sSPort != 0) {
 					serverSocket.connectToSocketServerNode(destNodeID, sSPort);
@@ -136,7 +134,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	ServerSocket server = null;
 
-	private static final int nodeCoordinatorPort = Integer.parseInt(SPINEManager.getMoteCom());
+	private static final int NODE_COMMUNICATION_PORT = Integer.parseInt(SPINEManager.getMoteCom());
 
 	SocketThrdServer() {
 		panel = new JPanel();
@@ -168,13 +166,13 @@ class SocketThrdServer extends JFrame implements Runnable {
 
 	public void run() {
 		try {
-			server = new ServerSocket(nodeCoordinatorPort);
+			server = new ServerSocket(NODE_COMMUNICATION_PORT);
 		} catch (IOException e) {
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 				StringBuffer str = new StringBuffer();
 				str.append(e.getMessage());
 				str.append(": Could not listen on port ");
-				str.append(nodeCoordinatorPort);
+				str.append(NODE_COMMUNICATION_PORT);
 				SPINEManager.getLogger().log(Logger.SEVERE, str.toString());
 			}
 		}

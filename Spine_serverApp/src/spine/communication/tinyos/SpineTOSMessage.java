@@ -64,7 +64,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     }
     
 	protected SpineTOSMessage(byte pktType, byte groupID, int sourceID, int destID, byte sequenceNumber, byte fragmentNr, byte totalFragments, byte[] payload) {
-    	super(SPINEHeader.SPINE_HEADER_SIZE + payload.length);
+    	super(SPINEPacketsConstants.SPINE_HEADER_SIZE + payload.length);
     	
     	this.amTypeSet(AM_TYPE); 
     	
@@ -73,9 +73,9 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
     	
     	this.payloadBuf = payload;
     	
-    	byte[] msgBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE + payload.length];
-    	System.arraycopy(header.build(), 0, msgBuf, 0, SPINEHeader.SPINE_HEADER_SIZE);
-    	System.arraycopy(payload, 0, msgBuf, SPINEHeader.SPINE_HEADER_SIZE, payload.length);
+    	byte[] msgBuf = new byte[SPINEPacketsConstants.SPINE_HEADER_SIZE + payload.length];
+    	System.arraycopy(header.build(), 0, msgBuf, 0, SPINEPacketsConstants.SPINE_HEADER_SIZE);
+    	System.arraycopy(payload, 0, msgBuf, SPINEPacketsConstants.SPINE_HEADER_SIZE, payload.length);
     	
     	this.dataSet(msgBuf);        
 	}
@@ -91,7 +91,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		
 		SPINEHeader h;
 		
-		byte[] sh_bytes = new byte[SPINEHeader.SPINE_HEADER_SIZE];
+		byte[] sh_bytes = new byte[SPINEPacketsConstants.SPINE_HEADER_SIZE];
 		System.arraycopy(rawsfmessage, AM_HEADER_SIZE, sh_bytes, 0, sh_bytes.length);
 		try {
 			h = new SPINEHeader(sh_bytes);
@@ -100,8 +100,8 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 			return null;
 		}
 		
-		payload = new byte[rawsfmessage.length - SPINEHeader.SPINE_HEADER_SIZE - AM_HEADER_SIZE];
-		System.arraycopy(rawsfmessage, AM_HEADER_SIZE+SPINEHeader.SPINE_HEADER_SIZE,
+		payload = new byte[rawsfmessage.length - SPINEPacketsConstants.SPINE_HEADER_SIZE - AM_HEADER_SIZE];
+		System.arraycopy(rawsfmessage, AM_HEADER_SIZE+SPINEPacketsConstants.SPINE_HEADER_SIZE,
 						 payload, 0, payload.length);
 		
 		
@@ -111,19 +111,19 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 	protected SPINEHeader getHeader() throws IllegalSpineHeaderSizeException {
     	byte[] msgBuf = this.dataGet();
     	
-    	if (msgBuf.length < SPINEHeader.SPINE_HEADER_SIZE) 
-    		throw new IllegalSpineHeaderSizeException(SPINEHeader.SPINE_HEADER_SIZE, msgBuf.length);
+    	if (msgBuf.length < SPINEPacketsConstants.SPINE_HEADER_SIZE) 
+    		throw new IllegalSpineHeaderSizeException(SPINEPacketsConstants.SPINE_HEADER_SIZE, msgBuf.length);
     	
-		byte[] headerBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE];
-		System.arraycopy(msgBuf, 0, headerBuf, 0, SPINEHeader.SPINE_HEADER_SIZE);		
+		byte[] headerBuf = new byte[SPINEPacketsConstants.SPINE_HEADER_SIZE];
+		System.arraycopy(msgBuf, 0, headerBuf, 0, SPINEPacketsConstants.SPINE_HEADER_SIZE);		
 		
 		return new SPINEHeader(headerBuf); 
     }
     
 	protected byte[] getRawPayload() {
     	if (this.payloadBuf == null) {
-	    	this.payloadBuf = new byte[this.dataGet().length - SPINEHeader.SPINE_HEADER_SIZE];
-			System.arraycopy(this.dataGet(), SPINEHeader.SPINE_HEADER_SIZE, this.payloadBuf, 0, this.payloadBuf.length);
+	    	this.payloadBuf = new byte[this.dataGet().length - SPINEPacketsConstants.SPINE_HEADER_SIZE];
+			System.arraycopy(this.dataGet(), SPINEPacketsConstants.SPINE_HEADER_SIZE, this.payloadBuf, 0, this.payloadBuf.length);
     	}				
 		return this.payloadBuf;
     }
@@ -137,12 +137,12 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		
 		byte[] msgBuf = this.dataGet();
 		
-		byte[] headerBuf = new byte[SPINEHeader.SPINE_HEADER_SIZE];
-		System.arraycopy(msgBuf, 0, headerBuf, 0, SPINEHeader.SPINE_HEADER_SIZE);		
+		byte[] headerBuf = new byte[SPINEPacketsConstants.SPINE_HEADER_SIZE];
+		System.arraycopy(msgBuf, 0, headerBuf, 0, SPINEPacketsConstants.SPINE_HEADER_SIZE);		
 		
 		if(this.payloadBuf == null) {
-			this.payloadBuf = new byte[msgBuf.length - SPINEHeader.SPINE_HEADER_SIZE];
-			System.arraycopy(msgBuf, SPINEHeader.SPINE_HEADER_SIZE, this.payloadBuf, 0, this.payloadBuf.length);
+			this.payloadBuf = new byte[msgBuf.length - SPINEPacketsConstants.SPINE_HEADER_SIZE];
+			System.arraycopy(msgBuf, SPINEPacketsConstants.SPINE_HEADER_SIZE, this.payloadBuf, 0, this.payloadBuf.length);
 		}
 		
 		SPINEHeader header = new SPINEHeader(headerBuf); 
@@ -177,8 +177,8 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 					s += Integer.toHexString(b).toUpperCase() + " ";
 					len++;
 				}
-			else if(this.dataGet() != null && this.dataGet().length > SPINEHeader.SPINE_HEADER_SIZE) 
-				for (int i = SPINEHeader.SPINE_HEADER_SIZE; i<this.dataGet().length; i++) {
+			else if(this.dataGet() != null && this.dataGet().length > SPINEPacketsConstants.SPINE_HEADER_SIZE) 
+				for (int i = SPINEPacketsConstants.SPINE_HEADER_SIZE; i<this.dataGet().length; i++) {
 					short b =  this.dataGet()[i];
 					if (b<0) b += 256;
 					s += Integer.toHexString(b).toUpperCase() + " ";
@@ -201,10 +201,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 
 class SPINEHeader {
 	
-	public final static byte SPINE_HEADER_SIZE = 9;
-	
-	
-	private byte headerBuf[] = new byte[SPINE_HEADER_SIZE];
+	private byte headerBuf[] = new byte[SPINEPacketsConstants.SPINE_HEADER_SIZE];
 	
 	private boolean canParse = false;
 	private boolean canBuild = false;
@@ -242,8 +239,8 @@ class SPINEHeader {
 	}
 	
 	protected SPINEHeader(byte[] header) throws IllegalSpineHeaderSizeException {
-		if (header.length != SPINE_HEADER_SIZE) 
-			throw new IllegalSpineHeaderSizeException(SPINE_HEADER_SIZE, header.length);
+		if (header.length != SPINEPacketsConstants.SPINE_HEADER_SIZE) 
+			throw new IllegalSpineHeaderSizeException(SPINEPacketsConstants.SPINE_HEADER_SIZE, header.length);
 		else {
 			this.headerBuf = header;
 			this.canParse = true;
