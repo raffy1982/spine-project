@@ -37,11 +37,12 @@
 
 package spine.communication.emu;
 
+import jade.util.Logger;
+
 import java.io.InterruptedIOException;
 
 import com.tilab.gal.WSNConnection;
 
-import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
@@ -87,8 +88,7 @@ public class EMUWSNConnection implements WSNConnection {
 				compressedPayload = new byte[compressedPayloadShort.length];
 				for (int i = 0; i < compressedPayloadShort.length; i++)
 					compressedPayload[i] = (byte) compressedPayloadShort[i];
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 
 			EMUMessage emumsg = new EMUMessage();
 			// pktType

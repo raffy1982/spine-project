@@ -25,10 +25,11 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import jade.util.Logger;
+
 import java.io.*;
 import java.net.*;
 
-import spine.Logger;
 import spine.SPINEManager;
 
 import net.tinyos.message.*;

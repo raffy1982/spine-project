@@ -39,7 +39,7 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.emu;
 
-import spine.Logger;
+import jade.util.Logger;
 import spine.SPINEFunctionConstants;
 import spine.SPINEManager;
 import spine.SPINESensorConstants;

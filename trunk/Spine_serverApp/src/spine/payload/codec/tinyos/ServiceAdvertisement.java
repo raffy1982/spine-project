@@ -37,9 +37,10 @@ Boston, MA  02111-1307, USA.
 
 package spine.payload.codec.tinyos;
 
+import jade.util.Logger;
+
 import java.util.Vector;
 
-import spine.Logger;
 import spine.SPINEFunctionConstants;
 import spine.SPINEManager;
 import spine.datamodel.Node;

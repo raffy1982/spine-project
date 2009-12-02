@@ -327,10 +327,5 @@ public class SPINETest implements SPINEListener {
 	public void received(ServiceMessage msg) {
 		// for this simple application, I just like to print the service message received
 		System.out.println(msg);
-	}
-	
-	public void serviceMessageReceived(int nodeID, ServiceMessage msg) {}
-	
-	public void dataReceived(int nodeID, Data data) {}
-	
+	}	
 }

@@ -96,22 +96,6 @@ public class ServiceMessage implements SpineObject {
 		return this.node;
 	}
 	
-	/**
-	 * 
-	 * @deprecated
-	 */
-	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
-	}
-	
-	/**
-	 * 
-	 * @deprecated
-	 */
-	public int getNodeID() {
-		return nodeID;
-	}
-	
 	protected String parse(){
 		return "";
 	}

@@ -45,15 +45,7 @@ public class Node implements SpineObject {
 	
 	private static final long serialVersionUID = 1L;
 	
-//	private final static String FUNCTION_CLASSNAME_PREFIX = "spine.datamodel.functions.";
-//	private final static String FUNCTION_CLASSNAME_SUFFIX = "Function";
-	
 	private static final String NEW_LINE = Properties.getDefaultProperties().getProperty(Properties.LINE_SEPARATOR_KEY);
-	
-	/**
-	 * @deprecated
-	 */
-	private int nodeID;
 	
 	private Address physicalID = null;
 	
@@ -65,42 +57,14 @@ public class Node implements SpineObject {
 	
 	
 	/**
-	 * Default constructor of a Node object. ** For in-framework use only. **
-	 * Application-level classes should never use this constructor, but rather get a node 
-	 * by looking at the activeNode Vector of the spine.SPINEManager
-	 * @deprecated
-	 */
-	public Node(){};
-	
-	/**
 	 * Constructor of a Node object. ** For in-framework use only. **
 	 * Application-level classes should never use this constructor, but rather get a node 
 	 * by looking at the activeNode Vector of the spine.SPINEManager
 	 */
 	public Node(Address physicalID) {
 		this.physicalID = physicalID;
-		this.nodeID = physicalID.getAsInt();
 	}
 	
-	/**
-	 * Getter method of the node id
-	 * @return the node id
-	 * @deprecated
-	 */
-	public int getNodeID() {
-		return nodeID;
-	}
-	
-	/**
-	 * Setter method of the node id. ** For in-framework use only. **
-	 * @param nodeID the node id
-	 * @deprecated
-	 */
-	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
-	}
-	
-
 	/**
 	 * Getter method of the node sensors list
 	 * @return the sensors list of the node
@@ -180,8 +144,7 @@ public class Node implements SpineObject {
 	 * 
 	 */
 	public String toString() {
-		String s = "Node ID (deprecated): " + this.nodeID + NEW_LINE;
-		s += "Physical Node ID: " + this.physicalID + NEW_LINE;
+		String s = "Physical Node ID: " + this.physicalID + NEW_LINE;
 		s += "Logical Node ID: " + this.logicalID + NEW_LINE;
 		
 		s += "OnBoard Sensors:" + NEW_LINE;

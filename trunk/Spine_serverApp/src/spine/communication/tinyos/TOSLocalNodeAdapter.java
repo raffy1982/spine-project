@@ -41,6 +41,8 @@ Boston, MA† 02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import jade.util.Logger;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -48,8 +50,6 @@ import net.tinyos.message.MessageListener;
 import net.tinyos.message.MoteIF;
 import net.tinyos.packet.BuildSource;
 import net.tinyos.util.PrintStreamMessenger;
-import spine.Logger;
-import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
 import spine.SPINEServiceMessageConstants;
@@ -66,8 +66,6 @@ import com.tilab.gal.WSNConnection;
 
 public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageListener {
 
-	private static final byte MY_GROUP_ID = (byte)Short.parseShort(Properties.getDefaultProperties().getProperty(Properties.GROUP_ID_KEY), 16);
-	
 	private Vector connections = new Vector(); // <values: WSNConnection>
 	
 	protected String motecom = null;
@@ -97,7 +95,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					sourceNodeID == SPINEPacketsConstants.SPINE_BROADCAST || 
 					h.getVersion() != SPINEPacketsConstants.CURRENT_SPINE_VERSION || 
 					h.getDestID() != SPINEPacketsConstants.SPINE_BASE_STATION ||					
-					h.getGroupID() != MY_GROUP_ID) {
+					h.getGroupID() != SPINEManager.getMyGroupID()) {
 					
 						if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) {
 							StringBuffer str = new StringBuffer();
@@ -204,7 +202,10 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					this.messagesQueue.removeElementAt(i);
 					return;
 				}
-			} catch (IllegalSpineHeaderSizeException e) {}
+			} catch (IllegalSpineHeaderSizeException e) {
+				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
+					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
+			}
 		}
 	}
 	

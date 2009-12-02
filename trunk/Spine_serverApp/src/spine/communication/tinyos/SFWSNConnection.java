@@ -38,11 +38,12 @@ Boston, MA  02111-1307, USA.
 
 package spine.communication.tinyos;
 
+import jade.util.Logger;
+
 import java.io.InterruptedIOException;
 
 import com.tilab.gal.WSNConnection;
 
-import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINEPacketsConstants;

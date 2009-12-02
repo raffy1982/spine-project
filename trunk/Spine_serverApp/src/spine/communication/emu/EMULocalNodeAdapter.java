@@ -40,13 +40,14 @@
 
 package spine.communication.emu;
 
+import jade.util.Logger;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
 import java.io.*;
 
-import spine.Logger;
 import spine.Properties;
 import spine.SPINEManager;
 import spine.SPINEPacketsConstants;
@@ -60,10 +61,6 @@ import java.util.Hashtable;
 import java.util.Enumeration;
 
 public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessageListener {
-
-	private static Properties prop = Properties.getDefaultProperties();
-
-	private static final String URL_PREFIX = prop.getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
 
 	// Node Information Hash Table
 	Hashtable nodeInfo = new Hashtable();
@@ -91,7 +88,8 @@ public class EMULocalNodeAdapter extends LocalNodeAdapter implements SocketMessa
 		if ((msg.getProfileId() != 0)) {
 			// nodeId from sourceURL
 			sourceURL = msg.getSourceURL();
-			nodeId = Integer.parseInt(sourceURL.substring(URL_PREFIX.length()));
+			String urlPrefix = Properties.getDefaultProperties().getProperty(SPINESupportedPlatforms.EMULATOR + "_" + Properties.URL_PREFIX_KEY);
+			nodeId = Integer.parseInt(sourceURL.substring(urlPrefix.length()));
 
 			// Add "nodeId"/"node info msg" to nodeInfo
 			nodeInfo.put(new Integer(nodeId), msg);
