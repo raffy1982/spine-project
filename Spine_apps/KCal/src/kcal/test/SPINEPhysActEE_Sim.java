@@ -45,7 +45,7 @@ import java.util.Vector;
 
 public class SPINEPhysActEE_Sim {
 
-	static final String FILE_NAME = "humanEnergyExp/resources/dataSets/Edmund_sitting.csv";
+	static final String FILE_NAME = "Kcal/resources/dataSets/Edmund_sitting.csv";
 	
 	private int counter = 0;
 	private double accum_minute_V = 0;

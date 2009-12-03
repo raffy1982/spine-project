@@ -42,7 +42,7 @@ import java.util.Arrays;
 
 public class KcalAlgsComparator {
 
-	private static String APP_PROPERTY_PATH = "humanEnergyExp/resources/dataSets/";
+	private static String APP_PROPERTY_PATH = "Kcal/resources/dataSets/";
 
 	static final String[] FILES = { APP_PROPERTY_PATH + "Edmund_runing.csv",
 									APP_PROPERTY_PATH + "Edmund_biking.csv",
