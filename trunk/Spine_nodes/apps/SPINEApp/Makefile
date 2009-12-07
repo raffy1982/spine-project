@@ -50,6 +50,11 @@ else
       PFLAGS += -DBUFFER_LENGTH=80
 endif
 
+CFLAGS += -DENABLE_BUFFERED_RAWDATA
+CFLAGS += -DENABLE_FEATURES
+#CFLAGS += -DENABLE_ALARMS
+#CFLAGS += -DENABLE_STEPCOUNTER
+#CFLAGS += -DENABLE_HMM
 
 #registry size for handling functions self-registration; set this value equal to the number of functions on the node (the array is preallocated, so this parameter affects the global memory usage)
 PFLAGS += -DFUNCTION_LIST_SIZE=4
