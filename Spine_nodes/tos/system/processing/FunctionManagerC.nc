@@ -41,11 +41,6 @@ Boston, MA  02111-1307, USA.
  implementation {
 
      components PacketManagerC, FunctionManagerP, SensorBoardControllerC;
-     components AlarmEngineC;
-     components FeatureEngineC;
-     components StepCounterEngineC;
-     components BufferedRawDataEngineC;
-     //components HMMEngineC;
 
 
      FunctionManager = FunctionManagerP;
@@ -53,14 +48,33 @@ Boston, MA  02111-1307, USA.
 
      FunctionManagerP.SensorBoardController -> SensorBoardControllerC;
 
+
      FunctionManagerP.Functions = Functions;
-     FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
 
-     FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
 
-     FunctionManagerP.Functions[STEP_COUNTER] -> StepCounterEngineC;
+     #ifdef ENABLE_FEATURES
+       components FeatureEngineC;
+       FunctionManagerP.Functions[FEATURE] -> FeatureEngineC;
+     #endif
 
-     FunctionManagerP.Functions[BUFFERED_RAWDATA] -> BufferedRawDataEngineC;
+     #ifdef ENABLE_ALARMS
+       components AlarmEngineC;
+       FunctionManagerP.Functions[ALARM] -> AlarmEngineC;
+     #endif
 
-     //FunctionManagerP.Functions[HMM] -> HMMEngineC;
+     #ifdef ENABLE_STEPCOUNTER
+       components StepCounterEngineC;
+       FunctionManagerP.Functions[STEP_COUNTER] -> StepCounterEngineC;
+     #endif
+
+     #ifdef ENABLE_BUFFERED_RAWDATA
+       components BufferedRawDataEngineC;
+       FunctionManagerP.Functions[BUFFERED_RAWDATA] -> BufferedRawDataEngineC;
+     #endif
+
+     #ifdef ENABLE_HMM
+       components HMMEngineC;
+       FunctionManagerP.Functions[HMM] -> HMMEngineC;
+       
+     #endif
  }
