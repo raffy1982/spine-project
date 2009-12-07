@@ -56,7 +56,7 @@ Download it from the URL specified in the README file and place it in the direct
 	<!--  _______________________________________________
                                jar
 	_________________________________________________ -->
-	<target name="jar" description="generate the jar files" depends="compile">
+	<target name="jar" description="generate the jar files" depends="clean,compile">
 		<!-- Compile the java code from src into classes -->
 		<mkdir dir="jar" />
 		<condition property="inclusion.level.0">
