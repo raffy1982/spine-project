@@ -35,6 +35,7 @@ Boston, MAÂ  02111-1307, USA.
 package test;
 
 import java.util.Vector;
+import java.util.logging.Level;
 
 import spine.SPINEFactory;
 import spine.SPINEFunctionConstants;
@@ -80,6 +81,9 @@ public class SPINETest implements SPINEListener {
 			// ... then we need to register a SPINEListener implementation to the SPINE manager instance
 			// (I register myself since I'm a SPINEListener implementation!)
 			manager.addListener(this);	
+			
+			// we could change the logging level to avoid e.g. prints for the ongoing and incoming low level messages.
+			SPINEManager.getLogger().setLevel(Level.ALL);
 			
 			// We could even decide to change the default discoveryProcedureTimeout; after that: ok ...
 			/* manager.setDiscoveryProcedureTimeout(1000); */
