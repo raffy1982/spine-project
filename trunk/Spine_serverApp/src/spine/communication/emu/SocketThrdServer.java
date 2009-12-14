@@ -80,6 +80,7 @@ class ClientWorker implements Runnable {
 			ois = new ObjectInputStream(client.getInputStream());
 			new ObjectOutputStream(client.getOutputStream());
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 				StringBuffer str = new StringBuffer();
 				str.append(e.getMessage());
@@ -103,9 +104,11 @@ class ClientWorker implements Runnable {
 				emuLocalNodeAdapter.messageReceived(srcID, msg);
 				textArea.append(msg.toString() + "\n");
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 			} catch (IOException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 					StringBuffer str = new StringBuffer();
 					str.append(e.getMessage());
@@ -168,6 +171,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 		try {
 			server = new ServerSocket(NODE_COMMUNICATION_PORT);
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 				StringBuffer str = new StringBuffer();
 				str.append(e.getMessage());
@@ -184,6 +188,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 				t.start();
 
 			} catch (IOException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 					StringBuffer str = new StringBuffer();
 					str.append(e.getMessage());
@@ -210,31 +215,30 @@ class SocketThrdServer extends JFrame implements Runnable {
 			oisClient.put(new Integer(destNodeID), new ObjectInputStream(socket.getInputStream()));
 
 		} catch (UnknownHostException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
 	}
 
 	public void sendCommand(int destNodeID, EMUMessage emumsg) throws IOException {
-		try {
-			if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
-				StringBuffer str = new StringBuffer();
-				str.append("Send cmd: ");
-				str.append(emumsg.toString());
-				str.append(" to node: ");
-				str.append(destNodeID);
-				SPINEManager.getLogger().log(Logger.INFO, str.toString());
-			}
-			ObjectOutputStream oosC = (ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
-			oosC.writeObject(emumsg);
-			oosC.flush();
-		} catch (IOException e) {
-			throw e;
+		if (SPINEManager.getLogger().isLoggable(Logger.INFO)) {
+			StringBuffer str = new StringBuffer();
+			str.append("Send cmd: ");
+			str.append(emumsg.toString());
+			str.append(" to node: ");
+			str.append(destNodeID);
+			SPINEManager.getLogger().log(Logger.INFO, str.toString());
 		}
+		
+		ObjectOutputStream oosC = (ObjectOutputStream) (oosClient.get(new Integer(destNodeID)));
+		oosC.writeObject(emumsg);
+		oosC.flush();
 	}
 
 	protected void finalize() {
@@ -243,6 +247,7 @@ class SocketThrdServer extends JFrame implements Runnable {
 		try {
 			server.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 				StringBuffer str = new StringBuffer();
 				str.append(e.getMessage());

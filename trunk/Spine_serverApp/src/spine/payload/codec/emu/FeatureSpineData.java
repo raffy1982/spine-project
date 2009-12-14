@@ -156,6 +156,7 @@ public class FeatureSpineData extends SpineCodec {
 			data.setFeatures((Feature[]) feats.toArray(new Feature[0]));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 			data = null;

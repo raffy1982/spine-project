@@ -131,6 +131,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
                               byte msgSeqNrAcknowledged = svcMsg.getMessageDetail();
                               removeAcknowledgedMsg(sourceNodeID, msgSeqNrAcknowledged);}
                           catch(MethodNotSupportedException e) {
+                        	  e.printStackTrace();
                         	  if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
           						SPINEManager.getLogger().log(Logger.SEVERE, e.toString());          						
                           }                    
@@ -179,6 +180,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					((TOSWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				
 			} catch (IllegalSpineHeaderSizeException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
 					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			
@@ -203,6 +205,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					return;
 				}
 			} catch (IllegalSpineHeaderSizeException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 			}
@@ -277,6 +280,7 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					//this.messagesQueue.removeElementAt(i);
 					Thread.sleep(2);
 				} catch (IOException e) {
+					e.printStackTrace();
 					if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
 						SPINEManager.getLogger().log(Logger.WARNING, e.getMessage());
 				}
@@ -293,9 +297,11 @@ public class TOSLocalNodeAdapter extends LocalNodeAdapter implements MessageList
 					this.sendImmediately = false;
 				
 			} catch (IOException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
 					SPINEManager.getLogger().log(Logger.WARNING, e.getMessage());
 			} catch (IllegalSpineHeaderSizeException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
 					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			

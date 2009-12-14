@@ -41,7 +41,7 @@ import spine.exceptions.*;
 
 public class BufferedRawDataSpineSetupFunction extends SpineCodec {
 
-	private final static int PARAM_LENGTH = 4;
+	private final static int PARAM_LENGTH = 3;
 
 	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
 		throw new MethodNotSupportedException("decode");
@@ -57,9 +57,8 @@ public class BufferedRawDataSpineSetupFunction extends SpineCodec {
 		data[1] = PARAM_LENGTH;
 
 		data[2] = workPayLoad.getSensor();
-		data[3] = (byte) (workPayLoad.getChannelsBitmask() & 0x0000000F);
-		data[4] = (byte) workPayLoad.getBufferSize();
-		data[5] = (byte) workPayLoad.getShiftSize();
+		data[3] = (byte) workPayLoad.getBufferSize();
+		data[4] = (byte) workPayLoad.getShiftSize();
 
 		return data;
 	}

@@ -113,9 +113,11 @@ public class EMUWSNConnection implements WSNConnection {
 			}
 
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		}
