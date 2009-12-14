@@ -75,29 +75,26 @@ implementation {
 		uint8_t i;
 
 		uint8_t sensCode;
-		uint8_t chsBitmask;
 		uint8_t bufferSize;
 		uint8_t shiftSize;
 
-		if (functionParamsSize != 4)
+		if (functionParamsSize != 3)
 		   return FALSE;
 
                 sensCode = functionParams[0];
-		chsBitmask = functionParams[1];
-		bufferSize = functionParams[2];
-		shiftSize = functionParams[3];
+		bufferSize = functionParams[1];
+		shiftSize = functionParams[2];
 
-                for (i = 0; i<paramsIndex; i++)
+                for (i = 0; i<paramsIndex && i<SENSORS_REGISTRY_SIZE; i++)
                    if (paramsList[i].sensorCode == sensCode) {
-                      paramsList[i].chsBitmask = chsBitmask;
                       paramsList[i].bufferSize = bufferSize;
                       paramsList[i].shiftSize = shiftSize;
+                      paramsList[i].samplesCount = 0;
                       break;
                    }
 
                 if (i == paramsIndex) {
                    paramsList[paramsIndex].sensorCode = sensCode;
-                   paramsList[paramsIndex].chsBitmask = chsBitmask;
                    paramsList[paramsIndex].bufferSize = bufferSize;
                    paramsList[paramsIndex].shiftSize = shiftSize;
                    paramsList[paramsIndex++].samplesCount = 0;
@@ -107,10 +104,22 @@ implementation {
 	}
 
 	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
-                if (functionParamsSize != 1)
+                bool activated = FALSE;
+                uint8_t i;
+
+                if (functionParamsSize != 2)
 		   return FALSE;
 
-                activeSensorsList[activeSensorsIndex++] = functionParams[0];
+                for (i = 0; i<paramsIndex && i<SENSORS_REGISTRY_SIZE; i++) {
+                   if (paramsList[i].sensorCode == functionParams[0])
+                      paramsList[i].chsBitmask = functionParams[1];
+                   if (activeSensorsList[i] == functionParams[0])
+                      activated = TRUE;
+                }
+
+                if (!activated)
+                   activeSensorsList[activeSensorsIndex++] = functionParams[0];
+
 
                 return TRUE;
 	}
@@ -120,23 +129,22 @@ implementation {
 
 		uint8_t sensorCode;
 
-		if (functionParamsSize != 1)
+		if (functionParamsSize != 2)
 		   return FALSE;
 
 		sensorCode = functionParams[0];
 
 		for(j = 0; j<activeSensorsIndex; j++) {
 		   if (activeSensorsList[j] == sensorCode) {
-  		      for ( k = j; k<activeSensorsIndex-1; k++) {
+  		      for ( k = j; k<activeSensorsIndex-1; k++)
 		         activeSensorsList[k] = activeSensorsList[k+1];
-		      }
-		      activeSensorsList[activeSensorsIndex--] = 0;
+		      activeSensorsList[--activeSensorsIndex] = 0;
 		      break;
 		   }
 		}
 
-		if (activeSensorsIndex == 0xFF)  // CHECK
-		   computingStarted = FALSE;
+		//if (activeSensorsIndex == 0xFF)  // CHECK
+		  // computingStarted = FALSE;
 
 		return TRUE;
 	}
