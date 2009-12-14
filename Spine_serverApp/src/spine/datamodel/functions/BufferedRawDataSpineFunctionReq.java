@@ -42,7 +42,8 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 	private static final long serialVersionUID = 1L;
 	
 	private byte sensor = -1;
-
+	private byte channelsBitmask = 0;
+	
 	
 	/**
 	 * Sets the sensor involved on the current BufferedRawData function request
@@ -62,6 +63,22 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 		return sensor;
 	}
 	
+	
+	/**
+	 * Sets the sensor involved on the current BufferedRawData function request
+	 * 
+	 * @param channelsBitmask the channels bitmask describing the sensor channels to return
+	 */
+	public void setChannelsBitmask(byte channelsBitmask) {
+		this.channelsBitmask = channelsBitmask;
+	}
+
+
+	public byte getChannelsBitmask() {
+		return channelsBitmask;
+	}
+	
+	
 	/**
 	 * 
 	 * Returns a string representation of the BufferedRawDataSpineFunctionReq object.
@@ -70,7 +87,8 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 	public String toString() {
 		String s = "Buffered Raw-Data Function Req {";		
 		s += (this.isActivationRequest)? "activate " : "deactivate ";		
-		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + "}";		
+		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";		
+		s += "chs bitmask = " + SPINESensorConstants.channelBitmaskToString(channelsBitmask) + "}";
 		return s;
 	}
 	

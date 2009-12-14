@@ -76,6 +76,7 @@ public final class SFReadWriteThread extends Thread {
 			os = sfSocket.getOutputStream();
 		}
 		catch (ConnectException ce) {
+			ce.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) { 
 				StringBuffer str = new StringBuffer();
 				str.append(ce.getMessage());
@@ -89,6 +90,7 @@ public final class SFReadWriteThread extends Thread {
 			System.exit(1);
 		}
 		catch (IOException ioe) {
+			ioe.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			System.exit(1);
@@ -141,6 +143,7 @@ public final class SFReadWriteThread extends Thread {
 			}
 		}
 		catch (IOException ioe) {
+			ioe.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			System.exit(1);
@@ -170,6 +173,7 @@ public final class SFReadWriteThread extends Thread {
 				tosmsg = SpineTOSMessage.Construct(rawmessage);
 								
 			} catch (SFLocalNodeAdapterException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 				break;
@@ -180,6 +184,7 @@ public final class SFReadWriteThread extends Thread {
 				srcID = tosmsg.getHeader().getSourceID();
 			}
 			catch (IllegalSpineHeaderSizeException ishse) {
+				ishse.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 					SPINEManager.getLogger().log(Logger.SEVERE, ishse.getMessage());
 				continue;
@@ -267,6 +272,7 @@ public final class SFReadWriteThread extends Thread {
 			os.flush();
 		}
 		catch (IOException ioe) {
+			ioe.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 				SPINEManager.getLogger().log(Logger.SEVERE, ioe.getMessage());
 			throw new SFWriteException();

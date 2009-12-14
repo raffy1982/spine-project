@@ -85,6 +85,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				sfReader = new SFReadWriteThread(host, Integer.parseInt(port), this);
 			}
 			catch (UnknownHostException uhe) {
+				uhe.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) {
 					StringBuffer str = new StringBuffer();
 					str.append("SFLocalNodeAdapter could not connect to SF at ");
@@ -121,6 +122,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 				try {
 					sfReader.sendMessage(curr.destNodeID, curr.tosmsg);
 				} catch (SFWriteException swe) {
+					swe.printStackTrace();
 					if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 						SPINEManager.getLogger().log(Logger.SEVERE, swe.getMessage());
 				}
@@ -135,6 +137,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 			try {
 				sfReader.sendMessage(destNodeID, tosmsg);
 			} catch (SFWriteException swe) {
+				swe.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 					SPINEManager.getLogger().log(Logger.SEVERE, swe.getMessage());
 			}
@@ -144,6 +147,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 					this.sendImmediately = false;
 
 			}  catch (IllegalSpineHeaderSizeException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.WARNING)) 
 					SPINEManager.getLogger().log(Logger.WARNING, "[SPINE1.3-MALFORMED-HEADER]... discarded!");
 			}			
@@ -217,6 +221,7 @@ public final class SFLocalNodeAdapter extends LocalNodeAdapter implements Messag
 					((SFWSNConnection)connections.elementAt(i)).messageReceived(msg);				
 				
 			} catch (IllegalSpineHeaderSizeException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 			}			

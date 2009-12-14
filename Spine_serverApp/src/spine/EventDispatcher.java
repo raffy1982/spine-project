@@ -153,6 +153,7 @@ class EventDispatcher {
 							 o = EventDispatcher.this.spineManager.spineCodec.decode(new Node(nodeID), payload);
 							 
 						} catch (Exception e) { 
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
@@ -188,6 +189,7 @@ class EventDispatcher {
 							} 
 							functionCode = codecInformation.getFunctionCode(payload);
 						} catch (Exception e) { 
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
@@ -207,22 +209,27 @@ class EventDispatcher {
 							 o = EventDispatcher.this.spineManager.spineCodec.decode(EventDispatcher.this.spineManager.getNodeByPhysicalID(nodeID), payload);
 							
 						} catch (PacketDecodingException e) {
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
 						} catch (MethodNotSupportedException e) {
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
 						} catch (InstantiationException e) {
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
 						} catch (IllegalAccessException e) {
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
 						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
@@ -244,6 +251,7 @@ class EventDispatcher {
 							} 
 							serviceMessageType = codecInformation.getServiceMessageType(payload);
 						} catch (Exception e) { 
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;
@@ -265,6 +273,7 @@ class EventDispatcher {
 							 o = EventDispatcher.this.spineManager.spineCodec.decode(EventDispatcher.this.spineManager.getNodeByPhysicalID(nodeID), payload);
 							
 						} catch (Exception e) { 
+							e.printStackTrace();
 							if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 								SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 							return;

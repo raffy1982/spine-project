@@ -119,9 +119,11 @@ public class SFWSNConnection implements WSNConnection {
 				this.sequenceNumber = 0;
 			
 		} catch (NumberFormatException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 				SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 		} 

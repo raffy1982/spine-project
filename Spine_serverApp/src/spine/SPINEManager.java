@@ -153,12 +153,15 @@ public class SPINEManager {
 		} catch (NumberFormatException e) {
 			exit(DEF_PROP_MISSING_MSG);
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (InstantiationException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} 
@@ -440,6 +443,7 @@ public class SPINEManager {
 					msg.setPayload(payloadShort);
 					
 				}catch (MethodNotSupportedException e){
+					e.printStackTrace();
 					if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 						SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 				}	      
@@ -449,18 +453,23 @@ public class SPINEManager {
 			connection.send(msg);
 			
 		} catch (InstantiationException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (InterruptedIOException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} catch (UnsupportedOperationException e) {
+			e.printStackTrace();
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		}			

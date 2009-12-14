@@ -113,7 +113,6 @@ public class BufferedRawDataToFile implements SPINEListener {
 					
 					BufferedRawDataSpineSetupFunction brdsf = new BufferedRawDataSpineSetupFunction();
 					brdsf.setSensor(sensor);
-					brdsf.setChannelsBitmask(SPINESensorConstants.CH1_CH2_CH3_ONLY);
 					brdsf.setBufferSize(BUFFER_SIZE);
 					brdsf.setShiftSize(SHIFT_SIZE);
 					manager.setup(curr, brdsf);
@@ -122,6 +121,7 @@ public class BufferedRawDataToFile implements SPINEListener {
 					
 					BufferedRawDataSpineFunctionReq brdfr = new BufferedRawDataSpineFunctionReq();
 					brdfr.setSensor(sensor);
+					brdfr.setChannelsBitmask(SPINESensorConstants.CH1_CH2_CH3_ONLY);					
 					manager.activate(curr, brdfr);
 					
 					try { Thread.sleep(SLEEP_TIME); } catch (InterruptedException e) {}

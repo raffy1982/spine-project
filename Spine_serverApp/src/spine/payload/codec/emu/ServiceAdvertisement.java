@@ -94,15 +94,19 @@ public class ServiceAdvertisement extends SpineCodec {
 				currFunction.init(fParams);
 				functionsList.addElement(currFunction);
 			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (InstantiationException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (IllegalAccessException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			} catch (BadFunctionSpecException e) {
+				e.printStackTrace();
 				if (SPINEManager.getLogger().isLoggable(Logger.SEVERE))
 					SPINEManager.getLogger().log(Logger.INFO, e.getMessage());
 			}

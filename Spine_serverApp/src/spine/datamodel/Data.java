@@ -87,6 +87,7 @@ public abstract class Data implements SpineObject {
 			} 
 			functionCode=codecInformation.getFunctionCode(payload);
 		} catch (Exception e) { 
+			e.printStackTrace();
 			if (SPINEManager.getLogger().isLoggable(Logger.SEVERE)) 
 				SPINEManager.getLogger().log(Logger.SEVERE, e.getMessage());
 		} 	

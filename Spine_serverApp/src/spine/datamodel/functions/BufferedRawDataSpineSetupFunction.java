@@ -40,7 +40,6 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 	private static final long serialVersionUID = 1L;
 	
 	private byte sensor = -1;
-	private byte channelsBitmask = 0;
 	private short bufferSize = 0;
 	private short shiftSize = 0;
 
@@ -62,21 +61,6 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 		sensor = this.sensor;
 		return sensor;
 	}
-	
-	/**
-	 * Sets the sensor involved on the current BufferedRawData function request
-	 * 
-	 * @param channelsBitmask the channels bitmask describing the sensor channels to return
-	 */
-	public void setChannelsBitmask(byte channelsBitmask) {
-		this.channelsBitmask = channelsBitmask;
-	}
-
-
-	public byte getChannelsBitmask() {
-		return channelsBitmask;
-	}
-	
 	
 	/**
 	 * Sets the size of the raw-data buffer
@@ -124,7 +108,6 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 		String s = "Buffered Raw-Data Setup Function {";
 		
 		s += "sensor = " + SPINESensorConstants.sensorCodeToString(sensor) + ", ";
-		s += "chs bitmask = " + SPINESensorConstants.channelBitmaskToString(channelsBitmask) + ", ";
 		s += "buffer size = " + bufferSize + ", ";
 		s += "shift size = " + shiftSize + "}";
 		
