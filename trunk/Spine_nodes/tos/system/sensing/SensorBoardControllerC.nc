@@ -111,7 +111,7 @@ implementation {
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
    #endif
      
-   //'Wisepla' BIOSENSOR sensor board (developed in Tampere University of Technology, Tampere, Finland) support (acceleromenter, ecg, eip ...
+   //'Wisepla' BIOSENSOR sensor board (developed in Tampere University of Technology, Tampere, Finland) support (acceleromenter, ecg, eip)
    #ifdef WISEPLA_BIOSENSOR_SENSORBOARD
      /* For the EIP Sensor */
      components EipSensorC;
@@ -132,6 +132,27 @@ implementation {
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
    #endif
    
+   //'Cardio-Shield' sensor board (by Alessandro Andreoli on the base of the spine motion board) support (acceleromenter, voltage, internal temp)
+   #ifdef CARDIOSHIELD_SENSORBOARD
+       /* For the ACC Sensor */
+     components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
+     SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
+
+       /* For the VOLTAGE Sensor */
+     components HilLiIonVoltageSensorC;
+     components new TimerMilliC() as VoltageSensorTimer;
+     SensorBoardControllerP.SensorImpls[VOLTAGE_SENSOR] -> HilLiIonVoltageSensorC;
+     SensorBoardControllerP.SamplingTimers[VOLTAGE_SENSOR] -> VoltageSensorTimer;
+
+       /* For the INTERNAL_TEMP Sensor */
+     components InternalTemperatureSensorC;
+     components new TimerMilliC() as InternalTemperatureSensorTimer;
+     SensorBoardControllerP.SensorImpls[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorC;
+     SensorBoardControllerP.SamplingTimers[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorTimer;
+   #endif
+
     //'Moteiv' Tmote Sky sensors kit
    #ifdef MOTEIV_KIT_SENSORBOARD
      /* For the Humidity Sensor */

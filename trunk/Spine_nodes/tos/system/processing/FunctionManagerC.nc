@@ -75,6 +75,10 @@ Boston, MA  02111-1307, USA.
      #ifdef ENABLE_HMM
        components HMMEngineC;
        FunctionManagerP.Functions[HMM] -> HMMEngineC;
-       
+     #endif
+     
+     #ifdef ENABLE_HEARTBEAT
+       components HeartBeatEngineC;
+       FunctionManagerP.Functions[HEART_BEAT] -> HeartBeatEngineC;
      #endif
  }
