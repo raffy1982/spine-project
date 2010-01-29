@@ -45,7 +45,8 @@ enum FunctionCodes {
   ONE_SHOT = 0x04,
   STEP_COUNTER = 0x05,
   BUFFERED_RAWDATA = 0x06,
-  HMM = 0x07
+  HMM = 0x07,
+  HEART_BEAT = 0x08
 
 };
 

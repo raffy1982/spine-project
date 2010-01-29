@@ -38,6 +38,10 @@ else ifeq ($(SENSORBOARD),mts300)
 else ifeq ($(SENSORBOARD),biosensor)
      PFLAGS += -DWISEPLA_BIOSENSOR_SENSORBOARD
      PFLAGS += -DBUFFER_POOL_SIZE=5
+else ifeq ($(SENSORBOARD),cardioshield)
+     PFLAGS += -DCARDIOSHIELD_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=5
+     CFLAGS += -DENABLE_HEARTBEAT
 else ifeq ($(SENSORBOARD),moteiv)
      PFLAGS += -DMOTEIV_KIT_SENSORBOARD
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/telosb
