@@ -46,6 +46,7 @@ public class SPINEFunctionConstants {
 	public static final byte STEP_COUNTER = 0x05;
 	public static final byte BUFFERED_RAW_DATA = 0x06;
 	public static final byte HMM = 0x07;
+	public static final byte HEARTBEAT = 0x08;
 	
 	//alarm types
 	public static final byte BELOW_THRESHOLD = 0x01;
@@ -79,6 +80,7 @@ public class SPINEFunctionConstants {
 	public static final String STEP_COUNTER_LABEL = "StepCounter";
 	public static final String BUFFERED_RAW_DATA_LABEL = "BufferedRawData";
 	public static final String HMM_LABEL = "Hmm";
+	public static final String HEARTBEAT_LABEL = "HeartBeat";
 	
 	// if new function libraries are added, declare their labels down here
 	public static final String RAW_DATA_LABEL = "Raw Data";
@@ -113,6 +115,7 @@ public class SPINEFunctionConstants {
 			case STEP_COUNTER: return STEP_COUNTER_LABEL;
 			case BUFFERED_RAW_DATA: return BUFFERED_RAW_DATA_LABEL;
 			case HMM: return HMM_LABEL;
+			case HEARTBEAT: return HEARTBEAT_LABEL;
 			default: return "?";
 		}
 	}
@@ -132,6 +135,8 @@ public class SPINEFunctionConstants {
 			return BUFFERED_RAW_DATA;
 		if(label.equals(HMM_LABEL))
 			return HMM;
+		if(label.equals(HEARTBEAT_LABEL))
+			return HEARTBEAT;
 		else 
 			return -1;
 	}
@@ -173,6 +178,7 @@ public class SPINEFunctionConstants {
 			case STEP_COUNTER: return STEP_COUNTER_LABEL;
 			case BUFFERED_RAW_DATA: return BUFFERED_RAW_DATA_LABEL;
 			case HMM: return HMM_LABEL;
+			case HEARTBEAT: return HEARTBEAT_LABEL;
 			case SIGNAL_PROCESSING:	return "?"; 
 			default: return "?";
 		}
