@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Module component of the Sensor Board Controller. This component has been introduces to abstract
- * the access to the different sensors of the specific sensorboard and 
+ * the access to the different sensors of the specific sensorboard and
  * to decouple the SPINE v1.2 core to the peripherals. 
  * This way, the only needed information to access a sensor, is to know its
  * code (as known by the Sensor Board Controller).
@@ -167,13 +167,13 @@ implementation {
    				return SUCCESS;
    			}
    		}
-		
+
    		return FAIL;
        }
        
        command bool SensorBoardController.canSense(enum SensorCode sensorCode, enum ValueTypes channel) {
              uint8_t* valueTypesList;
-             uint8_t valueTypesCount;
+             uint8_t valueTypesCount = 0;
              uint8_t i;
              
              valueTypesList = call SensorImpls.getValueTypesList[sensorCode](&valueTypesCount);
