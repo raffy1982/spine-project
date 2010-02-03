@@ -70,7 +70,7 @@ public class SPINEPacketsConstants {
 	public static final String FUNCTION_REQ_LABEL = "Funct Req";        
 	
 
-	public static final byte CURRENT_SPINE_VERSION = 2;
+	public static final byte CURRENT_SPINE_VERSION = 3;
 	
 	public final static byte SPINE_HEADER_SIZE = 9;
 
