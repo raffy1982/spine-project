@@ -58,7 +58,7 @@ implementation {
         components ModeC;
         components MedianC;
         components RawDataC;
-        #ifndef MTS300_SENSOR_BOARD
+        #ifndef MTS300_SENSORBOARD
         components PitchRollC;
         components EntropyC;
     	#endif
@@ -93,7 +93,7 @@ implementation {
         FeatureEngineP.Features[MODE] -> ModeC;
         FeatureEngineP.Features[MEDIAN] -> MedianC;
         FeatureEngineP.Features[RAW_DATA] -> RawDataC;
-        #ifndef MTS300_SENSOR_BOARD
+        #ifndef MTS300_SENSORBOARD
         FeatureEngineP.Features[PITCH_ROLL] -> PitchRollC;
         FeatureEngineP.Features[ENTROPY] -> EntropyC;
         #endif

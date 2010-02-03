@@ -62,8 +62,8 @@ else
      $(info INFO: Compiling in insecure mode, define 'SECURE=Y' to enable)
 endif
 
-#current spine version used (2 stands for 1.2)
-PFLAGS += -DSPINE_VERSION=2
+#current spine version used (3 stands for 1.3)
+PFLAGS += -DSPINE_VERSION=3
 
 
 #if new folder will be added, they must be included down here
