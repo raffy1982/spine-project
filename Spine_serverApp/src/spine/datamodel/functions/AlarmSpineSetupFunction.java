@@ -61,6 +61,13 @@ public class AlarmSpineSetupFunction implements SpineSetupFunction {
 	}
 	
 	
+	/**
+	 * Getter method of the sensor involved in this setup request
+	 * 
+	 * @return the sensor involved in this setup request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor=this.sensor;
@@ -78,7 +85,11 @@ public class AlarmSpineSetupFunction implements SpineSetupFunction {
 		this.windowSize = windowSize;
 	}
 	
-	
+	/**
+	 * Getter method of the size of the window over which the features will be computed
+	 * 
+	 * @return the size of the window involved in this setup request
+	 */
 	public short getWindowSize() {
 		short windowSize;
 		windowSize=this.windowSize;
@@ -97,6 +108,11 @@ public class AlarmSpineSetupFunction implements SpineSetupFunction {
 	}
 	
 	
+	/**
+	 * Getter method of the shift size involved in this setup request
+	 * 
+	 * @return the shift size involved in this setup request
+	 */
 	public short getShiftSize() {
 		short shiftSize;
 		shiftSize=this.shiftSize;

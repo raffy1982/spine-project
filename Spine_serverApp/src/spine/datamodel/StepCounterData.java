@@ -44,26 +44,30 @@ public class StepCounterData extends Data {
 		
 	/**
 	 * Getter method of the steps count
+	 * 
 	 * @return the steps count
 	 */
 	public int getStepsCount() {
 		return this.stepsCount;
+	}	
+
+	/**
+	 * Setter method of the steps count attribute
+	 * @param stepsCount the steps count to set
+	 */
+	public void setStepsCount(int stepsCount) {
+		this.stepsCount = stepsCount;
 	}
 	
 	/**
 	 * 
 	 * Returns a string representation of the StepCounter object.
 	 * 
+	 * @return a string representation of this StepCounter data
+	 * 
 	 */
 	public String toString() {
 		return "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.STEP_COUNTER_LABEL + 
 				" update: "	+ this.stepsCount;
-	}
-
-	/**
-	 * @param stepsCount the stepsCount to set
-	 */
-	public void setStepsCount(int stepsCount) {
-		this.stepsCount = stepsCount;
 	}
 }

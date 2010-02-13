@@ -27,6 +27,7 @@ Boston, MA  02111-1307, USA.
  * This class represents the generic SPINE Function requests and must be extended
  * by 'function specific' classes.
  *  
+ * Note that this abstract class is only used internally at the framework. 
  *
  * @author Raffaele Gravina
  *
@@ -54,7 +55,15 @@ public abstract class SpineFunctionReq implements SpineObject {
 		this.isActivationRequest = isActivationRequest;		
 	}
 	
-	
+	/**
+	 * Getter method for the control flag of the request indicating if it's an activation or a deactivation.
+	 * 
+	 * NOTE: This method is for internal use only, and not supposed to be used by SPINE Applications.
+	 * It's under consideration the possibility of excluding this method in future releases of SPINE.
+	 * 
+	 * @param isActivationRequest 'true' if the current request is of activation; 
+	 * 'false' if it's a deactivation request 
+	 */
 	public boolean getActivationFlag() {
 		boolean isActivationRequest;
 		isActivationRequest=this.isActivationRequest;

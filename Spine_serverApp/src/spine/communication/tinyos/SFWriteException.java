@@ -38,18 +38,7 @@ public final class SFWriteException extends SFLocalNodeAdapterException {
     
 	private static final long serialVersionUID = 1L;
 	
-	/** Version control identifier strings. */
-    public static final String[] RCS_ID = {
-		"$URL: http://macromates.com/svn/Bundles/trunk/Bundles/Java.tmbundle/Templates/Java Class/class-insert.java $",
-		"$Id$",
-    };
-    
-	// {{{ SFWriteException constructor
-    /**
-     * 
-     */
-    public SFWriteException() {
+	public SFWriteException() {
         super("Error writing to Serial Forwarder socket.");
     }
-	// }}}
 }

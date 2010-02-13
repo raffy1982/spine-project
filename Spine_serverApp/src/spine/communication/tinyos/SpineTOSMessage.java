@@ -166,10 +166,17 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 		String s = null;
 		
 		try {
-			s = getHeader() + " - ";
-		
-			s += "Payload (hex) { ";
+			s = getHeader() + " (hex: ";
 			int len = 0;
+			for (int i = 0; i<getHeader().getHeaderBuf().length; i++) {
+				short b =  getHeader().getHeaderBuf()[i];
+				if (b<0) b += 256;
+				s += Integer.toHexString(b).toUpperCase() + " ";
+				len++;
+			}
+			
+			s += ") - Payload (hex) { ";
+			//int len = 0;
 			if(payloadBuf != null && payloadBuf.length > 0) 
 				for (int i = 0; i<payloadBuf.length; i++) {
 					short b =  payloadBuf[i];
@@ -187,7 +194,7 @@ public class SpineTOSMessage extends net.tinyos.message.Message {
 			else 
 				s += "empty payload ";
 			
-			s += "} [len=" + len + "]";
+			s += "} [msg len=" + len + "]";
 			
 		} catch (IllegalSpineHeaderSizeException e) {
 			return e.getMessage();

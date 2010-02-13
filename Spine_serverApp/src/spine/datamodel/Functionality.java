@@ -78,6 +78,8 @@ public class Functionality implements Serializable {
 	 * 
 	 * Returns a string representation of the Functionality object.
 	 * 
+	 * @return a string representation of this Functionality
+	 * 
 	 */
 	public String toString() {
 		return SPINEFunctionConstants.functionCodeToString(functionType) + " - " + 

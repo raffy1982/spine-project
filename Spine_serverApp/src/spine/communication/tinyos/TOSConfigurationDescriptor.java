@@ -25,6 +25,8 @@ Boston, MA  02111-1307, USA.
 
 /**
  * Implementation of the GAL ConfigurationDescriptor
+ * 
+ * Note that this class is only used internally at the framework.
  *  
  *
  * @author Raffaele Gravina
@@ -38,13 +40,10 @@ import com.tilab.gal.ConfigurationDescriptor;
 
 public class TOSConfigurationDescriptor implements ConfigurationDescriptor {
 
-	public void commit() {
-	}
+	public void commit() {}
 
-	public void get(Parameter parm) {
-	}
+	public void get(Parameter parm) {}
 
-	public void preSet(Parameter parm) {
-	}
+	public void preSet(Parameter parm) {}
 
 }

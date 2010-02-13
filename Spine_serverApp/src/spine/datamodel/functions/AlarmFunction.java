@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- * Represents the function 'Alarm' specs
+ * Represents the function 'Alarm' specs.
+ * 
+ * Note that this class is only used internally at the framework.
  *
  * @author Raffaele Gravina
  * @author Philip Kuryloski

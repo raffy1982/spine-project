@@ -33,6 +33,7 @@
  * This class also implements the encode method of the abstract class SpineFunctionReq that is used internally
  * to convert the high level request into an actual SPINE message.     
  *
+ * Note that this class is used only internally at the framework.
  *
  * @author Roberta Giannantonio
  * @author Alessia Salmeri

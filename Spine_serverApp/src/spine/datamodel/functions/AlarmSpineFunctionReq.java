@@ -85,7 +85,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		this.sensor  = sensor;		
 	}
 	
-	
+	/**
+	 * Getter method of the sensor involved in this setup request
+	 * 
+	 * @return the sensor involved in this setup request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor=this.sensor;
@@ -93,7 +99,7 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	}
 	
 	/**
-	 * Set the value type involved in the request
+	 * Set the value type (channel bitmask) involved in the request
 	 * 
 	 * @param ValueType the channels that the alarm engine should monitor
 	 * 
@@ -103,7 +109,13 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		this.valueType  = ValueType;		
 	}	
 	
-	
+	/**
+	 * Getter method of the value type (channel bitmask)
+	 * 
+	 * @return the value type (channel bitmask)
+	 * 
+	 * @see spine.SPINESensorConstants 
+	 */	
 	public byte getValueType() {
 		byte valueType;
 		valueType=this.valueType;
@@ -112,6 +124,8 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 
 	/**
 	 * Set the lower threshold for the alarms
+	 * 
+	 * User must guarantee that the lower threshold value is smaller than the higher threshold value
 	 * 
 	 * @param setLowerThreshold lower threshold (LT) for alarms
 	 * the value will be sent back from the sensor if either one of the following is true:
@@ -124,7 +138,11 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 		this.lowerThreshold  = setLowerThreshold;		
 	}
 	
-	
+	/**
+	 * Getter method of the lower threshold for these alarms
+	 * 
+	 * @return the lower threshold for these alarms
+	 */	
 	public int getLowerThreshold() {
 		int lowerThreshold;
 		lowerThreshold=this.lowerThreshold;
@@ -133,6 +151,8 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	
 	/**
 	 * Set the upper threshold for the alarms
+	 * 
+	 * User must guarantee that the upper threshold value is greater than the lower threshold value
 	 * 
 	 * @param setUpperThreshold upper threshold (UT) for alarms
 	 * the value will be sent back from the sensor if either one of the following is true:
@@ -146,6 +166,11 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	}	
 	
 	
+	/**
+	 * Getter method of the upper threshold for these alarms
+	 * 
+	 * @return the upper threshold for these alarms
+	 */	
 	public int getUpperThreshold() {
 		int upperThreshold;
 		upperThreshold=this.upperThreshold;
@@ -158,13 +183,18 @@ public class AlarmSpineFunctionReq extends SpineFunctionReq {
 	 * @param AlarmType kind of alarm to set the alarm engine
 	 * 
 	 * @see spine.SPINEFunctionConstants
-	 */	
-	
+	 */		
 	public void setAlarmType(byte AlarmType) {
 		this.alarmType  = AlarmType;		
 	}	
 	
-	
+	/**
+	 * Getter method of the alarm type 
+	 * 
+	 * @return the alarm type
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 */	
 	public byte getAlarmType() {
 		byte alarmType;
 		alarmType=this.alarmType;

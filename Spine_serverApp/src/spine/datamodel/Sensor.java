@@ -60,16 +60,6 @@ public class Sensor implements Serializable {
 	}
 	
 	/**
-	 * 
-	 * Returns a string representation of the Sensor object.
-	 * 
-	 */
-	public String toString() {
-		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
-			   SPINESensorConstants.channelBitmaskToString(channelBitmask);
-	}
-
-	/**
 	 * Getter method of the sensor code
 	 * 
 	 * @return the sensor code
@@ -85,5 +75,17 @@ public class Sensor implements Serializable {
 	 */
 	public byte getChannelBitmask() {
 		return channelBitmask;
+	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the Sensor object.
+	 * 
+	 * @return a string representation of this Sensor
+	 * 
+	 */
+	public String toString() {
+		return SPINESensorConstants.sensorCodeToString(code) + " - " + 
+			   SPINESensorConstants.channelBitmaskToString(channelBitmask);
 	}
 }

@@ -64,6 +64,11 @@ public class SPINEServiceMessageConstants {
 		}
 	}
 	
+	/**
+	 * Returns the string label mapped to the service message type code of the current ServiceMessage object
+	 * 
+	 * @return the service message type string label mapped to the given service message type code
+	 */
 	public static String serviceMessageTypeToString(byte serviceMessageType) {
 		switch (serviceMessageType) {
 			case ERROR: return "ServiceError";

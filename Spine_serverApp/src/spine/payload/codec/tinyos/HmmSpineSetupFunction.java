@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of HmmSpineSetupFunction responsible of handling setup of the function type 'HMM'
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'HMM'
+* 
+* Note that this class is used only internally at the framework.
 *
 * @author Raffaele Gravina
 * @author Vitali Loseu

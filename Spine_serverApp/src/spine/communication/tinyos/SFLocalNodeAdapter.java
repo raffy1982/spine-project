@@ -26,6 +26,8 @@ Boston, MA  02111-1307, USA.
 /**
  *
  *  Provides a LocalNodeAdapter for a tinyos Serial Forwarder.
+ *  
+ *  Note that this class is only used internally at the framework.
  *
  * @author Philip Kuryloski
  *

@@ -103,6 +103,13 @@ public class SPINESensorConstants {
 	public static final String CH3_LABEL = "ch3";
 	public static final String CH4_LABEL = "ch4";
 	
+	
+	/**
+	 *  Returns a human friendly label of the given sensor code
+	 * 
+	 * @param numeric code the sensor to convert into a human friendly label
+	 * @return human friendly label of the given sensor code
+	 */
 	public static String sensorCodeToString(byte code) {
 		switch (code) {
 			case ACC_SENSOR: return ACC_SENSOR_LABEL;
@@ -118,6 +125,12 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	/**
+	 *  Returns the numeric code of the given sensor string label
+	 * 
+	 * @param string label of the sensor
+	 * @return numeric code of the given sensor string label
+	 */
 	public static byte sensorCodeByString(String label) {
 		if(label.equals(ACC_SENSOR_LABEL))
 			return ACC_SENSOR;
@@ -141,6 +154,16 @@ public class SPINESensorConstants {
 			return -1;	
 	}
 	
+	/**
+	 *  Returns the numeric code of the given channel bitmask
+	 * 
+	 * @param hasCh1 true if channel1 is enabled in this bitmask; false otherwise
+	 * @param hasCh2 true if channel2 is enabled in this bitmask; false otherwise
+	 * @param hasCh3 true if channel3 is enabled in this bitmask; false otherwise
+	 * @param hasCh4 true if channel4 is enabled in this bitmask; false otherwise
+	 * 
+	 * @return the numeric code of the given channel bitmask
+	 */
 	public static byte getValueTypesCodeByBitmask(boolean hasCh1, boolean hasCh2, boolean hasCh3, boolean hasCh4) {
 		byte code = 0;
 		
@@ -156,6 +179,13 @@ public class SPINESensorConstants {
 		return code;
 	}
 	
+	/**
+	 * Returns a human friendly label of the given channel bitmask code
+	 * 
+	 * @param code the numeric code of the given channel bitmask
+	 * 
+	 * @return human friendly label of the given channel bitmask code
+	 */
 	public static String channelBitmaskToString(byte code) {
 		
 		switch (code) {
@@ -183,6 +213,13 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	/**
+	 * Returns a human friendly label of the channel code
+	 * 
+	 * @param code the numeric code of the given channel 
+	 * 
+	 * @return human friendly label of the given channel code
+	 */
 	public static String channelCodeToString(byte code) {		
 		switch (code) {
 			case CH1: return CH1_LABEL;
@@ -193,6 +230,13 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	/**
+	 * Returns a human friendly label of the time scale code
+	 * 
+	 * @param code the numeric code of the given time scale 
+	 * 
+	 * @return human friendly label of the given time scale code
+	 */
 	public static String timeScaleToString(byte code) {
 		switch (code) {
 			case NOW: return NOW_LABEL;
@@ -203,6 +247,13 @@ public class SPINESensorConstants {
 		}
 	}
 	
+	/**
+	 *  Returns the numeric code of the given time scale label
+	 * 
+	 * @param label the time scale label to be returned as its numeric code
+	 * 
+	 * @return the numeric code of the given time scale label
+	 */
 	public static byte timeScaleByString(String label) {
 		if(label.equals(NOW_LABEL))
 			return NOW;
@@ -216,10 +267,25 @@ public class SPINESensorConstants {
 			return -1;
 	}
 
+	/**
+	 *  Checks wether the given channel is present in the given bitmask
+	 * 
+	 * @param chID the channel id to be checked. NOTE: 0, 1, 2, 3 will indicate ch1, ch2, ch3, ch4 respectively
+	 * @param channelBitmask the numeric code of the given channel bitmask
+	 * 
+	 * @return true if the given channel is enabled (present) in the given bitmask; false otherwise
+	 */
 	public static boolean chPresent(int chID, byte channelBitmask) {
 		return (( (channelBitmask>>(MAX_VALUE_TYPES - (chID+1))) & 0x01 ) == 1);
 	}
 	
+	/**
+	 * Returns the number of of channels that enabled in the given channel bitmask
+	 * 
+	 * @param channelBitmask the numeric code of the given channel bitmask
+	 * 
+	 * @return the number of channels enabled in this channel bitmask
+	 */
 	public static int countChannelsInBitmask(byte channelBitmask) {
 		int temp = channelBitmask; 
 		int result = 0; 

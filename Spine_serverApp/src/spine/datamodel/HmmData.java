@@ -70,6 +70,7 @@ public class HmmData extends Data {
 
 	/**
 	 * Getter method of the function code
+	 * 
 	 * @return the function code
 	 */
 	public byte getFunctionCode() {
@@ -78,15 +79,36 @@ public class HmmData extends Data {
 		
 	/**
 	 * Getter method of the states list
+	 * 
 	 * @return the states list
 	 */
 	public int[] getStates() {
 		return states;
+	}	
+
+	/**
+	 * @param functionCode the functionCode to set
+	 * 
+	 * @see spine.SPINEFunctionConstants
+	 */
+	public void setFunctionCode(byte functionCode) {
+		this.functionCode = functionCode;
 	}
 
 	/**
+	 * Setter method for the states of the hmm classification
+	 * 
+	 * @param states the states of the hmm classification
+	 */
+	public void setStates(int[] states) {
+		this.states = states;
+	}		
+	
+	/**
 	 * 
 	 * Returns a string representation of the HMMData object.
+	 * 
+	 * @return a string representation of this HMMData
 	 * 
 	 */
 	public String toString() {
@@ -110,21 +132,5 @@ public class HmmData extends Data {
 		
 		return s;
 	}*/
-
-	/**
-	 * @param functionCode the functionCode to set
-	 * 
-	 * @see spine.SPINEFunctionConstants
-	 */
-	public void setFunctionCode(byte functionCode) {
-		this.functionCode = functionCode;
-	}
-
-	/**
-	 * @param values the states of the hmm classification
-	 */
-	public void setStates(int[] states) {
-		this.states = states;
-	}		
 
 }

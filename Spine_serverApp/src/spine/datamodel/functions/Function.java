@@ -26,6 +26,9 @@ Boston, MA  02111-1307, USA.
 /**
  *
  * Abstract class that any actual function must extends
+ * 
+ * Note that this class is only used internally at the framework.
+ *
  *
  * @author Raffaele Gravina
  * @author Philip Kuryloski

@@ -56,7 +56,13 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 		this.sensor = sensor;
 	}
 	
-
+	/**
+	 * Getter method of the sensor involved in this request
+	 * 
+	 * @return the sensor involved in this request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor = this.sensor;
@@ -73,7 +79,11 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 		this.channelsBitmask = channelsBitmask;
 	}
 
-
+	/**
+	 * Getter method of the sensor channels bitmask
+	 * 
+	 * @return the sensor channels bitmask
+	 */
 	public byte getChannelsBitmask() {
 		return channelsBitmask;
 	}
@@ -82,6 +92,8 @@ public class BufferedRawDataSpineFunctionReq extends SpineFunctionReq {
 	/**
 	 * 
 	 * Returns a string representation of the BufferedRawDataSpineFunctionReq object.
+	 * 
+	 * @return the String representation of this BufferedRawDataSpineFunctionReq object
 	 * 
 	 */
 	public String toString() {

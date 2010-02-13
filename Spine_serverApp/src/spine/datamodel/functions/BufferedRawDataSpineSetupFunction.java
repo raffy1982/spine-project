@@ -56,6 +56,13 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 	}
 	
 
+	/**
+	 * Getter method of the sensor involved in this setup request
+	 * 
+	 * @return the sensor involved in this setup request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor = this.sensor;
@@ -71,7 +78,11 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 		this.bufferSize = bufferSize;
 	}
 	
-
+	/**
+	 * Getter method of the buffer size
+	 * 
+	 * @return the raw-data buffer size
+	 */
 	public short getBufferSize() {
 		short bufferSize;
 		bufferSize = this.bufferSize;
@@ -91,7 +102,11 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 		this.shiftSize = shiftSize;
 	}
 	
-
+	/**
+	 * Getter method of the overlap amount (ahead shift) over the previous window
+	 * 
+	 * @return the overlap amount (ahead shift) over the previous window
+	 */
 	public short getShiftSize() {
 		short shiftSize;
 		shiftSize = this.shiftSize;
@@ -102,6 +117,8 @@ public class BufferedRawDataSpineSetupFunction implements SpineSetupFunction {
 	/**
 	 * 
 	 * Returns a string representation of this BufferedRawDataSpineSetupFunction object.
+	 * 
+	 * @return the String representation of this BufferedRawDataSpineSetupFunction object
 	 * 
 	 */
 	public String toString() {

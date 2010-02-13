@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
 
 /**
  *
- * Represents the function 'Step Counter' specs
+ * Represents the function 'Step Counter' specs.
+ * 
+ * Note that this class is only used internally at the framework.
  *
  * @author Raffaele Gravina
  *

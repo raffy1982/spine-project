@@ -358,27 +358,6 @@ public class Feature implements Comparable, Serializable {
 	}
 	
 	/**
-	 * 
-	 * Returns a string representation of the Feature object.
-	 * 
-	 */
-	public String toString() {
-		
-		String info = "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
-					  " on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
-					  " (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
-					  " - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
-					  "; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
-					  "; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
-					  "; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
-		
-		if (this.featureLabel != null)
-			info += " (" + this.featureLabel + ") ";
-		
-		return info;
-	}
-	
-	/**
 	 * @param functionCode the functionCode to set
 	 */
 	public void setFunctionCode(byte functionCode) {
@@ -467,6 +446,28 @@ public class Feature implements Comparable, Serializable {
 		Feature clone = new Feature(this.node, this.functionCode, this.featureCode, this.sensorCode, this.channelBitmask, 
 									this.ch1Value, this.ch2Value, this.ch3Value, this.ch4Value, this.featureLabel);
 		return clone;
-	}
+	}	
 	
+	/**
+	 * 
+	 * Returns a string representation of the Feature object.
+	 * 
+	 * @return a string representation of this Feature
+	 * 
+	 */
+	public String toString() {
+		
+		String info = "From node: {" + this.node.toShortString() + "} - " + SPINEFunctionConstants.FEATURE_LABEL + ": " + SPINEFunctionConstants.functionalityCodeToString(this.functionCode, this.featureCode) + 
+					  " on " + SPINESensorConstants.sensorCodeToString(this.sensorCode) + 
+					  " (now on " + SPINESensorConstants.channelBitmaskToString(this.channelBitmask) + ") " + 
+					  " - " + SPINESensorConstants.CH1_LABEL + ": "+ this.ch1Value + 
+					  "; " + SPINESensorConstants.CH2_LABEL + ": "+ this.ch2Value + 
+					  "; " + SPINESensorConstants.CH3_LABEL + ": "+ this.ch3Value + 
+					  "; " + SPINESensorConstants.CH4_LABEL + ": "+ this.ch4Value;
+		
+		if (this.featureLabel != null)
+			info += " (" + this.featureLabel + ") ";
+		
+		return info;
+	}
 }

@@ -69,13 +69,26 @@ public class FeatureSpineFunctionReq extends SpineFunctionReq {
 	}
 
 
+	/**
+	 * Getter method of the sensor involved in this request
+	 * 
+	 * @return the sensor involved in this request
+	 * 
+	 * @see spine.SPINESensorConstants
+	 */
 	public byte getSensor() {
 		byte sensor;
 		sensor = this.sensor; 
 		return sensor;		
 	}
 	
-
+	/**
+	 * Getter method of the Vector of requested feature in this object.
+	 * Note that "removing" features, actually will add those features to the deactivation request
+	 * with their channel bitmask XORed with 0xF (Ob11111111). This is due to packet format implementation details.  
+	 * 
+	 * @return the Vector of the requested feature 
+	 */
 	public Vector getFeatures() {
 		Vector features;
 		features = this.features; 

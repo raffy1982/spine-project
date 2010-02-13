@@ -24,9 +24,10 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
- * This class represents the generic SPINE Setup Function and must be extended
+ * This marker interface represents the generic SPINE Setup Function and must be extended
  * by 'function specific' classes.
  *  
+ * Note that this interface is only used internally at the framework.
  *
  * @author Raffaele Gravina
  * @author Alessia Salmeri

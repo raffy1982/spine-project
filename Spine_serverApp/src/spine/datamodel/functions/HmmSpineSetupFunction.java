@@ -66,6 +66,8 @@ public class HmmSpineSetupFunction implements SpineSetupFunction {
 	 * 
 	 * Returns a string representation of this HmmSpineSetupFunction object.
 	 * 
+	 * @return a string representation of this HmmSpineFunctionReq
+	 * 
 	 */
 	public String toString() {
 		String s = "Hmm Data Setup Function {";
