@@ -40,17 +40,8 @@ public final class SFReadException extends SFLocalNodeAdapterException {
     
 	private static final long serialVersionUID = 1L;
 
-	/** Version control identifier strings. */
-    public static final String[] RCS_ID = {
-	"$URL: http://macromates.com/svn/Bundles/trunk/Bundles/Java.tmbundle/Templates/Java Class/class-insert.java $",
-	"$Id$",
-    };
-	
 	IOException ioe;
     
-    /**
-     * 
-     */
     public SFReadException(IOException ioe) {
 		super("Error reading from Serial Forwarder socket.");
 		this.ioe = ioe;

@@ -23,6 +23,13 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
+/**
+ * 
+ * Note that this interface is only used internally at the framework.
+ * 
+ * @version 1.3
+ */
+
 package spine.datamodel.functions;
 
 public interface CodecInfo {

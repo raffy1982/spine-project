@@ -24,7 +24,7 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'StepCounter'
 *
 * @author Raffaele Gravina
 *
@@ -39,7 +39,9 @@ public class StepCounterSpineSetupFunction implements SpineSetupFunction {
 	
 	/**
 	 * 
-	 * Returns a string representation of the AlarmSpineFunctionReq object.
+	 * Returns a string representation of the StepCounterSpineSetupFunction object.
+	 * 
+	 * @return a string representation of the StepCounterSpineSetupFunction
 	 * 
 	 */
 	public String toString() {

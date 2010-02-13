@@ -58,10 +58,7 @@ public final class SFReadWriteThread extends Thread {
 	
 	boolean handshakedone = false;
 
-    /**
-     * 
-     */
-	public SFReadWriteThread(String host, int port, MessageListener listener) throws UnknownHostException {
+    public SFReadWriteThread(String host, int port, MessageListener listener) throws UnknownHostException {
 		this.host = host;
 		this.port = port;
 		this.listener = listener;

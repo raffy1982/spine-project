@@ -212,7 +212,7 @@ public class SPINEManager {
 	
 	/**
 	 * Commands the SPINEManager to discovery the surrounding WSN nodes
-	 * A default timeout of 0.5s, is used
+	 * A default timeout of 2s, is used
 	 */
 	public void discoveryWsn() {
 		discoveryCompleted = false;

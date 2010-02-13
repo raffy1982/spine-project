@@ -25,7 +25,9 @@ Boston, MA  02111-1307, USA.
 
 /**
 * Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
-*
+* 
+* Note that this class is used only internally at the framework.
+* 
 * @author Raffaele Gravina
 * @author Alessia Salmeri
 *

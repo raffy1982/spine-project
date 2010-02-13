@@ -26,6 +26,8 @@ Boston, MA  02111-1307, USA.
 /**
 * Implementation of SpineFunctionReq responsible of handling setup of the function type 'Buffered Raw-Data'
 *
+* Note that this class is used only internally at the framework.
+*
 * @author Raffaele Gravina
 *
 * @version 1.3

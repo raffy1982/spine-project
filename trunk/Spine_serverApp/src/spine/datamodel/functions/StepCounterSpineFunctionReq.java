@@ -49,6 +49,8 @@ public class StepCounterSpineFunctionReq extends SpineFunctionReq {
 	 * 
 	 * Returns a string representation of the StepCounterSpineFunctionReq object.
 	 * 
+	 * @return a string representation of this StepCounterSpineFunctionReq
+	 * 
 	 */
 	public String toString() {
 		String s = "Steps-Counter Function Req {";		

@@ -23,6 +23,14 @@ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 *****************************************************************/
 
+/**
+ * 
+ * Note that this class is used only internally at the framework.
+ * 
+ * @version 1.3
+ * 
+ */
+
 package spine.payload.codec.tinyos;
 
 import spine.datamodel.functions.CodecInfo;

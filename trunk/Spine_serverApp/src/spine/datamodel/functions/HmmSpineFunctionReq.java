@@ -44,6 +44,8 @@ public class HmmSpineFunctionReq extends SpineFunctionReq {
 	 * 
 	 * Returns a string representation of the HmmSpineFunctionReq object.
 	 * 
+	 * @return a string representation of this HmmSpineFunctionReq
+	 * 
 	 */
 	public String toString() {
 		String s = "HMM Function Req {";		

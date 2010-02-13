@@ -56,6 +56,8 @@ public class ServiceMessage implements SpineObject {
 	/**
 	 * Getter method for the message type attribute 
 	 * 
+	 * @return the message type code
+	 * 
 	 */
 	public byte getMessageType() {
 		return messageType;
@@ -64,14 +66,57 @@ public class ServiceMessage implements SpineObject {
 	/**
 	 * Getter method for the message detail attribute 
 	 * 
+	 * @return the message detail code
+	 * 
 	 */
 	public byte getMessageDetail() {
 		return messageDetail;
 	}
 	
 	/**
+	 * INTERNAL FRAMEWORK USE ONLY
+	 */
+	public void setMessageDetail(byte messageDetail) {
+		this.messageDetail = messageDetail;
+	}
+	
+	/**
+	 * INTERNAL FRAMEWORK USE ONLY
+	 */
+	public void setMessageType(byte messageType) {
+		this.messageType = messageType;
+	}
+	
+	/**
+	 * INTERNAL FRAMEWORK USE ONLY
+	 */
+	public void setNode(Node node) {
+		this.node = node;
+	}
+	
+	/**
+	 * Getter method of the node issuing this service message 
 	 * 
-	 * Returns a string representation of this ServiceMessage.
+	 * @return the Node issuing this service message 
+	 * 
+	 */
+	public Node getNode() {
+		return this.node;
+	}
+	
+	/**
+	 * Currently, does nothing!
+	 * 
+	 */
+	protected String parse(){
+		return "";
+	}
+
+	/**
+	 * 
+	 * Returns a string representation of the ServiceMessage object.
+	 * 
+	 * @return a string representation of this ServiceMessage
 	 * 
 	 */
 	public String toString() {
@@ -79,26 +124,5 @@ public class ServiceMessage implements SpineObject {
 					SPINEServiceMessageConstants.messageTypeToString(this.messageType) + ":" + 
 					SPINEServiceMessageConstants.messageDetailToString(this.messageType,this.messageDetail);
 	}
-
-	public void setMessageDetail(byte messageDetail) {
-		this.messageDetail = messageDetail;
-	}
-	
-	public void setMessageType(byte messageType) {
-		this.messageType = messageType;
-	}
-	
-	public void setNode(Node node) {
-		this.node = node;
-	}
-	
-	public Node getNode() {
-		return this.node;
-	}
-	
-	protected String parse(){
-		return "";
-	}
-
 	
 }

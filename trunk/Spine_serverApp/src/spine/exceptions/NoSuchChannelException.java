@@ -1,5 +1,3 @@
-package spine.exceptions;
-
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
 allows dynamic on node configuration for feature extraction and a 
@@ -35,6 +33,8 @@ Boston, MA  02111-1307, USA.
  *
  * @version 1.3
  */
+
+package spine.exceptions;
 
 public class NoSuchChannelException extends RuntimeException {
 

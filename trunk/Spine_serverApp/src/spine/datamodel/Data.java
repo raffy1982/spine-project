@@ -70,8 +70,7 @@ public abstract class Data implements SpineObject {
 		
 
 	/**
-	 * @param node
-	 * @param payload
+	 * INTERNAL FRAMEWORK USE ONLY
 	 */
 	public void baseInit(Node node, byte[] payload) {
 		timestamp = System.currentTimeMillis();
@@ -94,22 +93,23 @@ public abstract class Data implements SpineObject {
 	}
 	
 	/**
-	 * 
-	 * @param functionCode
+	 * INTERNAL FRAMEWORK USE ONLY
 	 */
 	public void setFunctionCode(byte functionCode) {
 		this.functionCode = functionCode;
 	}
+	
+
 	/**
-	 * 
-	 * @param node
+	 * INTERNAL FRAMEWORK USE ONLY
 	 */
 	public void setNode(Node node) {
 		this.node = node;
 	}
+	
+
 	/**
-	 * 
-	 * @param timestamp
+	 * INTERNAL FRAMEWORK USE ONLY
 	 */
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;

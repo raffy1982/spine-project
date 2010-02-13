@@ -28,6 +28,8 @@
  * NodeEmulator SPINE 'Alarm' Data packet payload into a platform independent one.
  * This class is invoked only by the SpineData class, thru the dynamic class loading.
  * 
+ * Note that this class is used only internally at the framework.
+ * 
  * @author Roberta Giannantonio
  * @author Alessia Salmeri
  *

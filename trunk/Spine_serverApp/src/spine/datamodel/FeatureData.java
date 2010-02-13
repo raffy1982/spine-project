@@ -42,12 +42,17 @@ public class FeatureData extends Data {
 	Feature[] features;
 			
 	/**
-	 * Getter for features.
-	 * @return features
+	 * Getter method of the features array
+	 * @return the array of Feature objects of this FeatureData
 	 */
 	public Feature[] getFeatures() {
 	    return features;
 	}
+	
+	/**
+	 * Setter method of the features array
+	 * @param features the array of Feature objects of this FeatureData
+	 */
 	public void setFeatures(Feature[] features) {
 		this.features = features;
 	}
@@ -55,6 +60,8 @@ public class FeatureData extends Data {
 	/**
 	 * 
 	 * Returns a string representation of the Feature object.
+	 * 
+	 * @return a string representation of this Feature
 	 * 
 	 */
 	public String toString() {

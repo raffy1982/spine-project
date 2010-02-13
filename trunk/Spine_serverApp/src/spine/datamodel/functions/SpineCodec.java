@@ -24,7 +24,9 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 /**
  *
- * Abstract class that any data packet payload codec must extends
+ * Abstract class that any data packet payload codec must extends.
+ * 
+ * Note that this class is only used internally at the framework.
  *
  * @author Alessia Salmeri
  *

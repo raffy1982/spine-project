@@ -45,32 +45,28 @@ public class OneShotData extends Data {
 	 * 
 	 * Returns the one shot feature contained into the OneShot Data message received.
 	 * 
-	 */
-	public Feature getFeature() {
-		return oneShot;
-	}
-	
-	
-	/**
+	 * @return the one shot feature contained into the OneShot Data message received.
 	 * 
-	 * Returns a string representation of the OneShotData object.
-	 * 
-	 */
-	public String toString() {
-		return "" + oneShot;
-	}
-
-	/**
-	 * @return the oneShot
 	 */
 	public Feature getOneShot() {
 		return oneShot;
 	}
 
 	/**
-	 * @param oneShot the oneShot to set
+	 * INTERNAL FRAMEWORK USE ONLY
 	 */
 	public void setOneShot(Feature oneShot) {
 		this.oneShot = oneShot;
 	}
+	
+	/**
+	 * 
+	 * Returns a string representation of the OneShotData object.
+	 * 
+	 * @return a string representation of this OneShotData
+	 * 
+	 */
+	public String toString() {
+		return "" + oneShot;
+	}	
 }

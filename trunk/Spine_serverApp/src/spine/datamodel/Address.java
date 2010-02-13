@@ -67,6 +67,11 @@ public class Address implements Serializable {
 		}
 	}
 	
+	/**
+	 * Returns a hash code value for the String representation of this address
+	 * 
+	 * @return a hash code value for this object
+	 */
 	public int hashCode() {
 		return this.address.hashCode();
 	}

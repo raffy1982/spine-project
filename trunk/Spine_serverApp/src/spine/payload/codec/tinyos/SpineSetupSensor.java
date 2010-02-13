@@ -25,7 +25,8 @@ Boston, MA  02111-1307, USA.
 
 /**
  * This class represents the SPINE Setup Sensor request.
- *  
+ * 
+ * Note that this class is used only internally at the framework.
  *
  * @author Raffaele Gravina
  * @author Alessia Salmeri

@@ -25,6 +25,8 @@
 
 /**
  * Implementation of the GAL ConfigurationDescriptor
+ * 
+ * Note that this class is only used internally at the framework.
  *  
  * @author Alessia Salmeri
  *

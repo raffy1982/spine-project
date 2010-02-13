@@ -28,6 +28,8 @@ Boston, MA  02111-1307, USA.
 * NodeEmulator SPINE 'StepCounter' Data packet payload into a platform independent one.
 * This class is invoked only by the SpineData class, thru the dynamic class loading.
 * 
+* Note that this class is used only internally at the framework.
+* 
 * @author Raffaele Gravina
 * @author Alessia Salmeri
 *
