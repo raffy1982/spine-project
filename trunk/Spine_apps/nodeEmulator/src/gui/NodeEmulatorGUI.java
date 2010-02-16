@@ -108,7 +108,7 @@ public class NodeEmulatorGUI extends javax.swing.JFrame implements ActionListene
 
 	/** Construct a Node Emulator GUI. */
 	public NodeEmulatorGUI(Command command) {
-		super(" Node Emulator - Application for emulate sensors node");
+		super(" Node Emulator - Application to emulate sensors node");
 		this.vNode = (VirtualNode) command;
 		initGUI();
 	}
