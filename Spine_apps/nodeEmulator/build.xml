@@ -9,9 +9,6 @@
 		<condition property="SPINE.jar.present">
 			<available file="../../Spine_serverApp/jar/SPINE.jar" />
 		</condition>
-		<condition property="LocalNodeAdapter.jar.present">
-			<available file="../../Spine_serverApp/lib/localNodeAdapter.jar" />
-		</condition>
 	</target>
         
         <target name="check_spinejar" unless="SPINE.jar.present" depends="init">
@@ -20,20 +17,15 @@ Download it from the URL specified in the README file and place it in the lib di
 		<fail message="Missing file jar/SPINE.jar" />
         </target>
         
-        <target name="check_localnodeadapterjar" unless="LocalNodeAdapter.jar.present" depends="init">
-      		<echo level="error">Missing file lib/localNodeAdapter.jar
-Download it from the URL specified in the README file and place it in the lib directory.</echo>
-		<fail message="Missing file lib/localNodeAdapter.jar" />
-        </target>
 
 	<!--  _______________________________________________
                              compile
 	_________________________________________________ -->
-	<target name="compile" description="compile the java source files" depends="check_spinejar,check_localnodeadapterjar">
+	<target name="compile" description="compile the java source files" depends="check_spinejar">
 		<!-- Compile the java code from src into classes -->
 		<mkdir dir="classes" />
 		<javac srcdir="src" optimize="on" debug="on" debuglevel="lines,vars,source" destdir="classes" deprecation="on" 
-                                    classpath="../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
+                                    classpath="../../Spine_serverApp/jar/SPINE.jar" />
 	</target>
 
 	<!--  _______________________________________________
@@ -55,7 +47,6 @@ Download it from the URL specified in the README file and place it in the lib di
 		<jar jarfile="jar/NodeEmulator.jar">
 			<fileset dir="classes"/>
 			<fileset dir="." includes="resources/**"/>
-			<zipfileset src="../../Spine_serverApp/lib/localNodeAdapter.jar" includes="**/*.class" />
 			<zipfileset src="../../Spine_serverApp/jar/SPINE.jar">
                           <include name="**/*.class" />
                           <include name="resources/**" />
@@ -73,7 +64,7 @@ Download it from the URL specified in the README file and place it in the lib di
                                run
 	_________________________________________________ -->
 	<target name="run" description="launch the NodeEmulator application" depends="compile">
-		<java classname="main.NodeEmulator" fork="true" classpath="classes;../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
+		<java classname="main.NodeEmulator" fork="true" classpath="classes;../../Spine_serverApp/jar/SPINE.jar" />
 	</target>
 
 
