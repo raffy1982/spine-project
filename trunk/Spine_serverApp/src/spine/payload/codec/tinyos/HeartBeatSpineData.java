@@ -55,17 +55,8 @@ public class HeartBeatSpineData extends SpineCodec {
 		
 		// set data.nodeID, data.functionCode e data.timestamp
 		data.baseInit(node, payload);
-		data.setBPM(byteArrayToInt(payload, 2));
+		data.setBPM(Data.convertTwoBytesToInt(payload, 2));
 		
 		return data;
 	}
-	
-	private static int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 2; i++) {
-            int shift = (2 - 1 - i) * 8;
-            value += (b[i + offset] & 0x000000FF) << shift;
-        }
-        return value;
-    }
 }
