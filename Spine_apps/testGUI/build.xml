@@ -83,7 +83,7 @@ Download it from the URL specified in the README file and place it in the lib di
                                run
 	_________________________________________________ -->
 	<target name="run" description="launch the TestGUI application" depends="compile">
-		<java classname="main.SpineApp" fork="true" classpath="classes;../../Spine_serverApp/ext-lib/tinyos.jar;../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
+		<java classname="main.SpineApp" fork="true" classpath="resources;classes;../../Spine_serverApp/ext-lib/tinyos.jar;../../Spine_serverApp/jar/SPINE.jar;../../Spine_serverApp/lib/localNodeAdapter.jar" />
 	</target>
 
 
