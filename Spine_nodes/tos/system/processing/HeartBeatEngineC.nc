@@ -41,11 +41,14 @@ configuration HeartBeatEngineC {
 
 implementation {
 	components MainC, FunctionManagerC, HeartBeatEngineP;
-	
-	components UserButtonC;
-        HeartBeatEngineP.Notify -> UserButtonC;
+
+        components HplMsp430InterruptC as InterruptC;
+        components new Msp430InterruptC() as HBInterrupt;
+        HBInterrupt.HplInterrupt -> InterruptC.Port27;
+        HeartBeatEngineP.GpioInterrupt -> HBInterrupt.Interrupt;
 
 	components LocalTimeMilliC as LocalTime;
+	//components Counter32khz32C as LocalTime;
 	HeartBeatEngineP.LocalTime -> LocalTime;
 
 	components LedsC;
