@@ -153,7 +153,7 @@ Download it from the URL specified in the README file and place it in the direct
 				<fileset dir="${ext.lib.dir}">					
 					<include name="*.jar" />				
 				</fileset>			
-			</classpath>		
+			</classpath>
 		</java>	
 	</target>
 
@@ -165,18 +165,19 @@ Download it from the URL specified in the README file and place it in the direct
 		<jar jarfile="../SPINE${version}.zip">
 			<fileset dir="../" includes="COPYING" />
 			<fileset dir="../" includes="License" />
-			<fileset dir="../" includes="SPINE_manual.htm" />
+			<fileset dir="../" includes="SPINE_manual.pdf" />
 			<fileset dir="../" includes="Spine_nodes/apps/SPINEApp/**" />
 			<fileset dir="../" includes="Spine_nodes/tos/**" />
 			<fileset dir="../" includes="Spine_nodes/support/**" />
 			<fileset dir="../" includes="Spine_nodes/*" />
-			<fileset dir="../" includes="Spine_serverApp/src/**" />
-			<fileset dir="../" includes="Spine_serverApp/jar/**" />
 			<fileset dir="../" includes="Spine_serverApp/doc/**" />
-			<fileset dir="../" includes="Spine_serverApp/lib/**" />
-			<fileset dir="../" includes="Spine_serverApp/test/**" />
-			<fileset dir="../" includes="Spine_serverApp/resources/**" />
-			<fileset dir="../" includes="Spine_serverApp/*" excludes="Spine_serverApp/classes, Spine_serverApp${version}/ext-lib" />
+                        <fileset dir="../" includes="Spine_serverApp/jar/**" />
+                        <fileset dir="../" includes="Spine_serverApp/lib/**" />
+                        <fileset dir="../" includes="Spine_serverApp/resources/**" />
+                        <fileset dir="../" includes="Spine_serverApp/src/**" />
+			<fileset dir="../" includes="Spine_serverApp/*.properties" />
+			<fileset dir="../" includes="Spine_serverApp/*.xml" />
+			<fileset dir="../" includes="Spine_apps/**" excludes="**/bin/**, **/classes/**" />
 		</jar>
 	</target>
 
