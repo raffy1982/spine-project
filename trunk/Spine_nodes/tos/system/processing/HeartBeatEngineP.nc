@@ -52,9 +52,10 @@ module HeartBeatEngineP {
 	uses {
 		interface Boot;
 		interface FunctionManager;
-		interface Notify<button_state_t>;
+		interface GpioInterrupt;
 		
 		interface LocalTime<TMilli>;
+		//interface Counter<T32khz, uint32_t> as LocalTime;
 
                 interface Leds;
 	}
@@ -74,7 +75,7 @@ implementation {
 
         uint32_t time;
         
-        uint16_t startTime = 0;
+        uint32_t startTime = 0;
 
         uint8_t msg[2];
 
@@ -94,13 +95,13 @@ implementation {
 	
 	command bool Function.activateFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
                 active = TRUE;
-                call Notify.enable();
+                call GpioInterrupt.enableRisingEdge();
                 return TRUE;
 	}
 
 	command bool Function.disableFunction(uint8_t* functionParams, uint8_t functionParamsSize) {
 		active = FALSE;
-		call Notify.disable();
+		call GpioInterrupt.disable();
                 return TRUE;
 	}
 
@@ -111,13 +112,13 @@ implementation {
 
 	command void Function.startComputing() {
 		// enables INTERRUPT
-                call Notify.enable();
+                call GpioInterrupt.enableRisingEdge();
                 start = TRUE;
 	}
-	
+
 	command void Function.stopComputing() {
 		// disables INTERRUPT
-		call Notify.disable();
+		call GpioInterrupt.disable();
                 start = FALSE;
 	}
 	
@@ -125,7 +126,7 @@ implementation {
                 uint8_t i;
                 uint16_t avgBPM = 0;
 
-                times[timesIndex++] = time;
+                atomic { times[timesIndex++] = time; }
                 timesIndex %= SIZE;
 
                 if(timesIndex == 0)
@@ -146,29 +147,30 @@ implementation {
                       call FunctionManager.send(HEART_BEAT, msg, 2);
                 }
         }
-	
+        
+        task void send() {
+           atomic {
+             msg[0] = time>>8;
+             msg[1] = time;
+           }
+           call FunctionManager.send(HEART_BEAT, msg, 2);
+        }
 
-	event void Notify.notify( button_state_t state ) {
-                if ( state == BUTTON_RELEASED ) {
-                   
-                   if(startTimeValued) {
-                      time = (call LocalTime.get()-startTime);
-                      startTimeValued = FALSE;
-                   }
-                   else {
-                      startTime = call LocalTime.get();
-                      startTimeValued = TRUE;
-                   }
-                   
-                   call Leds.led1On();
-                   
-                   post computeBPM();
-
-                } else if ( state == BUTTON_PRESSED )
-                   call Leds.led1Off();
+        async event void GpioInterrupt.fired() {
+           if(startTimeValued) {
+              atomic { time = (call LocalTime.get()-startTime); }
+              startTimeValued = FALSE;
+              post send();
+           }
+           else {
+              startTime = call LocalTime.get();
+              startTimeValued = TRUE;
+           }
         }
         
         event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {}
+        
+        //async event void LocalTime.overflow() {}
 
 }
 
