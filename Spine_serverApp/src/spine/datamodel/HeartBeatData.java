@@ -55,7 +55,7 @@ public class HeartBeatData extends Data {
 	/**
 	 * Setter method of the BPM (beat per minute)
 	 * 
-	 * @param stepsCount the bpm (beat per minute)  to set
+	 * @param bpm the bpm (beat per minute)  to set
 	 */
 	public void setBPM(int bpm) {
 		this.bpm = bpm;

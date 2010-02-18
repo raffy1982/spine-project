@@ -107,7 +107,7 @@ public class SPINESensorConstants {
 	/**
 	 *  Returns a human friendly label of the given sensor code
 	 * 
-	 * @param numeric code the sensor to convert into a human friendly label
+	 * @param code numeric code the sensor to convert into a human friendly label
 	 * @return human friendly label of the given sensor code
 	 */
 	public static String sensorCodeToString(byte code) {
@@ -128,7 +128,7 @@ public class SPINESensorConstants {
 	/**
 	 *  Returns the numeric code of the given sensor string label
 	 * 
-	 * @param string label of the sensor
+	 * @param label string label of the sensor
 	 * @return numeric code of the given sensor string label
 	 */
 	public static byte sensorCodeByString(String label) {
