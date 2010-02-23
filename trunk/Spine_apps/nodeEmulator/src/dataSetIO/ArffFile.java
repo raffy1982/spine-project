@@ -53,7 +53,7 @@ public class ArffFile {
 
 	private Hashtable<String, String[]> attributeData;
 
-	private String relation;
+	private String relation = "";
 
 	private String comment = "";
 
@@ -74,8 +74,6 @@ public class ArffFile {
 
 	/** Construct an Arff File. */
 	public ArffFile() {
-		comment = null;
-		relation = "";
 		attributeNames = new ArrayList<String>();
 		attributeTypes = new Hashtable<String, String>();
 		attributeData = new Hashtable<String, String[]>();
@@ -241,9 +239,8 @@ public class ArffFile {
 	/** Write the Arff File to a string. */
 	public String write() {
 		String arffContent = "";
+		if (!comment.equals("")) {
 
-		if (comment != null) {
-			System.out.println("writing file...");
 			// COMMENT
 			arffContent = arffContent + "% " + comment.replaceAll(LINE_SEPARATOR, LINE_SEPARATOR + "% ") + LINE_SEPARATOR;
 
