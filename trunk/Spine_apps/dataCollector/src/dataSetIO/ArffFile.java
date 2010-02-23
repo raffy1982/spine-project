@@ -169,7 +169,7 @@ public class ArffFile {
 		String attribType = scanner.findInLine(pattern);
 
 		if (attribName == null || attribType == null) {
-			throw new ArffFileParseException(lineNumber, "Error in attribute definition: cannot be parsed");
+			throw new ArffFileParseException(lineNumber, "Error in attribute definition");
 		}
 
 		if (attribType.equals("numeric") || attribType.equals("string")) {
@@ -178,7 +178,7 @@ public class ArffFile {
 			attribType = (attribType.substring(1, attribType.length() - 1)).trim();
 			defineAttribute(attribName, "nominal", attribType.split("\\s*,\\s*"));
 		} else {
-			throw new ArffFileParseException(lineNumber, "Error: attribute type \"" + attribType + "\" not supported");
+			throw new ArffFileParseException(lineNumber, "Error: attribute type not supported (" + attribType + ")");
 		}
 	}
 
@@ -188,7 +188,7 @@ public class ArffFile {
 
 		String[] tokensMatch = dataLine.split("\\s*,\\s*");
 		if (tokensMatch.length != numAttributes) {
-			throw new ArffFileParseException(lineNumber, "Error: line " + lineNumber + " does not contain the right " + "number of elements (should be " + numAttributes + ").");
+			throw new ArffFileParseException(lineNumber, "Error: wrong number of elements in line " + lineNumber);
 		}
 
 		Object[] dataDetail = new Object[numAttributes];
@@ -206,7 +206,7 @@ public class ArffFile {
 				if (checkNominalValue(name, tokensMatch[k]).equalsIgnoreCase("correct")) {
 					dataDetail[k] = tokensMatch[k];
 				} else {
-					throw new ArffFileParseException(lineNumber, "Error: undefined nominal value \"" + tokensMatch[k] + "\" for " + name + ".");
+					throw new ArffFileParseException(lineNumber, "Error: wrong nominal value for " + name + " (" + tokensMatch[k] + ")");
 				}
 			}
 		}
