@@ -101,7 +101,6 @@ public class TxtCsvFile {
 
 	/** Construct an TxtCsvFile. */
 	public TxtCsvFile() {
-		comment = null;
 		attributeNames = new ArrayList<String>();
 		attributeTypes = new Hashtable<String, String>();
 		attributeData = new Hashtable<String, String[]>();
