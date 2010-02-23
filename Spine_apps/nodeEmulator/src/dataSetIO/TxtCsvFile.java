@@ -198,7 +198,7 @@ public class TxtCsvFile {
 			attribType = (attribType.substring(1, attribType.length() - 1)).trim();
 			defineAttribute(attribName, "nominal", attribType.split("\\s*,\\s*"));
 		} else {
-			throw new TxtCsvFileParseException(lineNumber, "Error: attribute type \"" + attribType + "\" not supported.");
+			throw new TxtCsvFileParseException(lineNumber, "Error: attribute type not supported (" + attribType + ")");
 		}
 	}
 
@@ -211,7 +211,7 @@ public class TxtCsvFile {
 		// String[] tokens = line.split("\\s"); -- TXT
 		String[] tokensMatch = dataLine.split(regExpSeparator);
 		if (tokensMatch.length != numAttributes) {
-			throw new TxtCsvFileParseException(lineNumber, "Error: line " + lineNumber + " does not contain the right " + "number of elements (should be " + numAttributes + ").");
+			throw new TxtCsvFileParseException(lineNumber, "Error: wrong number of elements in line " + lineNumber);
 		}
 
 		Object[] dataDetail = new Object[numAttributes];
@@ -229,7 +229,7 @@ public class TxtCsvFile {
 				if (checkNominalValue(name, tokensMatch[i]).equalsIgnoreCase("correct")) {
 					dataDetail[i] = tokensMatch[i];
 				} else {
-					throw new TxtCsvFileParseException(lineNumber, "Error: undefined nominal value \"" + tokensMatch[i] + "\" for " + name + ".");
+					throw new TxtCsvFileParseException(lineNumber, "Error: wrong nominal value for " + name + " (" + tokensMatch[i] + ")");
 				}
 			}
 		}
