@@ -1,0 +1,51 @@
+What's new in SPINE 1.3:
+
+- New open-source SPINE applications:
+
+  ·     SPINE Nodes Emulator, to create multiple virtual SPINE-enabled sensor nodes;
+
+  ·     Physical Energy Expenditure, measuring KCal burnt while performing daily physical activities; 
+
+  ·     Data Collector Tool, to store data collected from sensor nodes into CSV or ARFF files;
+
+  ·     GUI-based SPINE Test
+ 
+
+- Optional Security Service (messages HW encryption) (contrib by Philip Kuryloski, while at Cornell University)
+
+- New On-node Processing Functions:
+
+  ·         Buffered Raw-Data, to transmit chunks of sensor readings in a single message
+
+  ·         Step-Counter, a simplified accelerometer-based pedometer
+
+  ·         HMM Classifier (contrib by Roozbeh Jafari's group, University of Texas at Dallas)
+
+
+- New Features:
+  
+  ·     Entropy (contrib by Stefano Galzarano, Antonio Guerrieri, Università della Calabria)
+
+  ·     KCal - physical energy expenditure (contrib by Edmund Seto, Po Yan, University of California at Berkeley)
+
+
+- Moteiv optional sensor kit supported for Telosb/Tmote Sky Platform (contrib by Carlo Caione, Università di Bologna):
+
+  ·     environmental temperature
+
+  ·     humidity
+
+  ·     PAR/TSR light
+
+ 
+- CardioShield sensor-board, featuring a POLAR heart beat detector and a three-axis accelerometer (contrib by Alessandro Andreoli, Università Politecnica delle Marche, while at WSNLab Berkeley)
+
+- SensorBoard defaulting according to target tinyos platform
+
+- SPINE Manager and Listener Java APIs restyled (sw design contributed by Università degli Studi di Parma, Prof. Poggi, Prof. Turci)
+
+- Compatibility break w.r.t. SPINE 1.2 (see par. 4.1 of the SPINE 1.3 Documentation for further details)
+
+- Initial SPINE configuration strongly simplified through properties file
+
+- SPINE Logger added, to enable/disable specific levels of logging
