@@ -108,7 +108,7 @@ implementation {
 
   	//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        call CS_accel_port.set();
+        /*call CS_accel_port.set();
 	call CLK_port.set();
 	call CS_accel_port.clr();
 
@@ -132,7 +132,7 @@ implementation {
             else
   	        call DIN_port.clr();
             call CLK_port.set();
-        }
+        }*/
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     }
