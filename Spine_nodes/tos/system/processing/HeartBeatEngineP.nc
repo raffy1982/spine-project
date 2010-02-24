@@ -75,6 +75,7 @@ implementation {
 
         uint32_t time;
         
+        uint32_t currentTime = 0;
         uint32_t startTime = 0;
 
         uint8_t msg[2];
@@ -157,19 +158,17 @@ implementation {
         }
 
         async event void GpioInterrupt.fired() {
-           if(startTimeValued) {
-              atomic { time = (call LocalTime.get()-startTime); }
-              startTimeValued = FALSE;
+           atomic { 
+             currentTime = call LocalTime.get();
+             time = (currentTime - startTime);
+           }
+           if (startTime > 0)
               post send();
-           }
-           else {
-              startTime = call LocalTime.get();
-              startTimeValued = TRUE;
-           }
+           startTime = currentTime;
         }
-        
+
         event void FunctionManager.sensorWasSampledAndBuffered(enum SensorCode sensorCode) {}
-        
+
         //async event void LocalTime.overflow() {}
 
 }
