@@ -75,6 +75,7 @@ implementation {
 
         uint32_t time;
         
+        uint32_t currentTime = 0;
         uint32_t startTime = 0;
 
         uint8_t msg[2];
@@ -161,7 +162,7 @@ implementation {
              currentTime = call LocalTime.get();
              time = (currentTime - startTime);
            }
-           if (startTime > 0) 
+           if (startTime > 0)
               post send();
            startTime = currentTime;
         }
