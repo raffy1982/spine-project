@@ -1,5 +1,3 @@
-package spine;
-
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
 allows dynamic configuration of feature extraction capabilities 
@@ -26,21 +24,47 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This interface contains the platforms supported by SPINE.
-*
+* Implementation of SpineSetupFunction responsible of handling setup of the function type 'Alarm'
+* 
+* Note that this class is used only internally at the framework.
+* 
 * @author Raffaele Gravina
+* @author Alessia Salmeri
 *
 * @version 1.3
 */
 
-public interface SPINESupportedPlatforms {
+package spine.payload.codec.bt;
 
-	public final static String TINYOS = "tinyos";
+import spine.SPINEFunctionConstants;
+
+import spine.datamodel.Node;
+import spine.datamodel.functions.*;
+import spine.exceptions.*;
+
+
+public class AlarmSpineSetupFunction extends SpineCodec {
+
+	private final static int PARAM_LENGTH = 3; 
+
+	public SpineObject decode(Node node, byte[] payload) throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("decode");
+	};
 	
-	public final static String TINYOS_VIA_SERIALFWD = "sf";
+
+	public byte[] encode(SpineObject payload) {
+		
+		spine.datamodel.functions.AlarmSpineSetupFunction workPayLoad = (spine.datamodel.functions.AlarmSpineSetupFunction)payload;
+		
+		byte[] data = new byte[5];
 	
-	public final static String EMULATOR = "emu";
-	
-	public final static String BLUETOOTH = "bt";
-	
+		data[0] = SPINEFunctionConstants.ALARM;
+		data[1] = PARAM_LENGTH;
+		
+		data[2] = (byte)(workPayLoad.getSensor()<<4);
+		data[3] = (byte)workPayLoad.getWindowSize();
+		data[4] = (byte)workPayLoad.getShiftSize();
+		
+		return data;	
+	}	
 }

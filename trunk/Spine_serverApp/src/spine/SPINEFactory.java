@@ -28,12 +28,15 @@ package spine;
  * This class is responsible for creating and configuring the SPINEManager
  * 
  * @author Fabio Bellifemine, Telecom Italia
+ * @author Raffaele Gravina
  * @since 1.3
  */
 public class SPINEFactory {
 
 	private static final String APP_PROP_MISSING_MSG = "ERROR: 'app.properties' file is missing, not properly specified or 'MOTECOM' and/or 'PLATFORM' properties not defined!";
-
+	private static final String APP_PROP_MISSING_MSG_BT = "ERROR: 'app.properties' file is missing, not properly specified or 'BT_NETWORK_SIZE' and/or 'PLATFORM' properties not defined!";
+	private static final String BT_NETWORK_SIZE_MSG = "ERROR: 'BT_NETWORK_SIZE' property value must be a number!";
+	
 	private static SPINEManager managerInstance;
 
 	/**
@@ -64,13 +67,38 @@ public class SPINEFactory {
 			String PLATFORM = System.getProperty(Properties.PLATFORM_KEY);
 			PLATFORM = (PLATFORM != null) ? PLATFORM : appProp.getProperty(Properties.PLATFORM_KEY);
 			
-			if (MOTECOM == null || PLATFORM == null)
+			int BT_NETWORK_SIZE_INT = -1;
+			if (PLATFORM != null && PLATFORM.equalsIgnoreCase(SPINESupportedPlatforms.BLUETOOTH)) {
+				String BT_NETWORK_SIZE = System.getProperty(Properties.BT_NETWORK_SIZE_KEY);
+				BT_NETWORK_SIZE = (BT_NETWORK_SIZE != null) ? BT_NETWORK_SIZE : appProp.getProperty(Properties.BT_NETWORK_SIZE_KEY);
+				if (BT_NETWORK_SIZE == null)
+					throw new InstantiationException(APP_PROP_MISSING_MSG_BT);
+				try {
+					BT_NETWORK_SIZE_INT = Integer.parseInt(BT_NETWORK_SIZE);
+				} catch (NumberFormatException e) {
+					throw new InstantiationException(BT_NETWORK_SIZE_MSG);
+				}
+			}				
+			else if (MOTECOM == null || PLATFORM == null)
 				throw new InstantiationException(APP_PROP_MISSING_MSG);
 			
-			managerInstance = new SPINEManager(MOTECOM, PLATFORM);
+			managerInstance = new SPINEManager(MOTECOM, PLATFORM, BT_NETWORK_SIZE_INT);
 		}
 		return managerInstance;
 
+	}
+	
+	
+	/**
+	 * Returns the singleton instance of the SPINEManager, or throws an InstantiationException if the SPINEManager instance has not been created jet
+	 * 
+	 * @return the singleton instance of the SPINEManager
+	 * @throws InstantiationException if the SPINEManager instance has not been created jet (using the 'createSPINEManager' method)
+	 */
+	public static SPINEManager getSPINEManagerInstance() throws InstantiationException {
+		if (managerInstance == null)
+			throw new InstantiationException("SPINEManager must be initialized with the 'createSPINEManager' method!");
+		return managerInstance;
 	}
 
 }
