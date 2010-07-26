@@ -27,6 +27,7 @@ Boston, MA  02111-1307, USA.
  * Configuration component of the SPINE Application.
  *
  * @author Raffaele Gravina <raffale.gravina@gmail.com>
+ * @author Michele Capobianco (Shimmer Bluetooth Support)
  *
  * @version 1.2
  */
@@ -36,7 +37,6 @@ configuration SPINEApp_AppC {
 implementation {
   components MainC, SPINEApp_C;
   
-  components RadioControllerC;
   components PacketManagerC;
   components SpineStartPktC;
   components SpineSetupSensorPktC;
@@ -52,7 +52,14 @@ implementation {
   
   SPINEApp_C.Boot -> MainC.Boot;
   
-  SPINEApp_C.RadioController -> RadioControllerC;
+  #ifdef SHIMMER_BLUETOOTH
+    components BluetoothControllerC;
+    SPINEApp_C.RadioController -> BluetoothControllerC;
+  #else
+    components RadioControllerC;
+    SPINEApp_C.RadioController -> RadioControllerC;
+  #endif
+
   SPINEApp_C.PacketManager -> PacketManagerC;
   SPINEApp_C.SpineStartPkt -> SpineStartPktC;
   SPINEApp_C.SpineSetupSensorPkt -> SpineSetupSensorPktC;

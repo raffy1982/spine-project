@@ -99,7 +99,7 @@ implementation {
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
-     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
    #endif
 
    //MTS300 sensor board support (acceleromenter...)
@@ -108,7 +108,7 @@ implementation {
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
-     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer; 
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
    #endif
      
    //'Wisepla' BIOSENSOR sensor board (developed in Tampere University of Technology, Tampere, Finland) support (acceleromenter, ecg, eip)
