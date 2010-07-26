@@ -46,6 +46,12 @@ else ifeq ($(SENSORBOARD),moteiv)
      PFLAGS += -DMOTEIV_KIT_SENSORBOARD
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/telosb
      PFLAGS += -DBUFFER_POOL_SIZE=6
+else ifeq ($(SENSORBOARD),shimmerbt)
+     PFLAGS += -DSHIMMER_SENSORBOARD
+     PFLAGS += -DSHIMMER_BLUETOOTH
+     PFLAGS += -DBUFFER_POOL_SIZE=3
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
 else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif

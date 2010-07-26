@@ -28,7 +28,8 @@ Boston, MA  02111-1307, USA.
  *
  *
  * @author Raffaele Gravina
- * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git) 
+ * @author Philip Kuryloski (Security Integration - implementation from http://hinrg.cs.jhu.edu/git/?p=jgko/tinyos-2.x.git)
+ * @author Michele Capobianco (Shimmer Bluetooth Support)
  *
  * @version 1.3
  */
@@ -41,8 +42,7 @@ Boston, MA  02111-1307, USA.
  }
 
  implementation {
-      components PacketManagerP, RadioControllerC,
-                 SpineHeaderC;
+      components PacketManagerP, SpineHeaderC;
 
       // if new InPackets are added, declare their components down here
       components SpineSetupSensorPktC;
@@ -61,7 +61,13 @@ Boston, MA  02111-1307, USA.
       PacketManagerP.InPackets = InPackets;
       PacketManagerP.OutPackets = OutPackets;
 
-      PacketManagerP.RadioController -> RadioControllerC;
+      #ifdef SHIMMER_BLUETOOTH
+	components BluetoothControllerC;
+        PacketManagerP.RadioController -> BluetoothControllerC;
+      #else
+        components RadioControllerC;
+        PacketManagerP.RadioController -> RadioControllerC;
+      #endif
       
       PacketManagerP.Header -> SpineHeaderC;
       // if new InPackets are added, wire the aforedeclared components down here
