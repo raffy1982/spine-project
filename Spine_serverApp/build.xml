@@ -7,6 +7,7 @@
 	<property file="build.properties" />
 	<property name="ext.lib.dir" value="ext-lib" />
 	<property name="path.tinyos.jar" value="${ext.lib.dir}/${tinyos.jar}" />
+	<property name="path.bluecove.jar" value="${ext.lib.dir}/${bluecove.jar}" />
 
 	<target name="checkTinyOsJarInExtLib_step2" description="shows missing file message and stops build" unless="tinyos.jar.present">
 		<property name="missing.tinyos.file.error.msg" value="File ${tinyos.jar} is not available in the directory ${ext.lib.dir}." />
@@ -22,6 +23,21 @@ Download it from the URL specified in the README file and place it in the direct
 		</condition>
 		<antcall target="checkTinyOsJarInExtLib_step2" />
 	</target>
+	
+	<target name="checkBluecoveJarInExtLib_step2" description="shows missing file message and stops build" unless="bluecove.jar.present">
+			<property name="missing.bluecove.file.error.msg" value="File ${bluecove.jar} is not available in the directory ${ext.lib.dir}." />
+			<echo level="error">Build process can't continue.
+	${missing.bluecove.file.error.msg}
+	Download it from the URL specified in the README file and place it in the directory ${ext.lib.dir}.</echo>
+			<fail message="${missing.bluecove.file.error.msg}" />
+		</target>
+
+		<target name="checkBluecoveJarInExtLib_step1">
+			<condition property="bluecove.jar.present">
+				<available file="${path.bluecove.jar}" />
+			</condition>
+			<antcall target="checkBluecoveJarInExtLib_step2" />
+		</target>
 
 	<!--  _______________________________________________
                              compile
@@ -29,6 +45,7 @@ Download it from the URL specified in the README file and place it in the direct
 	<target name="compile" description="compile the java source files">
 		<!-- Compile the java code from src into classes -->
 		<antcall target="checkTinyOsJarInExtLib_step1" />
+		<antcall target="checkBluecoveJarInExtLib_step1" />
 
 		<mkdir dir="classes" />
 		<javac srcdir="src" optimize="${javac.optimize}" debug="${javac.debug}" debuglevel="lines,vars,source" destdir="classes" deprecation="on">

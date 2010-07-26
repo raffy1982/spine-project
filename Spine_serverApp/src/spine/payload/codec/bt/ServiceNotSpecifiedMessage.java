@@ -1,5 +1,3 @@
-package spine;
-
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
 allows dynamic configuration of feature extraction capabilities 
@@ -26,21 +24,35 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This interface contains the platforms supported by SPINE.
 *
-* @author Raffaele Gravina
+* This class contains the static method to parse (decode) a 
+* NodeEmulator SPINE Service Not Specified Message  packet payload into a platform independent one.
+*
+* Note that this class is only used internally at the framework. 
+*
+* @author Buondonno Luigi
 *
 * @version 1.3
 */
 
-public interface SPINESupportedPlatforms {
+package spine.payload.codec.bt;
 
-	public final static String TINYOS = "tinyos";
+import spine.datamodel.Node;
+import spine.datamodel.functions.SpineCodec;
+import spine.datamodel.functions.SpineObject;
+import spine.exceptions.MethodNotSupportedException;
+
+public class ServiceNotSpecifiedMessage extends SpineCodec {
 	
-	public final static String TINYOS_VIA_SERIALFWD = "sf";
+	public byte[] encode(SpineObject payload)throws MethodNotSupportedException {
+		throw new MethodNotSupportedException("encode");
+	};
 	
-	public final static String EMULATOR = "emu";
-	
-	public final static String BLUETOOTH = "bt";
-	
+	public SpineObject decode(Node node, byte[] payload)throws MethodNotSupportedException {
+		spine.datamodel.serviceMessages.ServiceNotSpecifiedMessage snsm=new spine.datamodel.serviceMessages.ServiceNotSpecifiedMessage();
+		snsm.setNode(node);
+		snsm.setMessageDetail(payload[1]);
+		return snsm;
+	}
+
 }

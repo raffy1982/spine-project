@@ -1,5 +1,3 @@
-package spine;
-
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
 allows dynamic configuration of feature extraction capabilities 
@@ -26,21 +24,26 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This interface contains the platforms supported by SPINE.
-*
-* @author Raffaele Gravina
-*
-* @version 1.3
-*/
+ * 
+ * Note that this class is used only internally at the framework.
+ * 
+ * @version 1.3
+ * 
+ */
 
-public interface SPINESupportedPlatforms {
+package spine.payload.codec.bt;
 
-	public final static String TINYOS = "tinyos";
-	
-	public final static String TINYOS_VIA_SERIALFWD = "sf";
-	
-	public final static String EMULATOR = "emu";
-	
-	public final static String BLUETOOTH = "bt";
-	
+import spine.datamodel.functions.CodecInfo;
+
+public class CodecInformation implements CodecInfo{
+
+	public byte getFunctionCode(byte[] payload) {
+		return payload[0];
+	}	
+
+	// New Refactoring ServiceMessage
+	public byte getServiceMessageType(byte[] payload) {
+		return payload[0];
+	}	
+
 }

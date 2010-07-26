@@ -1,9 +1,7 @@
-package spine;
-
 /*****************************************************************
 SPINE - Signal Processing In-Node Environment is a framework that 
-allows dynamic configuration of feature extraction capabilities 
-of WSN nodes via an OtA protocol
+allows dynamic on node configuration for feature extraction and a 
+OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
  
@@ -26,21 +24,24 @@ Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
-* This interface contains the platforms supported by SPINE.
-*
-* @author Raffaele Gravina
-*
-* @version 1.3
-*/
+ *
+ * This exception is thrown if the coordinator receives a SPINE message with an incorrect header size. 
+ * 
+ * Note that this class is only used internally at the framework. 
+ *
+ * @author Raffaele Gravina
+ *
+ * @version 1.3
+ */
 
-public interface SPINESupportedPlatforms {
+package spine.communication.bt;
 
-	public final static String TINYOS = "tinyos";
+public class IllegalSpineHeaderSizeException extends Exception {
 	
-	public final static String TINYOS_VIA_SERIALFWD = "sf";
-	
-	public final static String EMULATOR = "emu";
-	
-	public final static String BLUETOOTH = "bt";
-	
+	private static final long serialVersionUID = 0;
+
+	public IllegalSpineHeaderSizeException(int expectedLen, int receivedLen) {
+		super("expected SPINE Header size is: " + expectedLen + " bytes; but received: " + receivedLen + " bytes!");
+	}
+
 }

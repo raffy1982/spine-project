@@ -43,6 +43,7 @@ public abstract class Properties {
 	public static final String MOTECOM_KEY = "MOTECOM";
 	public static final String PLATFORM_KEY = "PLATFORM";
 	public static final String SPINE_HOME_KEY = "SPINE_HOME";
+	public static final String BT_NETWORK_SIZE_KEY = "BT_NETWORK_SIZE";
 	
 	public static final String GROUP_ID_KEY = "group_id";
 	public static final String LINE_SEPARATOR_KEY = "line_separator";

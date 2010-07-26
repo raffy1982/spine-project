@@ -48,7 +48,7 @@ import com.tilab.gal.WSNConnection;
  * @author Fabio Bellifemine, Telecom Italia
  * @since 1.3
  */
-class EventDispatcher {
+public class EventDispatcher extends Thread {
 
 	SPINEManager spineManager;
 	
@@ -62,6 +62,15 @@ class EventDispatcher {
 	
 	private Vector listeners = new Vector(1); // initialized to 1 element as we expect usually to have just 1 listener
 	
+	/**
+	 * Returns the list of listeners registered to the SPINE events
+	 * 
+	 * @return a Vector of SPINEListener objects
+	 */
+	public Vector getListeners() {
+		return listeners;
+	}
+
 	/**
 	 * Registers a SPINEListener with the manager instance
 	 * 
@@ -126,7 +135,7 @@ class EventDispatcher {
 			/*
 			 * This method is called to notify the SPINEManager of a new SPINE message reception. 
 			 */
-			public void messageReceived(com.tilab.gal.Message msg) {
+			public void messageReceived(com.tilab.gal.Message msg) {				
 				Address nodeID = new Address(msg.getSourceURL().substring(SPINEManager.URL_PREFIX.length()));
 				
 				SpineObject o = null;
@@ -291,5 +300,12 @@ class EventDispatcher {
 				System.gc();		
 			}
 		} 
+	 
+	 public void run() {
+		 // just a "keel alive", to ensure the underlying communication system continues to operate  
+		 while(true) {
+			 try { Thread.sleep(60000); } catch (InterruptedException e) {}
+		 }
+	 }
 	
 }

@@ -94,6 +94,7 @@ public class SPINEManager {
 	
 	private	static String MOTECOM = null;
 	private static String PLATFORM = null;	
+	private static int BT_NETWORK_SIZE = -1;
 	
 	private static byte MY_GROUP_ID = 0;
 	private static String LOCALNODEADAPTER_CLASSNAME = null;
@@ -119,11 +120,13 @@ public class SPINEManager {
 	}
 	
 	/** package-scoped method called by SPINEFactory.
-	 * The caller must guarantee that moteCom and platform are not null. **/
-	SPINEManager(String moteCom, String platform) {
+	 * The caller must guarantee that moteCom and platform and are not null. **/
+	SPINEManager(String moteCom, String platform, int btNetworkSize) {
 		try {
 			MOTECOM = moteCom;
 			PLATFORM = platform;			
+			
+			BT_NETWORK_SIZE = btNetworkSize;
 			
 			MY_GROUP_ID = (byte)Short.parseShort(prop.getProperty(Properties.GROUP_ID_KEY), 16);
 			LOCALNODEADAPTER_CLASSNAME = prop.getProperty(PLATFORM + "_" + Properties.LOCALNODEADAPTER_CLASSNAME_KEY);
@@ -149,6 +152,7 @@ public class SPINEManager {
 			baseStation.setLogicalID(new Address(SPINEPacketsConstants.SPINE_BASE_STATION_LABEL));
 			
 			eventDispatcher = new EventDispatcher(this);
+			eventDispatcher.start();
 
 		} catch (NumberFormatException e) {
 			exit(DEF_PROP_MISSING_MSG);
@@ -165,6 +169,15 @@ public class SPINEManager {
 			if (l.isLoggable(Logger.SEVERE)) 
 				l.log(Logger.SEVERE, e.getMessage());
 		} 
+	}
+	
+	/**
+	 * Returns the EventDispatcher associated to the SPINEManager
+	 * 
+	 * @return the EventDispatcher associated to the SPINEManager
+	 */
+	public EventDispatcher getEventDispatcher() {
+		return eventDispatcher;
 	}
 
 	
@@ -528,6 +541,18 @@ public class SPINEManager {
 	}
 	
 	/**
+	 * Returns the BT_NETWORK_SIZE property value specified in the given app.properties file.
+	 * Note that this property is meaningful (and mandatory to be present in the app.properties file)
+	 * if and only if the PLATFORM property is 'bt' (bluetooth).
+	 * 
+	 * @return the BT_NETWORK_SIZE property value specified in the given app.properties file 
+	 * or the -1 if the BT_NETWORK_SIZE property hasn't been specified  
+	 */
+	public static int getBTNetworkSize() {
+		return BT_NETWORK_SIZE;
+	}
+	
+	/**
 	 * Returns the Logger to be used by all the SPINE core classes
 	 * 
 	 * @return the Logger to be used by all the SPINE core classes  
@@ -559,21 +584,23 @@ public class SPINEManager {
 		}
 		
 		public void run () {
-			try {
-				discoveryCompleted = false;
-				sleep(delay);
-			} catch (InterruptedException e) {}
-			
-			// if no nodes has been discovered, it's the symptom of some radio connection problem;
-			// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
-			if (activeNodes.size()==0) {
-				ServiceErrorMessage serviceErrorMessage=new ServiceErrorMessage();
-				serviceErrorMessage.setNode(baseStation);
-				serviceErrorMessage.setMessageDetail(SPINEServiceMessageConstants.CONNECTION_FAIL);
-				eventDispatcher.notifyListeners(SPINEPacketsConstants.SVC_MSG,serviceErrorMessage);
-			}		
-			discoveryCompleted = true;			
-			eventDispatcher.notifyListeners(DISC_COMPL_EVT_COD, activeNodes);
+			if (!getPlatform().equalsIgnoreCase(SPINESupportedPlatforms.BLUETOOTH)) {
+				try {
+					discoveryCompleted = false;
+					sleep(delay);
+				} catch (InterruptedException e) {
+				}
+				// if no nodes has been discovered, it's the symptom of some radio connection problem;
+				// the SPINEManager notifies the SPINEListener of that situation by issuing an appropriate service message
+				if (activeNodes.size() == 0) {
+					ServiceErrorMessage serviceErrorMessage = new ServiceErrorMessage();
+					serviceErrorMessage.setNode(baseStation);
+					serviceErrorMessage.setMessageDetail(SPINEServiceMessageConstants.CONNECTION_FAIL);
+					eventDispatcher.notifyListeners(SPINEPacketsConstants.SVC_MSG, serviceErrorMessage);
+				}
+				discoveryCompleted = true;
+				eventDispatcher.notifyListeners(DISC_COMPL_EVT_COD, activeNodes);
+			}
 		}
 	}	
 	
