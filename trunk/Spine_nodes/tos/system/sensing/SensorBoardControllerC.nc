@@ -32,7 +32,7 @@ Boston, MA  02111-1307, USA.
  *
  * @author Raffaele Gravina
  *
- * @version 1.2
+ * @version 1.3
  */
 
 configuration SensorBoardControllerC {
@@ -93,13 +93,20 @@ implementation {
      SensorBoardControllerP.SamplingTimers[INTERNAL_TEMPERATURE_SENSOR] -> InternalTemperatureSensorTimer;
    #endif
 
-   //SHIMMER sensor board support (acceleromenter...)
+   //SHIMMER sensor board support (acceleromenter, gyro,...)
    #ifdef SHIMMER_SENSORBOARD
 	 /* For the ACC Sensor */
      components AccSensorC;
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
+	 
+	 /* For the GYRO Sensor */
+     components GyroSensorC;
+     components new TimerMilliC() as GyroSensorTimer;
+     SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
+     SensorBoardControllerP.SamplingTimers[GYRO_SENSOR] -> GyroSensorTimer;
+	 
    #endif
 
    //MTS300 sensor board support (acceleromenter...)
