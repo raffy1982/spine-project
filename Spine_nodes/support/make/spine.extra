@@ -18,6 +18,8 @@ ifndef SENSORBOARD
             SENSORBOARD=moteiv
        else ifeq ($(PLTFORM),shimmer)
             SENSORBOARD=shimmer
+       else ifeq ($(PLTFORM),shimmer2r)
+            SENSORBOARD=shimmer2r
        else ifeq ($(PLTFORM),micaz)
             SENSORBOARD=mts300
        else ifndef SENSORBOARD
@@ -33,6 +35,14 @@ else ifeq ($(SENSORBOARD),shimmer)
      PFLAGS += -DSHIMMER_SENSORBOARD
 	 # PFLAGS += -DBUFFER_POOL_SIZE=3
      PFLAGS += -DBUFFER_POOL_SIZE=6
+else ifeq ($(SENSORBOARD),shimmer2r)
+     PFLAGS += -DSHIMMER2R_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=3
+else ifeq ($(SENSORBOARD),shimmer2r_bt)
+     PFLAGS += -DSHIMMER2R_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=3
+     PFLAGS += -DSHIMMER_BLUETOOTH
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
 else ifeq ($(SENSORBOARD),mts300)
      PFLAGS += -DMTS300_SENSORBOARD
      PFLAGS += -DBUFFER_POOL_SIZE=2
@@ -53,6 +63,7 @@ else ifeq ($(SENSORBOARD),shimmerbt)
      PFLAGS += -DBUFFER_POOL_SIZE=3
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
+     PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/%p
 else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif
