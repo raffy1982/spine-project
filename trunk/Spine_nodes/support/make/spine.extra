@@ -33,7 +33,6 @@ ifeq ($(SENSORBOARD),spine)
      PFLAGS += -DBUFFER_POOL_SIZE=7
 else ifeq ($(SENSORBOARD),shimmer)
      PFLAGS += -DSHIMMER_SENSORBOARD
-	 # PFLAGS += -DBUFFER_POOL_SIZE=3
      PFLAGS += -DBUFFER_POOL_SIZE=6
 else ifeq ($(SENSORBOARD),shimmer2r)
      PFLAGS += -DSHIMMER2R_SENSORBOARD
@@ -60,7 +59,7 @@ else ifeq ($(SENSORBOARD),moteiv)
 else ifeq ($(SENSORBOARD),shimmerbt)
      PFLAGS += -DSHIMMER_SENSORBOARD
      PFLAGS += -DSHIMMER_BLUETOOTH
-     PFLAGS += -DBUFFER_POOL_SIZE=3
+     PFLAGS += -DBUFFER_POOL_SIZE=6
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer
      PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
      PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/%p
