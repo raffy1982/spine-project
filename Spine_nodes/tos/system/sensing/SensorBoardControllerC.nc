@@ -106,7 +106,15 @@ implementation {
      components new TimerMilliC() as GyroSensorTimer;
      SensorBoardControllerP.SensorImpls[GYRO_SENSOR] -> GyroSensorC;
      SensorBoardControllerP.SamplingTimers[GYRO_SENSOR] -> GyroSensorTimer;
-	 
+   #endif
+   
+   //SHIMMER2R sensor board support (acceleromenter...)
+   #ifdef SHIMMER2R_SENSORBOARD
+	 /* For the ACC Sensor */
+     components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
+     SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
    #endif
 
    //MTS300 sensor board support (acceleromenter...)
