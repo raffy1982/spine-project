@@ -36,12 +36,12 @@ else ifeq ($(SENSORBOARD),shimmer)
      PFLAGS += -DBUFFER_POOL_SIZE=6
 else ifeq ($(SENSORBOARD),shimmer2r)
      PFLAGS += -DSHIMMER2R_SENSORBOARD
-     PFLAGS += -DBUFFER_POOL_SIZE=3
+     PFLAGS += -DBUFFER_POOL_SIZE=5  # currently, for 3-axis ACCEL and 2 channels ECG (ecg is available but wirings are commented out in SensorBoardControllerC.nc)
 else ifeq ($(SENSORBOARD),shimmer2r_bt)
      PFLAGS += -DSHIMMER2R_SENSORBOARD
-     PFLAGS += -DBUFFER_POOL_SIZE=3
+     PFLAGS += -DBUFFER_POOL_SIZE=5  # currently, for 3-axis ACCEL and 2 channels ECG (ecg is available but wirings are commented out in SensorBoardControllerC.nc)
      PFLAGS += -DSHIMMER_BLUETOOTH
-     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
+     #PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer2r/chips/bluetooth
 else ifeq ($(SENSORBOARD),mts300)
      PFLAGS += -DMTS300_SENSORBOARD
      PFLAGS += -DBUFFER_POOL_SIZE=2
@@ -60,8 +60,8 @@ else ifeq ($(SENSORBOARD),shimmerbt)
      PFLAGS += -DSHIMMER_SENSORBOARD
      PFLAGS += -DSHIMMER_BLUETOOTH
      PFLAGS += -DBUFFER_POOL_SIZE=6
-     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer
-     PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
+     #PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer
+     #PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/shimmer/chips/bluetooth
      PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/%p
 else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
@@ -95,6 +95,7 @@ PFLAGS += -I$(TOS_OVERLAY_DIR)/system/processing
 PFLAGS += -I$(TOS_OVERLAY_DIR)/system/utils
 
 PFLAGS += -I$(TOS_OVERLAY_DIR)/platforms/%p
+PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/%p # does nothing if corresponding 'sensorboards' subfolder does not exist
 
 PFLAGS += -I$(TOS_OVERLAY_DIR)/sensorboards/$(SENSORBOARD)
 

@@ -56,6 +56,8 @@ Boston, MA  02111-1307, USA.
       BluetoothControllerP.Bluetooth -> RovingNetworksC;
 
       BluetoothControllerP.Queue -> Queue;
+      
+      BluetoothControllerP.BluetoothInit -> RovingNetworksC.Init;
 
    //BluetoothControllerP.Packet -> ActiveMessageC;
  }

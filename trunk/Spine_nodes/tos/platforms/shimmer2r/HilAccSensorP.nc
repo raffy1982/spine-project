@@ -62,7 +62,7 @@ implementation {
   };
 
   adc12memctl_t memctl[2] = { 
-       { INPUT_CHANNEL_A4, REFVOLT_LEVEL_2_5, 0}, 
+       { INPUT_CHANNEL_A4, REFVOLT_LEVEL_2_5, 0},
        { INPUT_CHANNEL_A5, REFVOLT_LEVEL_2_5, 1} };
 
   command error_t Init.init() {
@@ -71,7 +71,7 @@ implementation {
  
     event void Boot.booted() {
       call Resource.request();
-      call Mma7361.setSensitivity(RANGE_6_0G);
+      call Mma7361.setSensitivity(RANGE_1_5G);
     }
 
     async command const msp430adc12_channel_config_t* AdcConfigure.getConfiguration()
@@ -109,9 +109,9 @@ implementation {
  
     command uint16_t Sensor.getValue(enum ValueTypes valueType) {
         switch (valueType) {
-            case CH_1 : return accData[0];
-            case CH_2 : return accData[1];
-            case CH_3 : return accData[2];
+            case CH_1 : return accData[1];
+            case CH_2 : return accData[2];
+            case CH_3 : return accData[0];
             default : return 0xffff;
         }
     }
@@ -119,7 +119,10 @@ implementation {
     command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
         *valuesNr = sizeof valueTypesList;
 	atomic {
-           memcpy(buffer, accData, sizeof(*accData)*3);
+           //memcpy(buffer, accData, sizeof(*accData)*3);
+           buffer[0] = accData[1];
+           buffer[1] = accData[2];
+           buffer[2] = accData[0];
         }
     }
 
