@@ -115,6 +115,11 @@ implementation {
      components new TimerMilliC() as AccSensorTimer;
      SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
      SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;
+      /* For the ECG Sensor */
+     /*components EcgSensorC;
+     components new TimerMilliC() as EcgSensorTimer;
+     SensorBoardControllerP.SensorImpls[ECG_SENSOR] -> EcgSensorC;
+     SensorBoardControllerP.SamplingTimers[ECG_SENSOR] -> EcgSensorTimer;*/
    #endif
 
    //MTS300 sensor board support (acceleromenter...)

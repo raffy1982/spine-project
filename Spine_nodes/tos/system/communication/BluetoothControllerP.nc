@@ -51,6 +51,7 @@ Boston, MA  02111-1307, USA.
 	    interface Queue<bt_message>;
             
             interface Leds;
+            interface Init as BluetoothInit;
        }
 
        provides interface RadioController;
@@ -67,8 +68,18 @@ Boston, MA  02111-1307, USA.
        uint8_t last_received;
        uint8_t received_msg[SPINE_PKT_MAX_SIZE];
 
+       //char FRIENDLYNAME[6];
 
        event void Boot.booted() {
+         call BluetoothInit.init();
+         call Bluetooth.resetDefaults();
+         call Bluetooth.setRadioMode(SLAVE_MODE);
+         
+         /*strcpy(FRIENDLYNAME, "SPINE");
+         FRIENDLYNAME[5] = 1;
+         call Bluetooth.setName(FRIENDLYNAME);*/
+
+         //call Bluetooth.setName("SPINE1");
 	 call BTStdControl.start();
 	 
        }
@@ -85,7 +96,7 @@ Boston, MA  02111-1307, USA.
 	 signal RadioController.radioOn();
        }
 
-       async event void Bluetooth.commandModeEnded() { 
+       async event void Bluetooth.commandModeEnded() {
            call Leds.led1On();
 	   post signalRadioOn();
        }

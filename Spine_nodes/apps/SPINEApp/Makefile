@@ -68,3 +68,5 @@ PFLAGS += -DFUNCTION_LIBRARIES_LIST_SIZE=64
 
 
 include $(MAKERULES)
+
+#include $(TOSDIR)/lib/mac/tkn154/Makefile.include
