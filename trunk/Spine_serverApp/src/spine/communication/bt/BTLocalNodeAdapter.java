@@ -71,6 +71,9 @@ import com.tilab.gal.WSNConnection;
 
 public class BTLocalNodeAdapter extends LocalNodeAdapter implements DiscoveryListener, Runnable {
 
+	private static final String SHIMMER1_NAME_PREFIX = "FireFly-";
+	private static final String SHIMMER2R_NAME_PREFIX = "RN42-";
+	
 	private WSNConnection wsnConnection = null;
 	
 	private Vector nodeConnections = new Vector(); // <values: BTNodeConnection>
@@ -337,10 +340,11 @@ public class BTLocalNodeAdapter extends LocalNodeAdapter implements DiscoveryLis
 				str.append(remoteDevice.getFriendlyName(true));				
 				SPINEManager.getLogger().log(Logger.INFO, str.toString());
 			}
-			if(remoteDevice.getFriendlyName(true).length() > 7 && remoteDevice.getFriendlyName(true).substring(0,7).equals("FireFly")) {
+			if(remoteDevice.getFriendlyName(true).startsWith(SHIMMER1_NAME_PREFIX) || 
+					remoteDevice.getFriendlyName(true).startsWith(SHIMMER2R_NAME_PREFIX)) {
             	remoteDevices.addElement(remoteDevice);
             	if (SPINEManager.getLogger().isLoggable(Logger.INFO))			
-    				SPINEManager.getLogger().log(Logger.INFO, "... The device is a Shimmer Mote: will check if active!");
+    				SPINEManager.getLogger().log(Logger.INFO, "... The device is a Shimmer(1/2r) Mote: will check if active!");
 			}
 			else 
 				if (SPINEManager.getLogger().isLoggable(Logger.INFO))			
