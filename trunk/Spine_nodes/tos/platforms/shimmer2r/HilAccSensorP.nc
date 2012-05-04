@@ -71,7 +71,7 @@ implementation {
  
     event void Boot.booted() {
       call Resource.request();
-      call Mma7361.setSensitivity(RANGE_1_5G);
+      call Mma7361.setSensitivity(RANGE_6_0G);
     }
 
     async command const msp430adc12_channel_config_t* AdcConfigure.getConfiguration()
@@ -109,8 +109,8 @@ implementation {
  
     command uint16_t Sensor.getValue(enum ValueTypes valueType) {
         switch (valueType) {
-            case CH_1 : return accData[1];
-            case CH_2 : return accData[2];
+            case CH_1 : return accData[2];
+            case CH_2 : return accData[1];
             case CH_3 : return accData[0];
             default : return 0xffff;
         }
@@ -120,8 +120,8 @@ implementation {
         *valuesNr = sizeof valueTypesList;
 	atomic {
            //memcpy(buffer, accData, sizeof(*accData)*3);
-           buffer[0] = accData[1];
-           buffer[1] = accData[2];
+           buffer[0] = accData[2];
+           buffer[1] = accData[1];
            buffer[2] = accData[0];
         }
     }
