@@ -65,6 +65,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
+import android.util.Log;
 
 import com.tilab.gal.ConfigurationDescriptor;
 import com.tilab.gal.LocalNodeAdapter;
@@ -74,6 +76,8 @@ import com.tilab.gal.WSNConnection;
 @SuppressWarnings("rawtypes")
 public class BTLocalNodeAdapter extends LocalNodeAdapter {
 
+	//API_VERSION used on Smartphone
+	private final static int API_VERSION = Integer.valueOf(android.os.Build.VERSION.SDK);
 	private static final String SENSOR_TYPE="FireFly-";
 	private static final String SENSOR_TYPE2="RN42-";
 	private final UUID SHIMMER_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -152,6 +156,7 @@ public class BTLocalNodeAdapter extends LocalNodeAdapter {
 	private void setPaired() {
 		for(BluetoothDevice bd : bta.getBondedDevices()) {	        			
 			if( (bd.getName().contains(SENSOR_TYPE) || bd.getName().contains(SENSOR_TYPE2)) && !devices.contains(bd)) {
+				Log.d("SET_PAIRED:",bd.getName());
 				devices.add(bd);
 			}	
 		}
@@ -162,12 +167,42 @@ public class BTLocalNodeAdapter extends LocalNodeAdapter {
 		for (Object bd : devices) {
 			try { 
 				device = (BluetoothDevice)bd;
-				socket = device.createRfcommSocketToServiceRecord(SHIMMER_UUID);
+				if(device.getBondState() == BluetoothDevice.BOND_BONDED){
+					//unsecure Socket since Android API Level 10 (Android 2.3.3)
+					if(API_VERSION >= Build.VERSION_CODES.GINGERBREAD_MR1){
+						socket = device.createInsecureRfcommSocketToServiceRecord(SHIMMER_UUID);
+					}
+					//secure Socket till Android API Level 9 (Android 2.3)
+					else if(API_VERSION < Build.VERSION_CODES.GINGERBREAD_MR1){
+						socket = device.createRfcommSocketToServiceRecord(SHIMMER_UUID);
+					}
+				}
+				else { 
+					//secure Socket if device is not bonded
+					socket = device.createRfcommSocketToServiceRecord(SHIMMER_UUID);
+				}
 				socket.connect();
+				Log.d("CONNECTION_OK: ",device.getName());
 				curr = new BTNodeConnection(socket);
 				curr.setNodeID(new Address(device.getAddress()));
 				nodeConnections.add(curr);
-			} catch(IOException e) {} 
+			} catch(IOException e) {
+				Log.d("CONNECTION_FAILED: ",device.getName());
+			} 
+		}
+		
+		if (nodeConnections.isEmpty()) {
+			try {
+				Iterator it = SPINEFactory.getSPINEManagerInstance()
+						.getEventDispatcher().getListeners().iterator();
+				while (it.hasNext()) {
+					SPINEListener currListener = (SPINEListener) it.next();
+					currListener.discoveryCompleted(SPINEFactory
+							.getSPINEManagerInstance().getActiveNodes());
+				}
+				discoveryCompleted = true;
+			} catch (InstantiationException e) {
+			}
 		}
 	}
 	
@@ -426,22 +461,33 @@ public class BTLocalNodeAdapter extends LocalNodeAdapter {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
+			try{
 			String action = intent.getAction();
 			
 			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 				BluetoothDevice dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+				Log.d("DEVICE_FOUND: ", dev.getName());
+				if (dev.getBondState() != BluetoothDevice.BOND_BONDED ){
+					Log.d("SHIMMER_NOT_PAIRED: ", dev.getName());
+				}
 				if (dev.getBondState() != BluetoothDevice.BOND_BONDED && ( dev.getName().contains(SENSOR_TYPE) || dev.getName().contains(SENSOR_TYPE2)) && !devices.contains(dev)) {
+					Log.d("SHIMMER_FOUND: ", dev.getName());
 					devices.add(dev);
 				}
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				if(bta.isDiscovering())
+				Log.d("DISCOVERY_FINISHED: ", action);
+				if(bta.isDiscovering()){
+					Log.d("DISCOVERING_IN_PROGRESS: ", "true");
 					bta.cancelDiscovery();
+				}
 				finish = true;
 				setDevices();
 				startDevices();
 				send(msg);
 				}
+			}catch(RuntimeException e){
+				Log.e("ERROR_BROADCAST_INTENT: ", e.getMessage());
+			}
 		}
 	}
 }
