@@ -135,6 +135,27 @@ implementation {
      SensorBoardControllerP.SensorImpls[ECG_SENSOR] -> EcgSensorC;
      SensorBoardControllerP.SamplingTimers[ECG_SENSOR] -> EcgSensorTimer;*/
    #endif
+   
+   #ifdef SHIMMER2R_GSR_SENSORBOARD
+	 /* For the ACC Sensor */
+     /*components AccSensorC;
+     components new TimerMilliC() as AccSensorTimer;
+     SensorBoardControllerP.SensorImpls[ACC_SENSOR] -> AccSensorC;
+     SensorBoardControllerP.SamplingTimers[ACC_SENSOR] -> AccSensorTimer;*/
+      /* For the GSR Sensor */
+     components GsrSensorC;
+     components new TimerMilliC() as GsrSensorTimer;
+     SensorBoardControllerP.SensorImpls[GSR_SENSOR] -> GsrSensorC;
+     SensorBoardControllerP.SamplingTimers[GSR_SENSOR] -> GsrSensorTimer;
+   #endif
+   
+   #ifdef SHIMMER2R_EMG_SENSORBOARD
+      /* For the EMG Sensor */
+     components EmgSensorC;
+     components new TimerMilliC() as EmgSensorTimer;
+     SensorBoardControllerP.SensorImpls[EMG_SENSOR] -> EmgSensorC;
+     SensorBoardControllerP.SamplingTimers[EMG_SENSOR] -> EmgSensorTimer;
+   #endif
 
    //MTS300 sensor board support (acceleromenter...)
    #ifdef MTS300_SENSORBOARD

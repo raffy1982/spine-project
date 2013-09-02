@@ -68,6 +68,22 @@ else ifeq ($(SENSORBOARD),shimmerbt)
 else ifeq ($(SENSORBOARD),shimmer2)
      PFLAGS += -DSHIMMER2_SENSORBOARD
      PFLAGS += -DBUFFER_POOL_SIZE=5
+else ifeq ($(SENSORBOARD),shimmer2r_gsr)
+     PFLAGS += -DSHIMMER2R_GSR_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=1  # 1 channel GSR
+     #PFLAGS += -DBUFFER_POOL_SIZE=4  # for 3-axis ACCEL and 1 channel GSR (ACCEL and GSR appear not to work simultaneously)
+else ifeq ($(SENSORBOARD),shimmer2r_gsr_bt)
+     PFLAGS += -DSHIMMER2R_GSR_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=1  # 1 channel GSR
+     #PFLAGS += -DBUFFER_POOL_SIZE=4  # for 3-axis ACCEL and 1 channel GSR (ACCEL and GSR appear not to work simultaneously)
+     PFLAGS += -DSHIMMER_BLUETOOTH
+else ifeq ($(SENSORBOARD),shimmer2r_emg)
+     PFLAGS += -DSHIMMER2R_EMG_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=1  # 1 channel EMG
+else ifeq ($(SENSORBOARD),shimmer2r_emg_bt)
+     PFLAGS += -DSHIMMER2R_EMG_SENSORBOARD
+     PFLAGS += -DBUFFER_POOL_SIZE=1  # 1 channel EMG
+     PFLAGS += -DSHIMMER_BLUETOOTH                  
 else
      PFLAGS += -D$(SENSORBOARD)_SENSORBOARD
 endif
