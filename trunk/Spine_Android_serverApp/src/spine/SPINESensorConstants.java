@@ -47,6 +47,8 @@ public class SPINESensorConstants {
 	public static final byte TEMPERATURE_SENSOR = 0x07;
 	public static final byte HUMIDITY_SENSOR = 0x08;
 	public static final byte LIGHT_SENSOR = 0x09;
+	public static final byte EMG_SENSOR = 0x0A;
+	public static final byte GSR_SENSOR = 0x0B;
 
 	public static final String ACC_SENSOR_LABEL = "accelerometer";
 	public static final String VOLTAGE_SENSOR_LABEL = "voltage";
@@ -57,6 +59,8 @@ public class SPINESensorConstants {
 	public static final String TEMPERATURE_SENSOR_LABEL = "Env Temperature";
 	public static final String HUMIDITY_SENSOR_LABEL = "Humidity";
 	public static final String LIGHT_SENSOR_LABEL = "Light";
+	public static final String EMG_SENSOR_LABEL = "Electromiograph (EMG)";
+	public static final String GSR_SENSOR_LABEL = "Galvanik Skin Response (GSR)";
 
 	public static final byte ALL = 0x0F; // 1111
 	public static final byte NONE = 0x00; // 0000
@@ -128,6 +132,10 @@ public class SPINESensorConstants {
 			return HUMIDITY_SENSOR_LABEL;
 		case LIGHT_SENSOR:
 			return LIGHT_SENSOR_LABEL;
+		case EMG_SENSOR:
+			return EMG_SENSOR_LABEL;
+                case GSR_SENSOR:
+			return GSR_SENSOR_LABEL;
 		default:
 			return "?";
 		}
@@ -159,6 +167,10 @@ public class SPINESensorConstants {
 			return HUMIDITY_SENSOR;
 		if (label.equals(LIGHT_SENSOR_LABEL))
 			return LIGHT_SENSOR;
+		if (label.equals(EMG_SENSOR_LABEL))
+			return EMG_SENSOR;
+                if (label.equals(GSR_SENSOR_LABEL))
+			return GSR_SENSOR;
 		else
 			return -1;
 	}
