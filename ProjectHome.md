@@ -1,0 +1,4 @@
+The SPINE Project aims at providing developers with software instruments for rapid prototyping of WSN/WBSN-based applications by offering great flexibility in the implementation of distributed signal processing algorithms for the analysis and classification of sensor data.
+The SPINE programming framework is an open-source project to establish a broad community of users and developers that contribute to extend the frameworks with new capabilities and applications.
+
+SPINE is being developed since 2008 and it has been adopted in several WBSN applications. Implemented for supporting different sensor architectures based on the TinyOS environment, SPINE enables efficient implementations of signal processing algorithms for analysis and classification of sensory data through libraries of processing functionalities. It also embed an application-level communication protocol.
