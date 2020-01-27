@@ -37,7 +37,7 @@ Boston, MA  02111-1307, USA.
 
 implementation {
     
-    components EmgSensorC;
+    components HilEmgSensorC;
 
     Sensor = HilEmgSensorC;
 }

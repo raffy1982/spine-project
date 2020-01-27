@@ -83,7 +83,7 @@ implementation{
  
                 call SensorsRegistry.registerSensor(EMG_SENSOR);
  
-		call shimmerAnalogSetup.addEMGInputs();
+		call shimmerAnalogSetup.addEMGInput();
  
 		NBR_ADC_CHANS = call shimmerAnalogSetup.getNumberOfChannels();
  
