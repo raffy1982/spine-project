@@ -57,6 +57,7 @@ implementation {
         components VarianceC;
         components ModeC;
         components MedianC;
+		components GSRPhasicC;
         components RawDataC;
         #ifndef MTS300_SENSORBOARD
         components PitchRollC;
@@ -92,6 +93,7 @@ implementation {
         FeatureEngineP.Features[VARIANCE] -> VarianceC;
         FeatureEngineP.Features[MODE] -> ModeC;
         FeatureEngineP.Features[MEDIAN] -> MedianC;
+        FeatureEngineP.Features[GSR_PHASIC] -> GSRPhasicC;
         FeatureEngineP.Features[RAW_DATA] -> RawDataC;
         #ifndef MTS300_SENSORBOARD
         FeatureEngineP.Features[PITCH_ROLL] -> PitchRollC;

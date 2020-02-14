@@ -75,7 +75,8 @@ enum FeatureCodes {
   PITCH_ROLL = 0x0D,
   VECTOR_MAGNITUDE = 0x0E,
   KCAL = 0x0F,
-  ENTROPY = 0x10
+  ENTROPY = 0x10,
+  GSR_PHASIC = 0x11
 };
 
 typedef struct active_feature_t {

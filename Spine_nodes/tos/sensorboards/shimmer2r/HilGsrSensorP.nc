@@ -52,6 +52,7 @@ implementation{
 	uint8_t acquireTypesList[1] = { ALL };
 	 
 	uint16_t gsrData[1];
+	uint16_t gsrProva[1];
 	
 	uint8_t currRange = 0;// 0-40KOhms
 
@@ -99,6 +100,7 @@ implementation{
 	}
   
 	command uint16_t Sensor.getValue(enum ValueTypes valueType) {
+		
 		switch (valueType) {
 			case CH_1 : return gsrData[0];
 			default : return 0xffff;
@@ -106,9 +108,16 @@ implementation{
 	}
 
 	command void Sensor.getAllValues(uint16_t* buffer, uint8_t* valuesNr) {
+		//modifica Ubaldino Aloi
 		*valuesNr = sizeof valueTypesList;
 		atomic {
-			memcpy(buffer, gsrData, sizeof(*gsrData)*1);
+			if(currRange==0){
+			gsrProva[0]=gsrData[0];}
+			else if(currRange==1) {gsrProva[0]=gsrData[0]|0x4000;}// MSB = 01
+			else if(currRange==2) {gsrProva[0]=gsrData[0]|0x8000;}// MSB = 10
+			else if(currRange==3) {gsrProva[0]=gsrData[0]|0xc000;}// MSB = 11
+			//memcpy(buffer, gsrData, sizeof(*gsrData)*1);
+			memcpy(buffer, gsrProva, sizeof(*gsrProva)*1);
 			currRange = call Gsr.controlRange(gsrData[0], currRange);
 		}
 	}

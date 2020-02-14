@@ -4,23 +4,23 @@ allows dynamic on node configuration for feature extraction and a
 OtA protocol for the management for WSN
 
 Copyright (C) 2007 Telecom Italia S.p.A. 
-ï¿½
+ 
 GNU Lesser General Public License
-ï¿½
+ 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, 
 version 2.1 of the License. 
-ï¿½
+ 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.ï¿½ See the GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
-ï¿½
+ 
 You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the
 Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MAï¿½ 02111-1307, USA.
+Boston, MA  02111-1307, USA.
 *****************************************************************/
 
 /**
@@ -48,6 +48,7 @@ public class SPINEFunctionConstants {
 	public static final byte HMM = 0x07;
 	public static final byte HEARTBEAT = 0x08;
 	
+	
 	//alarm types
 	public static final byte BELOW_THRESHOLD = 0x01;
 	public static final byte ABOVE_THRESHOLD = 0x02;
@@ -71,6 +72,7 @@ public class SPINEFunctionConstants {
 	public static final byte VECTOR_MAGNITUDE = 0x0E;
 	public static final byte KCAL = 0x0F;
 	public static final byte ENTROPY = 0x10;
+	public static final byte GSR_PHASIC = 0x11;
 	
 	// if new functions are added, declare their labels down here
 	public static final String FEATURE_LABEL = "Feature";
@@ -99,6 +101,7 @@ public class SPINEFunctionConstants {
 	public static final String VECTOR_MAGNITUDE_LABEL = "Vector Magnitude";	
 	public static final String KCAL_LABEL = "Kcal";
 	public static final String ENTROPY_LABEL = "Entropy";
+	public static final String GSR_PHASIC_LABEL = "GSR Phasic Signal";
 	
 	public static final String BELOW_THRESHOLD_LABEL = "< LT";
 	public static final String ABOVE_THRESHOLD_LABEL = "> UT";
@@ -163,6 +166,7 @@ public class SPINEFunctionConstants {
 					case VECTOR_MAGNITUDE: return VECTOR_MAGNITUDE_LABEL;
 					case KCAL: return KCAL_LABEL;
 					case ENTROPY: return ENTROPY_LABEL;
+					case GSR_PHASIC: return GSR_PHASIC_LABEL;
 					default: return functionalityCode + " (?)";	
 				}
 			case ALARM: 
@@ -218,6 +222,8 @@ public class SPINEFunctionConstants {
 				return KCAL;
 			if(functionalityLabel.equals(ENTROPY_LABEL)) 
 				return ENTROPY;
+			if(functionalityLabel.equals(GSR_PHASIC_LABEL)) 
+				return GSR_PHASIC;
 			else
 				return -1;	
 		}
